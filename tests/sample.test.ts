@@ -10,8 +10,8 @@ describe('dummy test', () => {
   });
 });
 
-describe('dummy test', () => {
-  test('dummy test will fail', () => {
-    expect(1 + 1).toBe(0);
-  });
-});
+// describe('dummy test', () => {
+//   test('dummy test will fail', () => {
+//     expect(1 + 1).toBe(0);
+//   });
+// });
