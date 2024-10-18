@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "description": "REST API for ACM at UCSD's hackathon portal.",
   "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "release": "node build/index.js"
+  },
   "repository": "https://github.com/acmucsd/hackathon-portal.git",
   "author": "Eric Chang <55172722+echang594@users.noreply.github.com>",
   "dependencies": {},
