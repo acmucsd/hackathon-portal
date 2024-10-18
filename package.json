@@ -3,15 +3,24 @@
   "version": "0.1.0",
   "description": "REST API for ACM at UCSD's hackathon portal.",
   "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest --config jest.config.json --runInBand",
+    "lint": "eslint ./ --ext .ts",
+    "lint:fix": "eslint ./ --ext .ts --fix"
+  },
   "repository": "https://github.com/acmucsd/hackathon-portal.git",
   "author": "Eric Chang <55172722+echang594@users.noreply.github.com>",
   "dependencies": {},
   "devDependencies": {
+    "@types/jest": "^29.5.13",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^7.0.0",
     "eslint": "^8.57.1",
     "eslint-config-airbnb-typescript": "^18.0.0",
     "eslint-plugin-import": "^2.31.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
     "typescript": "^5.6.3"
   }
 }
