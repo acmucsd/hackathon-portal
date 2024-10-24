@@ -12,9 +12,14 @@
   },
   "repository": "https://github.com/acmucsd/hackathon-portal.git",
   "author": "Eric Chang <55172722+echang594@users.noreply.github.com>",
-  "dependencies": {},
+  "dependencies": {
+    "pg": "^8.13.1",
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "^0.3.20"
+  },
   "devDependencies": {
     "@types/jest": "^29.5.13",
+    "@types/node": "^22.7.9",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^7.0.0",
     "eslint": "^8.57.1",
