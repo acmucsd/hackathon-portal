@@ -2,7 +2,7 @@ extends:
   - "eslint:recommended"
   - "airbnb-typescript/base"
 parserOptions:
-  project: './tsconfig.json'
+  project: "./tsconfig.json"
 env:
   browser: true
   node: true
@@ -13,8 +13,9 @@ rules:
   "@typescript-eslint/no-unused-vars":
     - "error"
     - argsIgnorePattern: "type|_*"
+  "@typescript-eslint/indent": "off"
   class-methods-use-this: "off"
-  consistent-return: off
+  consistent-return: "off"
   func-names: "off"
   global-require: "off"
   import/no-cycle: "off"

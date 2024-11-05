@@ -8,6 +8,7 @@
     "declaration": true,
     "outDir": "./build",
     "strict": true,
+    "strictPropertyInitialization": false,
     "skipLibCheck": true
   },
   "include": [
