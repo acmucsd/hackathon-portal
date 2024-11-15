@@ -1,11 +1,22 @@
-import { auth } from './firebaseConfig';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword,
-  sendPasswordResetEmail, UserCredential } from 'firebase/auth';
+import { auth } from '../firebaseConfig';
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail,
+  UserCredential,
+} from 'firebase/auth';
 
-export const register = async (email: string, password: string): Promise<UserCredential | void> => {
+export const register = async (
+  email: string,
+  password: string,
+): Promise<UserCredential | void> => {
   try {
     console.log('authService.ts');
-    const userCredential: UserCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const userCredential: UserCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password,
+    );
     console.log('User registered:', userCredential.user);
     return userCredential;
   } catch (error) {
@@ -13,9 +24,16 @@ export const register = async (email: string, password: string): Promise<UserCre
   }
 };
 
-export const login = async (email: string, password: string): Promise<UserCredential | void> => {
+export const login = async (
+  email: string,
+  password: string,
+): Promise<UserCredential | void> => {
   try {
-    const userCredential: UserCredential = await signInWithEmailAndPassword(auth, email, password);
+    const userCredential: UserCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password,
+    );
     console.log('User logged in:', userCredential.user);
     return userCredential;
   } catch (error) {
