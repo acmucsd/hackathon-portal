@@ -1,0 +1,15 @@
+export enum UserAccessType {
+  RESTRICTED = 'RESTRICTED',
+  STANDARD = 'STANDARD',
+  MANAGER = 'MANAGER',
+  ADMIN = 'ADMIN',
+}
+
+export enum ApplicationStatus {
+  NOT_SUBMITTED = 'NOT_SUBMITTED',
+  SUBMITTED = 'SUBMITTED',
+  WITHDRAWN = 'WITHDRAWN',
+  ACCEPTED = 'ACCEPTED',
+  REJECTED = 'REJECTED',
+  ALL_DONE = 'ALL_DONE',
+}
