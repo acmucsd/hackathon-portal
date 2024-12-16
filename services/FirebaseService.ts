@@ -11,7 +11,6 @@ export const register = async (
   password: string,
 ): Promise<UserCredential | void> => {
   try {
-    console.log('authService.ts');
     const userCredential: UserCredential = await createUserWithEmailAndPassword(
       auth,
       email,
