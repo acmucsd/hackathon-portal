@@ -14,15 +14,15 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '20'
-      
-      - name: Change to server directory
-        run: cd server
 
       - name: Install dependencies
+        working-directory: ./server
         run: yarn install --frozen-lockfile
 
       - name: Run ESLint
+        working-directory: ./server
         run: yarn lint
+
   test:
     runs-on: ubuntu-latest
     needs: lint
@@ -35,11 +35,10 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Change to server directory
-        run: cd server
-
       - name: Install dependencies
-        run: yarn install
+        working-directory: ./server
+        run: yarn install --frozen-lockfile
 
       - name: Run tests
+        working-directory: ./server
         run: yarn test

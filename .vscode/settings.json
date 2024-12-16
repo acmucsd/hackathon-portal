@@ -1,0 +1,14 @@
+{
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "always"
+    },
+    "files.exclude": {
+        "**/.git": true,
+        "**/build": true,
+        "**/node_modules": true
+    },
+    "files.trimTrailingWhitespace": true,
+    "prettier.singleQuote": true,
+    "prettier.trailingComma": "all",
+    "editor.tabSize": 2
+}
