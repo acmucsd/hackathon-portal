@@ -1,12 +1,15 @@
-import { register, login } from './authService';
+import 'reflect-metadata';
 
-register('anotheremail@gmail.com', 'password')
-  .then((user) => {
-    console.log('registered user:', user);
+// must import data source before using repositories
+import { dataSource } from './DataSource';
+
+dataSource
+  .initialize()
+  .then(() => {
+    console.log('created connection');
+  })
+  .catch((error) => {
+    console.log(error);
   });
 
-
-login('randomemail@gmail.com', 'mysecretpassword')
-  .then((user) => {
-    console.log('login user:', user);
-  });
+console.log('Hello World!');

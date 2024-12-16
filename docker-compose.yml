@@ -1,6 +1,6 @@
 services:
-  rds.acmucsd.local:
-    container_name: rds.acmucsd.local
+  rds.hackathon.acmucsd.local:
+    container_name: rds.hackathon.acmucsd.local
     image: postgres:17
     restart: always
     ports:
