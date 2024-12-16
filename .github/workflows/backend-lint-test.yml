@@ -1,4 +1,4 @@
-name: Linting and Testing
+name: Backend - Linting and Testing
 on:
   pull_request:
     branches:
