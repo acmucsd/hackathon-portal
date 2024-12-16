@@ -14,6 +14,9 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '20'
+      
+      - name: Change to server directory
+        run: cd server
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
@@ -31,6 +34,9 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '20'
+
+      - name: Change to server directory
+        run: cd server
 
       - name: Install dependencies
         run: yarn install
