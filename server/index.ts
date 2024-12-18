@@ -5,6 +5,7 @@ import Container from 'typedi';
 // must import data source before using repositories
 import { dataSource } from './DataSource';
 import { controllers } from './api/controllers';
+import { Config } from './config';
 
 useContainer(Container);
 
@@ -32,6 +33,4 @@ const app = createExpressServer({
   },
 });
 
-app.listen(Number(process.env.PORT) || 3000, () => {
-  console.log('Hello World!');
-});
+app.listen(Config.port);

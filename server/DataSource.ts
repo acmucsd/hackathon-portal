@@ -1,14 +1,15 @@
 import Container from 'typedi';
 import { DataSource } from 'typeorm';
 import { models } from './models';
+import { Config } from './config';
 
 export const dataSource = new DataSource({
   type: 'postgres',
-  host: process.env.RDS_HOST,
-  port: Number(process.env.RDS_PORT),
-  username: process.env.RDS_USER,
-  password: process.env.RDS_PASSWORD,
-  database: process.env.RDS_DATABASE,
+  host: Config.database.host,
+  port: Config.database.port,
+  username: Config.database.user,
+  password: Config.database.pass,
+  database: Config.database.name,
   entities: models,
   synchronize: true, // DO NOT USE IN PRODUCTION, make migrations
 });
