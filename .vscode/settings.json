@@ -10,5 +10,9 @@
     "files.trimTrailingWhitespace": true,
     "prettier.singleQuote": true,
     "prettier.trailingComma": "all",
+    "eslint.workingDirectories": [
+        "./client",
+        "./server"
+    ],
     "editor.tabSize": 2
 }
