@@ -1,10 +1,16 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { ApplicationStatus, UserAccessType } from '../types/Enums';
 
 @Entity()
 export class UserModel {
   @PrimaryColumn()
-  uid: string;
+  id: string;
 
   @Column()
   email: string;
@@ -28,6 +34,12 @@ export class UserModel {
     default: ApplicationStatus.NOT_SUBMITTED,
   })
   applicationStatus: ApplicationStatus;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   public isRestricted(): boolean {
     return this.accessType === UserAccessType.RESTRICTED;
