@@ -1,6 +1,7 @@
 @use '../styles/vars.scss' as vars;
 
 .main {
+  flex: auto;
   display: flex;
   flex-direction: column;
   gap: 10rem;

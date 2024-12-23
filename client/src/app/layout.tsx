@@ -4,7 +4,7 @@ import '@/styles/globals.scss';
 import type { Metadata } from 'next';
 import { DM_Sans } from 'next/font/google';
 
-const dmSans = DM_Sans({ subsets: ['latin'] });
+const dmSans = DM_Sans({ subsets: ['latin'], weight: ['200', '400', '700'] });
 
 export const metadata: Metadata = {
   title: 'DiamondHacks 2025',

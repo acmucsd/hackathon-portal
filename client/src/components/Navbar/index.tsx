@@ -15,55 +15,18 @@ interface LinkMetadata {
 }
 
 const links: LinkMetadata[] = [
-  { name: 'Home', href: '/' },
-  { name: 'About', href: '/#about' },
-  { name: 'Impact', href: '/#impact' },
-  { name: 'FAQ', href: '/#faq' },
-  { name: 'Sponsors', href: '/#sponsors' },
-  { name: '2024', href: 'https://2024.diamondhacks.acmucsd.com' },
+  { name: 'Dashboard', href: '/' },
+  { name: 'Application', href: '/apply' },
 ];
 
-const DEBOUNCE_MS = 150; // Prevent back-to-back updates within 150ms
 const MOBILE_BREAKPOINT = 870; // Matches $breakpoint-md from vars.scss
 
 export default function Navbar() {
-  const [prevScrollPos, setPrevScrollPos] = useState(0);
-  const [visible, setVisible] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const lastUpdate = useRef(0);
 
-  const onLinkClick = (link: LinkMetadata) => {
-    lastUpdate.current = Date.now();
+  const onLinkClick = () => {
     setMobileMenuOpen(false);
-
-    if (link.name !== 'Home') {
-      setVisible(false);
-    }
   };
-
-  useEffect(() => {
-    // Show/hide navbar on scroll
-    const handleScroll = () => {
-      const currentScrollPos = window.scrollY;
-      const now = Date.now();
-
-      const readyToUpdate = now - lastUpdate.current > DEBOUNCE_MS;
-
-      // Show navbar when scrolling up or at top of page
-      const scrollingUp = currentScrollPos < prevScrollPos;
-      const topOfPage = currentScrollPos < 10;
-      const shouldBeVisible = scrollingUp || topOfPage;
-
-      if (readyToUpdate) {
-        setVisible(shouldBeVisible);
-        setPrevScrollPos(currentScrollPos);
-        lastUpdate.current = now;
-      }
-    };
-
-    window.addEventListener('wheel', handleScroll);
-    return () => window.removeEventListener('wheel', handleScroll);
-  }, [prevScrollPos]);
 
   useEffect(() => {
     // Close mobile menu when screen gets larger than mobile breakpoint
@@ -79,7 +42,7 @@ export default function Navbar() {
 
   return (
     <>
-      <div className={`${styles.container} ${visible ? styles.visible : styles.hidden}`}>
+      <div className={`${styles.container} `}>
         <div className={styles.logo}>
           <Image src="/assets/acm-logo.png" alt="ACM Logo" width={48} height={48} />
           <Typography variant="body/large" className={styles.logoText}>
@@ -90,16 +53,12 @@ export default function Navbar() {
         </div>
         <Typography variant="body/large" className={styles.desktopLinks}>
           {links.map(link => (
-            <Link
-              href={link.href}
-              className={styles.link}
-              onClick={() => onLinkClick(link)}
-              key={link.name}
-            >
+            <Link href={link.href} className={styles.link} onClick={onLinkClick} key={link.name}>
               {link.name}
             </Link>
           ))}
         </Typography>
+        <div className={styles.flex} />
         <div className={styles.mobileIcons}>
           <div className={`${styles.menuIcon} ${mobileMenuOpen ? '' : styles.hidden}`}>
             <CloseIcon onClick={() => setMobileMenuOpen(false)} />
@@ -117,12 +76,7 @@ export default function Navbar() {
       >
         <div className={styles.mobileMenu}>
           {links.map(link => (
-            <Link
-              href={link.href}
-              className={styles.link}
-              onClick={() => onLinkClick(link)}
-              key={link.name}
-            >
+            <Link href={link.href} className={styles.link} onClick={onLinkClick} key={link.name}>
               {link.name}
             </Link>
           ))}
