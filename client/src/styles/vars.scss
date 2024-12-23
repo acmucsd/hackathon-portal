@@ -10,6 +10,13 @@ $yellow: #ecdf98;
 $white: #ffffff;
 $neutral: #a1acbd;
 
+$card-bg: #37393e;
+$card-stroke: #525252;
+
+$btn-text: #000000;
+$btn-primary: #a5e0fb;
+$btn-secondary: #ffffff;
+
 // Media Query Standard Breakpoints
 $breakpoint-sm: 425px; //
 $breakpoint-md: 870px; // Use this breakpoint for most mobile-first CSS designs
@@ -17,3 +24,6 @@ $breakpoint-lg: 1024px;
 
 $side-padding: 4rem;
 $side-padding-mobile: 1rem;
+
+$card-padding: 3rem;
+$card-padding-mobile: 1rem;

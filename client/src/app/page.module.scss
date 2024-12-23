@@ -5,4 +5,15 @@
   display: flex;
   flex-direction: column;
   gap: 10rem;
+  padding: 6rem var(--side-padding);
+}
+
+.buttonRow {
+  display: flex;
+  justify-content: end;
+  gap: 1rem;
+
+  @media screen and (max-width: vars.$breakpoint-md) {
+    flex-direction: column;
+  }
 }

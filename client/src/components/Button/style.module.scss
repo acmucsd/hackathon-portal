@@ -1,0 +1,34 @@
+@use '@/styles/vars.scss' as vars;
+
+.button {
+  display: flex;
+  border-radius: 2rem;
+  padding: 0.25rem 2rem;
+  min-width: 8.75rem;
+  min-height: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  color: vars.$btn-text;
+  // Corresponds to diamond-theme/label/large
+  font-weight: 500;
+  font-size: 1.25rem;
+
+  @media screen and (max-width: vars.$breakpoint-md) {
+    // Corresponds to diamond-theme/label/small
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+  }
+
+  &[data-variant='primary'] {
+    background-color: vars.$btn-primary;
+  }
+
+  &[data-variant='secondary'] {
+    background-color: vars.$btn-secondary;
+  }
+
+  &[data-variant='tertiary'] {
+    border: 1px solid vars.$btn-primary;
+    color: vars.$btn-primary;
+  }
+}
