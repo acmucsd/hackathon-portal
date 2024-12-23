@@ -1,0 +1,30 @@
+@use './vars.scss' as vars;
+
+html,
+body {
+  color: vars.$white;
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  overscroll-behavior: none;
+}
+
+html {
+  scroll-behavior: smooth !important;
+}
+
+html {
+  background: linear-gradient(180deg, #151625 0%, #4e4f64 100%);
+}
+
+body {
+  padding: 0 vars.$side-padding;
+
+  @media screen and (max-width: vars.$breakpoint-md) {
+    padding: 0 vars.$side-padding-mobile;
+  }
+}
+
+section {
+  padding-top: 4rem;
+}

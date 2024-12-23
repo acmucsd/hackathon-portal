@@ -1,0 +1,102 @@
+@use '../../styles/vars.scss' as vars;
+
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 2rem vars.$side-padding;
+  background-color: vars.$black;
+  transition: transform 0.15s ease-in-out;
+  z-index: 2000;
+
+  @media screen and (max-width: vars.$breakpoint-md) {
+    padding: 1rem vars.$side-padding-mobile;
+  }
+}
+
+.visible {
+  transform: translateY(0);
+}
+
+.hidden {
+  transform: translateY(-100%);
+}
+
+.logo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+
+  @media screen and (max-width: vars.$breakpoint-md) {
+    color: vars.$white;
+    align-self: flex-start;
+  }
+}
+
+.logoText {
+  font-weight: 200 !important;
+  line-height: 1.375rem !important;
+}
+
+.desktopLinks {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+
+  @media screen and (max-width: vars.$breakpoint-md) {
+    display: none;
+  }
+}
+
+.link {
+  text-decoration: none;
+  color: vars.$white;
+
+  @media screen and (max-width: vars.$breakpoint-md) {
+    background-color: vars.$black;
+    text-align: center;
+  }
+}
+
+.mobileIcons {
+  display: none;
+  position: relative;
+  width: 24px;
+  height: 24px;
+  overflow: hidden;
+
+  .menuIcon {
+    position: absolute;
+    right: 0;
+    top: 0;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+    cursor: pointer;
+
+    &.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+
+  @media screen and (max-width: vars.$breakpoint-md) {
+    display: block;
+  }
+}
+
+.mobileMenu {
+  padding: 1.5rem vars.$side-padding-mobile;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  background-color: vars.$black;
+  padding-top: 6rem;
+}

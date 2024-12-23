@@ -1,0 +1,84 @@
+@use '@/styles/vars' as vars;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+  padding: 8rem vars.$side-padding;
+  position: relative;
+  margin: 0 calc(vars.$side-padding * -1);
+
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+
+  @media screen and (max-width: vars.$breakpoint-md) {
+    padding: 4rem vars.$side-padding-mobile;
+    margin: 0 calc(vars.$side-padding-mobile * -1);
+  }
+}
+
+.backgroundLeft {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: -1;
+  max-width: min(100% - 2 * vars.$side-padding, 580px);
+  height: auto;
+  object-fit: contain;
+
+  @media screen and (max-width: vars.$breakpoint-md) {
+    max-width: min(100% - 2 * vars.$side-padding-mobile, 580px);
+  }
+}
+
+.backgroundRight {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  max-width: min(100% - 2 * vars.$side-padding, 850px);
+  height: auto;
+  object-fit: contain;
+
+  @media screen and (max-width: vars.$breakpoint-md) {
+    max-width: min(100% - 2 * vars.$side-padding-mobile, 850px);
+  }
+}
+
+.links {
+  display: flex;
+  gap: 6.5rem;
+  align-items: center;
+  margin-bottom: 2rem;
+
+  a {
+    text-decoration: none;
+    color: vars.$white;
+
+    img {
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.7));
+    }
+  }
+
+  @media screen and (max-width: vars.$breakpoint-md) {
+    gap: 2rem;
+    a {
+      img {
+        display: none;
+      }
+    }
+  }
+}
+
+.socials {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+
+  a {
+    svg {
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.7));
+    }
+  }
+}
