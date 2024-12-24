@@ -1,5 +1,5 @@
 import Container from 'typedi';
-import { DataSource, EntityRepository, In, SelectQueryBuilder } from 'typeorm';
+import { DataSource } from 'typeorm';
 import { UserModel } from '../models/UserModel';
 import { Uuid } from '../types/Internal';
 import { ResponseModel } from '../models/ResponseModel';
@@ -16,6 +16,6 @@ export const ResponseRepository = Container.get(DataSource)
     },
 
     async findResponsesForUser(user: UserModel): Promise<ResponseModel[]> {
-      return this.findBy({ user })
-    }
+      return this.findBy({ user });
+    },
   });

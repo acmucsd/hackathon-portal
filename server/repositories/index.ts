@@ -9,7 +9,7 @@ export class Repositories {
   }
 
   public static response(entityManager: EntityManager) {
-    return entityManager.withRepository(ResponseRepository)
+    return entityManager.withRepository(ResponseRepository);
   }
 }
 

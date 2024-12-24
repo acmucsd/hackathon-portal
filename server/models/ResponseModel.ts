@@ -1,7 +1,17 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { UserModel } from "./UserModel";
-import { FormType } from "../types/Enums";
-import { Uuid } from "../types/Internal";
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { UserModel } from './UserModel';
+import { FormType } from '../types/Enums';
+import { Uuid } from '../types/Internal';
 
 @Entity('Response')
 export class ResponseModel extends BaseEntity {
@@ -25,6 +35,6 @@ export class ResponseModel extends BaseEntity {
   })
   formType: FormType;
 
-  @Column({type: 'json'})
+  @Column({ type: 'json' })
   data: object;
 }

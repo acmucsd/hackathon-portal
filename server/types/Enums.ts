@@ -15,5 +15,5 @@ export enum ApplicationStatus {
 }
 
 export enum FormType {
-  APPLICATION = 'APPLICATION'
+  APPLICATION = 'APPLICATION',
 }
