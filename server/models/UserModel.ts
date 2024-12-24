@@ -1,10 +1,12 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { ApplicationStatus, UserAccessType } from '../types/Enums';
+import { ResponseModel } from './ResponseModel';
+import { Uid } from '../types/Internal';
 
-@Entity()
+@Entity('User')
 export class UserModel {
   @PrimaryColumn()
-  uid: string;
+  uid: Uid;
 
   @Column()
   email: string;
@@ -28,6 +30,9 @@ export class UserModel {
     default: ApplicationStatus.NOT_SUBMITTED,
   })
   applicationStatus: ApplicationStatus;
+
+  @OneToMany((type) => ResponseModel, (response) => response.user, { cascade: true })
+  response: ResponseModel;
 
   public isRestricted(): boolean {
     return this.accessType === UserAccessType.RESTRICTED;
