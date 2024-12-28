@@ -80,9 +80,13 @@
 
     .bannerImage {
       position: absolute;
-      top: 0;
-      right: 0;
+      inset: 0;
       z-index: -1;
+      // next/image ruins the image quality for some reason
+      background-image: url('/assets/banner.png');
+      background-size: contain;
+      background-position: right;
+      background-repeat: no-repeat;
       animation: fade-in 3.5s 1.5s backwards;
     }
 

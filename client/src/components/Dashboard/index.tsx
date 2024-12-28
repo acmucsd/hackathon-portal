@@ -29,20 +29,13 @@ const Dashboard = ({ name, faq, status, timeline }: DashboardProps) => {
   return (
     <div className={styles.container}>
       <Card gap={1.5} className={`${styles.card} ${styles.banner}`}>
+        <div className={styles.bannerImage} />
         <Typography variant="headline/heavy/large" component="h1" className={styles.title}>
           Welcome, {name}!
         </Typography>
         <Typography variant="body/medium" component="p" className={styles.subtitle}>
           Access the application and view DiamondHacks updates here.
         </Typography>
-        <Image
-          src={Banner.src}
-          alt="Two diamond critters find a large jewel in a vault"
-          width={1128}
-          height={350}
-          quality={100}
-          className={styles.bannerImage}
-        />
       </Card>
       <Card gap={1.5} className={`${styles.card} ${styles.status}`}>
         <Typography variant="headline/heavy/small" component="h2">
