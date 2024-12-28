@@ -6,6 +6,7 @@ import { applicationDefault, initializeApp } from 'firebase-admin/app';
 // must import data source before using repositories
 import { dataSource } from './DataSource';
 import { controllers } from './api/controllers';
+import { middlewares } from './api/middleware';
 import { Config } from './config';
 
 useContainer(Container);
@@ -26,6 +27,7 @@ dataSource
 const app = createExpressServer({
   routePrefix: '/api/v1',
   controllers,
+  middlewares,
   defaults: {
     paramOptions: {
       required: true,

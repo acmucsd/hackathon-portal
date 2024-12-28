@@ -40,6 +40,4 @@ export class CreateUserRequest implements ICreateUserRequest {
   user: CreateUser;
 }
 
-export class LoginRequest {}
-
 export class UpdateUserRequest {}

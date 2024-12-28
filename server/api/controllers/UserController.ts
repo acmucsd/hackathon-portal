@@ -12,7 +12,6 @@ import { Service } from 'typedi';
 import { IdParam } from '../validators/GenericRequests';
 import {
   CreateUserRequest,
-  LoginRequest,
   UpdateUserRequest,
 } from '../validators/UserControllerRequests';
 
@@ -29,11 +28,6 @@ export class UserController {
   async createUser(@Body() createUserRequest: CreateUserRequest) {
     const user = await this.userService.createUser(createUserRequest.user);
     return { error: null, user: user.getPrivateProfile() };
-  }
-
-  @Post('/login')
-  async login(@Body() loginRequest: LoginRequest) {
-    return;
   }
 
   @Get('/:id')
