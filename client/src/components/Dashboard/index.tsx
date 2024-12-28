@@ -29,11 +29,11 @@ interface DashboardProps {
 const Dashboard = ({ name, faq, status, timeline }: DashboardProps) => {
   return (
     <div className={styles.container}>
-      <Card gap={1.5} className={styles.banner}>
-        <Typography variant="headline/heavy/large" component="h1">
+      <Card gap={1.5} className={`${styles.card} ${styles.banner}`}>
+        <Typography variant="headline/heavy/large" component="h1" className={styles.title}>
           Welcome, {name}!
         </Typography>
-        <Typography variant="body/medium" component="p">
+        <Typography variant="body/medium" component="p" className={styles.subtitle}>
           Access the application and view DiamondHacks updates here.
         </Typography>
         <Image
@@ -44,13 +44,13 @@ const Dashboard = ({ name, faq, status, timeline }: DashboardProps) => {
           className={styles.bannerImage}
         />
       </Card>
-      <Card gap={1.5} className={styles.status}>
+      <Card gap={1.5} className={`${styles.card} ${styles.status}`}>
         <Typography variant="headline/heavy/small" component="h2">
           Application Status
         </Typography>
         <DashboardStatus status={status} timeline={timeline} />
       </Card>
-      <Card gap={1.5} className={styles.timeline}>
+      <Card gap={1.5} className={`${styles.card} ${styles.timeline}`}>
         <Typography variant="headline/heavy/small" component="h2">
           Timeline
         </Typography>
@@ -63,7 +63,7 @@ const Dashboard = ({ name, faq, status, timeline }: DashboardProps) => {
           <TimelineItem date={timeline.hackathon}>Hackathon Day!</TimelineItem>
         </div>
       </Card>
-      <Card gap={1.5} className={styles.faq}>
+      <Card gap={1.5} className={`${styles.card} ${styles.faq}`}>
         <Typography variant="headline/heavy/small" component="h2">
           Frequently Asked Questions
         </Typography>

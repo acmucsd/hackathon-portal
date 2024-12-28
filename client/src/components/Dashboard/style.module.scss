@@ -16,6 +16,27 @@
     gap: vars.$side-padding-mobile;
   }
 
+  .card {
+    animation: card-in 0.5s backwards;
+
+    @for $i from 1 through 4 {
+      &:nth-child(#{$i}) {
+        animation-delay: calc($i * 100ms);
+      }
+    }
+
+    @keyframes card-in {
+      from {
+        transform: translateY(1rem);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+  }
+
   .banner {
     grid-area: banner;
     position: relative;
@@ -24,13 +45,54 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: start;
     overflow: hidden;
+
+    .title {
+      background-image: linear-gradient(
+        to left,
+        transparent,
+        transparent,
+        vars.$orange,
+        vars.$light-blue,
+        vars.$white,
+        vars.$white
+      );
+      color: transparent;
+      -webkit-background-clip: text;
+      background-clip: text;
+      background-size: 500%;
+      animation: gradient-in 2.5s 0.5s both;
+
+      @keyframes gradient-in {
+        from {
+          background-position: right;
+        }
+        to {
+          background-position: left;
+        }
+      }
+    }
+
+    .subtitle {
+      animation: fade-in 1s 1.5s backwards;
+    }
 
     .bannerImage {
       position: absolute;
       top: 0;
       right: 0;
       z-index: -1;
+      animation: fade-in 3.5s 1.5s backwards;
+    }
+
+    @keyframes fade-in {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
     }
   }
 
