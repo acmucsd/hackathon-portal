@@ -7,7 +7,11 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import styles from './style.module.scss';
 import Typography from '../Typography';
-import { Question } from './questions';
+
+export interface Question {
+  question: string;
+  answer: React.ReactNode;
+}
 
 interface FAQAccordionProps {
   data: Question[];

@@ -1,21 +1,14 @@
-import Typography from '@/components/Typography';
 import Link from 'next/link';
-
-export interface Question {
-  question: string;
-  answer: React.ReactNode;
-}
+import { Question } from './components/FAQAccordion';
+import { Deadlines } from './components/Dashboard';
 
 export const QUESTIONS: Question[] = [
   {
     question: 'How can I register for DiamondHacks?',
     answer: (
       <>
-        Fill out the interest form here (
-        <Link href="https://acmurl.com/diamondhacks-interest-form">
-          https://acmurl.com/diamondhacks-interest-form
-        </Link>
-        ) to be notified when applications go live!
+        Fill out the <Link href="https://acmurl.com/diamondhacks-interest-form">interest form</Link>{' '}
+        to be notified when applications go live!
       </>
     ),
   },
@@ -53,3 +46,10 @@ export const QUESTIONS: Question[] = [
     ),
   },
 ];
+
+export const TIMELINE: Deadlines = {
+  application: new Date('2024-12-01'),
+  decisions: new Date('2024-12-25'),
+  acceptance: new Date('2025-03-04'),
+  hackathon: new Date('2025-04-05'),
+};

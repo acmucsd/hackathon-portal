@@ -8,21 +8,29 @@
     'faq faq';
   grid-template-columns: 1fr 1fr;
   gap: 3.5rem;
+  align-items: start;
 
   @media screen and (max-width: vars.$breakpoint-md) {
     display: flex;
     flex-direction: column;
+    gap: vars.$side-padding-mobile;
   }
 
   .banner {
     grid-area: banner;
     position: relative;
+    z-index: 0;
     height: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
 
     .bannerImage {
       position: absolute;
       top: 0;
       right: 0;
+      z-index: -1;
     }
   }
 
@@ -32,6 +40,14 @@
 
   .timeline {
     grid-area: timeline;
+
+    .timelineItemWrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      position: relative;
+      z-index: 0;
+    }
   }
 
   .faq {
