@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { ApplicationStatus, UserAccessType } from '../types/Enums';
+import { PublicProfile, PrivateProfile } from '../types/ApiResponses';
 
 @Entity()
 export class UserModel {
@@ -51,5 +52,24 @@ export class UserModel {
 
   public isAdmin(): boolean {
     return this.accessType === UserAccessType.ADMIN;
+  }
+
+  public getPublicProfile(): PublicProfile {
+    return {
+      id: this.id,
+      firstName: this.firstName,
+      lastName: this.lastName,
+    };
+  }
+
+  public getPrivateProfile(): PrivateProfile {
+    return {
+      ...this.getPublicProfile(),
+      email: this.email,
+      accessType: this.accessType,
+      applicationStatus: this.applicationStatus,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+    };
   }
 }

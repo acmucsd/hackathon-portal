@@ -1,6 +1,20 @@
-import { Get, JsonController } from 'routing-controllers';
+import {
+  Body,
+  Delete,
+  Get,
+  JsonController,
+  Params,
+  Patch,
+  Post,
+} from 'routing-controllers';
 import { UserService } from '../../services/UserService';
 import { Service } from 'typedi';
+import { IdParam } from '../validators/GenericRequests';
+import {
+  CreateUserRequest,
+  LoginRequest,
+  UpdateUserRequest,
+} from '../validators/UserControllerRequests';
 
 @JsonController('/user')
 @Service()
@@ -11,8 +25,32 @@ export class UserController {
     this.userService = userService;
   }
 
-  @Get('/test')
-  async test() {
-    return { error: null };
+  @Post()
+  async createUser(@Body() createUserRequest: CreateUserRequest) {
+    const user = await this.userService.createUser(createUserRequest.user);
+    return { error: null, user: user.getPrivateProfile() };
+  }
+
+  @Post('/login')
+  async login(@Body() loginRequest: LoginRequest) {
+    return;
+  }
+
+  @Get('/:id')
+  async getUser(@Params() params: IdParam) {
+    return;
+  }
+
+  @Patch('/:id')
+  async updateUser(
+    @Params() params: IdParam,
+    @Body() updateUserRequest: UpdateUserRequest,
+  ) {
+    return;
+  }
+
+  @Delete('/:id')
+  async deleteUser(@Params() params: IdParam) {
+    return;
   }
 }
