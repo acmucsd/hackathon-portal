@@ -36,10 +36,8 @@ const Dashboard = ({ name, faq, status, timeline }: DashboardProps) => {
           Access the application and view DiamondHacks updates here.
         </Typography>
         <Image
-          src={Banner.src}
+          src={Banner}
           alt="Two diamond critters find a large jewel in a vault"
-          width={1128}
-          height={350}
           quality={100}
           className={styles.bannerImage}
         />
