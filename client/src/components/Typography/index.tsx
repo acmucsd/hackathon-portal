@@ -14,7 +14,7 @@ function isStandardVariant(variant: V2Variant): variant is V2StandardVariant {
   return variant.split('/').length === 2;
 }
 
-type ComponentType = 'p' | 'span' | 'div';
+type ComponentType = 'p' | 'span' | 'div' | 'h1' | 'h2' | 'h3';
 
 interface TypographyProps extends HTMLAttributes<HTMLElement> {
   variant: V2Variant;
