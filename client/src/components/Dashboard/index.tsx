@@ -5,7 +5,6 @@ import Banner from '@/../public/assets/banner.png';
 import Typography from '../Typography';
 import Link from 'next/link';
 import FAQ, { Question } from '../FAQAccordion';
-import { ReactNode } from 'react';
 import DashboardStatus from '../DashboardStatus';
 import TimelineItem from '../TimelineItem';
 
@@ -37,10 +36,11 @@ const Dashboard = ({ name, faq, status, timeline }: DashboardProps) => {
           Access the application and view DiamondHacks updates here.
         </Typography>
         <Image
-          src={Banner}
+          src={Banner.src}
           alt="Two diamond critters find a large jewel in a vault"
-          width={(350 / Banner.height) * Banner.width}
+          width={1128}
           height={350}
+          quality={100}
           className={styles.bannerImage}
         />
       </Card>
