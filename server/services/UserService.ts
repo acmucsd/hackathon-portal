@@ -21,7 +21,7 @@ export class UserService {
     const user = await this.transactionsManager.readOnly(
       async (entityManager) => Repositories.user(entityManager).findById(id),
     );
-    if (!user) throw new Error('User not found');
+    if (!user) throw new NotFoundError('User not found');
     return user;
   }
 

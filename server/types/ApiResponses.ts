@@ -13,3 +13,19 @@ export interface PrivateProfile extends PublicProfile {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface ApiResponse {
+  error: any;
+}
+
+export interface CreateUserResponse extends ApiResponse {
+  user: PrivateProfile;
+}
+
+export interface GetUserResponse extends ApiResponse {
+  user: PublicProfile;
+}
+
+export interface GetCurrentUserResponse extends ApiResponse {
+  user: PrivateProfile;
+}

@@ -2,13 +2,17 @@ import {
   ExpressMiddlewareInterface,
   ForbiddenError,
 } from 'routing-controllers';
-import { Inject } from 'typedi';
+import { Service } from 'typedi';
 import { UserService } from '../../services/UserService';
 import { NextFunction, Request, Response } from 'express';
 
+@Service()
 export class UserAuthentication implements ExpressMiddlewareInterface {
-  @Inject()
   private userService: UserService;
+
+  constructor(userService: UserService) {
+    this.userService = userService;
+  }
 
   async use(request: Request, response: Response, next: NextFunction) {
     const authHeader = request.get('Authorization');
