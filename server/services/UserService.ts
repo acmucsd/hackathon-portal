@@ -91,8 +91,10 @@ export class UserService {
     user: UserModel,
     updateUser: UpdateUser,
   ): Promise<UserModel> {
+    const firstName = updateUser.firstName ?? user.firstName;
+    const lastName = updateUser.lastName ?? user.lastName;
     getAuth().updateUser(user.id, {
-      displayName: `${updateUser.firstName} ${updateUser.lastName}`,
+      displayName: `${firstName} ${lastName}`,
     });
     return this.transactionsManager.readWrite(async (entityManager) => {
       const userRepository = Repositories.user(entityManager);
