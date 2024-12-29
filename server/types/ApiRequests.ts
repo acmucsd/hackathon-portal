@@ -18,3 +18,12 @@ export interface CreateUser {
 export interface CreateUserRequest {
   user: CreateUser;
 }
+
+export interface UpdateUser {
+  firstName?: string;
+  lastName?: string;
+}
+
+export interface UpdateUserRequest {
+  user: UpdateUser;
+}

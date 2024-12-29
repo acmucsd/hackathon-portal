@@ -10,6 +10,8 @@ import { Type } from 'class-transformer';
 import {
   CreateUser as ICreateUser,
   CreateUserRequest as ICreateUserRequest,
+  UpdateUser as IUpdateUser,
+  UpdateUserRequest as IUpdateUserRequest,
 } from '../../types/ApiRequests';
 
 const PASSWORD_MIN_LENGTH = 8;
@@ -40,4 +42,17 @@ export class CreateUserRequest implements ICreateUserRequest {
   user: CreateUser;
 }
 
-export class UpdateUserRequest {}
+export class UpdateUser implements IUpdateUser {
+  @IsNotEmpty()
+  firstName?: string;
+
+  @IsNotEmpty()
+  lastName?: string;
+}
+
+export class UpdateUserRequest implements IUpdateUserRequest {
+  @Type(() => UpdateUser)
+  @ValidateNested()
+  @IsDefined()
+  user: UpdateUser;
+}

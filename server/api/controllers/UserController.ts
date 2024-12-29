@@ -19,8 +19,10 @@ import { AuthenticatedUser } from '../decorators/AuthenticatedUser';
 import { UserModel } from '../../models/UserModel';
 import {
   CreateUserResponse,
+  DeleteCurrentUserResponse,
   GetCurrentUserResponse,
   GetUserResponse,
+  UpdateCurrentUserReponse,
 } from '../../types/ApiResponses';
 import { UserAuthentication } from '../middleware/UserAuthentication';
 
@@ -63,17 +65,24 @@ export class UserController {
   }
 
   @UseBefore(UserAuthentication)
-  @Patch('/:id')
-  async updateUser(
-    @Params() params: IdParam,
+  @Patch()
+  async updateCurrentUser(
     @Body() updateUserRequest: UpdateUserRequest,
-  ) {
-    return;
+    @AuthenticatedUser() user: UserModel,
+  ): Promise<UpdateCurrentUserReponse> {
+    const updatedUser = await this.userService.updateUser(
+      user,
+      updateUserRequest.user,
+    );
+    return { error: null, user: updatedUser.getPrivateProfile() };
   }
 
   @UseBefore(UserAuthentication)
-  @Delete('/:id')
-  async deleteUser(@Params() params: IdParam) {
-    return;
+  @Delete()
+  async deleteCurrentUser(
+    @AuthenticatedUser() user: UserModel,
+  ): Promise<DeleteCurrentUserResponse> {
+    this.userService.deleteUser(user);
+    return { error: null };
   }
 }

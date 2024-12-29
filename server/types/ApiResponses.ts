@@ -29,3 +29,9 @@ export interface GetUserResponse extends ApiResponse {
 export interface GetCurrentUserResponse extends ApiResponse {
   user: PrivateProfile;
 }
+
+export interface UpdateCurrentUserReponse extends ApiResponse {
+  user: PrivateProfile;
+}
+
+export interface DeleteCurrentUserResponse extends ApiResponse {}

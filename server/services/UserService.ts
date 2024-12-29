@@ -4,10 +4,11 @@ import { UserModel } from '../models/UserModel';
 import { CreateUser } from '../types/ApiRequests';
 import { FirebaseAuthError, getAuth } from 'firebase-admin/auth';
 import {
-  BadRequestError,
   ForbiddenError,
   NotFoundError,
+  UnauthorizedError,
 } from 'routing-controllers';
+import { UpdateUser } from '../api/validators/UserControllerRequests';
 
 @Service()
 export class UserService {
@@ -33,7 +34,7 @@ export class UserService {
         Repositories.user(entityManager).findByEmail(email),
     );
     const emailAlreadyUsed = userWithEmail !== null;
-    if (emailAlreadyUsed) throw new BadRequestError('Email already in use');
+    if (emailAlreadyUsed) throw new ForbiddenError('Email already in use');
 
     let firebaseUser;
     try {
@@ -45,7 +46,7 @@ export class UserService {
     } catch (error) {
       if (error instanceof FirebaseAuthError) {
         if (error.code === 'auth/email-already-exists')
-          throw new BadRequestError('Email already in use');
+          throw new ForbiddenError('Email already in use');
       }
       throw error;
     }
@@ -63,6 +64,28 @@ export class UserService {
     });
   }
 
+  public async updateUser(
+    user: UserModel,
+    updateUser: UpdateUser,
+  ): Promise<UserModel> {
+    getAuth().updateUser(user.id, {
+      displayName: `${updateUser.firstName} ${updateUser.lastName}`,
+    });
+    return this.transactionsManager.readWrite(async (entityManager) => {
+      const userRepository = Repositories.user(entityManager);
+      user = userRepository.merge(user, updateUser);
+      const updatedUser = userRepository.save(user);
+      return updatedUser;
+    });
+  }
+
+  public async deleteUser(user: UserModel): Promise<void> {
+    getAuth().deleteUser(user.id);
+    this.transactionsManager.readWrite(async (entityManager) =>
+      Repositories.user(entityManager).remove(user),
+    );
+  }
+
   public async checkAuthToken(token: string): Promise<UserModel> {
     let decodedToken;
     try {
@@ -70,7 +93,9 @@ export class UserService {
     } catch (error) {
       if (error instanceof FirebaseAuthError) {
         if (error.code === 'auth/invalid-id-token')
-          throw new BadRequestError('Invalid auth token');
+          throw new UnauthorizedError('Invalid auth token');
+        if (error.code === 'auth/id-token-expired')
+          throw new UnauthorizedError('Expired auth token');
       }
       throw error;
     }
