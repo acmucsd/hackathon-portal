@@ -127,6 +127,8 @@ export class UserService {
         Repositories.user(entityManager).findById(decodedToken.uid),
     );
     if (!user) throw new NotFoundError();
+    if (!decodedToken.email_verified)
+      throw new UnauthorizedError('Please verify your email');
     if (user.isRestricted())
       throw new ForbiddenError('Your account has been restricted');
     return user;
