@@ -27,3 +27,15 @@ export interface UpdateUser {
 export interface UpdateUserRequest {
   user: UpdateUser;
 }
+
+// Firebase Requests
+
+export interface GetIdTokenRequest {
+  token: string;
+  returnSecureToken: true;
+}
+
+export interface SendEmailVerificationRequest {
+  requestType: 'VERIFY_EMAIL';
+  idToken: string;
+}

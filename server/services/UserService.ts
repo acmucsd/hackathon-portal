@@ -1,7 +1,11 @@
 import { Service } from 'typedi';
 import { Repositories, TransactionsManager } from '../repositories';
 import { UserModel } from '../models/UserModel';
-import { CreateUser } from '../types/ApiRequests';
+import {
+  CreateUser,
+  GetIdTokenRequest,
+  SendEmailVerificationRequest,
+} from '../types/ApiRequests';
 import { FirebaseAuthError, getAuth } from 'firebase-admin/auth';
 import {
   ForbiddenError,
@@ -9,6 +13,19 @@ import {
   UnauthorizedError,
 } from 'routing-controllers';
 import { UpdateUser } from '../api/validators/UserControllerRequests';
+import { Config } from '../config';
+import {
+  GetIdTokenResponse,
+  SendEmailVerificationResponse,
+} from '../types/ApiResponses';
+
+const GET_ID_TOKEN_ENDPOINT =
+  'https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=' +
+  Config.firebase.apiKey;
+
+const SEND_EMAIL_VERIFICATION_ENDPOINT =
+  'https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=' +
+  Config.firebase.apiKey;
 
 @Service()
 export class UserService {
@@ -51,17 +68,23 @@ export class UserService {
       throw error;
     }
 
-    return this.transactionsManager.readWrite(async (entityManager) => {
-      const userRepository = Repositories.user(entityManager);
-      const newUser = userRepository.create({
-        id: firebaseUser.uid,
-        email,
-        firstName: createUser.firstName,
-        lastName: createUser.lastName,
-      });
-      const user = userRepository.save(newUser);
-      return user;
-    });
+    const user = await this.transactionsManager.readWrite(
+      async (entityManager) => {
+        const userRepository = Repositories.user(entityManager);
+        const newUser = userRepository.create({
+          id: firebaseUser.uid,
+          email,
+          firstName: createUser.firstName,
+          lastName: createUser.lastName,
+        });
+        const createdUser = userRepository.save(newUser);
+        return createdUser;
+      },
+    );
+
+    this.sendEmailVerification(user.id);
+
+    return user;
   }
 
   public async updateUser(
@@ -107,5 +130,45 @@ export class UserService {
     if (user.isRestricted())
       throw new ForbiddenError('Your account has been restricted');
     return user;
+  }
+
+  private async sendEmailVerification(id: string): Promise<string> {
+    const customToken = await getAuth().createCustomToken(id);
+
+    const getIdTokenRequestBody: GetIdTokenRequest = {
+      token: customToken,
+      returnSecureToken: true,
+    };
+    const getIdTokenRequest = new Request(GET_ID_TOKEN_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(getIdTokenRequestBody),
+    });
+    const getIdTokenResponse = await fetch(getIdTokenRequest);
+    const getIdTokenResponseBody: GetIdTokenResponse =
+      await getIdTokenResponse.json();
+
+    const idToken = getIdTokenResponseBody.idToken;
+
+    const sendEmailVerificationRequestBody: SendEmailVerificationRequest = {
+      requestType: 'VERIFY_EMAIL',
+      idToken,
+    };
+    const sendEmailVerificationRequest = new Request(
+      SEND_EMAIL_VERIFICATION_ENDPOINT,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(sendEmailVerificationRequestBody),
+      },
+    );
+    const sendEmailVerificationResponse = await fetch(
+      sendEmailVerificationRequest,
+    );
+    const sendEmailVerificationResponseBody: SendEmailVerificationResponse =
+      await sendEmailVerificationResponse.json();
+
+    const email = sendEmailVerificationResponseBody.email;
+    return email;
   }
 }
