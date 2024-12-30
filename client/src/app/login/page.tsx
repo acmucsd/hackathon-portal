@@ -4,56 +4,44 @@ import Heading from '@/components/Heading';
 import Button from '@/components/Button';
 import Typography from '@/components/Typography';
 import TextField from '@/components/TextField';
-import Link from '@mui/material/Link';
+import Link from 'next/link';
 import Alert from '@/components/Alert';
 
 export default function LoginPage() {
   return (
-    <main className={styles.main}>
-      <Card gap={1}>
+    <main className={`${styles.main}` }>
+      <div className={`${styles.login}`}>
+        <Card gap={1} >
+          <Alert marginBottom={0}>
+            <p>
+            Oops, incorrect email or password.
+            </p>
+          </Alert>
 
-        <Alert marginBottom={1}>
-          <p>
-          Oops, incorrect email or password.
-          </p>
-        </Alert>
+          <Heading centered>Log In</Heading>
 
-        <Heading centered>Log In</Heading>
-        {/* <Typography variant="title/medium" component="p">
-          Email Address
-        </Typography> */}
+          <TextField id="outlined-basic" variant="outlined" label={"Email Address"} defaultText={"Enter Email Address"}/>
 
-        <TextField id="outlined-basic" variant="outlined" label={"Email Address"} defaultText={"Enter Email Address"}/>
+          <TextField
+            id="outlined-basic"
+            variant="outlined"
+            label='Password'
+            defaultText={"Enter Password"}
+          />
 
-        {/* <Typography variant="title/medium" component="p">
-          Password
-        </Typography> */}
+          <Link href="/forgot-password">
+            Forgot your password?
+          </Link>
 
-        <TextField
-          id="outlined-basic"
-          variant="outlined"
-          label='Password'
-          defaultText={"Enter Password"}
-        />
+          <Button variant="primary">Apply Now</Button>
 
-        <Link href="/forgot-password">
-          Forgot your password?
-        </Link>
+          <Typography variant="label/medium" component="p">
+            Don't have an account? {' '}<Link href="/register" className="link"> Sign up!</Link>{' '}
+          </Typography>
 
-        <Button variant="primary">Apply Now</Button>
+          </Card>
+      </div>
 
-        <Typography variant="label/medium" component="p">
-          Don't have an account? <Link href="/register"> Sign up!</Link>
-        </Typography>
-
-        {/* <div className={styles.buttonRow}>
-          <Button variant="tertiary">Discard Changes</Button>
-          <Button variant="secondary" href="/">
-            Save Changes
-          </Button>
-          <Button variant="primary">Next</Button>
-        </div> */}
-      </Card>
     </main>
   );
 }

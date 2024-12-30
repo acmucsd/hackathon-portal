@@ -8,6 +8,19 @@
   padding: 6rem var(--side-padding);
 }
 
+.login {
+  width: 646px;
+  padding: 32px;
+  align-self: center;
+  align-items: stretch;
+
+  @media screen and (max-width: vars.$breakpoint-md) {
+    min-width: 343px; // Not working for some reason, never uses this. Reviewer please advise.
+    flex-shrink: 1;
+    width: 100%;
+  }
+}
+
 .buttonRow {
   display: flex;
   justify-content: end;
