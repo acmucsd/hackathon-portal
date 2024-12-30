@@ -3,8 +3,8 @@ import styles from '../page.module.scss';
 import Heading from '@/components/Heading';
 import Button from '@/components/Button';
 import Typography from '@/components/Typography';
-// import TextField from '@mui/material/TextField';
-// import Link from '@mui/material/Link';
+import TextField from '@/components/TextField';
+import Link from '@mui/material/Link';
 import Alert from '@/components/Alert';
 
 export default function LoginPage() {
@@ -14,25 +14,26 @@ export default function LoginPage() {
 
         <Alert marginBottom={1}>
           <p>
-          Oops, incorrect email or password. a;lkjfs;lkfja;ldkfjal a;lkjfs;lkfja;ldkfjal a;lkjfs;lkfja;ldkfjal a;lkjfs;lkfja;ldkfjal a;lkjfs;lkfja;ldkfjal
+          Oops, incorrect email or password.
           </p>
         </Alert>
 
-        {/* <Heading centered>Log In</Heading>
-        <Typography variant="title/medium" component="p">
+        <Heading centered>Log In</Heading>
+        {/* <Typography variant="title/medium" component="p">
           Email Address
-        </Typography>
+        </Typography> */}
 
-        <TextField id="outlined-basic" variant="outlined" label={"Enter Email Address"} />
+        <TextField id="outlined-basic" variant="outlined" label={"Email Address"} defaultText={"Enter Email Address"}/>
 
-        <Typography variant="title/medium" component="p">
+        {/* <Typography variant="title/medium" component="p">
           Password
-        </Typography>
+        </Typography> */}
 
         <TextField
           id="outlined-basic"
           variant="outlined"
-          label={"Enter Password"}
+          label='Password'
+          defaultText={"Enter Password"}
         />
 
         <Link href="/forgot-password">
@@ -43,7 +44,7 @@ export default function LoginPage() {
 
         <Typography variant="label/medium" component="p">
           Don't have an account? <Link href="/register"> Sign up!</Link>
-        </Typography> */}
+        </Typography>
 
         {/* <div className={styles.buttonRow}>
           <Button variant="tertiary">Discard Changes</Button>
