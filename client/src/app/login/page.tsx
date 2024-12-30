@@ -9,39 +9,42 @@ import Alert from '@/components/Alert';
 
 export default function LoginPage() {
   return (
-    <main className={`${styles.main}` }>
+    <main className={`${styles.main}`}>
       <div className={`${styles.login}`}>
-        <Card gap={1} >
+        <Card gap={1}>
           <Alert marginBottom={0}>
-            <p>
-            Oops, incorrect email or password.
-            </p>
+            <p>Oops, incorrect email or password.</p>
           </Alert>
 
           <Heading centered>Log In</Heading>
 
-          <TextField id="outlined-basic" variant="outlined" label={"Email Address"} defaultText={"Enter Email Address"}/>
+          <TextField
+            id="outlined-basic"
+            variant="outlined"
+            label={'Email Address'}
+            defaultText={'Enter Email Address'}
+          />
 
           <TextField
             id="outlined-basic"
             variant="outlined"
-            label='Password'
-            defaultText={"Enter Password"}
+            label="Password"
+            defaultText={'Enter Password'}
           />
 
-          <Link href="/forgot-password">
-            Forgot your password?
-          </Link>
+          <Link href="/forgot-password">Forgot your password?</Link>
 
           <Button variant="primary">Apply Now</Button>
 
           <Typography variant="label/medium" component="p">
-            Don't have an account? {' '}<Link href="/register" className="link"> Sign up!</Link>{' '}
+            Don&apos;t have an account?{' '}
+            <Link href="/register" className="link">
+              {' '}
+              Sign up!
+            </Link>{' '}
           </Typography>
-
-          </Card>
+        </Card>
       </div>
-
     </main>
   );
 }

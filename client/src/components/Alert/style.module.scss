@@ -1,7 +1,6 @@
 @use '@/styles/vars.scss' as vars;
 
-
-.error{
+.error {
   flex: none;
 }
 .alert {
@@ -15,7 +14,7 @@
   font-weight: 500;
   letter-spacing: 0.5px;
 
-  color:red;
+  color: red;
 
   flex-flow: row nowrap;
 }

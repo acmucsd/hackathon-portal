@@ -1,7 +1,5 @@
 @use '@/styles/vars.scss' as vars;
 
-
-
 .textField {
   display: flex;
   flex-direction: column;
@@ -11,10 +9,10 @@
   font-weight: 500;
   letter-spacing: 0.5px;
 
-  input{
+  input {
     border-radius: 8px;
     border: 2px solid var(--Dark-Mode-Stroke, #525252);
-    background: var(--Dark-Mode-Pop-up, #37393E);
+    background: var(--Dark-Mode-Pop-up, #37393e);
     color: vars.$neutral;
 
     padding: 12px;
@@ -22,10 +20,10 @@
     gap: 10px;
     align-self: stretch;
 
-    color: var(--dmd-sys-base-colors-neutral, #A1ACBD);
+    color: var(--dmd-sys-base-colors-neutral, #a1acbd);
 
     /* diamond-theme/body/large */
-    font-family: "DM Sans";
+    font-family: 'DM Sans';
     font-size: 18px;
     font-style: normal;
     font-weight: 400;
