@@ -3,20 +3,22 @@ import styles from '../page.module.scss';
 import Heading from '@/components/Heading';
 import Button from '@/components/Button';
 import Typography from '@/components/Typography';
-import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
-import Alert from '@mui/material/Alert';
+// import TextField from '@mui/material/TextField';
+// import Link from '@mui/material/Link';
+import Alert from '@/components/Alert';
 
 export default function LoginPage() {
   return (
     <main className={styles.main}>
       <Card gap={1}>
 
-        <Alert severity="error" variant='outlined'>
-          Oops! Incorrect email or password.
+        <Alert marginBottom={1}>
+          <p>
+          Oops, incorrect email or password. a;lkjfs;lkfja;ldkfjal a;lkjfs;lkfja;ldkfjal a;lkjfs;lkfja;ldkfjal a;lkjfs;lkfja;ldkfjal a;lkjfs;lkfja;ldkfjal
+          </p>
         </Alert>
 
-        <Heading centered>Log In</Heading>
+        {/* <Heading centered>Log In</Heading>
         <Typography variant="title/medium" component="p">
           Email Address
         </Typography>
@@ -41,7 +43,7 @@ export default function LoginPage() {
 
         <Typography variant="label/medium" component="p">
           Don't have an account? <Link href="/register"> Sign up!</Link>
-        </Typography>
+        </Typography> */}
 
         {/* <div className={styles.buttonRow}>
           <Button variant="tertiary">Discard Changes</Button>
