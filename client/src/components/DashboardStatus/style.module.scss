@@ -1,0 +1,24 @@
+.badge {
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  align-self: start;
+  text-transform: capitalize;
+
+  &.not-started,
+  &.incomplete {
+    background-color: #fad5dc;
+    color: #8d0d25;
+  }
+  &.submitted {
+    background-color: #d6e5f8;
+    color: #142e52;
+  }
+  &.accepted {
+    background-color: #d7ede7;
+    color: #00573f;
+  }
+  &.accepted {
+    background-color: #ece6f9;
+    color: #35118d;
+  }
+}

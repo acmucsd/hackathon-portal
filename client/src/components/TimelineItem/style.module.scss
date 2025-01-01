@@ -1,0 +1,36 @@
+@use '@/styles/vars.scss' as vars;
+
+.item {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+
+  .circle {
+    border-radius: 50%;
+    width: 2.25rem;
+    height: 2.25rem;
+    background-color: currentColor;
+    color: #dfe2eb;
+    flex: none;
+
+    &.complete {
+      color: vars.$btn-primary;
+    }
+
+    &.hasLine {
+      position: relative;
+
+      &::before {
+        content: '';
+        position: absolute;
+        background-color: currentColor;
+        width: 4px;
+        left: 50%;
+        bottom: 50%;
+        height: 3.5rem;
+        margin-left: -2px;
+        z-index: -1;
+      }
+    }
+  }
+}
