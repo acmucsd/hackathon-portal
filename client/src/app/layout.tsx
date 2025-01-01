@@ -3,6 +3,7 @@ import Navbar from '@/components/Navbar';
 import '@/styles/globals.scss';
 import type { Metadata } from 'next';
 import { DM_Sans } from 'next/font/google';
+import styles from './layout.module.scss';
 
 const dmSans = DM_Sans({ subsets: ['latin'], weight: ['200', '400', '500', '600', '700'] });
 
@@ -16,7 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={dmSans.className}>
         <Navbar />
-        {children}
+        <main className={styles.main}>{children}</main>
         <Footer />
       </body>
     </html>

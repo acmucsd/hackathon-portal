@@ -1,5 +1,5 @@
 import styles from './style.module.scss';
-import Link, { LinkProps } from 'next/link';
+import Link from 'next/link';
 import { PropsWithChildren } from 'react';
 
 interface ButtonProps {

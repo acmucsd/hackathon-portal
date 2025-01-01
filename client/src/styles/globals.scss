@@ -49,6 +49,14 @@ button {
 button:not(:disabled) {
   cursor: pointer;
 }
+fieldset {
+  border: none;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid vars.$card-stroke;
+}
 
 .link {
   color: vars.$btn-primary;
