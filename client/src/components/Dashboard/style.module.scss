@@ -64,6 +64,13 @@
       background-size: 500%;
       animation: gradient-in 2.5s 0.5s both;
 
+      // Wrap each shadow in drop-shadow()
+      $drop-shadows: ();
+      @each $shadow in vars.$text-shadow {
+        $drop-shadows: append($drop-shadows, drop-shadow(#{$shadow}));
+      }
+      filter: #{$drop-shadows};
+
       @keyframes gradient-in {
         from {
           background-position: right;
@@ -75,6 +82,7 @@
     }
 
     .subtitle {
+      text-shadow: vars.$text-shadow;
       animation: fade-in 1s 1.5s backwards;
     }
 
