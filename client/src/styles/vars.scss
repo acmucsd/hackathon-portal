@@ -24,8 +24,12 @@ $breakpoint-sm: 425px; //
 $breakpoint-md: 870px; // Use this breakpoint for most mobile-first CSS designs
 $breakpoint-lg: 1024px;
 
+$text-shadow:
+  0 1px 4px rgba(0, 0, 0, 0.5),
+  0 3px 15px rgba(0, 0, 0, 0.7);
+
 $side-padding: 4rem;
 $side-padding-mobile: 1rem;
 
-$card-padding: 3rem;
+$card-padding: 2rem;
 $card-padding-mobile: 1rem;

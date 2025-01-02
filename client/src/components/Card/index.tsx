@@ -3,11 +3,12 @@ import { PropsWithChildren } from 'react';
 
 interface CardProps {
   gap: 0 | 1 | 1.5 | 2;
+  className?: string;
 }
 
-const Card = ({ gap, children }: PropsWithChildren<CardProps>) => {
+const Card = ({ gap, className = '', children }: PropsWithChildren<CardProps>) => {
   return (
-    <div className={styles.container} style={{ gap: `${gap}rem` }}>
+    <div className={`${styles.container} ${className}`} style={{ gap: `${gap}rem` }}>
       {children}
     </div>
   );

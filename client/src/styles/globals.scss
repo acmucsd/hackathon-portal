@@ -53,3 +53,10 @@ button:not(:disabled) {
 input, select {
   font: inherit;
 }
+.link {
+  color: vars.$btn-primary;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

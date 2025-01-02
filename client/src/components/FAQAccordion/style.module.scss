@@ -1,0 +1,68 @@
+@use '../../styles/vars.scss' as vars;
+
+.accordion {
+  box-shadow: none;
+  margin: 0 !important;
+  padding: 0.5rem 0;
+  border-bottom: none;
+
+  &:first-of-type {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+
+  &:last-of-type {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom: 1px solid vars.$neutral;
+  }
+}
+
+.accordionRoot {
+  background-color: transparent !important;
+  border-top: 1px solid vars.$neutral;
+
+  &:before {
+    display: none;
+  }
+}
+
+.accordionSummary {
+  padding: 0 1rem;
+  flex-direction: row-reverse;
+
+  :global(.MuiAccordionSummary-content) {
+    margin: 0;
+  }
+
+  :global(.MuiAccordionSummary-expandIconWrapper) {
+    margin-right: 1rem;
+    transform: rotate(-90deg);
+
+    &.Mui-expanded {
+      transform: rotate(0deg);
+    }
+  }
+}
+
+.accordionDetails {
+  padding: 1rem 1rem 1rem 2rem;
+  color: vars.$white;
+}
+
+.expandIcon {
+  color: vars.$white;
+  min-width: 24px;
+}
+
+.accordionQuestion {
+  color: vars.$white;
+}
+
+.accordionAnswer {
+  color: vars.$white;
+
+  a {
+    color: vars.$blue;
+  }
+}
