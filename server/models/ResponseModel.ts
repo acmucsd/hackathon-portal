@@ -30,8 +30,7 @@ export class ResponseModel extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @Column({
-    type: 'enum',
+  @Column('enum', {
     enum: FormType,
   })
   formType: FormType;

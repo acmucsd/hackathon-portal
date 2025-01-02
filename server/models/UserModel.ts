@@ -24,15 +24,13 @@ export class UserModel {
   @Column()
   lastName: string;
 
-  @Column({
-    type: 'enum',
+  @Column('enum', {
     enum: UserAccessType,
     default: UserAccessType.STANDARD,
   })
   accessType: UserAccessType;
 
-  @Column({
-    type: 'enum',
+  @Column('enum', {
     enum: ApplicationStatus,
     default: ApplicationStatus.NOT_SUBMITTED,
   })
