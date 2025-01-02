@@ -5,10 +5,11 @@ import {
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { ResponseModel } from './ResponseModel';
 import { ApplicationStatus, UserAccessType } from '../types/Enums';
 import { PublicProfile, PrivateProfile } from '../types/ApiResponses';
 
-@Entity()
+@Entity('User')
 export class UserModel {
   @PrimaryColumn()
   id: string;
@@ -41,6 +42,11 @@ export class UserModel {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToMany((type) => ResponseModel, (response) => response.user, {
+    cascade: true,
+  })
+  response: ResponseModel;
 
   public isRestricted(): boolean {
     return this.accessType === UserAccessType.RESTRICTED;

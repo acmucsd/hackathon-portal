@@ -1,5 +1,6 @@
-## Hackathon Portal
+# Hackathon Portal
 
-# Repo Structure
-- `server`: backend
-- `client`: frontend
+## Repo Structure
+
+- [`server`](./server/): backend
+- [`client`](./client/): frontend

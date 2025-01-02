@@ -1,0 +1,15 @@
+@use '@/styles/vars.scss' as vars;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: vars.$card-padding;
+  background-color: vars.$card-bg;
+  border: 1px solid vars.$card-stroke;
+  border-radius: 0.5rem;
+
+  @media screen and (max-width: vars.$breakpoint-md) {
+    padding: vars.$card-padding-mobile;
+  }
+}

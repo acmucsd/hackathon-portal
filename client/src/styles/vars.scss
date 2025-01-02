@@ -1,0 +1,33 @@
+// Colors
+$black: #151625;
+$blue: #9ecaff;
+$light-blue: #bfeafd;
+$dark-blue: #0061a3;
+$darker-blue: #003258;
+$red: #ff8e72;
+$orange: #f9a857;
+$yellow: #ecdf98;
+$white: #ffffff;
+$neutral: #a1acbd;
+
+$card-bg: #37393e;
+$card-stroke: #525252;
+
+$btn-text: #000000;
+$btn-primary: #a5e0fb;
+$btn-secondary: #ffffff;
+
+// Media Query Standard Breakpoints
+$breakpoint-sm: 425px; //
+$breakpoint-md: 870px; // Use this breakpoint for most mobile-first CSS designs
+$breakpoint-lg: 1024px;
+
+$text-shadow:
+  0 1px 4px rgba(0, 0, 0, 0.5),
+  0 3px 15px rgba(0, 0, 0, 0.7);
+
+$side-padding: 4rem;
+$side-padding-mobile: 1rem;
+
+$card-padding: 2rem;
+$card-padding-mobile: 1rem;

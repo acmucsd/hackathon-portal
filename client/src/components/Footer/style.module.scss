@@ -1,0 +1,70 @@
+@use '@/styles/vars' as vars;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+  padding: 8rem 0;
+  position: relative;
+
+  text-shadow: vars.$text-shadow;
+}
+
+.backgroundLeft {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: -1;
+  max-width: min(100%, 580px);
+  height: auto;
+  object-fit: contain;
+}
+
+.backgroundRight {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  max-width: min(100%, 850px);
+  height: auto;
+  object-fit: contain;
+}
+
+.links {
+  display: flex;
+  gap: 6.5rem;
+  align-items: center;
+  margin-bottom: 2rem;
+
+  a {
+    text-decoration: none;
+    color: vars.$white;
+
+    img {
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.7));
+    }
+  }
+
+  @media screen and (max-width: vars.$breakpoint-md) {
+    gap: 2rem;
+    a {
+      img {
+        display: none;
+      }
+    }
+  }
+}
+
+.socials {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+
+  a {
+    svg {
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.7));
+    }
+  }
+}

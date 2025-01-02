@@ -13,3 +13,7 @@ export enum ApplicationStatus {
   REJECTED = 'REJECTED',
   ALL_DONE = 'ALL_DONE',
 }
+
+export enum FormType {
+  APPLICATION = 'APPLICATION',
+}

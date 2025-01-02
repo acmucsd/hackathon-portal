@@ -1,0 +1,19 @@
+@use '@/styles/vars.scss' as vars;
+
+.heading {
+  // Corresponds to diamond-theme/headline/heavy
+  font-weight: 600;
+  font-size: 2.5625rem;
+  line-height: 3.3125rem;
+  letter-spacing: -0.25px;
+
+  @media screen and (max-width: vars.$breakpoint-md) {
+    // Corresponds to diamond-theme/label/x-large
+    font-size: 1.5rem;
+    line-height: 1.9375rem;
+  }
+
+  &.centered {
+    text-align: center;
+  }
+}
