@@ -31,7 +31,7 @@ export default function RegisterPage() {
     formState: { errors },
   } = useForm<RegisterFormValues>({
     defaultValues: {
-      university: '',
+      university: universities[0],
     },
   });
 
