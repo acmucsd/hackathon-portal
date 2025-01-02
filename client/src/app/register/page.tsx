@@ -8,6 +8,7 @@ import Button from '@/components/Button';
 import Typography from '@/components/Typography';
 import universities from '../../utils/universities';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { SubmitHandler, useForm, Controller } from 'react-hook-form';
 import isEmail from 'validator/lib/isEmail';
 import styles from './page.module.scss';
@@ -20,13 +21,6 @@ interface RegisterFormValues {
   confirmPassword: string;
   university: string;
 }
-
-const passwordMatchValidation = (confirmPassword: string, password: string) => {
-  if (confirmPassword !== password) {
-    return 'Passwords do not match';
-  }
-  return true;
-};
 
 export default function RegisterPage() {
   const {
@@ -41,8 +35,11 @@ export default function RegisterPage() {
     },
   });
 
+  const router = useRouter();
+
   const onSubmit: SubmitHandler<RegisterFormValues> = data => {
     console.log(data);
+    router.push(`/check-email?email=${encodeURIComponent("placeholder@ucsd.edu")}`);
   };
 
   return (
@@ -108,7 +105,8 @@ export default function RegisterPage() {
             formRegister={register('confirmPassword', {
               required: 'Missing input/field.',
               validate: {
-                matchesPassword: value => passwordMatchValidation(value, getValues('password')),
+                matchesPassword: value =>
+                  value === getValues('password') || 'Passwords do not match',
               },
             })}
           />
