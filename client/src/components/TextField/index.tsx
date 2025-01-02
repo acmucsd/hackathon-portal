@@ -1,5 +1,5 @@
 import Typography from '../Typography';
-import ErrorIcon from '../../../public/assets/error.svg';
+import ErrorIcon from '../../../public/assets/icons/error.svg';
 import { UseFormRegisterReturn } from 'react-hook-form';
 import { PropsWithChildren } from 'react';
 import styles from './style.module.scss';
