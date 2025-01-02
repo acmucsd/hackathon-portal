@@ -1,4 +1,4 @@
-import DropdownArrow from '../../../public/assets/dropdown-arrow.svg';
+import DropdownArrow from '../../../public/assets/icons/dropdown-arrow.svg';
 import Typography from '@/components/Typography';
 import { ReactNode, useEffect, useState } from 'react';
 import styles from './style.module.scss';
