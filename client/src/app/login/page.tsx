@@ -6,10 +6,20 @@ import Typography from '@/components/Typography';
 import TextField from '@/components/TextField';
 import Link from 'next/link';
 import Alert from '@/components/Alert';
+import Binary from '@/../public/assets/binary.png';
 
 export default function LoginPage() {
   return (
-    <main className={`${styles.main}`} >
+    <main
+      className={`${styles.main}`}
+      style={{
+        backgroundImage: `url(${Binary.src})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center bottom',
+        width: '100%',
+        height: '100%',
+      }}
+    >
       <div className={`${styles.login}`}>
         <Card gap={1}>
           <Heading centered>Log In</Heading>
