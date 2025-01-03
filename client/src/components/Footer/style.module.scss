@@ -9,9 +9,7 @@
   padding: 8rem 0;
   position: relative;
 
-  text-shadow:
-    0 1px 4px rgba(0, 0, 0, 0.5),
-    0 3px 15px rgba(0, 0, 0, 0.7);
+  text-shadow: vars.$text-shadow;
 }
 
 .backgroundLeft {

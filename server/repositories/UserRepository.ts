@@ -1,7 +1,6 @@
 import { DataSource, In } from 'typeorm';
 import { UserModel } from '../models/UserModel';
 import Container from 'typedi';
-import { Uid } from '../types/Internal';
 
 export const UserRepository = Container.get(DataSource)
   .getRepository(UserModel)
@@ -10,8 +9,8 @@ export const UserRepository = Container.get(DataSource)
       return this.find();
     },
 
-    async findByUid(uid: Uid): Promise<UserModel | null> {
-      return this.findOneBy({ uid });
+    async findById(id: string): Promise<UserModel | null> {
+      return this.findOneBy({ id });
     },
 
     async findByEmail(email: string): Promise<UserModel | null> {

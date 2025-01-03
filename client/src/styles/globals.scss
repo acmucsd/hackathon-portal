@@ -57,3 +57,11 @@ button {
 button:not(:disabled) {
   cursor: pointer;
 }
+
+.link {
+  color: vars.$btn-primary;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

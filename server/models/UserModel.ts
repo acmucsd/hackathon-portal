@@ -1,10 +1,19 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { ResponseModel } from './ResponseModel';
 import { ApplicationStatus, UserAccessType } from '../types/Enums';
+import { PublicProfile, PrivateProfile } from '../types/ApiResponses';
 
-@Entity()
+@Entity('User')
 export class UserModel {
   @PrimaryColumn()
-  uid: string;
+  id: string;
 
   @Column()
   email: string;
@@ -15,19 +24,28 @@ export class UserModel {
   @Column()
   lastName: string;
 
-  @Column({
-    type: 'enum',
+  @Column('enum', {
     enum: UserAccessType,
     default: UserAccessType.STANDARD,
   })
   accessType: UserAccessType;
 
-  @Column({
-    type: 'enum',
+  @Column('enum', {
     enum: ApplicationStatus,
     default: ApplicationStatus.NOT_SUBMITTED,
   })
   applicationStatus: ApplicationStatus;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @OneToMany((type) => ResponseModel, (response) => response.user, {
+    cascade: true,
+  })
+  response: ResponseModel;
 
   public isRestricted(): boolean {
     return this.accessType === UserAccessType.RESTRICTED;
@@ -39,5 +57,24 @@ export class UserModel {
 
   public isAdmin(): boolean {
     return this.accessType === UserAccessType.ADMIN;
+  }
+
+  public getPublicProfile(): PublicProfile {
+    return {
+      id: this.id,
+      firstName: this.firstName,
+      lastName: this.lastName,
+    };
+  }
+
+  public getPrivateProfile(): PrivateProfile {
+    return {
+      ...this.getPublicProfile(),
+      email: this.email,
+      accessType: this.accessType,
+      applicationStatus: this.applicationStatus,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+    };
   }
 }

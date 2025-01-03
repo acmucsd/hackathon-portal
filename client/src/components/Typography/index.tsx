@@ -14,7 +14,7 @@ function isStandardVariant(variant: V2Variant): variant is V2StandardVariant {
   return variant.split('/').length === 2;
 }
 
-type ComponentType = 'p' | 'span' | 'div';
+type ComponentType = 'p' | 'span' | 'div' | 'h1' | 'h2' | 'h3';
 
 interface TypographyProps extends HTMLAttributes<HTMLElement> {
   variant: V2Variant;
@@ -133,13 +133,13 @@ const v2WeightedWeights: Record<V2WeightedStyle, Record<V2Weight, Record<V2Size,
   },
   headline: {
     light: {
-      large: 400,
+      large: 300,
       medium: 400,
       small: 400,
     },
     heavy: {
-      large: 600,
-      medium: 600,
+      large: 400,
+      medium: 400,
       small: 600,
     },
   },
