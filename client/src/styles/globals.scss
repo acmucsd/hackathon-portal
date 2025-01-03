@@ -39,6 +39,14 @@ body {
 a {
   color: inherit;
   text-decoration: none;
+
+  &.link {
+    color: vars.$btn-primary;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
 button {
   border: none;
