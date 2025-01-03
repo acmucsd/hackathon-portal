@@ -6,24 +6,21 @@
   flex-direction: column;
   gap: 10rem;
   padding: 6rem var(--side-padding);
+  background: url(/client/public/assets/binary.png);
 }
 
 .login {
-  width: 646px;
   padding: 32px;
   align-self: center;
   align-items: stretch;
 
-  @media screen and (max-width: vars.$breakpoint-md) {
-    min-width: 343px; // Not working for some reason, never uses this. Reviewer please advise.
-    flex-shrink: 1;
-    width: 100%;
-  }
+  max-width: 646px;
+  width: 100%;
 }
 
 .buttonRow {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   gap: 1rem;
 
   @media screen and (max-width: vars.$breakpoint-md) {

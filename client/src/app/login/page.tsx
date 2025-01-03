@@ -9,14 +9,14 @@ import Alert from '@/components/Alert';
 
 export default function LoginPage() {
   return (
-    <main className={`${styles.main}`}>
+    <main className={`${styles.main}`} >
       <div className={`${styles.login}`}>
         <Card gap={1}>
+          <Heading centered>Log In</Heading>
+
           <Alert marginBottom={0}>
             <p>Oops, incorrect email or password.</p>
           </Alert>
-
-          <Heading centered>Log In</Heading>
 
           <TextField
             id="outlined-basic"
