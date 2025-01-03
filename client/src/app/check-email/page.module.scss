@@ -1,0 +1,17 @@
+.main {
+  flex: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10rem;
+  padding: 6rem var(--side-padding);
+
+  .check_email {
+    margin: 0 auto;
+    max-width: 646px;
+    text-align: center;
+  }
+
+  a {
+    align-self: center;
+  }
+}
