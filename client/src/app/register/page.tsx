@@ -39,7 +39,7 @@ export default function RegisterPage() {
 
   const onSubmit: SubmitHandler<RegisterFormValues> = data => {
     console.log(data);
-    router.push(`/check-email?email=${encodeURIComponent("placeholder@ucsd.edu")}`);
+    router.push(`/check-email?email=${encodeURIComponent('placeholder@ucsd.edu')}`);
   };
 
   return (
