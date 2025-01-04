@@ -45,7 +45,6 @@ export default function RegisterPage() {
     AuthManager.register({
       ...userRegistration,
       onSuccessCallback: (user: PrivateProfile) => {
-        console.log('sucess');
         router.push(`/check-email?email=${encodeURIComponent(user.email)}`);
       },
       onFailCallback: error => {
