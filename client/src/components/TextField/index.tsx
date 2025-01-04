@@ -39,10 +39,10 @@ const TextField = ({
         placeholder={defaultText ? defaultText : ''}
         {...formRegister}
       />
-      <p className={styles.formError}>
+      <Typography variant='label/medium' component="p" className={styles.formError}>
         {error && <ErrorIcon />}
         {error?.message}
-      </p>
+      </Typography>
     </div>
   );
 };

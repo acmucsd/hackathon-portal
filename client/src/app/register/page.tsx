@@ -59,7 +59,6 @@ export default function RegisterPage() {
         <Card gap={2}>
           <Heading centered>Sign Up</Heading>
           <TextField
-          variant='horizontal'
             id="firstName"
             label="First Name"
             defaultText="Enter your First Name"
