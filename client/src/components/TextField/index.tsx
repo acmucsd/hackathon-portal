@@ -5,7 +5,7 @@ import { HTMLInputTypeAttribute } from 'react';
 import styles from './style.module.scss';
 
 interface TextFieldProps {
-  variant: 'outlined' | 'filled';
+  variant?: 'vertical' | 'horizontal';
   label: string;
   id: string;
   defaultText?: string;
@@ -18,7 +18,7 @@ interface TextFieldProps {
 const TextField = ({
   id,
   label,
-  variant,
+  variant = 'vertical',
   defaultText,
   formRegister,
   error,
@@ -26,7 +26,7 @@ const TextField = ({
   autoComplete,
 }: TextFieldProps) => {
   return (
-    <div className={`${styles.textField} ${variant}`}>
+    <div className={`${styles.textField} ${styles[variant]}`}>
       <label htmlFor={id}>
         <Typography variant="label/medium" component="p">
           {label}

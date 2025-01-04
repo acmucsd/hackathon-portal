@@ -20,11 +20,7 @@
     display: flex;
     border-radius: 8px;
     border: 2px solid vars.$card-stroke;
-
     padding: 12px;
-    align-items: center;
-    gap: 10px;
-    align-self: stretch;
 
     select {
       appearance: none;

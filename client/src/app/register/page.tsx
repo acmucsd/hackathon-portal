@@ -59,8 +59,8 @@ export default function RegisterPage() {
         <Card gap={2}>
           <Heading centered>Sign Up</Heading>
           <TextField
+          variant='horizontal'
             id="firstName"
-            variant="outlined"
             label="First Name"
             defaultText="Enter your First Name"
             error={errors.firstName}
@@ -72,7 +72,6 @@ export default function RegisterPage() {
           />
           <TextField
             id="lastName"
-            variant="outlined"
             label="Last Name"
             defaultText="Enter your Last Name"
             error={errors.lastName}
@@ -84,7 +83,6 @@ export default function RegisterPage() {
           />
           <TextField
             id="email"
-            variant="outlined"
             label="University Email (.edu)"
             defaultText="Enter your Email"
             error={errors.email}
@@ -101,7 +99,6 @@ export default function RegisterPage() {
           />
           <TextField
             id="password"
-            variant="outlined"
             label="Password"
             defaultText="Enter your password"
             error={errors.password}
@@ -117,7 +114,6 @@ export default function RegisterPage() {
           />
           <TextField
             id="confirmPassword"
-            variant="outlined"
             label="Confirm Password"
             defaultText="Re-enter your password"
             error={errors.confirmPassword}
