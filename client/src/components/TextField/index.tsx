@@ -24,7 +24,7 @@ const TextField = ({
   error,
   type,
   autoComplete,
-}: PropsWithChildren<TextFieldProps>) => {
+}: TextFieldProps) => {
   return (
     <div className={`${styles.textField} ${variant}`}>
       <label htmlFor={id}>
