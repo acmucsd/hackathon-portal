@@ -11,6 +11,7 @@ interface DropdownProps {
   onChange: (value: string) => void;
   readOnly?: boolean;
   className?: string;
+  placeholder?: string;
 }
 
 const Dropdown = ({
@@ -21,6 +22,7 @@ const Dropdown = ({
   onChange,
   readOnly,
   className,
+  placeholder,
 }: DropdownProps) => {
   const [open, setOpen] = useState(false);
 
@@ -75,6 +77,11 @@ const Dropdown = ({
           aria-label={ariaLabel}
           disabled={readOnly}
         >
+          {placeholder && (
+            <option value="" disabled>
+              {placeholder}
+            </option>
+          )}
           {options.map(option => (
             <option value={option} key={option}>
               {option}

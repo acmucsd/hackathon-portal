@@ -25,6 +25,7 @@ dataSource
   });
 
 const app = createExpressServer({
+  cors: true,
   routePrefix: '/api/v1',
   controllers,
   middlewares,

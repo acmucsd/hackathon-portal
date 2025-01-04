@@ -6,7 +6,11 @@ import TextField from '@/components/TextField';
 import Dropdown from '@/components/Dropdown';
 import Button from '@/components/Button';
 import Typography from '@/components/Typography';
-import universities from '../../utils/universities';
+import universities from '@/lib/constants/universities';
+import { AuthManager } from '@/lib/managers';
+import type { UserRegistration } from '@/lib/types/apiRequests';
+import type { PrivateProfile } from '@/lib/types/apiResponses';
+import { reportError } from '@/lib/utils';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { SubmitHandler, useForm, Controller } from 'react-hook-form';
@@ -31,15 +35,23 @@ export default function RegisterPage() {
     formState: { errors },
   } = useForm<RegisterFormValues>({
     defaultValues: {
-      university: universities[0],
+      university: '',
     },
   });
 
   const router = useRouter();
 
-  const onSubmit: SubmitHandler<RegisterFormValues> = data => {
-    console.log(data);
-    router.push(`/check-email?email=${encodeURIComponent('placeholder@ucsd.edu')}`);
+  const onSubmit: SubmitHandler<UserRegistration> = userRegistration => {
+    AuthManager.register({
+      ...userRegistration,
+      onSuccessCallback: (user: PrivateProfile) => {
+        console.log('sucess');
+        router.push(`/check-email?email=${encodeURIComponent(user.email)}`);
+      },
+      onFailCallback: error => {
+        reportError('Error with registration!', error);
+      },
+    });
   };
 
   return (
@@ -56,6 +68,8 @@ export default function RegisterPage() {
             formRegister={register('firstName', {
               required: 'Missing input/field.',
             })}
+            type="text"
+            autoComplete="given-name"
           />
           <TextField
             id="outlined-basic"
@@ -66,6 +80,8 @@ export default function RegisterPage() {
             formRegister={register('lastName', {
               required: 'Missing input/field.',
             })}
+            type="text"
+            autoComplete="family-name"
           />
           <TextField
             id="outlined-basic"
@@ -81,6 +97,8 @@ export default function RegisterPage() {
                   value?.endsWith('.edu') || 'Please enter an .edu email address.',
               },
             })}
+            type="email"
+            autoComplete="email"
           />
           <TextField
             id="outlined-basic"
@@ -95,6 +113,8 @@ export default function RegisterPage() {
                 message: 'Minimum 12 characters.',
               },
             })}
+            type="password"
+            autoComplete="new-password"
           />
           <TextField
             id="outlined-basic"
@@ -109,6 +129,8 @@ export default function RegisterPage() {
                   value === getValues('password') || 'Passwords do not match',
               },
             })}
+            type="password"
+            autoComplete="new-password"
           />
           <Controller
             name="university"
@@ -121,6 +143,7 @@ export default function RegisterPage() {
                 value={field.value}
                 onChange={field.onChange}
                 className={styles.dropdown}
+                placeholder="Select"
               />
             )}
           />

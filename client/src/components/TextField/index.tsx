@@ -1,7 +1,7 @@
 import Typography from '../Typography';
 import ErrorIcon from '../../../public/assets/icons/error.svg';
 import { UseFormRegisterReturn } from 'react-hook-form';
-import { PropsWithChildren } from 'react';
+import { HTMLInputTypeAttribute, PropsWithChildren } from 'react';
 import styles from './style.module.scss';
 
 interface TextFieldProps {
@@ -11,6 +11,8 @@ interface TextFieldProps {
   defaultText?: string;
   formRegister: UseFormRegisterReturn;
   error: any;
+  type: HTMLInputTypeAttribute;
+  autoComplete: string;
 }
 
 const TextField = ({
@@ -20,6 +22,8 @@ const TextField = ({
   defaultText,
   formRegister,
   error,
+  type,
+  autoComplete,
 }: PropsWithChildren<TextFieldProps>) => {
   return (
     <div className={`${styles.textField} ${variant}`}>
@@ -28,7 +32,13 @@ const TextField = ({
           {label}
         </Typography>
       </label>
-      <input id={id} placeholder={defaultText ? defaultText : ''} {...formRegister} />
+      <input
+        id={id}
+        type={type}
+        autoComplete={autoComplete}
+        placeholder={defaultText ? defaultText : ''}
+        {...formRegister}
+      />
       <p className={styles.formError}>
         {error && <ErrorIcon />}
         {error?.message}
