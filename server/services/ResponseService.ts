@@ -1,6 +1,5 @@
 import { Service } from 'typedi';
 import { Repositories, TransactionsManager } from '../repositories';
-import { Uuid } from '../types/Internal';
 import { ResponseModel } from '../models/ResponseModel';
 
 @Service()
@@ -11,9 +10,10 @@ export class ResponseService {
     this.transactionsManager = transactionsManager;
   }
 
-  public async findByUuid(uuid: Uuid): Promise<ResponseModel> {
+  public async findByUuid(uuid: string): Promise<ResponseModel> {
     const response = await this.transactionsManager.readOnly(
-      async (entityManager) => Repositories.response(entityManager).findByUuid(uuid),
+      async (entityManager) =>
+        Repositories.response(entityManager).findByUuid(uuid),
     );
     if (!response) throw new Error('Response not found');
     return response;
