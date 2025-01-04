@@ -1,0 +1,23 @@
+.main {
+  flex: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10rem;
+  padding: 6rem var(--side-padding);
+}
+
+.profile {
+  margin: 0 auto;
+  width: 646px;
+
+  .profileHeader {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .profileContent {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+}

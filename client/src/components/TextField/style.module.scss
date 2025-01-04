@@ -1,0 +1,36 @@
+@use '@/styles/vars.scss' as vars;
+
+.textField {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  color: vars.$white;
+
+  input {
+    border-radius: 8px;
+    border: 2px solid vars.$card-stroke;
+    background: vars.$card-bg;
+    color: vars.$white;
+
+    padding: 12px;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+
+    /* diamond-theme/body/large */
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 24px; /* 133.333% */
+    letter-spacing: 0.5px;
+
+    &::placeholder {
+      color: vars.$neutral;
+    }
+  }
+
+  .formError {
+    display: flex;
+    gap: 0.5rem;
+    color: vars.$error;
+  }
+}
