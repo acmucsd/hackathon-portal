@@ -59,7 +59,7 @@ export default function RegisterPage() {
         <Card gap={2}>
           <Heading centered>Sign Up</Heading>
           <TextField
-            id="outlined-basic"
+            id="firstName"
             variant="outlined"
             label="First Name"
             defaultText="Enter your First Name"
@@ -71,7 +71,7 @@ export default function RegisterPage() {
             autoComplete="given-name"
           />
           <TextField
-            id="outlined-basic"
+            id="lastName"
             variant="outlined"
             label="Last Name"
             defaultText="Enter your Last Name"
@@ -83,7 +83,7 @@ export default function RegisterPage() {
             autoComplete="family-name"
           />
           <TextField
-            id="outlined-basic"
+            id="email"
             variant="outlined"
             label="University Email (.edu)"
             defaultText="Enter your Email"
@@ -100,7 +100,7 @@ export default function RegisterPage() {
             autoComplete="email"
           />
           <TextField
-            id="outlined-basic"
+            id="password"
             variant="outlined"
             label="Password"
             defaultText="Enter your password"
@@ -116,7 +116,7 @@ export default function RegisterPage() {
             autoComplete="new-password"
           />
           <TextField
-            id="outlined-basic"
+            id="confirmPassword"
             variant="outlined"
             label="Confirm Password"
             defaultText="Re-enter your password"

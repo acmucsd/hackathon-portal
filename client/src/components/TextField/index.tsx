@@ -1,7 +1,7 @@
 import Typography from '../Typography';
 import ErrorIcon from '../../../public/assets/icons/error.svg';
 import { UseFormRegisterReturn } from 'react-hook-form';
-import { HTMLInputTypeAttribute, PropsWithChildren } from 'react';
+import { HTMLInputTypeAttribute } from 'react';
 import styles from './style.module.scss';
 
 interface TextFieldProps {
