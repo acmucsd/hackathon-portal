@@ -104,8 +104,8 @@ export default function RegisterPage() {
             formRegister={register('password', {
               required: 'Missing input/field.',
               minLength: {
-                value: 12,
-                message: 'Minimum 12 characters.',
+                value: 8,
+                message: 'Minimum 8 characters.',
               },
             })}
             type="password"
