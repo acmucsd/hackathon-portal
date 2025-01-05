@@ -1,0 +1,21 @@
+@use '../../styles/vars.scss' as vars;
+
+.main {
+  flex: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10rem;
+  padding: 6rem var(--side-padding);
+
+  .register {
+    margin: 0 auto;
+    max-width: 646px;
+  }
+
+  .loginPrompt {
+    text-align: center;
+    .link {
+      color: vars.$light-blue;
+    }
+  }
+}
