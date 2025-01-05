@@ -1,11 +1,11 @@
 import Typography from '../Typography';
 import ErrorIcon from '../../../public/assets/icons/error.svg';
 import { UseFormRegisterReturn } from 'react-hook-form';
-import { HTMLInputTypeAttribute, PropsWithChildren } from 'react';
+import { HTMLInputTypeAttribute } from 'react';
 import styles from './style.module.scss';
 
 interface TextFieldProps {
-  variant: 'outlined' | 'filled';
+  variant?: 'vertical' | 'horizontal';
   label: string;
   id: string;
   defaultText?: string;
@@ -18,15 +18,15 @@ interface TextFieldProps {
 const TextField = ({
   id,
   label,
-  variant,
+  variant = 'vertical',
   defaultText,
   formRegister,
   error,
   type,
   autoComplete,
-}: PropsWithChildren<TextFieldProps>) => {
+}: TextFieldProps) => {
   return (
-    <div className={`${styles.textField} ${variant}`}>
+    <div className={`${styles.textField} ${styles[variant]}`}>
       <label htmlFor={id}>
         <Typography variant="label/medium" component="p">
           {label}
@@ -39,10 +39,10 @@ const TextField = ({
         placeholder={defaultText ? defaultText : ''}
         {...formRegister}
       />
-      <p className={styles.formError}>
+      <Typography variant="label/medium" component="p" className={styles.formError}>
         {error && <ErrorIcon />}
         {error?.message}
-      </p>
+      </Typography>
     </div>
   );
 };

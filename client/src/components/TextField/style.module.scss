@@ -11,11 +11,7 @@
     border: 2px solid vars.$card-stroke;
     background: vars.$card-bg;
     color: vars.$white;
-
     padding: 12px;
-    align-items: center;
-    gap: 10px;
-    align-self: stretch;
 
     /* diamond-theme/body/large */
     font-size: 18px;
@@ -32,5 +28,15 @@
     display: flex;
     gap: 0.5rem;
     color: vars.$error;
+  }
+
+  /* Horizontal Layout */
+  &.horizontal {
+    align-items: center;
+    flex-flow: row wrap;
+
+    input {
+      flex-grow: 1;
+    }
   }
 }
