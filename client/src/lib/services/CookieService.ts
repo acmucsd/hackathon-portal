@@ -1,5 +1,4 @@
-import { getCookie, setCookie } from 'cookies-next';
-import type { OptionsType } from 'cookies-next/lib/types';
+import { getCookie, setCookie, type OptionsType } from 'cookies-next';
 
 export const getClientCookie = (key: string): string => {
   return getCookie(key) as string;
