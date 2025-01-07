@@ -2,6 +2,7 @@ import Container from 'typedi';
 import { DataSource } from 'typeorm';
 import { UserModel } from '../models/UserModel';
 import { ResponseModel } from '../models/ResponseModel';
+import { FormType } from '../types/Enums';
 
 export const ResponseRepository = Container.get(DataSource)
   .getRepository(ResponseModel)
@@ -16,5 +17,9 @@ export const ResponseRepository = Container.get(DataSource)
 
     async findResponsesForUser(user: UserModel): Promise<ResponseModel[]> {
       return this.findBy({ user });
+    },
+
+    async findResponsesForUserByType(user: UserModel, formType: FormType): Promise<ResponseModel[]> {
+      return this.findBy({ user, formType });
     },
   });
