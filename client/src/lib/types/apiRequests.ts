@@ -4,3 +4,12 @@ export interface UserRegistration {
   email: string;
   password: string;
 }
+
+export interface UserPatches {
+  firstName?: string;
+  lastName?: string;
+}
+
+export interface PatchUserRequest {
+  user: UserPatches;
+}
