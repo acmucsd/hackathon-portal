@@ -34,8 +34,7 @@ export default function ProfilePage() {
   useEffect(() => {
     setIsMobile(window.innerWidth <= 870);
     CookieService.setClientCookie(
-      CookieType.ACCESS_TOKEN,
-      'eyJhbGciOiJSUzI1NiIsImtpZCI6ImMwYTQwNGExYTc4ZmUzNGM5YTVhZGU5NTBhMjE2YzkwYjVkNjMwYjMiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiQW5nZWxhIEh1IiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL2hhY2thdGhvbi1wb3J0YWwtMmJlZWEiLCJhdWQiOiJoYWNrYXRob24tcG9ydGFsLTJiZWVhIiwiYXV0aF90aW1lIjoxNzM2MjQ2NDQ2LCJ1c2VyX2lkIjoiUmxmN0pHTFlHVFlxZ21xUzI5S0FwOXI5dTBlMiIsInN1YiI6IlJsZjdKR0xZR1RZcWdtcVMyOUtBcDlyOXUwZTIiLCJpYXQiOjE3MzYyNDY0NDYsImV4cCI6MTczNjI1MDA0NiwiZW1haWwiOiJhNGh1QHVjc2QuZWR1IiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsiYTRodUB1Y3NkLmVkdSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.nrvedJqQi1C-5Tt2uOmsMYGe0EIpNoGZ_yzhDB_j_j9NLPkW1qbPRUsXKRrzDdKSve1I--MoT-eP-OXumQ4YAJZV5nLJ_MtLn_udU5MCvZ9S-kYgAKyTVbM5mqkKVK060lOxBxEJRaP7v2nsBQa1f4LuMpda5ARuUlqmM5QSd9cyNcaNkB18csC3Osj8egTeB_zFFXsNW7i6ZCu3wr7M4ETWuV3D2OW-16pOQLvxrkIwlWa8Ls8FNA7JayKli4H_RzjRyIy2DoxNZ6FvIEEgGI_gBDGtmIvR4g_i9hgEnotOIDB1G6t76L_9Gkv3Q13RosJ5rXWBdO-dyiIn5_1hAQ'
+      CookieType.ACCESS_TOKEN,'token'
     );
     const fetchUser = async () => {
       try {
