@@ -28,6 +28,11 @@ export interface UpdateUserRequest {
   user: UpdateUser;
 }
 
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
 // Firebase Requests
 
 export interface GetIdTokenRequest {

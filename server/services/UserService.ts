@@ -6,6 +6,7 @@ import {
   GetIdTokenRequest,
   SendEmailVerificationRequest,
 } from '../types/ApiRequests';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { FirebaseAuthError, getAuth } from 'firebase-admin/auth';
 import {
   ForbiddenError,
@@ -13,7 +14,7 @@ import {
   UnauthorizedError,
 } from 'routing-controllers';
 import { UpdateUser } from '../api/validators/UserControllerRequests';
-import { Config } from '../config';
+import { auth, Config } from '../config';
 import {
   GetIdTokenResponse,
   SendEmailVerificationResponse,
@@ -111,6 +112,22 @@ export class UserService {
     );
   }
 
+  public async login(email: string, password: string): Promise<string> {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const token = await userCredential.user.getIdToken();
+      // If checkAuthToken() runs without throwing an error, the user exists.
+      this.checkAuthToken(token);
+      return token;
+    } catch (error) {
+      if (error instanceof UnauthorizedError || error instanceof ForbiddenError) {
+        // Throw special error messages as-is.
+        throw error;
+      }
+      throw new UnauthorizedError('Invalid email or password.');
+    }
+  }
+
   public async checkAuthToken(token: string): Promise<UserModel> {
     let decodedToken;
     try {
@@ -176,3 +193,4 @@ export class UserService {
     return email;
   }
 }
+
