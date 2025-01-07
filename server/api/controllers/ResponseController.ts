@@ -42,7 +42,6 @@ export class ResponseController {
   async getApplication(
     @AuthenticatedUser() user: UserModel,
   ): Promise<SubmitApplicationResponse> {
-    console.log('HI there');
     const response = await this.responseService.getUserApplication(
       user,
     );
