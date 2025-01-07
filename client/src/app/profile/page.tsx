@@ -10,7 +10,9 @@ import { UserAPI } from '@/lib/api';
 import { CookieService } from '@/lib/services';
 import { CookieType } from '@/lib/types/enums';
 import { reportError } from '@/lib/utils';
+import { useWindowSize } from '@/lib/hooks/useWindowSize';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import isEmail from 'validator/lib/isEmail';
 import styles from './page.module.scss';
@@ -21,32 +23,12 @@ interface UpdateProfileValues {
   email: string;
 }
 
-const getUser = async () => {
-  const authToken = CookieService.getClientCookie(CookieType.ACCESS_TOKEN);
-  const user = await UserAPI.getCurrentUser(authToken);
-  return user;
-};
-
 export default function ProfilePage() {
+  const size = useWindowSize();
+  const isMobile = (size.width ?? 0) <= 870;
   const [editProfile, setEditProfile] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
 
-  useEffect(() => {
-    setIsMobile(window.innerWidth <= 870);
-    CookieService.setClientCookie(
-      CookieType.ACCESS_TOKEN,'token'
-    );
-    const fetchUser = async () => {
-      try {
-        const fetchedUser = await getUser();
-        console.log(fetchedUser);
-        reset(fetchedUser);
-      } catch (error) {
-        console.error('Error fetching user:', error);
-      }
-    };
-    fetchUser();
-  }, []);
+  const router = useRouter();
 
   const {
     register,
@@ -77,6 +59,21 @@ export default function ProfilePage() {
     reset();
     setEditProfile(prevState => !prevState);
   };
+
+  const fetchUser = async () => {
+    try {
+      const authToken = CookieService.getClientCookie(CookieType.ACCESS_TOKEN);
+      const fetchedUser = await UserAPI.getCurrentUser(authToken);
+      reset(fetchedUser);
+    } catch (error) {
+      reportError('Cannot find user', error);
+      router.push('/login');
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
   return (
     <main className={styles.main}>
