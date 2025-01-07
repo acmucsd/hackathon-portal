@@ -12,6 +12,7 @@ import {
   CreateUserRequest as ICreateUserRequest,
   UpdateUser as IUpdateUser,
   UpdateUserRequest as IUpdateUserRequest,
+  LoginRequest as ILoginRequest,
 } from '../../types/ApiRequests';
 
 const PASSWORD_MIN_LENGTH = 8;
@@ -55,4 +56,12 @@ export class UpdateUserRequest implements IUpdateUserRequest {
   @ValidateNested()
   @IsDefined()
   user: UpdateUser;
+}
+
+export class LoginRequest implements ILoginRequest {
+  @IsDefined()
+  email: string;
+
+  @IsDefined()
+  password: string;
 }

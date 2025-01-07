@@ -36,6 +36,10 @@ export interface UpdateCurrentUserReponse extends ApiResponse {
 
 export interface DeleteCurrentUserResponse extends ApiResponse {}
 
+export interface LoginResponse extends ApiResponse {
+  token: string;
+}
+
 // Firebase Responses
 export interface GetIdTokenResponse {
   idToken: string;
