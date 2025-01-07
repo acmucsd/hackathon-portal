@@ -13,6 +13,7 @@ import { Service } from 'typedi';
 import { IdParam } from '../validators/GenericRequests';
 import {
   CreateUserRequest,
+  LoginRequest,
   UpdateUserRequest,
 } from '../validators/UserControllerRequests';
 import { AuthenticatedUser } from '../decorators/AuthenticatedUser';
@@ -22,6 +23,7 @@ import {
   DeleteCurrentUserResponse,
   GetCurrentUserResponse,
   GetUserResponse,
+  LoginResponse,
   UpdateCurrentUserReponse,
 } from '../../types/ApiResponses';
 import { UserAuthentication } from '../middleware/UserAuthentication';
@@ -41,6 +43,14 @@ export class UserController {
   ): Promise<CreateUserResponse> {
     const user = await this.userService.createUser(createUserRequest.user);
     return { error: null, user: user.getPrivateProfile() };
+  }
+
+  @Post('/login')
+  async login(
+    @Body() loginRequest: LoginRequest,
+  ): Promise<LoginResponse> {
+    const token = await this.userService.login(loginRequest.email, loginRequest.password);
+    return { error: null, token };
   }
 
   @UseBefore(UserAuthentication)

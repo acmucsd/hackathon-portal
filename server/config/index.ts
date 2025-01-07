@@ -1,3 +1,6 @@
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+
 const env = process.env.NODE_ENV || 'development';
 const isDevelopment = env !== 'production';
 
@@ -24,3 +27,6 @@ export const Config = {
     measurementId: process.env.MEASUREMENT_ID,
   },
 };
+
+const app = initializeApp(Config.firebase);
+export const auth = getAuth(app);
