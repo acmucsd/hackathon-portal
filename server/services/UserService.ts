@@ -136,7 +136,7 @@ export class UserService {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const token = await userCredential.user.getIdToken();
       // If checkAuthToken() runs without throwing an error, the user exists.
-      this.checkAuthToken(token);
+      await this.checkAuthToken(token);
       return token;
     } catch (error) {
       if (error instanceof UnauthorizedError || error instanceof ForbiddenError) {
@@ -165,6 +165,7 @@ export class UserService {
         Repositories.user(entityManager).findById(decodedToken.uid),
     );
     if (!user) throw new NotFoundError('User not found');
+    console.log(decodedToken.email_verified);
     if (!decodedToken.email_verified)
       throw new UnauthorizedError('Please verify your email');
     if (user.isRestricted())
