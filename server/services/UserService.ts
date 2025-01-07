@@ -52,7 +52,26 @@ export class UserService {
         Repositories.user(entityManager).findByEmail(email),
     );
     const emailAlreadyUsed = userWithEmail !== null;
-    if (emailAlreadyUsed) throw new ForbiddenError('Email already in use');
+    if (emailAlreadyUsed) {
+      const firebaseRecord = await getAuth().getUserByEmail(email);
+
+      if (!firebaseRecord.emailVerified) {
+        await getAuth().updateUser(firebaseRecord.uid, {
+          password: createUser.password,
+        });
+
+        const user = await this.updateUser(userWithEmail, {
+          firstName: createUser.firstName,
+          lastName: createUser.lastName,
+        });
+
+        this.sendEmailVerification(userWithEmail.id);
+
+        return user;
+      } else {
+        throw new ForbiddenError('Email already in use');
+      }
+    }
 
     let firebaseUser;
     try {
