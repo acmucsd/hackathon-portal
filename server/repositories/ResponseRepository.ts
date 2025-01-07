@@ -1,7 +1,6 @@
 import Container from 'typedi';
 import { DataSource } from 'typeorm';
 import { UserModel } from '../models/UserModel';
-import { Uuid } from '../types/Internal';
 import { ResponseModel } from '../models/ResponseModel';
 
 export const ResponseRepository = Container.get(DataSource)
@@ -11,7 +10,7 @@ export const ResponseRepository = Container.get(DataSource)
       return this.find();
     },
 
-    async findByUuid(uuid: Uuid): Promise<ResponseModel | null> {
+    async findByUuid(uuid: string): Promise<ResponseModel | null> {
       return this.findOneBy({ uuid });
     },
 

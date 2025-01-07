@@ -11,14 +11,15 @@ import {
 } from 'typeorm';
 import { UserModel } from './UserModel';
 import { FormType } from '../types/Enums';
-import { Uuid } from '../types/Internal';
 
 @Entity('Response')
 export class ResponseModel extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  uuid: Uuid;
+  uuid: string;
 
-  @ManyToOne((type) => UserModel, (user) => user.response, { onDelete: 'CASCADE' })
+  @ManyToOne((type) => UserModel, (user) => user.response, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'user' })
   @Index('response_by_user_index')
   user: UserModel;
@@ -29,8 +30,7 @@ export class ResponseModel extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @Column({
-    type: 'enum',
+  @Column('enum', {
     enum: FormType,
   })
   formType: FormType;

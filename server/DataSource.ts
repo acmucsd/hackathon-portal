@@ -12,6 +12,7 @@ export const dataSource = new DataSource({
   database: Config.database.name,
   entities: models,
   synchronize: true, // DO NOT USE IN PRODUCTION, make migrations
+  dropSchema: true, // Definitely don't use this in production :O
 });
 
 // important for dependency injection for repositories
