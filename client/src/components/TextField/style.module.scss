@@ -5,29 +5,38 @@
   flex-direction: column;
   gap: 1rem;
   color: vars.$white;
-  // Corresponds to diamond-theme/label/small
-  font-weight: 500;
-  letter-spacing: 0.5px;
 
   input {
     border-radius: 8px;
-    border: 2px solid var(--Dark-Mode-Stroke, #525252);
-    background: var(--Dark-Mode-Pop-up, #37393e);
-    color: vars.$neutral;
-
+    border: 2px solid vars.$card-stroke;
+    background: vars.$card-bg;
+    color: vars.$white;
     padding: 12px;
-    align-items: center;
-    gap: 10px;
-    align-self: stretch;
-
-    color: var(--dmd-sys-base-colors-neutral, #a1acbd);
 
     /* diamond-theme/body/large */
-    font-family: 'DM Sans';
     font-size: 18px;
-    font-style: normal;
     font-weight: 400;
     line-height: 24px; /* 133.333% */
     letter-spacing: 0.5px;
+
+    &::placeholder {
+      color: vars.$neutral;
+    }
+  }
+
+  .formError {
+    display: flex;
+    gap: 0.5rem;
+    color: vars.$error;
+  }
+
+  /* Horizontal Layout */
+  &.horizontal {
+    align-items: center;
+    flex-flow: row wrap;
+
+    input {
+      flex-grow: 1;
+    }
   }
 }

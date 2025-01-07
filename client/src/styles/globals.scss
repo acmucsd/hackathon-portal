@@ -58,6 +58,10 @@ button:not(:disabled) {
   cursor: pointer;
 }
 
+input,
+select {
+  font: inherit;
+}
 .link {
   color: vars.$btn-primary;
 

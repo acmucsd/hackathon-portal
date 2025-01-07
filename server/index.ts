@@ -18,13 +18,14 @@ initializeApp({
 dataSource
   .initialize()
   .then(() => {
-    console.log('created connection');
+    console.log('Initialized TypeORM DataSource');
   })
   .catch((error) => {
     console.log(error);
   });
 
 const app = createExpressServer({
+  cors: true,
   routePrefix: '/api/v1',
   controllers,
   middlewares,
@@ -41,3 +42,4 @@ const app = createExpressServer({
 });
 
 app.listen(Config.port);
+console.log(`Listening on port ${Config.port}...`);
