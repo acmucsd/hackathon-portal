@@ -164,7 +164,7 @@ export class UserService {
       async (entityManager) =>
         Repositories.user(entityManager).findById(decodedToken.uid),
     );
-    if (!user) throw new NotFoundError();
+    if (!user) throw new NotFoundError('User not found');
     if (!decodedToken.email_verified)
       throw new UnauthorizedError('Please verify your email');
     if (user.isRestricted())
