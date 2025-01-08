@@ -18,10 +18,14 @@ type AppQuestion = {
   optional?: boolean;
 } & (
   | {
-      type: 'select-one' | 'select-multiple' | 'dropdown';
+      type: 'select-one' | 'select-multiple';
       choices: string[];
       other?: boolean;
       inline?: boolean;
+    }
+  | {
+      type: 'dropdown';
+      choices: string[];
     }
   | {
       type: 'text';
@@ -150,20 +154,12 @@ const ApplicationStep = ({
               </fieldset>
             );
           }
-          if (question.type === 'dropdown') {
-            return (
-              <div className={styles.questionWrapper} key={question.id}>
-                <Typography variant="body/medium" component="p" className={styles.question}>
-                  <label htmlFor={question.id}>
-                    {question.question}
-                    {question.optional ? null : ASTERISK}
-                  </label>
-                </Typography>
-                TODO
-              </div>
-            );
-          }
-          if (question.type === 'text' || question.type === 'phone' || question.type === 'url') {
+          if (
+            question.type === 'text' ||
+            question.type === 'phone' ||
+            question.type === 'url' ||
+            question.type === 'dropdown'
+          ) {
             return (
               <div className={styles.questionWrapper} key={question.id}>
                 <Typography variant="body/medium" component="p" className={styles.question}>
@@ -180,6 +176,20 @@ const ApplicationStep = ({
                     required={!question.optional}
                     className={styles.textbox}
                   />
+                ) : question.type === 'dropdown' ? (
+                  <select
+                    id={`${id}-${question.id}`}
+                    name={question.id}
+                    required={!question.optional}
+                    className={styles.textline}
+                  >
+                    <option selected disabled>
+                      Select one
+                    </option>
+                    {question.choices.map(choice => (
+                      <option value={choice}>{choice}</option>
+                    ))}
+                  </select>
                 ) : (
                   <input
                     type={question.type === 'phone' ? 'tel' : 'url'}

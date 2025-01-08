@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { FAQQuestion } from './components/FAQAccordion';
 import { Deadlines } from './components/Dashboard';
 import { Step } from './components/ApplicationStep';
-import { iso31661 } from 'iso-3166';
+import { countries } from './lib/constants/countries';
 
 export const FAQ_QUESTIONS: FAQQuestion[] = [
   {
@@ -87,7 +87,6 @@ export const appQuestions: Step[] = [
         id: 'age',
         question: <>Age</>,
         choices: ['18', '19', '20', '21', '22', '23', '24', '25', '25+'],
-        inline: true,
       },
       {
         type: 'select-one',
@@ -140,8 +139,7 @@ export const appQuestions: Step[] = [
         type: 'dropdown',
         id: 'country',
         question: <>Country of Residence</>,
-        // TODO: put US first
-        choices: iso31661.map(entry => `${entry.alpha2}: ${entry.name}`),
+        choices: countries,
       },
       {
         type: 'select-multiple',

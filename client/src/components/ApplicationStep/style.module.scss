@@ -43,6 +43,10 @@
     padding: 0.75rem;
     border-radius: 0.5rem;
     border: 1px solid vars.$card-stroke;
+
+    option {
+      background-color: vars.$black;
+    }
   }
 
   .uploadBtn {
