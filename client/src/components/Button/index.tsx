@@ -1,5 +1,5 @@
 import styles from './style.module.scss';
-import Link, { LinkProps } from 'next/link';
+import Link from 'next/link';
 import { PropsWithChildren } from 'react';
 
 interface ButtonProps {
@@ -11,6 +11,8 @@ interface ButtonProps {
    */
   variant?: 'primary' | 'secondary' | 'tertiary';
   href?: string;
+  for?: string;
+  submit?: boolean;
   onClick?: () => void;
   className?: string;
 }
@@ -18,6 +20,8 @@ interface ButtonProps {
 const Button = ({
   variant = 'primary',
   href,
+  for: htmlFor,
+  submit = false,
   onClick,
   className = '',
   children,
@@ -28,7 +32,13 @@ const Button = ({
     onClick,
     children,
   };
-  return href ? <Link href={href} {...props} /> : <button type="button" {...props} />;
+  return htmlFor ? (
+    <label htmlFor={htmlFor} {...props} />
+  ) : href ? (
+    <Link href={href} {...props} />
+  ) : (
+    <button type={submit ? 'submit' : 'button'} {...props} />
+  );
 };
 
 export default Button;

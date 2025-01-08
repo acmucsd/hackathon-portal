@@ -62,8 +62,8 @@ export default function LoginPage() {
             formRegister={register('email', {
               required: 'Enter your email',
             })}
-            type="text"
-            autoComplete="given-name"
+            type="email"
+            autoComplete="email"
             defaultText="Enter Email Address"
           />
 
@@ -75,8 +75,8 @@ export default function LoginPage() {
             formRegister={register('password', {
               required: 'Enter your password',
             })}
-            type="text"
-            autoComplete="given-name"
+            type="password"
+            autoComplete="current-password"
             defaultText="Enter Password"
           />
 

@@ -4,7 +4,7 @@ import styles from './style.module.scss';
 import Banner from '@/../public/assets/banner.png';
 import Typography from '../Typography';
 import Link from 'next/link';
-import FAQ, { Question } from '../FAQAccordion';
+import FAQ, { FAQQuestion } from '../FAQAccordion';
 import DashboardStatus from '../DashboardStatus';
 import TimelineItem from '../TimelineItem';
 import { PrivateProfile } from '@/lib/types/apiResponses';
@@ -20,7 +20,7 @@ export interface Deadlines {
 }
 
 interface DashboardProps {
-  faq: Question[];
+  faq: FAQQuestion[];
   timeline: Deadlines;
   user: PrivateProfile;
 }

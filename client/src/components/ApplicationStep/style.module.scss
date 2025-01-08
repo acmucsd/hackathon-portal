@@ -1,0 +1,73 @@
+@use '@/styles/vars.scss' as vars;
+
+.back {
+  align-self: flex-start;
+}
+
+.required {
+  color: #ef626c;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.question a {
+  color: vars.$blue;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.questionWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .textbox {
+    width: 100%;
+    min-height: 10rem;
+    resize: vertical;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    border: 1px solid vars.$card-stroke;
+  }
+
+  .textline {
+    width: 100%;
+    max-width: 300px;
+    align-self: flex-start;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    border: 1px solid vars.$card-stroke;
+
+    option {
+      background-color: vars.$black;
+    }
+  }
+
+  .uploadBtn {
+    align-self: flex-start;
+  }
+}
+
+.error {
+  display: none;
+  align-items: center;
+  gap: 0.5rem;
+  color: vars.$error;
+}
+:user-invalid + .error,
+.multipleChoice:has(:user-invalid) .error {
+  display: flex;
+}
+
+.buttonRow {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}

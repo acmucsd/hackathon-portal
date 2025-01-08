@@ -138,9 +138,9 @@ const v2WeightedWeights: Record<V2WeightedStyle, Record<V2Weight, Record<V2Size,
       small: 400,
     },
     heavy: {
-      large: 400,
+      large: 600,
       medium: 400,
-      small: 600,
+      small: 400,
     },
   },
 };

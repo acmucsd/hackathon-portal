@@ -48,7 +48,10 @@ a {
     }
   }
 }
-button {
+button,
+input,
+textarea,
+select {
   border: none;
   background: none;
   color: inherit;
@@ -57,15 +60,29 @@ button {
 button:not(:disabled) {
   cursor: pointer;
 }
-
-input,
-select {
-  font: inherit;
+fieldset {
+  border: none;
 }
+
+hr {
+  border: none;
+  border-top: 1px solid vars.$card-stroke;
+}
+
 .link {
   color: vars.$btn-primary;
 
   &:hover {
     text-decoration: underline;
   }
+}
+
+.accessible-but-hidden {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
 }
