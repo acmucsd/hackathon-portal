@@ -5,7 +5,7 @@ const env = process.env.NODE_ENV || 'development';
 const isDevelopment = env !== 'production';
 
 export const Config = {
-  port: Number(process.env.PORT) || 3000,
+  port: Number(process.env.PORT) || 4000,
 
   isDevelopment,
 
