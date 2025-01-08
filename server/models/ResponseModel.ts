@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 import { UserModel } from './UserModel';
 import { FormType } from '../types/Enums';
+import { Application } from '../types/Application';
 
 @Entity('Response')
 export class ResponseModel extends BaseEntity {
@@ -36,5 +37,5 @@ export class ResponseModel extends BaseEntity {
   formType: FormType;
 
   @Column({ type: 'json' })
-  data: object;
+  data: Application;
 }

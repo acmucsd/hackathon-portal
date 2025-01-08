@@ -41,6 +41,32 @@ export class StorageService {
     return response.Location;
   }
 
+  public async uploadToFolder(
+    file: File,
+    mediaType: MediaType,
+    fileName: string,
+    folder: string,
+  ): Promise<string> {
+    const { uploadPath } = StorageService.getMediaConfig(mediaType);
+    const fileExtension = path.extname(file.originalname);
+    const fullPath = `${uploadPath}/${folder}/${fileName}${fileExtension}`;
+
+    const upload = new Upload({
+      client: this.s3,
+      params: {
+        ACL: 'public-read',
+        Bucket: Config.s3.bucket,
+        Key: fullPath,
+        Body: file.buffer,
+      },
+    });
+    const response = await upload.done();
+    if (!response.Location)
+      throw new InternalServerError('Resource could not be uploaded');
+    console.log(fullPath, response.Location);
+    return response.Location;
+  }
+
   public async deleteAtUrl(url: string): Promise<void> {
     const { pathname } = new URL(url);
     const delimiter = pathname.indexOf('/', 1);

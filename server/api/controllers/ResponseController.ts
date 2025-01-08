@@ -5,6 +5,7 @@ import {
   JsonController,
   Patch,
   Post,
+  UploadedFile,
   UseBefore,
 } from 'routing-controllers';
 import { Service } from 'typedi';
@@ -17,7 +18,13 @@ import {
 } from '../../types/ApiResponses';
 import { UserAuthentication } from '../middleware/UserAuthentication';
 import { ResponseService } from '../../services/ResponseService';
-import { CreateApplicationRequest, UpdateApplicationRequest } from '../validators/ResponseRequests';
+import {
+  CreateApplicationRequest,
+  UpdateApplicationRequest,
+} from '../validators/ResponseRequests';
+import { StorageService } from '../../services/StorageService';
+import { MediaType } from '../../types/Enums';
+import { File } from '../../types/ApiRequests';
 
 @JsonController('/response')
 @Service()
@@ -42,9 +49,7 @@ export class ResponseController {
   async getApplication(
     @AuthenticatedUser() user: UserModel,
   ): Promise<SubmitApplicationResponse> {
-    const response = await this.responseService.getUserApplication(
-      user,
-    );
+    const response = await this.responseService.getUserApplication(user);
     return { error: null, response: response };
   }
 
@@ -53,10 +58,15 @@ export class ResponseController {
   async submitApplication(
     @Body() createApplicationRequest: CreateApplicationRequest,
     @AuthenticatedUser() user: UserModel,
+    @UploadedFile('file', {
+      options: StorageService.getFileOptions(MediaType.RESUME),
+    })
+    file: File,
   ): Promise<SubmitApplicationResponse> {
     const response = await this.responseService.submitUserApplication(
       user,
       createApplicationRequest.application,
+      file,
     );
     return { error: null, response: response };
   }
@@ -66,6 +76,11 @@ export class ResponseController {
   async updateApplication(
     @Body() updateApplicationRequest: UpdateApplicationRequest,
     @AuthenticatedUser() user: UserModel,
+    @UploadedFile('file', {
+      required: false,
+      options: StorageService.getFileOptions(MediaType.RESUME),
+    })
+    file?: File,
   ): Promise<SubmitApplicationResponse> {
     const response = await this.responseService.updateUserApplication(
       user,
