@@ -24,12 +24,31 @@
 
 .inline {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px));
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
 }
 
 .checkboxLabel {
   display: flex;
   align-items: center;
+
+  .other {
+    border-bottom: 1px solid vars.$white;
+  }
+}
+
+.questionWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .textbox {
+    width: 100%;
+    min-height: 10rem;
+    resize: vertical;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    border: 1px solid vars.$card-stroke;
+  }
 }
 
 .buttonRow {

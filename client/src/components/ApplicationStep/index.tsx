@@ -6,6 +6,8 @@ import { Checkbox, createTheme, Radio, ThemeProvider } from '@mui/material';
 import styles from './style.module.scss';
 import Button from '../Button';
 import { useRouter } from 'next/navigation';
+import { iso31661 } from 'iso-3166';
+import Dropdown from '../Dropdown';
 
 type AppQuestion = {
   id: string;
@@ -13,13 +15,17 @@ type AppQuestion = {
   optional?: boolean;
 } & (
   | {
-      type: 'select-one' | 'select-multiple';
+      type: 'select-one' | 'select-multiple' | 'dropdown';
       choices: string[];
       other?: boolean;
       inline?: boolean;
     }
   | {
       type: 'text';
+    }
+  | {
+      type: 'url' | 'phone';
+      placeholder?: string;
     }
   | {
       type: 'file';
@@ -30,7 +36,7 @@ type AppQuestion = {
 export type Step = {
   shortName: string;
   title: string;
-  description?: string;
+  description?: ReactNode;
   questions: AppQuestion[];
 };
 
@@ -115,7 +121,7 @@ const ApplicationStep = ({
                     );
                   })}
                   {question.other ? (
-                    <p>
+                    <p className={styles.checkboxLabel}>
                       <label className={styles.checkboxLabel}>
                         <Component name={question.id} value="other" required={required} />{' '}
                         Other:&nbsp;
@@ -127,28 +133,52 @@ const ApplicationStep = ({
               </fieldset>
             );
           }
-          if (question.type === 'text') {
+          if (question.type === 'dropdown') {
             return (
-              <div key={question.id}>
-                <Typography variant="body/large" component="p" className={styles.question}>
+              <div className={styles.questionWrapper} key={question.id}>
+                <Typography variant="body/medium" component="p" className={styles.question}>
+                  <label htmlFor={question.id}>
+                    {question.question}
+                    {question.optional ? null : ASTERISK}
+                  </label>
+                </Typography>
+                TODO
+              </div>
+            );
+          }
+          if (question.type === 'text' || question.type === 'phone' || question.type === 'url') {
+            return (
+              <div className={styles.questionWrapper} key={question.id}>
+                <Typography variant="body/medium" component="p" className={styles.question}>
                   <label htmlFor={`${id}-${question.id}`}>
                     {question.question}
                     {question.optional ? null : ASTERISK}
                   </label>
                 </Typography>
-                <textarea
-                  id={`${id}-${question.id}`}
-                  name={question.id}
-                  placeholder="Type answer here..."
-                  required={!question.optional}
-                ></textarea>
+                {question.type === 'text' ? (
+                  <textarea
+                    id={`${id}-${question.id}`}
+                    name={question.id}
+                    placeholder="Type answer here..."
+                    required={!question.optional}
+                    className={styles.textbox}
+                  />
+                ) : (
+                  <input
+                    type={question.type === 'phone' ? 'tel' : 'url'}
+                    id={`${id}-${question.id}`}
+                    name={question.id}
+                    placeholder={question.placeholder}
+                    required={!question.optional}
+                  />
+                )}
               </div>
             );
           }
           if (question.type === 'file') {
             return (
-              <div key={question.id}>
-                <Typography variant="body/large" component="p" className={styles.question}>
+              <div className={styles.questionWrapper} key={question.id}>
+                <Typography variant="body/medium" component="p" className={styles.question}>
                   <label htmlFor={`${id}-${question.id}`}>
                     {question.question}
                     {question.optional ? null : ASTERISK}

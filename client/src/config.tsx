@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { FAQQuestion } from './components/FAQAccordion';
 import { Deadlines } from './components/Dashboard';
-import { ReactNode } from 'react';
 import { Step } from './components/ApplicationStep';
+import { iso31661 } from 'iso-3166';
 
 export const FAQ_QUESTIONS: FAQQuestion[] = [
   {
@@ -16,18 +16,32 @@ export const FAQ_QUESTIONS: FAQQuestion[] = [
   },
   {
     question: 'What is a hackathon?',
-    answer:
-      'A hackathon is an event where hackers come together to collaborate, create, and develop projects within a set timeframe (usually 24–48 hours). Participants form teams to brainstorm ideas, write code, and build solutions, with a focus on innovation and creativity.',
+    answer: (
+      <>
+        A hackathon is an event where hackers come together to collaborate, create, and develop
+        projects within a set timeframe (usually 24–48 hours). Participants form teams to brainstorm
+        ideas, write code, and build solutions, with a focus on innovation and creativity.
+      </>
+    ),
   },
   {
     question: 'Do I need any prior experience?',
-    answer:
-      "No, hackers of any experience levels are welcome! We'll have workshops and mentors to help you get started, and beginners have the chance to win prizes specifically for first time hackers.",
+    answer: (
+      <>
+        No, hackers of any experience levels are welcome! We'll have workshops and mentors to help
+        you get started, and beginners have the chance to win prizes specifically for first time
+        hackers.
+      </>
+    ),
   },
   {
     question: 'Where will DiamondHacks be held?',
-    answer:
-      'DiamondHacks will be hosted at UC San Diego, in the Computer Science & Engineering Buildings, as well as Jacobs Hall.',
+    answer: (
+      <>
+        DiamondHacks will be hosted at UC San Diego, in the Computer Science & Engineering
+        Buildings, as well as Jacobs Hall.
+      </>
+    ),
   },
   {
     question: 'Who can attend DiamondHacks?',
@@ -53,35 +67,126 @@ export const appQuestions: Step[] = [
   {
     shortName: 'Demographics',
     title: 'Demographic Information',
-    description:
-      'Welcome to DiamondHacks! Our mission at DiamondHacks is to bring together hackers from diverse backgrounds to develop innovative solutions to real world problems. All experience levels are welcome. Your information will not be publicly shared other than for collecting statistics and logistics about DiamondHacks hackathon. We hope to see you there!',
+    description: (
+      <>
+        Welcome to DiamondHacks! Our mission at DiamondHacks is to bring together hackers from
+        diverse backgrounds to develop innovative solutions to real world problems. All experience
+        levels are welcome. Your information will not be publicly shared other than for collecting
+        statistics and logistics about DiamondHacks hackathon. We hope to see you there!
+      </>
+    ),
     questions: [
+      {
+        type: 'phone',
+        id: 'phone',
+        question: <>Phone</>,
+        placeholder: '(858) 534-2230',
+      },
+      {
+        type: 'dropdown',
+        id: 'age',
+        question: <>Age</>,
+        choices: ['18', '19', '20', '21', '22', '23', '24', '25', '25+'],
+        inline: true,
+      },
       {
         type: 'select-one',
         id: 'grad',
-        question: 'What is your expected graduation date?',
+        question: <>What is your expected graduation date?</>,
         choices: ['2025', '2026', '2027', '2028'],
         other: true,
       },
       {
         type: 'select-one',
+        id: 'level',
+        question: <>Level of Study</>,
+        choices: [
+          'Less than Secondary / High School',
+          'Secondary / High School',
+          'Undergraduate University (2 year - community college or similar)',
+          'Undergraduate University (3+ year)',
+          'Graduate University (Masters, Professional, Doctoral, etc)',
+          'Code School / Bootcamp',
+          'Other Vocational / Trade Program or Apprenticeship',
+          'Post Doctorate',
+          'Other',
+          'I’m not currently a student',
+          'Prefer not to answer',
+        ],
+      },
+      {
+        type: 'select-one',
+        id: 'major',
+        question: <>Major/Field of Study</>,
+        choices: [
+          'Computer science, mathematics-computer science, computer engineering, or software engineering',
+          'Another engineering discipline (such as civil, electrical, mechanical, etc.)',
+          'Information systems, information technology, or system administration',
+          'A natural science (such as biology, chemistry, physics, etc.)',
+          'Mathematics or statistics',
+          'Web development or web design',
+          'Business discipline (such as accounting, finance, marketing, etc.)',
+          'Humanities discipline (such as literature, history, philosophy, etc.)',
+          'Social science (such as anthropology, psychology, political science, etc.)',
+          'Fine arts or performing arts (such as graphic design, music, studio art, etc.)',
+          'Health science (such as nursing, pharmacy, radiology, etc.)',
+          'Other (please specify)',
+          'Undecided / No Declared Major',
+          'My school does not offer majors / primary areas of study',
+          'Prefer not to answer',
+        ],
+      },
+      {
+        type: 'dropdown',
+        id: 'country',
+        question: <>Country of Residence</>,
+        // TODO: put US first
+        choices: iso31661.map(entry => `${entry.alpha2}: ${entry.name}`),
+      },
+      {
+        type: 'select-multiple',
         id: 'gender',
-        question: 'What is your gender?',
+        question: <>What is your gender?</>,
         choices: ['Male', 'Female', 'Non-binary', 'Other', 'Prefer not to say'],
       },
       {
         type: 'select-multiple',
+        id: 'pronouns',
+        question: <>Pronouns</>,
+        choices: ['She/Her', 'He/Him', 'They/Them', 'She/They', 'He/They', 'Prefer Not to Answer'],
+        other: true,
+        optional: true,
+      },
+      {
+        type: 'select-multiple',
+        id: 'sexuality',
+        question: <>Do you consider yourself to be any of the following?</>,
+        choices: ['Heterosexual or straight', 'Gay or lesbian', 'Bisexual', 'Prefer Not to Answer'],
+        other: true,
+        optional: true,
+      },
+      {
+        type: 'select-multiple',
         id: 'race',
-        question: 'Race/Ethnicity',
+        question: <>Race/Ethnicity</>,
         choices: [
+          'Asian Indian',
+          'Chinese',
+          'Filipino',
+          'Guamanian or Chamorro',
+          'Middle Eastern',
           'White',
           'Black or African American',
-          'American Indian or Alaska Native',
-          'East Asian',
-          'South Asian',
-          'Southeast Asian',
-          'Hispanic/Latino/Spanish Origin',
-          'Native Hawaiian or Other Pacific Islander',
+          'Hispanic / Latino / Spanish Origin',
+          'Japanese',
+          'Korean',
+          'Native American or Alaskan Native',
+          'Native Hawaiian',
+          'Samoan',
+          'Vietnamese',
+          'Other Asian (Thai, Cambodian, etc)',
+          'Other Pacific Islanders',
+          'Prefer Not To Answer',
         ],
         other: true,
       },
@@ -94,18 +199,18 @@ export const appQuestions: Step[] = [
       {
         type: 'text',
         id: 'why',
-        question: 'Why do you want to participate in the DiamondHacks Hackathon?',
+        question: <>Why do you want to participate in the DiamondHacks Hackathon?</>,
       },
       {
         type: 'file',
         id: 'resume',
-        question: 'Upload your resume in PDF format below (Max: 100MB).',
+        question: <>Upload your resume in PDF format below (Max: 100MB).</>,
         maxSize: 100 * 1e6,
       },
       {
         type: 'select-multiple',
         id: 'topics',
-        question: 'Which topics are you most interested in?',
+        question: <>Which topics are you most interested in?</>,
         choices: [
           'Software Engineering',
           'Product Design',
@@ -118,7 +223,7 @@ export const appQuestions: Step[] = [
       {
         type: 'select-multiple',
         id: 'how',
-        question: 'How did you hear about DiamondHacks?',
+        question: <>How did you hear about DiamondHacks?</>,
         choices: [
           'Instagram',
           'LinkedIn',
@@ -132,12 +237,35 @@ export const appQuestions: Step[] = [
         other: true,
       },
       {
+        type: 'url',
+        id: 'linkedin',
+        question: <>Linkedin URL</>,
+        placeholder: 'https://www.linkedin.com/in/',
+      },
+      {
+        type: 'select-one',
+        id: 'coc',
+        question: (
+          <>
+            If accepted, I am attending DiamondHacks on April 4-5 at UC San Diego.
+            <br />
+            <br />
+            Please note that we are unfortunately unable to provide travel reimbursements or
+            accommodations at this time!
+          </>
+        ),
+        choices: ['Yes', 'No'],
+      },
+      {
         type: 'select-one',
         id: 'coc',
         question: (
           <>
             I have read and agree to the{' '}
-            <Link href="https://github.com/MLH/mlh-policies/blob/main/code-of-conduct.md">
+            <Link
+              href="https://github.com/MLH/mlh-policies/blob/main/code-of-conduct.md"
+              target="_blank"
+            >
               MLH Code of Conduct
             </Link>
             .
@@ -152,15 +280,24 @@ export const appQuestions: Step[] = [
           <>
             I authorize you to share my application/registration information with Major League
             Hacking for event administration, ranking, and MLH administration in-line with the{' '}
-            <Link href="https://github.com/MLH/mlh-policies/blob/main/privacy-policy.md">
+            <Link
+              href="https://github.com/MLH/mlh-policies/blob/main/privacy-policy.md"
+              target="_blank"
+            >
               MLH Privacy Policy
             </Link>
             . I further agree to the terms of both the{' '}
-            <Link href="https://github.com/MLH/mlh-policies/blob/main/contest-terms.md">
+            <Link
+              href="https://github.com/MLH/mlh-policies/blob/main/contest-terms.md"
+              target="_blank"
+            >
               MLH Contest Terms and Conditions
             </Link>{' '}
             and the{' '}
-            <Link href="https://github.com/MLH/mlh-policies/blob/main/privacy-policy.md">
+            <Link
+              href="https://github.com/MLH/mlh-policies/blob/main/privacy-policy.md"
+              target="_blank"
+            >
               MLH Privacy Policy
             </Link>
             .
