@@ -1,11 +1,18 @@
 import config from '@/lib/config';
-import type { UserPatches, PatchUserRequest } from '@/lib/types/apiRequests';
+import type { UserPatches, PatchUserRequest, LoginRequest } from '@/lib/types/apiRequests';
 import type {
   PrivateProfile,
   GetCurrentUserResponse,
   PatchUserResponse,
+  LoginResponse,
 } from '@/lib/types/apiResponses';
 import axios from 'axios';
+
+export const login = async (email: string, password: string): Promise<string> => {
+  const requestBody: LoginRequest = { email, password };
+  const response = await axios.post<LoginResponse>('/api/login', requestBody);
+  return response.data.token;
+};
 
 /**
  * Get current user's private profile

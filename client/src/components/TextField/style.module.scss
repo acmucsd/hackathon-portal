@@ -24,10 +24,17 @@
     }
   }
 
+  &.error {
+    input {
+      border: 2px solid vars.$error;
+    }
+  }
+
   .formError {
     display: flex;
     gap: 0.5rem;
     color: vars.$error;
+    align-items: center;
   }
 
   /* Horizontal Layout */

@@ -9,7 +9,7 @@ interface AlertProps {
 const Alert = ({ marginBottom, children }: PropsWithChildren<AlertProps>) => {
   return (
     <div className={styles.alert} style={{ marginBottom: `${marginBottom}rem` }}>
-      <div className="error">
+      <div className={styles.error}>
         <Error />
       </div>
 

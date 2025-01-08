@@ -13,3 +13,8 @@ export interface UserPatches {
 export interface PatchUserRequest {
   user: UserPatches;
 }
+
+export interface LoginRequest {
+  email: string;
+  password: string;
+}

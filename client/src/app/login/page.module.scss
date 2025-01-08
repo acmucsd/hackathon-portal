@@ -1,5 +1,3 @@
-@use '../styles/vars.scss' as vars;
-
 .main {
   flex: auto;
   display: flex;
@@ -13,12 +11,11 @@
   height: 100%;
 }
 
-.buttonRow {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
+.login {
+  padding: 32px;
+  align-self: center;
+  align-items: stretch;
 
-  @media screen and (max-width: vars.$breakpoint-md) {
-    flex-direction: column;
-  }
+  max-width: 646px;
+  width: 100%;
 }
