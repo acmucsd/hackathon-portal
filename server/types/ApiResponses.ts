@@ -14,6 +14,7 @@ export interface PrivateProfile extends PublicProfile {
   applicationStatus: ApplicationStatus;
   createdAt: Date;
   updatedAt: Date;
+  responses?: ResponseModel;
 }
 
 export interface ApiResponse {
@@ -56,7 +57,7 @@ export interface SendEmailVerificationResponse {
 
 // Form response responses
 export interface GetFormsResponse extends ApiResponse {
-  responses: ResponseModel[]
+  responses: ResponseModel[];
 }
 
 export interface GetFormResponse extends ApiResponse {

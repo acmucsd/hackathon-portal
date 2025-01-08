@@ -8,9 +8,13 @@
     "start": "node build/index.js --env-file=.env",
     "dev": "node -r ts-node/register --env-file=.env --watch index.ts",
     "test": "jest --config jest.config.json --runInBand",
-    "release": "node build/index.js",
+    "release": " && node build/index.js --env-file=.env",
     "lint": "eslint ./ --ext .ts",
-    "lint:fix": "eslint ./ --ext .ts --fix"
+    "lint:fix": "eslint ./ --ext .ts --fix",
+    "db:migrate:generate": "typeorm-ts-node-commonjs migration:generate -d ./MigrationDataSource.ts",
+    "db:migrate:create": "typeorm-ts-node-commonjs migration:create",
+    "db:migrate": "typeorm-ts-node-commonjs migration:run -d ./MigrationDataSource.ts",
+    "db:rollback": "typeorm-ts-node-commonjs migration:revert -d ./MigrationDataSource.ts"
   },
   "repository": "https://github.com/acmucsd/hackathon-portal.git",
   "author": "Eric Chang <55172722+echang594@users.noreply.github.com>",

@@ -1,6 +1,3 @@
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-
 const BYTES_PER_KILOBYTE = 1024;
 
 const env = process.env.NODE_ENV || 'development';
@@ -45,6 +42,3 @@ export const Config = {
       process.env.BASE_UPLOAD_PATH! + process.env.RESUME_UPLOAD_PATH!,
   },
 };
-
-const app = initializeApp(Config.firebase);
-export const auth = getAuth(app);
