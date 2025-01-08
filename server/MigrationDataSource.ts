@@ -3,8 +3,6 @@ import { DataSource } from 'typeorm';
 import { models } from './models';
 import { Config } from './config';
 
-console.log(Config);
-
 export default new DataSource({
   type: 'postgres',
   host: Config.database.host,
