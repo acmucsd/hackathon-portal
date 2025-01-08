@@ -9,6 +9,8 @@ import { BadRequestError, NotFoundError } from 'routing-controllers';
 import { File } from '../types/ApiRequests';
 import { StorageService } from './StorageService';
 
+const RESUME_ALLOWED_EXTENSIONS = ['.pdf', '.doc', 'docx'];
+
 @Service()
 export class ResponseService {
   private storageService: StorageService;
@@ -73,9 +75,10 @@ export class ResponseService {
       }
     }
 
-    // Error if resume is not a pdf
-    if (path.extname(resume.originalname) !== '.pdf')
-      throw new BadRequestError("Filetype must be '.pdf'");
+    // Error if resume has disallowed extension
+    const fileExtension = path.extname(resume.originalname);
+    if (!RESUME_ALLOWED_EXTENSIONS.includes(fileExtension))
+      throw new BadRequestError("Filetype must be '.pdf' or '.doc' or '.docx'");
 
     // Upload resume
     const fileName = resume.originalname.substring(
@@ -123,11 +126,13 @@ export class ResponseService {
   ): Promise<ResponseModel> {
     const application = await this.getUserApplication(user);
 
-    console.log(resume);
     if (resume) {
-      // Error if resume is not a pdf
-      if (path.extname(resume.originalname) !== '.pdf')
-        throw new BadRequestError("Filetype must be '.pdf'");
+      // Error if resume has disallowed extension
+      const fileExtension = path.extname(resume.originalname);
+      if (!RESUME_ALLOWED_EXTENSIONS.includes(fileExtension))
+        throw new BadRequestError(
+          "Filetype must be '.pdf' or '.doc' or '.docx'",
+        );
 
       // Delete previous resume
       this.storageService.deleteAtUrl(application.data.resumeLink);
