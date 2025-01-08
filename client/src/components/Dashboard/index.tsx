@@ -45,7 +45,6 @@ const Dashboard = ({ faq, timeline }: DashboardProps) => {
       }
     } catch (error) {
       router.push('/login');
-      reportError(error);
     }
   };
 
