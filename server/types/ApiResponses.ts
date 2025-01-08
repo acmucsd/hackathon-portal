@@ -14,10 +14,19 @@ export interface PrivateProfile extends PublicProfile {
   applicationStatus: ApplicationStatus;
   createdAt: Date;
   updatedAt: Date;
+  responses?: ResponseModel;
+}
+
+export interface CustomErrorBody {
+  name: string;
+  message: string;
+  httpCode: number;
+  stack?: string;
+  errors?: any;
 }
 
 export interface ApiResponse {
-  error: any;
+  error: CustomErrorBody | null;
 }
 
 export interface CreateUserResponse extends ApiResponse {
@@ -38,8 +47,14 @@ export interface UpdateCurrentUserReponse extends ApiResponse {
 
 export interface DeleteCurrentUserResponse extends ApiResponse {}
 
+export interface UserAndToken {
+  token: string;
+  user: PrivateProfile;
+}
+
 export interface LoginResponse extends ApiResponse {
   token: string;
+  user: PrivateProfile;
 }
 
 // Firebase Responses
@@ -55,7 +70,7 @@ export interface SendEmailVerificationResponse {
 
 // Form response responses
 export interface GetFormsResponse extends ApiResponse {
-  responses: ResponseModel[]
+  responses: ResponseModel[];
 }
 
 export interface GetFormResponse extends ApiResponse {

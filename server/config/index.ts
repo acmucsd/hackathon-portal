@@ -1,11 +1,12 @@
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+import { ServiceAccount } from 'firebase-admin';
+
+const BYTES_PER_KILOBYTE = 1024;
 
 const env = process.env.NODE_ENV || 'development';
 const isDevelopment = env !== 'production';
 
 export const Config = {
-  port: Number(process.env.PORT) || 3000,
+  port: Number(process.env.PORT) || 4000,
 
   isDevelopment,
 
@@ -26,7 +27,26 @@ export const Config = {
     appId: process.env.APP_ID,
     measurementId: process.env.MEASUREMENT_ID,
   },
-};
 
-const app = initializeApp(Config.firebase);
-export const auth = getAuth(app);
+  firebaseAdmin: {
+    projectId: process.env.PROJECT_ID,
+    clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
+    privateKey: process.env.FIREBASE_ADMIN_PRIVATE_KEY,
+  } satisfies ServiceAccount,
+
+  s3: {
+    region: process.env.S3_REGION,
+    credentials: {
+      accessKeyId: process.env.S3_ACCESS_KEY_ID!,
+      secretAccessKey: process.env.S3_SECRET_ACCESS_KEY!,
+    },
+    bucket: process.env.S3_BUCKET,
+  },
+
+  file: {
+    MAX_RESUME_FILE_SIZE:
+      Number(process.env.MAX_RESUME_FILE_SIZE) * BYTES_PER_KILOBYTE,
+    RESUME_UPLOAD_PATH:
+      process.env.BASE_UPLOAD_PATH! + process.env.RESUME_UPLOAD_PATH!,
+  },
+};

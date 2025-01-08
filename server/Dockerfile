@@ -9,5 +9,5 @@ RUN yarn build
 FROM node:20.18.0-alpine3.19
 WORKDIR /app
 COPY --from=build /app /app
-EXPOSE 3000
+EXPOSE 4000
 CMD ["yarn", "release"]

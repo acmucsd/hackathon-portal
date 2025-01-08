@@ -34,6 +34,11 @@ export interface RegistrationResponse extends ApiResponse {
   user: PrivateProfile;
 }
 
+export interface LoginResponse extends ApiResponse {
+  token: string;
+  user: PrivateProfile;
+}
+
 // Response types
 
 export interface ValidatorError {

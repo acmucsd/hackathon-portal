@@ -8,6 +8,8 @@ declare global {
   }
 }
 
+export type File = Express.Multer.File;
+
 export interface CreateUser {
   firstName: string;
   lastName: string;

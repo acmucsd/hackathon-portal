@@ -46,11 +46,12 @@ export class UserController {
   }
 
   @Post('/login')
-  async login(
-    @Body() loginRequest: LoginRequest,
-  ): Promise<LoginResponse> {
-    const token = await this.userService.login(loginRequest.email, loginRequest.password);
-    return { error: null, token };
+  async login(@Body() loginRequest: LoginRequest): Promise<LoginResponse> {
+    const userAndToken = await this.userService.login(
+      loginRequest.email,
+      loginRequest.password,
+    );
+    return { error: null, ...userAndToken };
   }
 
   @UseBefore(UserAuthentication)

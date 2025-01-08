@@ -11,13 +11,14 @@ import {
 } from 'typeorm';
 import { UserModel } from './UserModel';
 import { FormType } from '../types/Enums';
+import { Application } from '../types/Application';
 
 @Entity('Response')
 export class ResponseModel extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   uuid: string;
 
-  @ManyToOne((type) => UserModel, (user) => user.response, {
+  @ManyToOne((type) => UserModel, (user) => user.responses, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'user' })
@@ -36,5 +37,5 @@ export class ResponseModel extends BaseEntity {
   formType: FormType;
 
   @Column({ type: 'json' })
-  data: object;
+  data: Application;
 }

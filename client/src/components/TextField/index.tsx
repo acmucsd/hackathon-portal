@@ -28,7 +28,7 @@ const TextField = ({
   disabled = false,
 }: TextFieldProps) => {
   return (
-    <div className={`${styles.textField} ${styles[variant]}`}>
+    <div className={`${styles.textField} ${styles[variant]} ${error ? styles.error : ''}`}>
       <Typography variant="label/medium" component="p">
         <label htmlFor={id}>{label}</label>
       </Typography>
@@ -41,7 +41,7 @@ const TextField = ({
         {...formRegister}
       />
       {error && (
-        <Typography variant="label/medium" component="p" className={styles.formError}>
+        <Typography variant="label/small" component="p" className={styles.formError}>
           {error && <ErrorIcon />}
           {error?.message}
         </Typography>

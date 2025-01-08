@@ -1,9 +1,9 @@
-import Container from 'typedi';
+import 'dotenv/config';
 import { DataSource } from 'typeorm';
 import { models } from './models';
 import { Config } from './config';
 
-export const dataSource = new DataSource({
+export default new DataSource({
   type: 'postgres',
   host: Config.database.host,
   port: Config.database.port,
@@ -11,10 +11,8 @@ export const dataSource = new DataSource({
   password: Config.database.pass,
   database: Config.database.name,
   entities: models,
+  migrations: ['migrations/*.ts'],
   ssl: {
     rejectUnauthorized: false,
   },
 });
-
-// important for dependency injection for repositories
-Container.set(DataSource, dataSource);
