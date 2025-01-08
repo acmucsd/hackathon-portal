@@ -1,5 +1,5 @@
 import Card from '@/components/Card';
-import styles from '../page.module.scss';
+import styles from './page.module.scss';
 import Heading from '@/components/Heading';
 import Button from '@/components/Button';
 import Typography from '@/components/Typography';

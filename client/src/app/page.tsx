@@ -1,6 +1,6 @@
 import { FAQ_QUESTIONS, TIMELINE } from '@/config';
-import Dashboard from '@/components/Dashboard';
 import styles from './page.module.scss';
+import Dashboard from '@/components/Dashboard';
 
 export default function Home() {
   return (

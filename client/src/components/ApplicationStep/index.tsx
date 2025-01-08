@@ -6,6 +6,7 @@ import Typography from '../Typography';
 import { Checkbox, createTheme, Radio, ThemeProvider } from '@mui/material';
 import styles from './style.module.css';
 import Button from '../Button';
+import { useRouter } from 'next/navigation';
 
 type AppQuestion = {
   id: string;
@@ -48,19 +49,38 @@ const ASTERISK = (
 
 interface ApplicationStepProps {
   step: Step;
+  prev: string;
+  next: string;
 }
 
-const ApplicationStep = ({ step: { title, description, questions } }: ApplicationStepProps) => {
+const ApplicationStep = ({
+  step: { title, description, questions },
+  prev,
+  next,
+}: ApplicationStepProps) => {
+  const router = useRouter();
   const id = useId();
 
   return (
     <ThemeProvider theme={darkTheme}>
-      <Card gap={2} formAction={console.log}>
-        <Link href="/">&lt; Back</Link>
+      <Card
+        gap={2}
+        onSubmit={e => {
+          e.preventDefault();
+
+          console.log(new FormData(e.currentTarget));
+
+          // Next button
+          if (e.nativeEvent.submitter?.dataset.variant === 'primary') {
+            router.push(next);
+          }
+        }}
+      >
+        <Link href={prev}>&lt; Back</Link>
         <div className={styles.info}>
           <Heading>{title}</Heading>
-          {description ? <Typography variant="body/large">{description}</Typography> : null}
-          <Typography variant="body/large">{ASTERISK} indicates a required field.</Typography>
+          {description ? <Typography variant="body/medium">{description}</Typography> : null}
+          <Typography variant="body/medium">{ASTERISK} indicates a required field.</Typography>
         </div>
         <hr />
         {questions.map(question => {
@@ -72,7 +92,7 @@ const ApplicationStep = ({ step: { title, description, questions } }: Applicatio
             return (
               <fieldset key={question.id}>
                 <legend>
-                  <Typography variant="body/large" component="span">
+                  <Typography variant="body/medium" component="span">
                     {question.question}
                     {question.optional ? null : ASTERISK}
                   </Typography>
@@ -134,11 +154,9 @@ const ApplicationStep = ({ step: { title, description, questions } }: Applicatio
           }
           return null;
         })}
-        <div>
-          <Button type="submit" variant="secondary">
-            Save Changes
-          </Button>
-          <Button type="submit">Next</Button>
+        <div className={styles.buttonRow}>
+          <Button variant="secondary">Save Changes</Button>
+          <Button>Next</Button>
         </div>
       </Card>
     </ThemeProvider>

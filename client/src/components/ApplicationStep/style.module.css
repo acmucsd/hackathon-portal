@@ -1,7 +1,7 @@
 .info {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 1rem;
 }
 
 .inline {
@@ -16,4 +16,11 @@
 
 .required {
   color: #ef626c;
+}
+
+.buttonRow {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
