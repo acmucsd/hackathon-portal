@@ -26,7 +26,6 @@ interface DashboardProps {
 }
 
 const Dashboard = ({ faq, timeline, user }: DashboardProps) => {
-
   return (
     <div className={styles.container}>
       <Card gap={1.5} className={`${styles.card} ${styles.banner}`}>
