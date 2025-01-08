@@ -1,3 +1,5 @@
+import { ServiceAccount } from 'firebase-admin';
+
 const BYTES_PER_KILOBYTE = 1024;
 
 const env = process.env.NODE_ENV || 'development';
@@ -25,6 +27,12 @@ export const Config = {
     appId: process.env.APP_ID,
     measurementId: process.env.MEASUREMENT_ID,
   },
+
+  firebaseAdmin: {
+    projectId: process.env.PROJECT_ID,
+    clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
+    privateKey: process.env.FIREBASE_ADMIN_PRIVATE_KEY,
+  } satisfies ServiceAccount,
 
   s3: {
     region: process.env.S3_REGION,
