@@ -26,6 +26,12 @@ export const Config = {
     measurementId: process.env.MEASUREMENT_ID,
   },
 
+  firebaseAdmin: {
+    projectId: process.env.PROJECT_ID,
+    clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
+    privateKey: process.env.FIREBASE_ADMIN_PRIVATE_KEY,
+  },
+
   s3: {
     region: process.env.S3_REGION,
     credentials: {
