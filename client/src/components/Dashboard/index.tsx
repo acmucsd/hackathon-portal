@@ -10,12 +10,10 @@ import FAQ, { Question } from '../FAQAccordion';
 import DashboardStatus from '../DashboardStatus';
 import TimelineItem from '../TimelineItem';
 import { UserAPI } from '@/lib/api';
-import { CookieService } from '@/lib/services';
 import { useEffect, useState } from 'react';
-import { CookieType } from '@/lib/types/enums';
 import { useRouter } from 'next/navigation';
 
-type Status = 'not-started' | 'incomplete' | 'submitted' | 'accepted' | 'confirmed';
+type Status = 'NOT_SUBMITTED' | 'SUBMITTED' | 'WITHDRAWN' | 'ACCEPTED' | 'REJECTED' | 'CONFIRMED';
 
 /** Dates should be at 12 am UTC. */
 export interface Deadlines {
@@ -31,28 +29,29 @@ interface DashboardProps {
 }
 
 const Dashboard = ({ faq, timeline }: DashboardProps) => {
-
   const router = useRouter();
 
   const [name, setName] = useState<string | null>(null);
-  const [status, setStatus] = useState<Status>('not-started');
+  const [status, setStatus] = useState<Status>('NOT_SUBMITTED');
 
   const fetchUser = async () => {
     try {
       const fetchedUser = await UserAPI.getCurrentUser();
-      setName(fetchedUser.firstName + ' ' + fetchedUser.lastName);
-      console.log("applicationStatus: ", fetchedUser.applicationStatus);
-      // setStatus(fetchedUser.applicationStatus);
+      if (fetchedUser) {
+        setName(fetchedUser.firstName + ' ' + fetchedUser.lastName);
+        setStatus(fetchedUser.applicationStatus as Status);
+      } else {
+        router.push('/login');
+      }
     } catch (error) {
-      reportError(error);
       router.push('/login');
+      reportError(error);
     }
   };
 
   useEffect(() => {
     fetchUser();
   }, []);
-
 
   return (
     <div className={styles.container}>
