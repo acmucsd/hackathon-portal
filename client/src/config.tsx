@@ -191,7 +191,7 @@ export const appQuestions: Step[] = [
     ],
   },
   {
-    shortName: 'Additional Questions',
+    shortName: 'Questionnaire',
     title: 'Additional Questions',
     questions: [
       {
@@ -203,7 +203,6 @@ export const appQuestions: Step[] = [
         type: 'file',
         id: 'resume',
         question: <>Upload your resume in PDF format below (Max: 100MB).</>,
-        maxSize: 100 * 1e6,
         fileTypes: '.pdf,.doc,.docx',
       },
       {

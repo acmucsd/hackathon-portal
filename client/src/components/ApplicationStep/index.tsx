@@ -34,7 +34,6 @@ type AppQuestion = {
     }
   | {
       type: 'file';
-      maxSize: number;
       fileTypes: string;
     }
 );
