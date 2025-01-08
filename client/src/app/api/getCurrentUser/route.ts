@@ -10,7 +10,7 @@ import axios, { AxiosError } from 'axios';
  * @param token Authorization bearer token
  * @returns User's profile
  */
-export const getCurrentUser = async (token: string): Promise<GetCurrentUserResponse> => {
+const getCurrentUser = async (token: string): Promise<GetCurrentUserResponse> => {
   const requestUrl = `${config.api.baseUrl}${config.api.endpoints.user.user}`;
   const response = await axios.get<GetCurrentUserResponse>(requestUrl, {
     headers: {
