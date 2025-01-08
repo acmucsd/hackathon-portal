@@ -2,7 +2,12 @@
 
 import ApplicationStep from '@/components/ApplicationStep';
 import { appQuestions } from '@/config';
+import styles from '../page.module.scss';
 
 export default function Application() {
-  return <ApplicationStep step={appQuestions[1]} />;
+  return (
+    <main className={styles.main}>
+      <ApplicationStep step={appQuestions[1]} />
+    </main>
+  );
 }
