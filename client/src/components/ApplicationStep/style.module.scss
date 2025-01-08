@@ -22,21 +22,6 @@
   }
 }
 
-.inline {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-}
-
-.checkboxLabel {
-  display: flex;
-  align-items: center;
-
-  .other {
-    border-bottom: 1px solid vars.$white;
-    padding: 0.25rem 0.75rem;
-  }
-}
-
 .questionWrapper {
   display: flex;
   flex-direction: column;

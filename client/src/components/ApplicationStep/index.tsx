@@ -10,6 +10,7 @@ import { iso31661 } from 'iso-3166';
 import Dropdown from '../Dropdown';
 import Link from 'next/link';
 import ErrorIcon from '../../../public/assets/icons/error.svg';
+import MultipleChoiceGroup, { OTHER } from '../MultipleChoiceGroup';
 
 type AppQuestion = {
   id: string;
@@ -76,7 +77,31 @@ const ApplicationStep = ({
     }
 
     // TODO: Save changes
-    console.log(new FormData(formRef.current));
+    const data = new FormData(formRef.current);
+    console.log(
+      Object.fromEntries(
+        questions.map(question => {
+          if (question.type === 'select-multiple') {
+            return [
+              question.id,
+              data
+                .getAll(question.id)
+                .map(response =>
+                  response === OTHER ? `[Other] ${data.get(`${question.id}-${OTHER}`)}` : response
+                ),
+            ];
+          }
+          const response = data.get(question.id);
+          if (question.type === 'select-one') {
+            return [
+              question.id,
+              response === OTHER ? `[Other] ${data.get(`${question.id}-${OTHER}`)}` : response,
+            ];
+          }
+          return [question.id, response];
+        })
+      )
+    );
   }
 
   return (
@@ -103,8 +128,6 @@ const ApplicationStep = ({
           if (question.type === 'select-one' || question.type === 'select-multiple') {
             const required = !question.optional && question.type === 'select-one';
 
-            const Component = question.type === 'select-one' ? Radio : Checkbox;
-
             return (
               <fieldset key={question.id} className={styles.multipleChoice}>
                 <legend>
@@ -113,36 +136,17 @@ const ApplicationStep = ({
                     {question.optional ? null : ASTERISK}
                   </Typography>
                 </legend>
-                <div className={question.inline ? styles.inline : ''}>
-                  {question.choices.map(choice => {
-                    return (
-                      <p key={choice}>
-                        <label className={styles.checkboxLabel}>
-                          <Component name={question.id} value={choice} required={required} />
-                          &nbsp;
-                          {choice}
-                        </label>
-                      </p>
-                    );
-                  })}
-                  {question.other ? (
-                    <p className={styles.checkboxLabel}>
-                      <label className={styles.checkboxLabel}>
-                        <Component name={question.id} value="other" required={required} />
-                        &nbsp;Other:&nbsp;
-                      </label>
-                      <input
-                        type="text"
-                        name={question.id}
-                        aria-label="Other"
-                        className={styles.other}
-                      />
-                    </p>
-                  ) : null}
-                  <Typography variant="label/medium" component="p" className={styles.error}>
-                    <ErrorIcon /> Required.
-                  </Typography>
-                </div>
+                <MultipleChoiceGroup
+                  mode={question.type === 'select-one' ? 'radio' : 'checkbox'}
+                  name={question.id}
+                  choices={question.choices}
+                  inline={question.inline}
+                  other={question.other}
+                  required={required}
+                />
+                <Typography variant="label/medium" component="p" className={styles.error}>
+                  <ErrorIcon /> Required.
+                </Typography>
               </fieldset>
             );
           }

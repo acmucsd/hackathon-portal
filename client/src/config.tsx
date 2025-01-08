@@ -245,7 +245,7 @@ export const appQuestions: Step[] = [
       },
       {
         type: 'select-one',
-        id: 'coc',
+        id: 'will-attend',
         question: (
           <>
             If accepted, I am attending DiamondHacks on April 4-5 at UC San Diego.
