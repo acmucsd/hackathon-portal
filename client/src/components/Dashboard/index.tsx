@@ -1,5 +1,3 @@
-'use client';
-
 import Image from 'next/image';
 import Card from '../Card';
 import styles from './style.module.scss';
@@ -9,9 +7,7 @@ import Link from 'next/link';
 import FAQ, { Question } from '../FAQAccordion';
 import DashboardStatus from '../DashboardStatus';
 import TimelineItem from '../TimelineItem';
-import { UserAPI } from '@/lib/api';
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { PrivateProfile } from '@/lib/types/apiResponses';
 
 type Status = 'NOT_SUBMITTED' | 'SUBMITTED' | 'WITHDRAWN' | 'ACCEPTED' | 'REJECTED' | 'CONFIRMED';
 
@@ -26,37 +22,16 @@ export interface Deadlines {
 interface DashboardProps {
   faq: Question[];
   timeline: Deadlines;
+  user: PrivateProfile;
 }
 
-const Dashboard = ({ faq, timeline }: DashboardProps) => {
-  const router = useRouter();
-
-  const [name, setName] = useState<string | null>(null);
-  const [status, setStatus] = useState<Status>('NOT_SUBMITTED');
-
-  const fetchUser = async () => {
-    try {
-      const fetchedUser = await UserAPI.getCurrentUser();
-      if (fetchedUser) {
-        setName(fetchedUser.firstName + ' ' + fetchedUser.lastName);
-        setStatus(fetchedUser.applicationStatus as Status);
-      } else {
-        router.push('/login');
-      }
-    } catch (error) {
-      router.push('/login');
-    }
-  };
-
-  useEffect(() => {
-    fetchUser();
-  }, []);
+const Dashboard = ({ faq, timeline, user }: DashboardProps) => {
 
   return (
     <div className={styles.container}>
       <Card gap={1.5} className={`${styles.card} ${styles.banner}`}>
         <Typography variant="headline/heavy/large" component="h1" className={styles.title}>
-          Welcome, {name}!
+          Welcome, {user.firstName + ' ' + user.lastName}!
         </Typography>
         <Typography variant="body/medium" component="p" className={styles.subtitle}>
           Access the application and view DiamondHacks updates here.
@@ -72,7 +47,7 @@ const Dashboard = ({ faq, timeline }: DashboardProps) => {
         <Typography variant="headline/heavy/small" component="h2">
           Application Status
         </Typography>
-        <DashboardStatus status={status} timeline={timeline} />
+        <DashboardStatus status={user.applicationStatus as Status} timeline={timeline} />
       </Card>
       <Card gap={1.5} className={`${styles.card} ${styles.timeline}`}>
         <Typography variant="headline/heavy/small" component="h2">
