@@ -4,20 +4,19 @@
   align-self: start;
   text-transform: capitalize;
 
-  &.not-started,
-  &.incomplete {
+  &.NOT_SUBMITTED {
     background-color: #fad5dc;
     color: #8d0d25;
   }
-  &.submitted {
+  &.SUBMITTED {
     background-color: #d6e5f8;
     color: #142e52;
   }
-  &.accepted {
+  &.ACCEPTED {
     background-color: #d7ede7;
     color: #00573f;
   }
-  &.accepted {
+  &.ACCEPTED {
     background-color: #ece6f9;
     color: #35118d;
   }

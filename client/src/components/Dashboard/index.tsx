@@ -7,8 +7,9 @@ import Link from 'next/link';
 import FAQ, { Question } from '../FAQAccordion';
 import DashboardStatus from '../DashboardStatus';
 import TimelineItem from '../TimelineItem';
+import { PrivateProfile } from '@/lib/types/apiResponses';
 
-type Status = 'not-started' | 'incomplete' | 'submitted' | 'accepted' | 'confirmed';
+type Status = 'NOT_SUBMITTED' | 'SUBMITTED' | 'WITHDRAWN' | 'ACCEPTED' | 'REJECTED' | 'CONFIRMED';
 
 /** Dates should be at 12 am UTC. */
 export interface Deadlines {
@@ -19,18 +20,17 @@ export interface Deadlines {
 }
 
 interface DashboardProps {
-  name: string;
   faq: Question[];
-  status: Status;
   timeline: Deadlines;
+  user: PrivateProfile;
 }
 
-const Dashboard = ({ name, faq, status, timeline }: DashboardProps) => {
+const Dashboard = ({ faq, timeline, user }: DashboardProps) => {
   return (
     <div className={styles.container}>
       <Card gap={1.5} className={`${styles.card} ${styles.banner}`}>
         <Typography variant="headline/heavy/large" component="h1" className={styles.title}>
-          Welcome, {name}!
+          Welcome, {user.firstName + ' ' + user.lastName}!
         </Typography>
         <Typography variant="body/medium" component="p" className={styles.subtitle}>
           Access the application and view DiamondHacks updates here.
@@ -46,7 +46,7 @@ const Dashboard = ({ name, faq, status, timeline }: DashboardProps) => {
         <Typography variant="headline/heavy/small" component="h2">
           Application Status
         </Typography>
-        <DashboardStatus status={status} timeline={timeline} />
+        <DashboardStatus status={user.applicationStatus as Status} timeline={timeline} />
       </Card>
       <Card gap={1.5} className={`${styles.card} ${styles.timeline}`}>
         <Typography variant="headline/heavy/small" component="h2">
