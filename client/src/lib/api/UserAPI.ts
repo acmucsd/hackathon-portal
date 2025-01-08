@@ -18,7 +18,7 @@ export const login = async (email: string, password: string): Promise<string> =>
  * @returns User's profile
  */
 export const getCurrentUser = async (): Promise<PrivateProfile> => {
-  const response = await axios.get<GetCurrentUserResponse>('/api/getUser');
+  const response = await axios.get<GetCurrentUserResponse>('/api/getCurrentUser');
   return response.data.user;
 };
 
@@ -29,8 +29,6 @@ export const getCurrentUser = async (): Promise<PrivateProfile> => {
  */
 export const updateCurrentUserProfile = async (user: UserPatches): Promise<PrivateProfile> => {
   const requestBody: PatchUserRequest = { user };
-
   const response = await axios.patch<PatchUserResponse>('/api/updateUser', requestBody);
-
   return response.data.user;
 };

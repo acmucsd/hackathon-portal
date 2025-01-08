@@ -24,7 +24,7 @@ export async function GET() {
   try {
     const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
     const response = await getCurrentUser(accessToken);
-    return response;
+    return NextResponse.json(response);
   } catch (error) {
     if (error instanceof AxiosError) {
       return NextResponse.json(

@@ -1,6 +1,6 @@
 import config from '@/lib/config';
 import type { UserPatches, PatchUserRequest } from '@/lib/types/apiRequests';
-import type { PrivateProfile, PatchUserResponse } from '@/lib/types/apiResponses';
+import type { PatchUserResponse } from '@/lib/types/apiResponses';
 import { getCookie } from '@/lib/services/CookieService';
 import { CookieType } from '@/lib/types/enums';
 import { NextResponse, NextRequest } from 'next/server';
@@ -9,7 +9,7 @@ import axios, { AxiosError } from 'axios';
 const updateCurrentUserProfile = async (
   token: string,
   user: UserPatches
-): Promise<PrivateProfile> => {
+): Promise<PatchUserResponse> => {
   const requestUrl = `${config.api.baseUrl}${config.api.endpoints.user.user}`;
 
   const requestBody: PatchUserRequest = { user };
@@ -19,19 +19,18 @@ const updateCurrentUserProfile = async (
       Authorization: `Bearer ${token}`,
     },
   });
-  return response.data.user;
+  return response.data;
 };
 
 export async function PATCH(request: NextRequest) {
-  const authToken = await getCookie(CookieType.ACCESS_TOKEN);
-
   try {
+    const authToken = await getCookie(CookieType.ACCESS_TOKEN);
     const body = await request.json();
     const user: UserPatches = body.user;
 
     const updatedUser = await updateCurrentUserProfile(authToken, user);
 
-    return NextResponse.json(updatedUser, { status: 200 });
+    return NextResponse.json(updatedUser);
   } catch (error) {
     if (error instanceof AxiosError) {
       return NextResponse.json(

@@ -25,7 +25,6 @@ export default function ProfilePage() {
   const size = useWindowSize();
   const isMobile = (size.width ?? 0) <= 870;
   const [editProfile, setEditProfile] = useState(false);
-  const [loading, setLoading] = useState(true);
 
   const router = useRouter();
 
@@ -47,7 +46,6 @@ export default function ProfilePage() {
       const updatedUser = await UserAPI.updateCurrentUserProfile(updateProfile);
       setEditProfile(prevState => !prevState);
       reset(updatedUser);
-      setLoading(false);
     } catch (error) {
       reportError('Changes failed to save', error);
     }
@@ -71,10 +69,6 @@ export default function ProfilePage() {
   useEffect(() => {
     fetchUser();
   }, []);
-
-  if (loading) {
-    return null; // Do not render anything while loading
-  }
 
   return (
     <main className={styles.main}>
