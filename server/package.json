@@ -8,7 +8,7 @@
     "start": "node --env-file=.env build/index.js",
     "dev": "node -r ts-node/register --env-file=.env --watch index.ts",
     "test": "jest --config jest.config.json --runInBand",
-    "release": "typeorm-ts-node-commonjs migration:run -d ./MigrationDataSource.ts && node --env-file=.env build/index.js",
+    "release": "typeorm-ts-node-commonjs migration:run -d ./MigrationDataSource.ts && node build/index.js",
     "lint": "eslint ./ --ext .ts",
     "lint:fix": "eslint ./ --ext .ts --fix",
     "db:migrate:generate": "typeorm-ts-node-commonjs migration:generate -d ./MigrationDataSource.ts",
