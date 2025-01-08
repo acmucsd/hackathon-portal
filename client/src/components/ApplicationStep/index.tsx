@@ -2,12 +2,10 @@ import { ReactNode, useId, useRef } from 'react';
 import Card from '../Card';
 import Heading from '../Heading';
 import Typography from '../Typography';
-import { Checkbox, createTheme, Radio, ThemeProvider } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material';
 import styles from './style.module.scss';
 import Button from '../Button';
 import { useRouter } from 'next/navigation';
-import { iso31661 } from 'iso-3166';
-import Dropdown from '../Dropdown';
 import Link from 'next/link';
 import ErrorIcon from '../../../public/assets/icons/error.svg';
 import MultipleChoiceGroup, { OTHER } from '../MultipleChoiceGroup';
@@ -130,8 +128,6 @@ const ApplicationStep = ({
         <hr />
         {questions.map(question => {
           if (question.type === 'select-one' || question.type === 'select-multiple') {
-            const required = !question.optional && question.type === 'select-one';
-
             return (
               <fieldset key={question.id} className={styles.multipleChoice}>
                 <legend>
@@ -146,7 +142,7 @@ const ApplicationStep = ({
                   choices={question.choices}
                   inline={question.inline}
                   other={question.other}
-                  required={required}
+                  required={!question.optional}
                 />
                 <Typography variant="label/medium" component="p" className={styles.error}>
                   <ErrorIcon /> Required.
@@ -183,7 +179,7 @@ const ApplicationStep = ({
                     required={!question.optional}
                     className={styles.textline}
                   >
-                    <option selected disabled>
+                    <option value="" selected disabled>
                       Select one
                     </option>
                     {question.choices.map(choice => (

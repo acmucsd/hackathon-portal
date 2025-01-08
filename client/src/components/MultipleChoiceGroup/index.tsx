@@ -2,7 +2,9 @@
 
 import { Checkbox, Radio } from '@mui/material';
 import styles from './style.module.scss';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import Typography from '../Typography';
+import ErrorIcon from '../../../public/assets/icons/error.svg';
 
 export const OTHER = '__OTHER__';
 
@@ -26,11 +28,12 @@ const MultipleChoiceGroup = ({
   const Component = mode === 'radio' ? Radio : Checkbox;
   const [selected, setSelected] = useState('');
   const [showOther, setShowOther] = useState(false);
+  const ref = useRef<HTMLDivElement | null>(null);
 
   const isOtherEnabled = mode === 'radio' ? selected === OTHER : showOther;
 
   return (
-    <div className={inline ? styles.inline : ''}>
+    <div className={`${styles.wrapper} ${inline ? styles.inline : ''}`} ref={ref}>
       {choices.map(choice => {
         return (
           <p key={choice}>
@@ -38,11 +41,16 @@ const MultipleChoiceGroup = ({
               <Component
                 name={name}
                 value={choice}
-                required={required}
+                // For checkboxes, we can require at least one checkbox by
+                // only setting all of them `required` if none of them are
+                // checked
+                required={required && (mode === 'radio' || selected === '')}
                 checked={mode === 'radio' ? selected === choice : undefined}
                 onChange={e => {
                   if (e.currentTarget.checked) {
                     setSelected(choice);
+                  } else if (mode === 'checkbox' && !ref.current?.querySelector(':checked')) {
+                    setSelected('');
                   }
                 }}
               />
@@ -63,12 +71,14 @@ const MultipleChoiceGroup = ({
             <Component
               name={name}
               value={OTHER}
-              required={required}
+              required={required && (mode === 'radio' || selected === '')}
               checked={isOtherEnabled}
               onChange={e => {
                 setShowOther(e.currentTarget.checked);
                 if (e.currentTarget.checked) {
                   setSelected(OTHER);
+                } else if (mode === 'checkbox' && !ref.current?.querySelector(':checked')) {
+                  setSelected('');
                 }
               }}
             />

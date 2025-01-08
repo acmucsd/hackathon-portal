@@ -56,6 +56,7 @@
 
 .error {
   display: none;
+  align-items: center;
   gap: 0.5rem;
   color: vars.$error;
 }

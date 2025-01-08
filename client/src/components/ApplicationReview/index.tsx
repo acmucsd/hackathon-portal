@@ -30,7 +30,7 @@ const ApplicationReview = ({ responses, prev, next }: ApplicationReviewProps) =>
       </dl>
 
       <div className={styles.buttonRow}>
-        <Button href={prev} variant="secondary">
+        <Button href="/apply" variant="secondary">
           Make Changes
         </Button>
         <Button href={next}>Submit</Button>
