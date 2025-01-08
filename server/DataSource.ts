@@ -11,9 +11,6 @@ export const dataSource = new DataSource({
   password: Config.database.pass,
   database: Config.database.name,
   entities: models,
-  ssl: {
-    rejectUnauthorized: false,
-  },
 });
 
 // important for dependency injection for repositories

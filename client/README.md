@@ -5,30 +5,29 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with
 
 1. Copy `client/.env.example` to `client/.env.local`.
 
-   Copy `server/.env.example` to `server/.env`.
+   Download
+   [`.env` and Firebase credentials](https://drive.google.com/drive/u/2/folders/1r9w9NFSBFmobQsJ4yXhOwaMRgGMGVs9X)
+   to `server/.env` and `server/firebaseServiceAccountKey.json`.
 
    Add `PORT=4000` to the end of `server/.env`.
 
-2. Download the
-   [Firebase credentials](https://drive.google.com/drive/u/2/folders/1r9w9NFSBFmobQsJ4yXhOwaMRgGMGVs9X)
-   to `server/firebaseServiceAccountKey.json`.
-
-3. Run the backend database service in one terminal shell:
+2. Run the backend database service in one terminal shell:
 
    ```shell
    # in server/
    $ docker-compose --env-file .env up
    ```
 
-4. Build and run the backend server in another shell:
+3. Build and run the backend server in another shell:
 
    ```shell
    # in server/
+   $ yarn
    $ yarn build
    $ yarn start
    ```
 
-5. Run the frontend development server in a third shell:
+4. Run the frontend development server in a third shell:
 
    ```shell
    # in client/
@@ -54,6 +53,7 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 feedback and contributions are welcome!
 
 ### Useful Documentation Links:
+
 - https://nextjs.org/docs/app/getting-started/layouts-and-pages (Creating new routes)
 - We use `React-Hook-Form` for authentication: https://react-hook-form.com/
 - We use useRouter to make API calls: https://nextjs.org/docs/app/api-reference/functions/use-router
