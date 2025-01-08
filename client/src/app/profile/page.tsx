@@ -7,8 +7,6 @@ import TextField from '@/components/TextField';
 import CloseIcon from '../../../public/assets/icons/close.svg';
 import EditIcon from '../../../public/assets/icons/edit.svg';
 import { UserAPI } from '@/lib/api';
-import { CookieService } from '@/lib/services';
-import { CookieType } from '@/lib/types/enums';
 import { reportError } from '@/lib/utils';
 import { useWindowSize } from '@/lib/hooks/useWindowSize';
 import { useState, useEffect } from 'react';
@@ -27,6 +25,7 @@ export default function ProfilePage() {
   const size = useWindowSize();
   const isMobile = (size.width ?? 0) <= 870;
   const [editProfile, setEditProfile] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const router = useRouter();
 
@@ -44,12 +43,11 @@ export default function ProfilePage() {
   });
 
   const onSubmit: SubmitHandler<UpdateProfileValues> = async updateProfile => {
-    const authToken = CookieService.getClientCookie(CookieType.ACCESS_TOKEN);
-
     try {
-      const updatedUser = await UserAPI.updateCurrentUserProfile(authToken, updateProfile);
+      const updatedUser = await UserAPI.updateCurrentUserProfile(updateProfile);
       setEditProfile(prevState => !prevState);
       reset(updatedUser);
+      setLoading(false);
     } catch (error) {
       reportError('Changes failed to save', error);
     }
@@ -62,8 +60,7 @@ export default function ProfilePage() {
 
   const fetchUser = async () => {
     try {
-      const authToken = CookieService.getClientCookie(CookieType.ACCESS_TOKEN);
-      const fetchedUser = await UserAPI.getCurrentUser(authToken);
+      const fetchedUser = await UserAPI.getCurrentUser();
       reset(fetchedUser);
     } catch (error) {
       reportError('Cannot find user', error);
@@ -74,6 +71,10 @@ export default function ProfilePage() {
   useEffect(() => {
     fetchUser();
   }, []);
+
+  if (loading) {
+    return null; // Do not render anything while loading
+  }
 
   return (
     <main className={styles.main}>
