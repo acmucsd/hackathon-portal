@@ -4,4 +4,3 @@
 
 - [`server`](./server/): backend
 - [`client`](./client/): frontend
-
