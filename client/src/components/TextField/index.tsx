@@ -13,6 +13,7 @@ interface TextFieldProps {
   error: any;
   type: HTMLInputTypeAttribute;
   autoComplete: string;
+  disabled?: boolean;
 }
 
 const TextField = ({
@@ -24,6 +25,7 @@ const TextField = ({
   error,
   type,
   autoComplete,
+  disabled = false,
 }: TextFieldProps) => {
   return (
     <div className={`${styles.textField} ${styles[variant]}`}>
@@ -37,12 +39,15 @@ const TextField = ({
         type={type}
         autoComplete={autoComplete}
         placeholder={defaultText ? defaultText : ''}
+        disabled={disabled}
         {...formRegister}
       />
-      <Typography variant="label/medium" component="p" className={styles.formError}>
-        {error && <ErrorIcon />}
-        {error?.message}
-      </Typography>
+      {error && (
+        <Typography variant="label/medium" component="p" className={styles.formError}>
+          {error && <ErrorIcon />}
+          {error?.message}
+        </Typography>
+      )}
     </div>
   );
 };

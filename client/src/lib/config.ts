@@ -5,6 +5,9 @@ const config = {
       auth: {
         register: '/user',
       },
+      user: {
+        user: '/user',
+      },
     },
   },
 };

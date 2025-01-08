@@ -13,3 +13,8 @@ export enum ApplicationStatus {
   REJECTED = 'REJECTED',
   ALL_DONE = 'ALL_DONE',
 }
+
+export enum CookieType {
+  USER = 'USER',
+  ACCESS_TOKEN = 'ACCESS_TOKEN',
+}
