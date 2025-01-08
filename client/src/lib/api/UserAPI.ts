@@ -17,8 +17,15 @@ export const login = async (email: string, password: string): Promise<string> =>
  * Get current user's private profile
  * @returns User's profile
  */
-export const getCurrentUser = async (): Promise<PrivateProfile> => {
-  const response = await axios.get<GetCurrentUserResponse>('/api/getCurrentUser');
+export const getCurrentUser = async (token: string): Promise<PrivateProfile> => {
+  const response = await axios.get<GetCurrentUserResponse>(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/getCurrentUser`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
   return response.data.user;
 };
 

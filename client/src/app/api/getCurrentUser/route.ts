@@ -1,8 +1,6 @@
 import config from '@/lib/config';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { GetCurrentUserResponse } from '@/lib/types/apiResponses';
-import { getCookie } from '@/lib/services/CookieService';
-import { CookieType } from '@/lib/types/enums';
 import axios, { AxiosError } from 'axios';
 
 /**
@@ -20,10 +18,15 @@ const getCurrentUser = async (token: string): Promise<GetCurrentUserResponse> =>
   return response.data;
 };
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
-    const response = await getCurrentUser(accessToken);
+    const token = request.headers.get('Authorization')?.replace('Bearer ', '');
+
+    if (!token) {
+      return NextResponse.json({ error: 'Authorization token missing' }, { status: 401 });
+    }
+
+    const response = await getCurrentUser(token);
     return NextResponse.json(response);
   } catch (error) {
     if (error instanceof AxiosError) {
