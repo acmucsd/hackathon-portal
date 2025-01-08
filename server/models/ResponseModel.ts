@@ -18,7 +18,7 @@ export class ResponseModel extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   uuid: string;
 
-  @ManyToOne((type) => UserModel, (user) => user.response, {
+  @ManyToOne((type) => UserModel, (user) => user.responses, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'user' })

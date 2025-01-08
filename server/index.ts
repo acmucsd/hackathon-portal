@@ -1,19 +1,14 @@
 import 'reflect-metadata';
 import { createExpressServer, useContainer } from 'routing-controllers';
 import Container from 'typedi';
-import { applicationDefault, initializeApp } from 'firebase-admin/app';
 
 // must import data source before using repositories
 import { dataSource } from './DataSource';
 import { controllers } from './api/controllers';
-import { middlewares, errorHandler } from './api/middleware';
+import { middlewares } from './api/middleware';
 import { Config } from './config';
 
 useContainer(Container);
-
-initializeApp({
-  credential: applicationDefault(),
-});
 
 dataSource
   .initialize()
@@ -39,8 +34,9 @@ const app = createExpressServer({
     skipMissingProperties: true,
     forbidUnknownValues: true,
   },
+  defaultErrorHandler: false,
 });
 
-app.use(errorHandler);
-app.listen(Config.port);
-console.log(`Listening on port ${Config.port}...`);
+app.listen(Config.port, () => {
+  console.log(`Listening on port ${Config.port}...`);
+});

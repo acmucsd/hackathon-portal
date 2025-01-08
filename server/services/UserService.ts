@@ -7,18 +7,19 @@ import {
   SendEmailVerificationRequest,
 } from '../types/ApiRequests';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { FirebaseAuthError, getAuth } from 'firebase-admin/auth';
+import { FirebaseAuthError } from 'firebase-admin/auth';
 import {
   ForbiddenError,
   NotFoundError,
   UnauthorizedError,
 } from 'routing-controllers';
 import { UpdateUser } from '../api/validators/UserControllerRequests';
-import { auth, Config } from '../config';
+import { Config } from '../config';
+import { auth, adminAuth } from '../FirebaseAuth';
 import {
   GetIdTokenResponse,
-  LoginResponse,
   SendEmailVerificationResponse,
+  UserAndToken,
 } from '../types/ApiResponses';
 
 const GET_ID_TOKEN_ENDPOINT =
@@ -54,10 +55,10 @@ export class UserService {
     );
     const emailAlreadyUsed = userWithEmail !== null;
     if (emailAlreadyUsed) {
-      const firebaseRecord = await getAuth().getUserByEmail(email);
+      const firebaseRecord = await adminAuth.getUserByEmail(email);
 
       if (!firebaseRecord.emailVerified) {
-        await getAuth().updateUser(firebaseRecord.uid, {
+        await adminAuth.updateUser(firebaseRecord.uid, {
           password: createUser.password,
         });
 
@@ -76,7 +77,7 @@ export class UserService {
 
     let firebaseUser;
     try {
-      firebaseUser = await getAuth().createUser({
+      firebaseUser = await adminAuth.createUser({
         email,
         password: createUser.password,
         displayName: `${createUser.firstName} ${createUser.lastName}`,
@@ -114,7 +115,7 @@ export class UserService {
   ): Promise<UserModel> {
     const firstName = updateUser.firstName ?? user.firstName;
     const lastName = updateUser.lastName ?? user.lastName;
-    getAuth().updateUser(user.id, {
+    adminAuth.updateUser(user.id, {
       displayName: `${firstName} ${lastName}`,
     });
     return this.transactionsManager.readWrite(async (entityManager) => {
@@ -126,21 +127,28 @@ export class UserService {
   }
 
   public async deleteUser(user: UserModel): Promise<void> {
-    getAuth().deleteUser(user.id);
+    adminAuth.deleteUser(user.id);
     this.transactionsManager.readWrite(async (entityManager) =>
       Repositories.user(entityManager).remove(user),
     );
   }
 
-  public async login(email: string, password: string): Promise<LoginResponse> {
+  public async login(email: string, password: string): Promise<UserAndToken> {
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
       const token = await userCredential.user.getIdToken();
       // If checkAuthToken() runs without throwing an error, the user exists.
       const user = await this.checkAuthToken(token);
-      return { error: null, token, user };
+      return { token, user };
     } catch (error) {
-      if (error instanceof UnauthorizedError || error instanceof ForbiddenError) {
+      if (
+        error instanceof UnauthorizedError ||
+        error instanceof ForbiddenError
+      ) {
         // Throw special error messages as-is.
         throw error;
       }
@@ -151,7 +159,7 @@ export class UserService {
   public async checkAuthToken(token: string): Promise<UserModel> {
     let decodedToken;
     try {
-      decodedToken = await getAuth().verifyIdToken(token);
+      decodedToken = await adminAuth.verifyIdToken(token);
     } catch (error) {
       if (error instanceof FirebaseAuthError) {
         if (error.code === 'auth/invalid-id-token')
@@ -174,7 +182,7 @@ export class UserService {
   }
 
   private async sendEmailVerification(id: string): Promise<string> {
-    const customToken = await getAuth().createCustomToken(id);
+    const customToken = await adminAuth.createCustomToken(id);
 
     const getIdTokenRequestBody: GetIdTokenRequest = {
       token: customToken,
@@ -213,4 +221,3 @@ export class UserService {
     return email;
   }
 }
-

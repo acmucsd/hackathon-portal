@@ -1,6 +1,6 @@
 {
   "name": "hackathon-portal",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "REST API for ACM at UCSD's hackathon portal.",
   "main": "index.js",
   "scripts": {
@@ -8,9 +8,13 @@
     "start": "node build/index.js --env-file=.env",
     "dev": "node -r ts-node/register --env-file=.env --watch index.ts",
     "test": "jest --config jest.config.json --runInBand",
-    "release": "node build/index.js",
+    "release": "typeorm-ts-node-commonjs migration:run -d ./MigrationDataSource.ts && node build/index.js --env-file=.env",
     "lint": "eslint ./ --ext .ts",
-    "lint:fix": "eslint ./ --ext .ts --fix"
+    "lint:fix": "eslint ./ --ext .ts --fix",
+    "db:migrate:generate": "typeorm-ts-node-commonjs migration:generate -d ./MigrationDataSource.ts",
+    "db:migrate:create": "typeorm-ts-node-commonjs migration:create",
+    "db:migrate": "typeorm-ts-node-commonjs migration:run -d ./MigrationDataSource.ts",
+    "db:rollback": "typeorm-ts-node-commonjs migration:revert -d ./MigrationDataSource.ts"
   },
   "repository": "https://github.com/acmucsd/hackathon-portal.git",
   "author": "Eric Chang <55172722+echang594@users.noreply.github.com>",
@@ -21,6 +25,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "firebase": "^11.0.1",
     "firebase-admin": "^13.0.2",

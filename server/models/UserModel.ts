@@ -45,7 +45,7 @@ export class UserModel {
   @OneToMany((type) => ResponseModel, (response) => response.user, {
     cascade: true,
   })
-  response: ResponseModel;
+  responses: ResponseModel;
 
   public isRestricted(): boolean {
     return this.accessType === UserAccessType.RESTRICTED;
@@ -68,7 +68,7 @@ export class UserModel {
   }
 
   public getPrivateProfile(): PrivateProfile {
-    return {
+    const privateProfile: PrivateProfile = {
       ...this.getPublicProfile(),
       email: this.email,
       accessType: this.accessType,
@@ -76,5 +76,7 @@ export class UserModel {
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };
+    if (this.responses) privateProfile.responses = this.responses;
+    return privateProfile;
   }
 }

@@ -11,7 +11,7 @@ export enum ApplicationStatus {
   WITHDRAWN = 'WITHDRAWN',
   ACCEPTED = 'ACCEPTED',
   REJECTED = 'REJECTED',
-  ALL_DONE = 'ALL_DONE',
+  CONFIRMED = 'CONFIRMED',
 }
 
 export enum FormType {
