@@ -19,14 +19,8 @@ export const login = async (email: string, password: string): Promise<string> =>
  * @param token Authorization bearer token
  * @returns User's profile
  */
-export const getCurrentUser = async (token: string): Promise<PrivateProfile> => {
-  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.user.user}`;
-  const response = await axios.get<GetCurrentUserResponse>(requestUrl, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
+export const getCurrentUser = async (): Promise<PrivateProfile> => {
+  const response = await axios.get<GetCurrentUserResponse>('/api/getCurrentUser');
   return response.data.user;
 };
 

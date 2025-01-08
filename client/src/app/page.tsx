@@ -5,7 +5,7 @@ import Dashboard from '@/components/Dashboard';
 export default function Home() {
   return (
     <main className={styles.main}>
-      <Dashboard name="User" faq={QUESTIONS} status="not-started" timeline={TIMELINE} />
+      <Dashboard faq={QUESTIONS} timeline={TIMELINE} />
     </main>
   );
 }

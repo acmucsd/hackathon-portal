@@ -1,3 +1,5 @@
+'use client';
+
 import Image from 'next/image';
 import Card from '../Card';
 import styles from './style.module.scss';
@@ -7,6 +9,11 @@ import Link from 'next/link';
 import FAQ, { Question } from '../FAQAccordion';
 import DashboardStatus from '../DashboardStatus';
 import TimelineItem from '../TimelineItem';
+import { UserAPI } from '@/lib/api';
+import { CookieService } from '@/lib/services';
+import { useEffect, useState } from 'react';
+import { CookieType } from '@/lib/types/enums';
+import { useRouter } from 'next/navigation';
 
 type Status = 'not-started' | 'incomplete' | 'submitted' | 'accepted' | 'confirmed';
 
@@ -19,13 +26,34 @@ export interface Deadlines {
 }
 
 interface DashboardProps {
-  name: string;
   faq: Question[];
-  status: Status;
   timeline: Deadlines;
 }
 
-const Dashboard = ({ name, faq, status, timeline }: DashboardProps) => {
+const Dashboard = ({ faq, timeline }: DashboardProps) => {
+
+  const router = useRouter();
+
+  const [name, setName] = useState<string | null>(null);
+  const [status, setStatus] = useState<Status>('not-started');
+
+  const fetchUser = async () => {
+    try {
+      const fetchedUser = await UserAPI.getCurrentUser();
+      setName(fetchedUser.firstName + ' ' + fetchedUser.lastName);
+      console.log("applicationStatus: ", fetchedUser.applicationStatus);
+      // setStatus(fetchedUser.applicationStatus);
+    } catch (error) {
+      reportError(error);
+      router.push('/login');
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
+
   return (
     <div className={styles.container}>
       <Card gap={1.5} className={`${styles.card} ${styles.banner}`}>
