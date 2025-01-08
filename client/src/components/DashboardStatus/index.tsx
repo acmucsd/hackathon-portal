@@ -37,8 +37,8 @@ const DashboardStatus = ({ status, timeline }: DashboardStatusProps) => {
           {status === 'not-started'
             ? 'Apply Now'
             : status === 'incomplete'
-            ? 'Continue Application'
-            : 'Edit Application'}
+              ? 'Continue Application'
+              : 'Edit Application'}
         </Button>
       )}
     </>
