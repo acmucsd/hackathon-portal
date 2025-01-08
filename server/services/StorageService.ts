@@ -37,7 +37,6 @@ export class StorageService {
     const response = await upload.done();
     if (!response.Location)
       throw new InternalServerError('Resource could not be uploaded');
-    console.log(fullPath, response.Location);
     return response.Location;
   }
 
@@ -63,17 +62,14 @@ export class StorageService {
     const response = await upload.done();
     if (!response.Location)
       throw new InternalServerError('Resource could not be uploaded');
-    console.log(fullPath, response.Location);
     return response.Location;
   }
 
   public async deleteAtUrl(url: string): Promise<void> {
-    const { pathname } = new URL(url);
-    const delimiter = pathname.indexOf('/', 1);
-    const bucket = pathname.slice(1, delimiter);
-    const key = pathname.slice(delimiter);
-    console.log(url, pathname, bucket, key);
-    await this.s3.send(new DeleteObjectCommand({ Bucket: bucket, Key: key }));
+    const key = new URL(url).pathname.slice(1);
+    await this.s3.send(
+      new DeleteObjectCommand({ Bucket: Config.s3.bucket, Key: key }),
+    );
   }
 
   public static getFileOptions(mediaType: MediaType): FileOptions {

@@ -1,5 +1,5 @@
 import {
-  Body,
+  BodyParam,
   Delete,
   Get,
   JsonController,
@@ -18,10 +18,7 @@ import {
 } from '../../types/ApiResponses';
 import { UserAuthentication } from '../middleware/UserAuthentication';
 import { ResponseService } from '../../services/ResponseService';
-import {
-  CreateApplicationRequest,
-  UpdateApplicationRequest,
-} from '../validators/ResponseRequests';
+import { Application } from '../validators/ResponseRequests';
 import { StorageService } from '../../services/StorageService';
 import { MediaType } from '../../types/Enums';
 import { File } from '../../types/ApiRequests';
@@ -56,7 +53,7 @@ export class ResponseController {
   @UseBefore(UserAuthentication)
   @Post('/application')
   async submitApplication(
-    @Body() createApplicationRequest: CreateApplicationRequest,
+    @BodyParam('application') application: Application,
     @AuthenticatedUser() user: UserModel,
     @UploadedFile('file', {
       options: StorageService.getFileOptions(MediaType.RESUME),
@@ -65,7 +62,7 @@ export class ResponseController {
   ): Promise<SubmitApplicationResponse> {
     const response = await this.responseService.submitUserApplication(
       user,
-      createApplicationRequest.application,
+      application,
       file,
     );
     return { error: null, response: response };
@@ -74,7 +71,7 @@ export class ResponseController {
   @UseBefore(UserAuthentication)
   @Patch('/application')
   async updateApplication(
-    @Body() updateApplicationRequest: UpdateApplicationRequest,
+    @BodyParam('application') application: Application,
     @AuthenticatedUser() user: UserModel,
     @UploadedFile('file', {
       required: false,
@@ -84,7 +81,8 @@ export class ResponseController {
   ): Promise<SubmitApplicationResponse> {
     const response = await this.responseService.updateUserApplication(
       user,
-      updateApplicationRequest.application,
+      application,
+      file,
     );
     return { error: null, response: response };
   }

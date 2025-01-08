@@ -123,6 +123,7 @@ export class ResponseService {
   ): Promise<ResponseModel> {
     const application = await this.getUserApplication(user);
 
+    console.log(resume);
     if (resume) {
       // Error if resume is not a pdf
       if (path.extname(resume.originalname) !== '.pdf')
@@ -149,7 +150,7 @@ export class ResponseService {
     return this.transactionsManager.readWrite(async (entityManager) => {
       const responseRepository = Repositories.response(entityManager);
       const newApplication = responseRepository.merge(application, {
-        data: updateApplication,
+        data: { ...application.data, ...updateApplication },
       });
       const updatedApplication = responseRepository.save(newApplication);
       return updatedApplication;
