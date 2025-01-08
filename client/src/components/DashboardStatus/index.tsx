@@ -3,7 +3,13 @@ import { Deadlines } from '../Dashboard';
 import Button from '../Button';
 import styles from './style.module.scss';
 
-export type Status = 'not-started' | 'incomplete' | 'submitted' | 'accepted' | 'confirmed';
+export type Status =
+  | 'NOT_SUBMITTED'
+  | 'SUBMITTED'
+  | 'WITHDRAWN'
+  | 'ACCEPTED'
+  | 'REJECTED'
+  | 'CONFIRMED';
 
 export const dateFormat = new Intl.DateTimeFormat('en-US', {
   timeZone: 'UTC',
@@ -15,11 +21,16 @@ interface DashboardStatusProps {
   timeline: Deadlines;
 }
 
+const statusText = (status: string) => {
+  const formatted = status.replace('_', ' ').toLowerCase();
+  return formatted.charAt(0).toUpperCase() + formatted.slice(1);
+};
+
 const DashboardStatus = ({ status, timeline }: DashboardStatusProps) => {
   // TODO
   return (
     <>
-      <div className={`${styles.badge} ${styles[status]}`}>Status: {status.replace('-', ' ')}</div>
+      <div className={`${styles.badge} ${styles[status]}`}>Status: {statusText(status)}</div>
       <Typography variant="body/large" component="p">
         Our records have indicated that you have not started on your application. Click below to go
         on your hacker journey!
@@ -28,19 +39,13 @@ const DashboardStatus = ({ status, timeline }: DashboardStatusProps) => {
         Please note that applications are due on {dateFormat.format(timeline.application)}.
         Reference the hackathon timeline for more information.
       </Typography>
-      {status === 'confirmed' ? (
+      {status === 'CONFIRMED' ? (
         <Button href="/confirmation">View Confirmation</Button>
-      ) : status === 'accepted' ? (
+      ) : status === 'ACCEPTED' ? (
         <Button>Confirm Acceptance</Button>
-      ) : (
-        <Button href="/apply">
-          {status === 'not-started'
-            ? 'Apply Now'
-            : status === 'incomplete'
-              ? 'Continue Application'
-              : 'Edit Application'}
-        </Button>
-      )}
+      ) : status === 'NOT_SUBMITTED' ? (
+        <Button href="/apply">Apply Now</Button>
+      ) : null}
     </>
   );
 };
