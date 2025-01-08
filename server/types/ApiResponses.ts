@@ -17,8 +17,16 @@ export interface PrivateProfile extends PublicProfile {
   responses?: ResponseModel;
 }
 
+export interface CustomErrorBody {
+  name: string;
+  message: string;
+  httpCode: number;
+  stack?: string;
+  errors?: any;
+}
+
 export interface ApiResponse {
-  error: any;
+  error: CustomErrorBody | null;
 }
 
 export interface CreateUserResponse extends ApiResponse {
@@ -38,6 +46,11 @@ export interface UpdateCurrentUserReponse extends ApiResponse {
 }
 
 export interface DeleteCurrentUserResponse extends ApiResponse {}
+
+export interface UserAndToken {
+  token: string;
+  user: PrivateProfile;
+}
 
 export interface LoginResponse extends ApiResponse {
   token: string;

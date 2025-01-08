@@ -18,8 +18,8 @@ import { Config } from '../config';
 import { auth, adminAuth } from '../FirebaseAuth';
 import {
   GetIdTokenResponse,
-  LoginResponse,
   SendEmailVerificationResponse,
+  UserAndToken,
 } from '../types/ApiResponses';
 
 const GET_ID_TOKEN_ENDPOINT =
@@ -133,7 +133,7 @@ export class UserService {
     );
   }
 
-  public async login(email: string, password: string): Promise<LoginResponse> {
+  public async login(email: string, password: string): Promise<UserAndToken> {
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -143,7 +143,7 @@ export class UserService {
       const token = await userCredential.user.getIdToken();
       // If checkAuthToken() runs without throwing an error, the user exists.
       const user = await this.checkAuthToken(token);
-      return { error: null, token, user };
+      return { token, user };
     } catch (error) {
       if (
         error instanceof UnauthorizedError ||

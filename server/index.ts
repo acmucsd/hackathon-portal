@@ -5,7 +5,7 @@ import Container from 'typedi';
 // must import data source before using repositories
 import { dataSource } from './DataSource';
 import { controllers } from './api/controllers';
-import { middlewares, errorHandler } from './api/middleware';
+import { middlewares } from './api/middleware';
 import { Config } from './config';
 
 useContainer(Container);
@@ -34,9 +34,9 @@ const app = createExpressServer({
     skipMissingProperties: true,
     forbidUnknownValues: true,
   },
+  defaultErrorHandler: false,
 });
 
-app.use(errorHandler);
 app.listen(Config.port, () => {
   console.log(`Listening on port ${Config.port}...`);
 });
