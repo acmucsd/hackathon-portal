@@ -3,6 +3,8 @@ import { DataSource } from 'typeorm';
 import { models } from './models';
 import { Config } from './config';
 
+console.log(Config);
+
 export default new DataSource({
   type: 'postgres',
   host: Config.database.host,
@@ -12,4 +14,7 @@ export default new DataSource({
   database: Config.database.name,
   entities: models,
   migrations: ['migrations/*.ts'],
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });

@@ -7,6 +7,8 @@ import { getAuth as getAdminAuth } from 'firebase-admin/auth';
 import { Config } from './config';
 import { credential } from 'firebase-admin';
 
+console.log(Config);
+
 const app = initializeApp(Config.firebase);
 export const auth = getAuth(app);
 
