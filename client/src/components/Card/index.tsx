@@ -1,18 +1,26 @@
 import styles from './style.module.scss';
-import { PropsWithChildren, SyntheticEvent } from 'react';
+import { MutableRefObject, PropsWithChildren, SyntheticEvent } from 'react';
 
 interface CardProps {
   gap: 0 | 1 | 1.5 | 2;
   className?: string;
   onSubmit?: (event: SyntheticEvent<HTMLFormElement, SubmitEvent>) => void;
+  formRef?: MutableRefObject<HTMLFormElement | null>;
 }
 
-const Card = ({ gap, className = '', onSubmit, children }: PropsWithChildren<CardProps>) => {
+const Card = ({
+  gap,
+  className = '',
+  onSubmit,
+  formRef,
+  children,
+}: PropsWithChildren<CardProps>) => {
   return onSubmit ? (
     <form
       className={`${styles.container} ${className}`}
       style={{ gap: `${gap}rem` }}
       onSubmit={onSubmit}
+      ref={formRef}
     >
       {children}
     </form>

@@ -29,11 +29,9 @@ const TextField = ({
 }: TextFieldProps) => {
   return (
     <div className={`${styles.textField} ${styles[variant]}`}>
-      <label htmlFor={id}>
-        <Typography variant="label/medium" component="p">
-          {label}
-        </Typography>
-      </label>
+      <Typography variant="label/medium" component="p">
+        <label htmlFor={id}>{label}</label>
+      </Typography>
       <input
         id={id}
         type={type}

@@ -1,4 +1,4 @@
-import { ReactNode, useId } from 'react';
+import { ReactNode, useId, useRef } from 'react';
 import Card from '../Card';
 import Heading from '../Heading';
 import Typography from '../Typography';
@@ -8,6 +8,8 @@ import Button from '../Button';
 import { useRouter } from 'next/navigation';
 import { iso31661 } from 'iso-3166';
 import Dropdown from '../Dropdown';
+import Link from 'next/link';
+import ErrorIcon from '../../../public/assets/icons/error.svg';
 
 type AppQuestion = {
   id: string;
@@ -30,6 +32,7 @@ type AppQuestion = {
   | {
       type: 'file';
       maxSize: number;
+      fileTypes: string;
     }
 );
 
@@ -65,30 +68,31 @@ const ApplicationStep = ({
 }: ApplicationStepProps) => {
   const router = useRouter();
   const id = useId();
+  const formRef = useRef<HTMLFormElement | null>(null);
+
+  async function save() {
+    if (!formRef.current) {
+      return;
+    }
+
+    // TODO: Save changes
+    console.log(new FormData(formRef.current));
+  }
 
   return (
     <ThemeProvider theme={darkTheme}>
       <Card
         gap={2}
-        onSubmit={e => {
+        formRef={formRef}
+        onSubmit={async e => {
           e.preventDefault();
-
-          // TODO: Save changes
-          console.log(new FormData(e.currentTarget));
-
-          // Next button
-          if (e.nativeEvent.submitter?.dataset.variant === 'primary') {
-            router.push(next);
-          }
-          // Back button
-          if (e.nativeEvent.submitter?.dataset.variant === 'back') {
-            router.push(prev);
-          }
+          await save();
+          router.push(next);
         }}
       >
-        <button type="submit" data-variant="back" className={styles.back}>
+        <Link href={prev} className={styles.back} onClick={save}>
           &lt; Back
-        </button>
+        </Link>
         <div className={styles.info}>
           <Heading>{title}</Heading>
           {description ? <Typography variant="body/medium">{description}</Typography> : null}
@@ -102,7 +106,7 @@ const ApplicationStep = ({
             const Component = question.type === 'select-one' ? Radio : Checkbox;
 
             return (
-              <fieldset key={question.id}>
+              <fieldset key={question.id} className={styles.multipleChoice}>
                 <legend>
                   <Typography variant="body/medium" component="span" className={styles.question}>
                     {question.question}
@@ -114,7 +118,8 @@ const ApplicationStep = ({
                     return (
                       <p key={choice}>
                         <label className={styles.checkboxLabel}>
-                          <Component name={question.id} value={choice} required={required} />{' '}
+                          <Component name={question.id} value={choice} required={required} />
+                          &nbsp;
                           {choice}
                         </label>
                       </p>
@@ -123,12 +128,20 @@ const ApplicationStep = ({
                   {question.other ? (
                     <p className={styles.checkboxLabel}>
                       <label className={styles.checkboxLabel}>
-                        <Component name={question.id} value="other" required={required} />{' '}
-                        Other:&nbsp;
+                        <Component name={question.id} value="other" required={required} />
+                        &nbsp;Other:&nbsp;
                       </label>
-                      <input type="text" name={question.id} aria-label="Other" />
+                      <input
+                        type="text"
+                        name={question.id}
+                        aria-label="Other"
+                        className={styles.other}
+                      />
                     </p>
                   ) : null}
+                  <Typography variant="label/medium" component="p" className={styles.error}>
+                    <ErrorIcon /> Required.
+                  </Typography>
                 </div>
               </fieldset>
             );
@@ -170,8 +183,12 @@ const ApplicationStep = ({
                     name={question.id}
                     placeholder={question.placeholder}
                     required={!question.optional}
+                    className={styles.textline}
                   />
                 )}
+                <Typography variant="label/medium" component="p" className={styles.error}>
+                  <ErrorIcon /> Required.
+                </Typography>
               </div>
             );
           }
@@ -184,15 +201,34 @@ const ApplicationStep = ({
                     {question.optional ? null : ASTERISK}
                   </label>
                 </Typography>
-                <input type="file" name={question.id} required={!question.optional} />
+                <input
+                  type="file"
+                  accept={question.fileTypes}
+                  name={question.id}
+                  id={`${id}-${question.id}`}
+                  required={!question.optional}
+                  className="accessible-but-hidden"
+                />
+                <Button
+                  variant="secondary"
+                  for={`${id}-${question.id}`}
+                  className={styles.uploadBtn}
+                >
+                  Upload New
+                </Button>
+                <Typography variant="label/medium" component="p" className={styles.error}>
+                  <ErrorIcon /> Required.
+                </Typography>
               </div>
             );
           }
           return null;
         })}
         <div className={styles.buttonRow}>
-          <Button variant="secondary">Save Changes</Button>
-          <Button>Next</Button>
+          <Button variant="secondary" onClick={save}>
+            Save Changes
+          </Button>
+          <Button submit>Next</Button>
         </div>
       </Card>
     </ThemeProvider>

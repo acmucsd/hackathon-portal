@@ -12,6 +12,7 @@
   // Corresponds to diamond-theme/label/small
   font-weight: 500;
   letter-spacing: 0.5px;
+  cursor: pointer;
 
   &[data-variant='primary'] {
     background-color: vars.$btn-primary;

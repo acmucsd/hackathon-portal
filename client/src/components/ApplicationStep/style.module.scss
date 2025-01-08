@@ -33,6 +33,7 @@
 
   .other {
     border-bottom: 1px solid vars.$white;
+    padding: 0.25rem 0.75rem;
   }
 }
 
@@ -49,6 +50,29 @@
     border-radius: 0.5rem;
     border: 1px solid vars.$card-stroke;
   }
+
+  .textline {
+    width: 100%;
+    max-width: 300px;
+    align-self: flex-start;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    border: 1px solid vars.$card-stroke;
+  }
+
+  .uploadBtn {
+    align-self: flex-start;
+  }
+}
+
+.error {
+  display: none;
+  gap: 0.5rem;
+  color: vars.$error;
+}
+:user-invalid + .error,
+.multipleChoice:has(:user-invalid) .error {
+  display: flex;
 }
 
 .buttonRow {

@@ -130,11 +130,11 @@ export const appQuestions: Step[] = [
           'Social science (such as anthropology, psychology, political science, etc.)',
           'Fine arts or performing arts (such as graphic design, music, studio art, etc.)',
           'Health science (such as nursing, pharmacy, radiology, etc.)',
-          'Other (please specify)',
           'Undecided / No Declared Major',
           'My school does not offer majors / primary areas of study',
           'Prefer not to answer',
         ],
+        other: true,
       },
       {
         type: 'dropdown',
@@ -206,6 +206,7 @@ export const appQuestions: Step[] = [
         id: 'resume',
         question: <>Upload your resume in PDF format below (Max: 100MB).</>,
         maxSize: 100 * 1e6,
+        fileTypes: '.pdf,.doc,.docx',
       },
       {
         type: 'select-multiple',
