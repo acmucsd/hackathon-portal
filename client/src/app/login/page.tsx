@@ -38,7 +38,7 @@ export default function LoginPage() {
           <Button variant="primary">Apply Now</Button>
 
           <Typography variant="label/medium" component="p">
-            Don&apos;t have an account?{' '}
+            Don&rsquo;t have an account?{' '}
             <Link href="/register" className="link">
               {' '}
               Sign up!
