@@ -8,6 +8,7 @@
   background-color: vars.$progress-bg;
 
   .blueBar {
+    max-width: 100%;
     height: 100%;
     background-color: vars.$btn-primary;
   }

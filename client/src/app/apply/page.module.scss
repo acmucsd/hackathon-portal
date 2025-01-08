@@ -1,0 +1,13 @@
+.main {
+  flex: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 6rem var(--side-padding);
+}
+
+.submitted {
+  padding: 4rem 2rem;
+  align-items: center;
+  text-align: center;
+}
