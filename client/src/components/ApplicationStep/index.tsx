@@ -182,7 +182,9 @@ const ApplicationStep = ({
                       Select one
                     </option>
                     {question.choices.map(choice => (
-                      <option value={choice}>{choice}</option>
+                      <option value={choice} key={choice}>
+                        {choice}
+                      </option>
                     ))}
                   </select>
                 ) : (

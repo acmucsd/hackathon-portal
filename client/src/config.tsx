@@ -28,9 +28,9 @@ export const FAQ_QUESTIONS: FAQQuestion[] = [
     question: 'Do I need any prior experience?',
     answer: (
       <>
-        No, hackers of any experience levels are welcome! We'll have workshops and mentors to help
-        you get started, and beginners have the chance to win prizes specifically for first time
-        hackers.
+        No, hackers of any experience levels are welcome! We&rsquo;ll have workshops and mentors to
+        help you get started, and beginners have the chance to win prizes specifically for first
+        time hackers.
       </>
     ),
   },
