@@ -26,3 +26,6 @@ export enum YesOrNo {
 export enum Yes {
   YES = 'YES',
 }
+export enum MediaType {
+  RESUME = 'RESUME',
+}
