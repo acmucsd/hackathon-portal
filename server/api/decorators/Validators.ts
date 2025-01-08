@@ -33,3 +33,19 @@ class EduEmailValidator implements ValidatorConstraintInterface {
 export function IsEduEmail(validationOptions?: ValidationOptions) {
   return templatedValidationDecorator(EduEmailValidator, validationOptions);
 }
+
+@ValidatorConstraint()
+class LinkedinValidator implements ValidatorConstraintInterface {
+  validate(url: string): boolean {
+    const regex = /^https?:\/\/(www\.)?linkedin\.com\/(in|pub)\/[a-zA-Z0-9-]+\/?$/;
+    return regex.test(url);
+  }
+
+  defaultMessage(): string {
+    return 'Invalid LinkedIn URL';
+  }
+}
+
+export function IsLinkedinURL(validationOptions?: ValidationOptions) {
+  return templatedValidationDecorator(LinkedinValidator, validationOptions);
+}

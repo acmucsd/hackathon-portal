@@ -35,8 +35,20 @@
     align-items: center;
     flex-flow: row wrap;
 
+    label {
+      flex: 0 0 150px;
+    }
+
     input {
       flex-grow: 1;
+
+      &:disabled {
+        border: none;
+
+        &::placeholder {
+          color: vars.$white;
+        }
+      }
     }
   }
 }

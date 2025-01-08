@@ -52,7 +52,26 @@ export class UserService {
         Repositories.user(entityManager).findByEmail(email),
     );
     const emailAlreadyUsed = userWithEmail !== null;
-    if (emailAlreadyUsed) throw new ForbiddenError('Email already in use');
+    if (emailAlreadyUsed) {
+      const firebaseRecord = await getAuth().getUserByEmail(email);
+
+      if (!firebaseRecord.emailVerified) {
+        await getAuth().updateUser(firebaseRecord.uid, {
+          password: createUser.password,
+        });
+
+        const user = await this.updateUser(userWithEmail, {
+          firstName: createUser.firstName,
+          lastName: createUser.lastName,
+        });
+
+        this.sendEmailVerification(userWithEmail.id);
+
+        return user;
+      } else {
+        throw new ForbiddenError('Email already in use');
+      }
+    }
 
     let firebaseUser;
     try {
@@ -117,7 +136,7 @@ export class UserService {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const token = await userCredential.user.getIdToken();
       // If checkAuthToken() runs without throwing an error, the user exists.
-      this.checkAuthToken(token);
+      await this.checkAuthToken(token);
       return token;
     } catch (error) {
       if (error instanceof UnauthorizedError || error instanceof ForbiddenError) {
@@ -145,7 +164,7 @@ export class UserService {
       async (entityManager) =>
         Repositories.user(entityManager).findById(decodedToken.uid),
     );
-    if (!user) throw new NotFoundError();
+    if (!user) throw new NotFoundError('User not found');
     if (!decodedToken.email_verified)
       throw new UnauthorizedError('Please verify your email');
     if (user.isRestricted())

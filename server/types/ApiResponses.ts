@@ -1,5 +1,7 @@
+import { ResponseModel } from '../models/ResponseModel';
 import { ApplicationStatus, UserAccessType } from './Enums';
 
+// User responses
 export interface PublicProfile {
   id: string;
   firstName: string;
@@ -50,3 +52,18 @@ export interface GetIdTokenResponse {
 export interface SendEmailVerificationResponse {
   email: string;
 }
+
+// Form response responses
+export interface GetFormsResponse extends ApiResponse {
+  responses: ResponseModel[]
+}
+
+export interface GetFormResponse extends ApiResponse {
+  response: ResponseModel;
+}
+
+export interface SubmitApplicationResponse extends ApiResponse {
+  response: ResponseModel;
+}
+
+export interface DeleteApplicationResponse extends ApiResponse {}

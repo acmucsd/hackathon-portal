@@ -6,7 +6,7 @@ import { applicationDefault, initializeApp } from 'firebase-admin/app';
 // must import data source before using repositories
 import { dataSource } from './DataSource';
 import { controllers } from './api/controllers';
-import { middlewares } from './api/middleware';
+import { middlewares, errorHandler } from './api/middleware';
 import { Config } from './config';
 
 useContainer(Container);
@@ -41,5 +41,6 @@ const app = createExpressServer({
   },
 });
 
+app.use(errorHandler);
 app.listen(Config.port);
 console.log(`Listening on port ${Config.port}...`);

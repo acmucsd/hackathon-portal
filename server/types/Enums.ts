@@ -17,3 +17,12 @@ export enum ApplicationStatus {
 export enum FormType {
   APPLICATION = 'APPLICATION',
 }
+
+export enum YesOrNo {
+  YES = 'YES',
+  NO = 'NO',
+}
+
+export enum Yes {
+  YES = 'YES',
+}

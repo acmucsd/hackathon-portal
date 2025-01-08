@@ -16,6 +16,14 @@ export interface PrivateProfile extends PublicProfile {
   updatedAt: Date;
 }
 
+export interface GetCurrentUserResponse extends ApiResponse {
+  user: PrivateProfile;
+}
+
+export interface PatchUserResponse extends ApiResponse {
+  user: PrivateProfile;
+}
+
 // Auth
 
 export interface ApiResponse {

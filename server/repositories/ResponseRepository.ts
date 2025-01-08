@@ -2,6 +2,7 @@ import Container from 'typedi';
 import { DataSource } from 'typeorm';
 import { UserModel } from '../models/UserModel';
 import { ResponseModel } from '../models/ResponseModel';
+import { FormType } from '../types/Enums';
 
 export const ResponseRepository = Container.get(DataSource)
   .getRepository(ResponseModel)
@@ -15,6 +16,25 @@ export const ResponseRepository = Container.get(DataSource)
     },
 
     async findResponsesForUser(user: UserModel): Promise<ResponseModel[]> {
-      return this.findBy({ user });
+      return this.find({
+        where: {
+          user: {
+            id: user.id,
+          },
+        },
+        relations: { user: true },
+      });
+    },
+
+    async findResponsesForUserByType(user: UserModel, formType: FormType): Promise<ResponseModel[]> {
+      return this.find({
+        where: {
+          user: {
+            id: user.id,
+          },
+          formType,
+        },
+        relations: { user: true },
+      });
     },
   });
