@@ -3,7 +3,7 @@ import { setCookie } from '@/lib/services/CookieService';
 import { LoginRequest } from '@/lib/types/apiRequests';
 import { LoginResponse } from '@/lib/types/apiResponses';
 import { CookieType } from '@/lib/types/enums';
-import { getMessagesFromError } from '@/lib/utils';
+import { getErrorMessage, getMessagesFromError } from '@/lib/utils';
 import axios, { AxiosError } from 'axios';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -19,16 +19,13 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { email, password } = body;
     const response = await login(email, password);
-    setCookie(CookieType.ACCESS_TOKEN, response.token);
-    setCookie(CookieType.USER, JSON.stringify(response.user));
+    await setCookie(CookieType.ACCESS_TOKEN, response.token);
+    await setCookie(CookieType.USER, JSON.stringify(response.user));
     return response;
   } catch (error) {
-    if (error instanceof AxiosError) {
-      return NextResponse.json(
-        { error: error.response?.data.message },
-        { status: error.status || 500 }
-      );
-    }
-    return NextResponse.json({ error: error }, { status: 500 });
+    return NextResponse.json(
+      { error: getErrorMessage(error) },
+      { status: error instanceof AxiosError ? error.status || 500 : 500 }
+    );
   }
 }
