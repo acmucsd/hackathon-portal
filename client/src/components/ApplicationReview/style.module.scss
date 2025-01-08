@@ -1,0 +1,24 @@
+@use '@/styles/vars.scss' as vars;
+
+.question a {
+  color: vars.$blue;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.response {
+  padding: 0.75rem;
+
+  &:not(:last-child) {
+    margin-bottom: 1.5rem;
+  }
+}
+
+.buttonRow {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}

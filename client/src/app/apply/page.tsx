@@ -4,6 +4,8 @@ import ApplicationStep from '@/components/ApplicationStep';
 import { appQuestions } from '@/config';
 import styles from '../page.module.scss';
 import { useSearchParams } from 'next/navigation';
+import ApplicationReview from '@/components/ApplicationReview';
+import Progress from '@/components/Progress';
 
 export default function Application() {
   const searchParams = useSearchParams();
@@ -11,11 +13,19 @@ export default function Application() {
 
   return (
     <main className={styles.main}>
-      <ApplicationStep
-        step={appQuestions[step - 1]}
-        prev={step === 1 ? '/' : `?=${step - 1}`}
-        next={`?step=${step + 1}`}
+      <Progress
+        steps={[...appQuestions.map(({ shortName }) => shortName), 'Review']}
+        step={step - 1}
       />
+      {step <= appQuestions.length ? (
+        <ApplicationStep
+          step={appQuestions[step - 1]}
+          prev={step === 1 ? '/' : `?step=${step - 1}`}
+          next={`?step=${step + 1}`}
+        />
+      ) : (
+        <ApplicationReview responses={{}} prev={`?step=${appQuestions.length}`} next="/submitted" />
+      )}
     </main>
   );
 }

@@ -1,10 +1,9 @@
 import { ReactNode, useId } from 'react';
 import Card from '../Card';
-import Link from 'next/link';
 import Heading from '../Heading';
 import Typography from '../Typography';
 import { Checkbox, createTheme, Radio, ThemeProvider } from '@mui/material';
-import styles from './style.module.css';
+import styles from './style.module.scss';
 import Button from '../Button';
 import { useRouter } from 'next/navigation';
 
@@ -68,15 +67,22 @@ const ApplicationStep = ({
         onSubmit={e => {
           e.preventDefault();
 
+          // TODO: Save changes
           console.log(new FormData(e.currentTarget));
 
           // Next button
           if (e.nativeEvent.submitter?.dataset.variant === 'primary') {
             router.push(next);
           }
+          // Back button
+          if (e.nativeEvent.submitter?.dataset.variant === 'back') {
+            router.push(prev);
+          }
         }}
       >
-        <Link href={prev}>&lt; Back</Link>
+        <button type="submit" data-variant="back" className={styles.back}>
+          &lt; Back
+        </button>
         <div className={styles.info}>
           <Heading>{title}</Heading>
           {description ? <Typography variant="body/medium">{description}</Typography> : null}
@@ -92,7 +98,7 @@ const ApplicationStep = ({
             return (
               <fieldset key={question.id}>
                 <legend>
-                  <Typography variant="body/medium" component="span">
+                  <Typography variant="body/medium" component="span" className={styles.question}>
                     {question.question}
                     {question.optional ? null : ASTERISK}
                   </Typography>
@@ -124,7 +130,7 @@ const ApplicationStep = ({
           if (question.type === 'text') {
             return (
               <div key={question.id}>
-                <Typography variant="body/large" component="p">
+                <Typography variant="body/large" component="p" className={styles.question}>
                   <label htmlFor={`${id}-${question.id}`}>
                     {question.question}
                     {question.optional ? null : ASTERISK}
@@ -142,7 +148,7 @@ const ApplicationStep = ({
           if (question.type === 'file') {
             return (
               <div key={question.id}>
-                <Typography variant="body/large" component="p">
+                <Typography variant="body/large" component="p" className={styles.question}>
                   <label htmlFor={`${id}-${question.id}`}>
                     {question.question}
                     {question.optional ? null : ASTERISK}
