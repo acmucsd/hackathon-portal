@@ -1,17 +1,11 @@
-import { getCookie, setCookie, type OptionsType } from 'cookies-next';
+import { cookies, headers } from 'next/headers';
 
-export const getClientCookie = (key: string): string => {
-  return getCookie(key) as string;
+export const getCookie = async (key: string): Promise<string> => {
+  const cookie = await cookies();
+  return cookie.get(key)?.value as string;
 };
 
-export const getServerCookie = (key: string, options: OptionsType): string => {
-  return getCookie(key, options) as string;
-};
-
-export const setClientCookie = (key: string, value: string, options?: OptionsType): void => {
-  setCookie(key, value, options);
-};
-
-export const setServerCookie = (key: string, value: string, options: OptionsType): void => {
-  setCookie(key, value, options);
+export const setCookie = async (key: string, value: string): Promise<void> => {
+  const cookie = await cookies();
+  cookie.set(key, value);
 };

@@ -40,6 +40,7 @@ export interface DeleteCurrentUserResponse extends ApiResponse {}
 
 export interface LoginResponse extends ApiResponse {
   token: string;
+  user: PrivateProfile;
 }
 
 // Firebase Responses

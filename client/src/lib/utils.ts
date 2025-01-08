@@ -8,6 +8,7 @@ import { AxiosError } from 'axios';
  * @returns List of all user-friendly error strings
  */
 export const getMessagesFromError = (errBody: CustomErrorBody): string[] => {
+  if (typeof errBody === 'string') return [errBody];
   // if error has no suberrors, just return top level error message
   if (!errBody.errors) return [errBody.message];
 

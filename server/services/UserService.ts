@@ -17,6 +17,7 @@ import { UpdateUser } from '../api/validators/UserControllerRequests';
 import { auth, Config } from '../config';
 import {
   GetIdTokenResponse,
+  LoginResponse,
   SendEmailVerificationResponse,
 } from '../types/ApiResponses';
 
@@ -131,13 +132,13 @@ export class UserService {
     );
   }
 
-  public async login(email: string, password: string): Promise<string> {
+  public async login(email: string, password: string): Promise<LoginResponse> {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const token = await userCredential.user.getIdToken();
       // If checkAuthToken() runs without throwing an error, the user exists.
-      await this.checkAuthToken(token);
-      return token;
+      const user = await this.checkAuthToken(token);
+      return { error: null, token, user };
     } catch (error) {
       if (error instanceof UnauthorizedError || error instanceof ForbiddenError) {
         // Throw special error messages as-is.
