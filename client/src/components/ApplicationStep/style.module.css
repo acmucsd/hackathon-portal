@@ -1,0 +1,19 @@
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.inline {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px));
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+}
+
+.required {
+  color: #ef626c;
+}

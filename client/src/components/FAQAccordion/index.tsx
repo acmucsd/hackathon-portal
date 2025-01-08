@@ -8,13 +8,13 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import styles from './style.module.scss';
 import Typography from '../Typography';
 
-export interface Question {
+export interface FAQQuestion {
   question: string;
   answer: React.ReactNode;
 }
 
 interface FAQAccordionProps {
-  data: Question[];
+  data: FAQQuestion[];
 }
 
 export default function FAQ({ data }: FAQAccordionProps) {

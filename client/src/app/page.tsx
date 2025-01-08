@@ -1,6 +1,6 @@
-import { QUESTIONS, TIMELINE } from '@/config';
+import { FAQ_QUESTIONS, TIMELINE } from '@/config';
 import Dashboard from '@/components/Dashboard';
 
 export default function Home() {
-  return <Dashboard name="User" faq={QUESTIONS} status="not-started" timeline={TIMELINE} />;
+  return <Dashboard name="User" faq={FAQ_QUESTIONS} status="not-started" timeline={TIMELINE} />;
 }

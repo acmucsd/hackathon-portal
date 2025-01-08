@@ -10,6 +10,9 @@ interface ButtonProps {
    * Default: `primary`.
    */
   variant?: 'primary' | 'secondary' | 'tertiary';
+  /** Default: `button`. Doesn't do anything if `href` is set. */
+  type?: 'button' | 'submit';
+  formAction?: (formData: FormData) => void;
   href?: string;
   onClick?: () => void;
   className?: string;
@@ -17,6 +20,8 @@ interface ButtonProps {
 
 const Button = ({
   variant = 'primary',
+  type = 'button',
+  formAction,
   href,
   onClick,
   className = '',
@@ -28,7 +33,11 @@ const Button = ({
     onClick,
     children,
   };
-  return href ? <Link href={href} {...props} /> : <button type="button" {...props} />;
+  return href ? (
+    <Link href={href} {...props} />
+  ) : (
+    <button type={type} formAction={formAction} {...props} />
+  );
 };
 
 export default Button;
