@@ -9,7 +9,9 @@ import axios from 'axios';
 
 export const login = async (email: string, password: string): Promise<string> => {
   const requestBody: LoginRequest = { email, password };
-  const response = await axios.post<LoginResponse>('/api/login', requestBody);
+  const response = await axios.post<LoginResponse>('/api/login', requestBody, {
+    headers: { 'Cache-Control': 'no-cache' },
+  });
   return response.data.token;
 };
 
@@ -23,6 +25,7 @@ export const getCurrentUser = async (token: string): Promise<PrivateProfile> => 
     {
       headers: {
         Authorization: `Bearer ${token}`,
+        'Cache-Control': 'no-cache',
       },
     }
   );
