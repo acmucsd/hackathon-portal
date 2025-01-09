@@ -34,15 +34,3 @@ export interface LoginRequest {
   email: string;
   password: string;
 }
-
-// Firebase Requests
-
-export interface GetIdTokenRequest {
-  token: string;
-  returnSecureToken: true;
-}
-
-export interface SendEmailVerificationRequest {
-  requestType: 'VERIFY_EMAIL';
-  idToken: string;
-}
