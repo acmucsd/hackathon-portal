@@ -14,7 +14,7 @@ interface ButtonProps {
   for?: string;
   submit?: boolean;
   onClick?: () => void;
-  disabled: boolean;
+  disabled?: boolean;
   className?: string;
 }
 
