@@ -35,6 +35,7 @@ export async function POST(request: NextRequest) {
       sameSite: 'strict',
       path: '/',
     });
+    response.headers.set('x-middleware-cache', 'no-cache');
 
     return response;
   } catch (error) {
