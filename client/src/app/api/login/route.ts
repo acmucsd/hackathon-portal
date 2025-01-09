@@ -8,7 +8,7 @@ import axios, { AxiosError } from 'axios';
 import { NextRequest, NextResponse } from 'next/server';
 
 const login = async (email: string, password: string): Promise<LoginResponse> => {
-  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.auth.login}`;
+  const requestUrl = `${config.api.baseApiUrl}${config.api.endpoints.auth.login}`;
   const requestBody: LoginRequest = { email, password };
   const response = await axios.post<LoginResponse>(requestUrl, requestBody);
   return response.data;

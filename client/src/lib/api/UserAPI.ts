@@ -6,6 +6,7 @@ import type {
   LoginResponse,
 } from '@/lib/types/apiResponses';
 import axios from 'axios';
+import config from '../config';
 
 export const login = async (email: string, password: string): Promise<string> => {
   const requestBody: LoginRequest = { email, password };
@@ -21,7 +22,7 @@ export const login = async (email: string, password: string): Promise<string> =>
  */
 export const getCurrentUser = async (token: string): Promise<PrivateProfile> => {
   const response = await axios.get<GetCurrentUserResponse>(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/getCurrentUser`,
+    `${config.api.baseUrl}/api/getCurrentUser`,
     {
       headers: {
         Authorization: `Bearer ${token}`,

@@ -9,7 +9,7 @@ import axios from 'axios';
  * @returns PrivateProfile containing user information on successful creation
  */
 export const register = async (user: UserRegistration): Promise<PrivateProfile> => {
-  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.auth.register}`;
+  const requestUrl = `${config.api.baseApiUrl}${config.api.endpoints.auth.register}`;
 
   const response = await axios.post<RegistrationResponse>(requestUrl, { user: user });
 
