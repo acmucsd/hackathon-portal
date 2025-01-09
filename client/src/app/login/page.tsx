@@ -37,7 +37,6 @@ export default function LoginPage() {
   const onSubmit: SubmitHandler<LoginValues> = async credentials => {
     try {
       await UserAPI.login(credentials.email, credentials.password);
-      console.log('Nice');
       router.push('/');
     } catch (error) {
       setError(getErrorMessage(error));
