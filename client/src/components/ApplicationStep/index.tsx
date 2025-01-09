@@ -1,3 +1,5 @@
+'use client';
+
 import { ReactNode, useId, useRef } from 'react';
 import Card from '../Card';
 import Heading from '../Heading';
@@ -177,8 +179,9 @@ const ApplicationStep = ({
                     name={question.id}
                     required={!question.optional}
                     className={styles.textline}
+                    defaultValue=""
                   >
-                    <option value="" selected disabled>
+                    <option value="" disabled>
                       Select one
                     </option>
                     {question.choices.map(choice => (

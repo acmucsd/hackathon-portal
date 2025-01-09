@@ -1,9 +1,6 @@
-'use client';
-
 import ApplicationStep from '@/components/ApplicationStep';
 import { appQuestions } from '@/config';
 import styles from './page.module.scss';
-import { useSearchParams } from 'next/navigation';
 import ApplicationReview from '@/components/ApplicationReview';
 import Progress from '@/components/Progress';
 import Card from '@/components/Card';
@@ -11,9 +8,12 @@ import Button from '@/components/Button';
 import Typography from '@/components/Typography';
 import PartyPopper from '@/../public/assets/party-popper.svg';
 
-export default function Application() {
-  const searchParams = useSearchParams();
-  const step = Number(searchParams.get('step') ?? 1);
+type ApplicationPageProps = {
+  params: Promise<{ step: string }>;
+};
+
+export default async function ApplicationPage({ params }: ApplicationPageProps) {
+  const step = Number((await params).step);
 
   return (
     <main className={styles.main}>
@@ -24,14 +24,14 @@ export default function Application() {
       {appQuestions[step - 1] ? (
         <ApplicationStep
           step={appQuestions[step - 1]}
-          prev={step === 1 ? '/' : `?step=${step - 1}`}
-          next={`?step=${step + 1}`}
+          prev={step === 1 ? '/' : `/apply/${step - 1}`}
+          next={`/apply/${step + 1}`}
         />
       ) : step === appQuestions.length + 1 ? (
         <ApplicationReview
           responses={{}}
-          prev={`?step=${appQuestions.length}`}
-          next={`?step=${appQuestions.length + 2}`}
+          prev={`/apply/${appQuestions.length}`}
+          next={`/apply/${appQuestions.length + 2}`}
         />
       ) : step === appQuestions.length + 2 ? (
         <Card gap={2.5} className={styles.submitted}>
@@ -45,4 +45,8 @@ export default function Application() {
       ) : null}
     </main>
   );
+}
+
+export async function generateStaticParams() {
+  return Array.from({ length: appQuestions.length + 2 }, (_, i) => ({ step: `${i + 1}` }));
 }
