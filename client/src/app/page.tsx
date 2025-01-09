@@ -9,9 +9,12 @@ import { getCurrentUser } from './api/getCurrentUser/route';
 
 export default async function Home() {
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
+  console.log('HI THERE');
 
   try {
     const response = await getCurrentUser(accessToken);
+
+    console.log(response.user);
     const fetchedUser = response.user;
     return (
       <main className={styles.main}>
@@ -20,6 +23,7 @@ export default async function Home() {
     );
   } catch (error) {
     console.error(error);
+    return <main>this is broken</main>;
     redirect('/login');
   }
 }

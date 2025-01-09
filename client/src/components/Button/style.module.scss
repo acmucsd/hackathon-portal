@@ -26,4 +26,8 @@
     border: 1px solid vars.$btn-primary;
     color: vars.$btn-primary;
   }
+
+  &:disabled {
+    background-color: vars.$card-stroke;
+  }
 }
