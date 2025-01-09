@@ -236,7 +236,7 @@ export const appQuestions: Step[] = [
         id: 'will-attend',
         question: (
           <>
-            If accepted, I am attending DiamondHacks on April 4-5 at UC San Diego.
+            If accepted, I am attending DiamondHacks on April 5-6 at UC San Diego.
             <br />
             <br />
             Please note that we are unfortunately unable to provide travel reimbursements or
