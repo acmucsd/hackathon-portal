@@ -10,7 +10,7 @@ import Link from 'next/link';
 import Alert from '@/components/Alert';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { UserAPI } from '@/lib/api';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { getErrorMessage } from '@/lib/utils';
 
@@ -36,13 +36,15 @@ export default function LoginPage() {
   });
 
   const onSubmit: SubmitHandler<LoginValues> = async credentials => {
-    setLoading(true);
-    UserAPI.login(credentials.email, credentials.password)
-      .then(() => router.push('/'))
-      .catch(error => {
-        setLoading(false);
-        setError(getErrorMessage(error));
-      });
+    try {
+      setLoading(true);
+      await UserAPI.login(credentials.email, credentials.password);
+      // This delay ensures that the cookies get set before redirecting.
+      setTimeout(() => router.push('/'), 100);
+    } catch (error) {
+      setLoading(false);
+      setError(getErrorMessage(error));
+    }
   };
 
   return (

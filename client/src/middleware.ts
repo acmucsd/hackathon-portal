@@ -4,8 +4,10 @@ import { CookieType } from './lib/types/enums';
 export function middleware(request: NextRequest) {
   const userCookie = request.cookies.get(CookieType.USER);
 
+  console.log(userCookie);
+
   if (!userCookie) {
-    // return NextResponse.redirect(new URL('/login', request.url));
+    return NextResponse.redirect(new URL('/login', request.url));
   }
 
   return NextResponse.next();

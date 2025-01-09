@@ -19,19 +19,30 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { email, password } = body;
     const loginResponse = await login(email, password);
-    const response = NextResponse.json({ loginResponse });
 
-    response.headers.append(
-      'Set-Cookie',
-      serializeCookie(CookieType.ACCESS_TOKEN, loginResponse.token)
-    );
-    response.headers.append(
-      'Set-Cookie',
-      serializeCookie(CookieType.USER, JSON.stringify(loginResponse.user))
-    );
+    const url = new URL(request.url);
+    url.pathname = '/';
+    const response = NextResponse.redirect(url);
 
+    console.log(url);
+
+    response.cookies.set(CookieType.ACCESS_TOKEN, loginResponse.token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/',
+    });
+    response.cookies.set(CookieType.USER, JSON.stringify(loginResponse.user), {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/',
+    });
+
+    console.error('redirecting..');
     return response;
   } catch (error) {
+    console.error(error);
     if (error instanceof AxiosError) {
       return NextResponse.json({ error: getErrorMessage(error) }, { status: error.status || 500 });
     }
