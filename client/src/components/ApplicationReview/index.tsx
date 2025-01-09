@@ -29,6 +29,14 @@ const ApplicationReview = ({ accessToken, responses, prev, next }: ApplicationRe
       onSubmit={async e => {
         e.preventDefault();
 
+        if (
+          !confirm(
+            'Are you sure you want to submit? You currently will not be able to edit your application after submitting.'
+          )
+        ) {
+          return;
+        }
+
         const application: Application = {
           phoneNumber: '+12345678900',
           age: 'meow',
@@ -44,7 +52,7 @@ const ApplicationReview = ({ accessToken, responses, prev, next }: ApplicationRe
           interests: ['meow'],
           major: 'meow',
           referrer: ['meow'],
-          resumeLink: 'meow??',
+          resumeLink: 'This will be populated by the backend',
           willAttend: YesOrNo.YES,
           mlhCodeOfConduct: Yes.YES,
           mlhAuthorization: Yes.YES,
