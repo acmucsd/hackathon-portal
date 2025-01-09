@@ -17,6 +17,7 @@ export default async function Home() {
       </main>
     );
   } catch (error) {
+    console.error(error);
     redirect('/login');
   }
 }
