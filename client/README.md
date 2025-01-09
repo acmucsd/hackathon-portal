@@ -54,9 +54,18 @@ feedback and contributions are welcome!
 
 ### Useful Documentation Links:
 
+#### Pages
 - https://nextjs.org/docs/app/getting-started/layouts-and-pages (Creating new routes)
 - We use `React-Hook-Form` for authentication: https://react-hook-form.com/
 - We use useRouter to make API calls: https://nextjs.org/docs/app/api-reference/functions/use-router
+
+#### Linking Backend and Frontend
+We use [Axios](https://axios-http.com/docs/intro) to call routes in the backend.
+
+- Types in `client/src/lib/types` are copied from `server/types/`
+- Need to create new file in `client/src/app/api` to correspond to equivalent `server/api/controllers/*.ts` route
+  - `client/src/app/api/getCurrentUser` corresponds to route `/api/getCurrentUser` defined in `server/api/controllers/UserController.ts`
+
 
 ## Deploy on Vercel
 

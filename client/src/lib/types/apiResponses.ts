@@ -1,6 +1,7 @@
 import { ApplicationStatus, UserAccessType } from './enums';
 
 // User
+// Pulled from server/types/ApiResponses.ts
 
 export interface PublicProfile {
   id: string;

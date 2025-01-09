@@ -9,7 +9,7 @@ import axios from 'axios';
 
 export const login = async (email: string, password: string): Promise<string> => {
   const requestBody: LoginRequest = { email, password };
-  const response = await axios.post<LoginResponse>('/api/login', requestBody);
+  const response = await axios.post<LoginResponse>('/api/login', requestBody); // API route based on client/src/api/login folder
   return response.data.token;
 };
 
