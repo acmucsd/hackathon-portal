@@ -75,13 +75,13 @@ export default function LoginPage() {
             defaultText="Enter Password"
           />
 
-          <Link href="/forgot-password">Forgot your password?</Link>
+          {/* <Link href="/forgot-password">Forgot your password?</Link> */}
 
           <Button variant="primary" onClick={handleSubmit(onSubmit)}>
             Login
           </Button>
 
-          <Typography variant="label/medium" component="p">
+          <Typography variant="label/small" component="p">
             Don&rsquo;t have an account?{' '}
             <Link href="/register" className="link">
               {' '}

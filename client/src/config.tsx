@@ -6,15 +6,6 @@ import { countries } from './lib/constants/countries';
 
 export const FAQ_QUESTIONS: FAQQuestion[] = [
   {
-    question: 'How can I register for DiamondHacks?',
-    answer: (
-      <>
-        Fill out the <Link href="https://acmurl.com/diamondhacks-interest-form">interest form</Link>{' '}
-        to be notified when applications go live!
-      </>
-    ),
-  },
-  {
     question: 'What is a hackathon?',
     answer: (
       <>
@@ -245,7 +236,7 @@ export const appQuestions: Step[] = [
         id: 'will-attend',
         question: (
           <>
-            If accepted, I am attending DiamondHacks on April 4-5 at UC San Diego.
+            If accepted, I am attending DiamondHacks on April 5-6 at UC San Diego.
             <br />
             <br />
             Please note that we are unfortunately unable to provide travel reimbursements or
@@ -321,8 +312,8 @@ export const appQuestions: Step[] = [
 ];
 
 export const TIMELINE: Deadlines = {
-  application: new Date('2025-02-21'),
-  decisions: new Date('2025-02-28'),
-  acceptance: new Date('2025-03-07'),
+  application: new Date('2025-02-28'),
+  decisions: new Date('2025-03-07'),
+  acceptance: new Date('2025-03-21'),
   hackathon: new Date('2025-04-05'),
 };

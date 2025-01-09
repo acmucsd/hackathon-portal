@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './style.module.scss';
 import Typography from '../Typography';
 import Image from 'next/image';
@@ -43,14 +43,14 @@ export default function Navbar() {
   return (
     <>
       <div className={`${styles.container} `}>
-        <div className={styles.logo}>
+        <Link href="/" className={styles.logo}>
           <Image src="/assets/acm-logo.png" alt="ACM Logo" width={48} height={48} />
           <Typography variant="body/large" className={styles.logoText}>
             <b>diamond</b>
             <br />
             hacks
           </Typography>
-        </div>
+        </Link>
         <Typography variant="body/large" className={styles.desktopLinks}>
           {links.map(link => (
             <Link href={link.href} className={styles.link} onClick={onLinkClick} key={link.name}>

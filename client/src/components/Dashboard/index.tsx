@@ -73,7 +73,7 @@ const Dashboard = ({ faq, timeline, user }: DashboardProps) => {
           <Link href="mailto:hackathon@acmucsd.org" className="link">
             hackathon@acmucsd.org
           </Link>{' '}
-          to reach DiamondHack’s organizers!
+          to reach DiamondHacks’s organizers!
         </Typography>
       </Card>
     </div>

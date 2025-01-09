@@ -32,6 +32,7 @@ const Profile = ({ user }: ProfileClientProps) => {
   const size = useWindowSize();
   const isMobile = (size.width ?? 0) <= 870;
   const [editProfile, setEditProfile] = useState(false);
+  const [currentUser, setCurrentUser] = useState(user);
 
   const {
     register,
@@ -39,12 +40,13 @@ const Profile = ({ user }: ProfileClientProps) => {
     reset,
     formState: { errors },
   } = useForm<UpdateProfileValues>({
-    defaultValues: user,
+    defaultValues: currentUser,
   });
 
   const onSubmit: SubmitHandler<UpdateProfileValues> = async updateProfile => {
     try {
       const updatedUser = await UserAPI.updateCurrentUserProfile(updateProfile);
+      setCurrentUser(updatedUser);
       setEditProfile(prevState => !prevState);
       reset(updatedUser);
     } catch (error) {
@@ -53,7 +55,7 @@ const Profile = ({ user }: ProfileClientProps) => {
   };
 
   const clearFields = () => {
-    reset(user);
+    reset(currentUser);
     setEditProfile(prevState => !prevState);
   };
 

@@ -57,17 +57,6 @@ export interface LoginResponse extends ApiResponse {
   user: PrivateProfile;
 }
 
-// Firebase Responses
-export interface GetIdTokenResponse {
-  idToken: string;
-  refreshToken: string;
-  expiresIn: string;
-}
-
-export interface SendEmailVerificationResponse {
-  email: string;
-}
-
 // Form response responses
 export interface GetFormsResponse extends ApiResponse {
   responses: ResponseModel[];
