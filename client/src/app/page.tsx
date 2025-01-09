@@ -6,10 +6,12 @@ import { redirect } from 'next/navigation';
 import { getCookie } from '@/lib/services/CookieService';
 import { CookieType } from '@/lib/types/enums';
 import { getCurrentUser } from './api/getCurrentUser/route';
+import { getErrorMessage } from '@/lib/utils';
 
 export default async function Home() {
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
   console.log('HI THERE');
+  console.log(accessToken);
 
   try {
     const response = await getCurrentUser(accessToken);
@@ -22,7 +24,7 @@ export default async function Home() {
       </main>
     );
   } catch (error) {
-    console.error(error);
+    console.error(getErrorMessage(error));
     return <main>this is broken</main>;
     redirect('/login');
   }
