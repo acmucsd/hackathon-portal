@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     if (error instanceof AxiosError) {
       return NextResponse.json(
-        { error: error.response?.data.message },
+        { error: error.response?.data.error.message },
         { status: error.status || 500 }
       );
     }
