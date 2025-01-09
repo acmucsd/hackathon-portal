@@ -39,7 +39,8 @@ export default function LoginPage() {
     try {
       setLoading(true);
       await UserAPI.login(credentials.email, credentials.password);
-      router.push('/');
+      router.replace('/');
+      router.refresh();
     } catch (error) {
       setError(getErrorMessage(error));
     }

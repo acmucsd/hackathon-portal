@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
     const loginResponse = await login(email, password);
 
     const url = new URL('/', request.url);
-    const response = NextResponse.redirect(url);
+    const response = NextResponse.json(loginResponse);
 
     response.cookies.set(CookieType.ACCESS_TOKEN, loginResponse.token, {
       httpOnly: true,
@@ -35,7 +35,6 @@ export async function POST(request: NextRequest) {
       sameSite: 'strict',
       path: '/',
     });
-    response.headers.set('x-middleware-cache', 'no-cache');
 
     return response;
   } catch (error) {
