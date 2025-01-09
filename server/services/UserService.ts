@@ -1,12 +1,12 @@
 import { Service } from 'typedi';
 import { Repositories, TransactionsManager } from '../repositories';
 import { UserModel } from '../models/UserModel';
+import { CreateUser } from '../types/ApiRequests';
 import {
-  CreateUser,
-  GetIdTokenRequest,
-  SendEmailVerificationRequest,
-} from '../types/ApiRequests';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+  sendEmailVerification,
+  signInWithCustomToken,
+  signInWithEmailAndPassword,
+} from 'firebase/auth';
 import { FirebaseAuthError } from 'firebase-admin/auth';
 import {
   ForbiddenError,
@@ -14,21 +14,8 @@ import {
   UnauthorizedError,
 } from 'routing-controllers';
 import { UpdateUser } from '../api/validators/UserControllerRequests';
-import { Config } from '../config';
 import { auth, adminAuth } from '../FirebaseAuth';
-import {
-  GetIdTokenResponse,
-  SendEmailVerificationResponse,
-  UserAndToken,
-} from '../types/ApiResponses';
-
-const GET_ID_TOKEN_ENDPOINT =
-  'https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=' +
-  Config.firebase.apiKey;
-
-const SEND_EMAIL_VERIFICATION_ENDPOINT =
-  'https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=' +
-  Config.firebase.apiKey;
+import { UserAndToken } from '../types/ApiResponses';
 
 @Service()
 export class UserService {
@@ -181,43 +168,9 @@ export class UserService {
     return user;
   }
 
-  private async sendEmailVerification(id: string): Promise<string> {
+  private async sendEmailVerification(id: string): Promise<void> {
     const customToken = await adminAuth.createCustomToken(id);
-
-    const getIdTokenRequestBody: GetIdTokenRequest = {
-      token: customToken,
-      returnSecureToken: true,
-    };
-    const getIdTokenRequest = new Request(GET_ID_TOKEN_ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(getIdTokenRequestBody),
-    });
-    const getIdTokenResponse = await fetch(getIdTokenRequest);
-    const getIdTokenResponseBody: GetIdTokenResponse =
-      await getIdTokenResponse.json();
-
-    const idToken = getIdTokenResponseBody.idToken;
-
-    const sendEmailVerificationRequestBody: SendEmailVerificationRequest = {
-      requestType: 'VERIFY_EMAIL',
-      idToken,
-    };
-    const sendEmailVerificationRequest = new Request(
-      SEND_EMAIL_VERIFICATION_ENDPOINT,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(sendEmailVerificationRequestBody),
-      },
-    );
-    const sendEmailVerificationResponse = await fetch(
-      sendEmailVerificationRequest,
-    );
-    const sendEmailVerificationResponseBody: SendEmailVerificationResponse =
-      await sendEmailVerificationResponse.json();
-
-    const email = sendEmailVerificationResponseBody.email;
-    return email;
+    const userCredential = await signInWithCustomToken(auth, customToken);
+    await sendEmailVerification(userCredential.user);
   }
 }
