@@ -40,11 +40,13 @@ export default function LoginPage() {
       setLoading(true);
       await UserAPI.login(credentials.email, credentials.password);
       // This delay ensures that the cookies get set before redirecting.
-      setTimeout(() => router.push('/'), 100);
+      setTimeout(() => {
+        router.push('/');
+      }, 100);
     } catch (error) {
-      setLoading(false);
       setError(getErrorMessage(error));
     }
+    setLoading(false);
   };
 
   return (

@@ -20,9 +20,8 @@ export async function POST(request: NextRequest) {
     const { email, password } = body;
     const loginResponse = await login(email, password);
 
-    const url = new URL(request.url);
-    url.pathname = '/';
-    const response = NextResponse.json(loginResponse);
+    const url = new URL('/', request.url);
+    const response = NextResponse.redirect(url);
 
     response.cookies.set(CookieType.ACCESS_TOKEN, loginResponse.token, {
       httpOnly: true,
