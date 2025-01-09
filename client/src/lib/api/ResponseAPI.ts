@@ -1,3 +1,5 @@
+'use server';
+
 import config from '@/lib/config';
 import type {} from '@/lib/types/apiRequests';
 import type {
@@ -6,11 +8,8 @@ import type {
   SubmitApplicationResponse,
 } from '@/lib/types/apiResponses';
 import axios from 'axios';
-import {
-  Application,
-  CreateApplicationRequest,
-  UpdateApplicationRequest,
-} from '../types/application';
+import { Application } from '../types/application';
+import { getErrorMessage } from '../utils';
 
 /**
  * Get current user's responses
@@ -41,7 +40,6 @@ export const getApplication = async (token: string): Promise<ResponseModel> => {
       },
     }
   );
-  console.log(response.data);
   return response.data.response;
 };
 
@@ -52,21 +50,20 @@ export const getApplication = async (token: string): Promise<ResponseModel> => {
  */
 export const submitApplication = async (
   token: string,
-  application: Application,
-  file: File
-): Promise<ResponseModel> => {
+  formData: FormData
+): Promise<ResponseModel | { error: string }> => {
   const requestUrl = `${config.api.baseUrl}${config.api.endpoints.response.application}`;
 
-  const formData = new FormData();
-  formData.append('application', JSON.stringify(application));
-  formData.append('file', file);
-
-  const response = await axios.post<SubmitApplicationResponse>(requestUrl, formData, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return response.data.response;
+  try {
+    const response = await axios.post<SubmitApplicationResponse>(requestUrl, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data.response;
+  } catch (error) {
+    return { error: getErrorMessage(error) };
+  }
 };
 
 /**
@@ -93,4 +90,15 @@ export const updateApplication = async (
     },
   });
   return response.data.response;
+};
+
+/**
+ * Delete current user's application
+ */
+export const deleteApplication = async (token: string): Promise<void> => {
+  await axios.delete(`${config.api.baseUrl}${config.api.endpoints.response.application}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };

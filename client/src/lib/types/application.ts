@@ -1,3 +1,5 @@
+import { YesOrNo, Yes } from './enums';
+
 export interface Application {
   phoneNumber: string;
   age: string;
@@ -15,10 +17,10 @@ export interface Application {
   referrer: string[];
   // TODO: upload and save resumes to s3
   resumeLink: string;
-  willAttend: string;
-  mlhCodeOfConduct: string;
-  mlhAuthorization: string;
-  mlhEmailAuthorization: string;
+  willAttend: YesOrNo;
+  mlhCodeOfConduct: Yes;
+  mlhAuthorization: Yes;
+  mlhEmailAuthorization: YesOrNo;
   additionalComments: string;
 }
 

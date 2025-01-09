@@ -12,7 +12,9 @@ import { ResponseAPI } from '@/lib/api';
 import { getCookie } from '@/lib/services/CookieService';
 import { CookieType } from '@/lib/types/enums';
 import { AxiosError } from 'axios';
-import { Application } from '@/lib/types/application';
+
+const STEP_REVIEW = appQuestions.length + 1;
+const STEP_SUBMITTED = appQuestions.length + 2;
 
 type ApplicationPageProps = {
   params: Promise<{ step: string }>;
@@ -20,56 +22,26 @@ type ApplicationPageProps = {
 
 export default async function ApplicationPage({ params }: ApplicationPageProps) {
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
+  const step = Number((await params).step);
 
-  let application: Application;
-  try {
-    console.log(await ResponseAPI.getResponsesForCurrentUser(accessToken));
-    const { data } = await ResponseAPI.getApplication(accessToken);
-    application = data;
-  } catch (error) {
-    if (error instanceof AxiosError && error.status === 404) {
-      // Try creating an application if it doesn't exist
-      try {
-        await ResponseAPI.submitApplication(
-          accessToken,
-          {
-            phoneNumber: '',
-            age: '',
-            university: '',
-            levelOfStudy: '',
-            country: '',
-            linkedin: '',
-            gender: '',
-            pronouns: '',
-            orientation: [],
-            ethnicity: [],
-            dietary: [],
-            interests: [],
-            major: '',
-            referrer: [],
-            resumeLink: '',
-            willAttend: '',
-            mlhCodeOfConduct: '',
-            mlhAuthorization: '',
-            mlhEmailAuthorization: '',
-            additionalComments: '',
-          },
-          new File([], 'hello')
-        );
-      } catch (error) {
-        console.log(error.response.data);
-        console.log(error.response.data.error.errors);
-        return null;
+  // For now, prohibit user from editing application
+  if (step < STEP_SUBMITTED) {
+    let exists = false;
+    try {
+      await ResponseAPI.getApplication(accessToken);
+      exists = true;
+    } catch (error) {
+      if (!(error instanceof AxiosError && error.status === 404)) {
+        console.log(error);
+        redirect('/login');
       }
-      const { data } = await ResponseAPI.getApplication(accessToken);
-      application = data;
-    } else {
-      console.log(error);
-      redirect('/login');
+    }
+    if (exists) {
+      // If it exists, they've submitted their application
+      // NOTE: Cannot redirect inside try-catch
+      redirect(`/apply/${STEP_SUBMITTED}`);
     }
   }
-
-  const step = Number((await params).step);
 
   return (
     <main className={styles.main}>
@@ -83,13 +55,14 @@ export default async function ApplicationPage({ params }: ApplicationPageProps) 
           prev={step === 1 ? '/' : `/apply/${step - 1}`}
           next={`/apply/${step + 1}`}
         />
-      ) : step === appQuestions.length + 1 ? (
+      ) : step === STEP_REVIEW ? (
         <ApplicationReview
+          accessToken={accessToken}
           responses={{}}
           prev={`/apply/${appQuestions.length}`}
-          next={`/apply/${appQuestions.length + 2}`}
+          next={`/apply/${STEP_SUBMITTED}`}
         />
-      ) : step === appQuestions.length + 2 ? (
+      ) : step === STEP_SUBMITTED ? (
         <Card gap={2.5} className={styles.submitted}>
           <PartyPopper />
           <Typography variant="headline/heavy/large">
