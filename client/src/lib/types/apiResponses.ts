@@ -26,12 +26,19 @@ export interface PrivateProfile extends PublicProfile {
   responses?: ResponseModel;
 }
 
+export interface ValidatorError {
+  children: ValidatorError[];
+  constraints: object;
+  property: string;
+  target: object;
+}
+
 export interface CustomErrorBody {
   name: string;
   message: string;
   httpCode: number;
   stack?: string;
-  errors?: any;
+  errors?: ValidatorError[];
 }
 
 export interface ApiResponse {

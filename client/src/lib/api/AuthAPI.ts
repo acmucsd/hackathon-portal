@@ -1,6 +1,6 @@
 import config from '@/lib/config';
 import type { UserRegistration } from '@/lib/types/apiRequests';
-import type { PrivateProfile, RegistrationResponse } from '@/lib/types/apiResponses';
+import type { PrivateProfile, CreateUserResponse } from '@/lib/types/apiResponses';
 import axios from 'axios';
 
 /**
@@ -11,7 +11,7 @@ import axios from 'axios';
 export const register = async (user: UserRegistration): Promise<PrivateProfile> => {
   const requestUrl = `${config.api.baseUrl}${config.api.endpoints.auth.register}`;
 
-  const response = await axios.post<RegistrationResponse>(requestUrl, { user: user });
+  const response = await axios.post<CreateUserResponse>(requestUrl, { user: user });
 
   return response.data.user;
 };
