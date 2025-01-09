@@ -1,9 +1,9 @@
 import config from '@/lib/config';
-import { setCookie } from '@/lib/services/CookieService';
+import { serializeCookie } from '@/lib/services/CookieService';
 import { LoginRequest } from '@/lib/types/apiRequests';
 import { LoginResponse } from '@/lib/types/apiResponses';
 import { CookieType } from '@/lib/types/enums';
-import { getErrorMessage, getMessagesFromError } from '@/lib/utils';
+import { getErrorMessage } from '@/lib/utils';
 import axios, { AxiosError } from 'axios';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -18,9 +18,18 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { email, password } = body;
-    const response = await login(email, password);
-    await setCookie(CookieType.ACCESS_TOKEN, response.token);
-    await setCookie(CookieType.USER, JSON.stringify(response.user));
+    const loginResponse = await login(email, password);
+    const response = NextResponse.json({ loginResponse });
+
+    response.headers.append(
+      'Set-Cookie',
+      serializeCookie(CookieType.ACCESS_TOKEN, loginResponse.token)
+    );
+    response.headers.append(
+      'Set-Cookie',
+      serializeCookie(CookieType.USER, JSON.stringify(loginResponse.user))
+    );
+
     return response;
   } catch (error) {
     if (error instanceof AxiosError) {
