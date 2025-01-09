@@ -22,9 +22,7 @@ export async function POST(request: NextRequest) {
 
     const url = new URL(request.url);
     url.pathname = '/';
-    const response = NextResponse.redirect(url);
-
-    console.log(url);
+    const response = NextResponse.json(loginResponse);
 
     response.cookies.set(CookieType.ACCESS_TOKEN, loginResponse.token, {
       httpOnly: true,
@@ -39,7 +37,6 @@ export async function POST(request: NextRequest) {
       path: '/',
     });
 
-    console.error('redirecting..');
     return response;
   } catch (error) {
     console.error(error);
