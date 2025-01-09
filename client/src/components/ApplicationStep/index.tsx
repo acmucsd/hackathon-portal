@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ErrorIcon from '../../../public/assets/icons/error.svg';
 import MultipleChoiceGroup, { OTHER } from '../MultipleChoiceGroup';
+import saveData from './save';
 
 type AppQuestion = {
   id: string;
@@ -81,6 +82,7 @@ const ApplicationStep = ({
 
     // TODO: Save changes
     const data = new FormData(formRef.current);
+    await saveData(data);
     console.log(
       Object.fromEntries(
         questions.map(question => {

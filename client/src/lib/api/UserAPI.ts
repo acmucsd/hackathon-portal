@@ -2,8 +2,8 @@ import type { UserPatches, PatchUserRequest, LoginRequest } from '@/lib/types/ap
 import type {
   PrivateProfile,
   GetCurrentUserResponse,
-  PatchUserResponse,
   LoginResponse,
+  UpdateCurrentUserReponse,
 } from '@/lib/types/apiResponses';
 import axios from 'axios';
 
@@ -36,6 +36,6 @@ export const getCurrentUser = async (token: string): Promise<PrivateProfile> => 
  */
 export const updateCurrentUserProfile = async (user: UserPatches): Promise<PrivateProfile> => {
   const requestBody: PatchUserRequest = { user };
-  const response = await axios.patch<PatchUserResponse>('/api/updateUser', requestBody);
+  const response = await axios.patch<UpdateCurrentUserReponse>('/api/updateUser', requestBody);
   return response.data.user;
 };

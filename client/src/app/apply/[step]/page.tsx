@@ -7,12 +7,68 @@ import Card from '@/components/Card';
 import Button from '@/components/Button';
 import Typography from '@/components/Typography';
 import PartyPopper from '@/../public/assets/party-popper.svg';
+import { redirect } from 'next/navigation';
+import { ResponseAPI } from '@/lib/api';
+import { getCookie } from '@/lib/services/CookieService';
+import { CookieType } from '@/lib/types/enums';
+import { AxiosError } from 'axios';
+import { Application } from '@/lib/types/application';
 
 type ApplicationPageProps = {
   params: Promise<{ step: string }>;
 };
 
 export default async function ApplicationPage({ params }: ApplicationPageProps) {
+  const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
+
+  let application: Application;
+  try {
+    console.log(await ResponseAPI.getResponsesForCurrentUser(accessToken));
+    const { data } = await ResponseAPI.getApplication(accessToken);
+    application = data;
+  } catch (error) {
+    if (error instanceof AxiosError && error.status === 404) {
+      // Try creating an application if it doesn't exist
+      try {
+        await ResponseAPI.submitApplication(
+          accessToken,
+          {
+            phoneNumber: '',
+            age: '',
+            university: '',
+            levelOfStudy: '',
+            country: '',
+            linkedin: '',
+            gender: '',
+            pronouns: '',
+            orientation: [],
+            ethnicity: [],
+            dietary: [],
+            interests: [],
+            major: '',
+            referrer: [],
+            resumeLink: '',
+            willAttend: '',
+            mlhCodeOfConduct: '',
+            mlhAuthorization: '',
+            mlhEmailAuthorization: '',
+            additionalComments: '',
+          },
+          new File([], 'hello')
+        );
+      } catch (error) {
+        console.log(error.response.data);
+        console.log(error.response.data.error.errors);
+        return null;
+      }
+      const { data } = await ResponseAPI.getApplication(accessToken);
+      application = data;
+    } else {
+      console.log(error);
+      redirect('/login');
+    }
+  }
+
   const step = Number((await params).step);
 
   return (
@@ -45,8 +101,4 @@ export default async function ApplicationPage({ params }: ApplicationPageProps) 
       ) : null}
     </main>
   );
-}
-
-export async function generateStaticParams() {
-  return Array.from({ length: appQuestions.length + 2 }, (_, i) => ({ step: `${i + 1}` }));
 }

@@ -1,7 +1,16 @@
-import { ApplicationStatus, UserAccessType } from './enums';
+import { Application } from './application';
+import { ApplicationStatus, FormType, UserAccessType } from './enums';
 
-// User
+export interface ResponseModel {
+  uuid: string;
+  user: PrivateProfile;
+  createdAt: string;
+  updatedAt: string;
+  formType: FormType;
+  data: Application;
+}
 
+// User responses
 export interface PublicProfile {
   id: string;
   firstName: string;
@@ -14,23 +23,41 @@ export interface PrivateProfile extends PublicProfile {
   applicationStatus: ApplicationStatus;
   createdAt: Date;
   updatedAt: Date;
+  responses?: ResponseModel;
+}
+
+export interface CustomErrorBody {
+  name: string;
+  message: string;
+  httpCode: number;
+  stack?: string;
+  errors?: any;
+}
+
+export interface ApiResponse {
+  error: CustomErrorBody | null;
+}
+
+export interface CreateUserResponse extends ApiResponse {
+  user: PrivateProfile;
+}
+
+export interface GetUserResponse extends ApiResponse {
+  user: PublicProfile;
 }
 
 export interface GetCurrentUserResponse extends ApiResponse {
   user: PrivateProfile;
 }
 
-export interface PatchUserResponse extends ApiResponse {
+export interface UpdateCurrentUserReponse extends ApiResponse {
   user: PrivateProfile;
 }
 
-// Auth
+export interface DeleteCurrentUserResponse extends ApiResponse {}
 
-export interface ApiResponse {
-  error: any;
-}
-
-export interface RegistrationResponse extends ApiResponse {
+export interface UserAndToken {
+  token: string;
   user: PrivateProfile;
 }
 
@@ -39,19 +66,28 @@ export interface LoginResponse extends ApiResponse {
   user: PrivateProfile;
 }
 
-// Response types
-
-export interface ValidatorError {
-  children: ValidatorError[];
-  constraints: object;
-  property: string;
-  target: object;
+// Firebase Responses
+export interface GetIdTokenResponse {
+  idToken: string;
+  refreshToken: string;
+  expiresIn: string;
 }
 
-export interface CustomErrorBody {
-  name: string;
-  message: string;
-  httpCode: number;
-  stack?: string;
-  errors?: ValidatorError[];
+export interface SendEmailVerificationResponse {
+  email: string;
 }
+
+// Form response responses
+export interface GetFormsResponse extends ApiResponse {
+  responses: ResponseModel[];
+}
+
+export interface GetFormResponse extends ApiResponse {
+  response: ResponseModel;
+}
+
+export interface SubmitApplicationResponse extends ApiResponse {
+  response: ResponseModel;
+}
+
+export interface DeleteApplicationResponse extends ApiResponse {}
