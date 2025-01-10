@@ -20,4 +20,8 @@
 
   max-width: 646px;
   width: 100%;
+
+  .loginCard {
+    backdrop-filter: blur(5px);
+  }
 }

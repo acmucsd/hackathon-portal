@@ -46,7 +46,7 @@ export default function LoginPage() {
   return (
     <main className={styles.main}>
       <div className={`${styles.login}`}>
-        <Card gap={1}>
+        <Card gap={1} className={styles.loginCard}>
           <Heading centered>Log In</Heading>
           {error ? (
             <Alert marginBottom={0}>
