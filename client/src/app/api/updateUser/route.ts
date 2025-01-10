@@ -1,7 +1,7 @@
 import config from '@/lib/config';
 import type { UserPatches, PatchUserRequest } from '@/lib/types/apiRequests';
 import type { PatchUserResponse } from '@/lib/types/apiResponses';
-import { getCookie } from '@/lib/services/CookieService';
+import { getCookie, setCookie } from '@/lib/services/CookieService';
 import { CookieType } from '@/lib/types/enums';
 import { NextResponse, NextRequest } from 'next/server';
 import axios, { AxiosError } from 'axios';
@@ -29,6 +29,7 @@ export async function PATCH(request: NextRequest) {
     const user: UserPatches = body.user;
 
     const updatedUser = await updateCurrentUserProfile(authToken, user);
+    await setCookie(CookieType.USER, JSON.stringify(updatedUser.user));
 
     return NextResponse.json(updatedUser);
   } catch (error) {
