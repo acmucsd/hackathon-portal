@@ -5,7 +5,7 @@ import Profile from '@/components/Profile';
 import { redirect } from 'next/navigation';
 
 export default async function ProfilePage() {
-  const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
+  const accessToken = getCookie(CookieType.ACCESS_TOKEN);
 
   try {
     const fetchedUser = await UserAPI.getCurrentUser(accessToken);

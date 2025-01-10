@@ -20,6 +20,7 @@ interface LoginValues {
 }
 
 export default function LoginPage() {
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>(undefined);
   const router = useRouter();
 
@@ -35,12 +36,14 @@ export default function LoginPage() {
   });
 
   const onSubmit: SubmitHandler<LoginValues> = async credentials => {
+    console.log('FUCK');
     try {
-      await UserAPI.login(credentials.email, credentials.password);
-      router.push('/');
+      const response = await UserAPI.login(credentials.email, credentials.password);
+      setTimeout(() => router.push('/'), 500);
     } catch (error) {
       setError(getErrorMessage(error));
     }
+    setLoading(false);
   };
 
   return (
@@ -82,7 +85,7 @@ export default function LoginPage() {
 
           {/* <Link href="/forgot-password">Forgot your password?</Link> */}
 
-          <Button variant="primary" onClick={handleSubmit(onSubmit)}>
+          <Button variant="primary" onClick={handleSubmit(onSubmit)} disabled={loading}>
             Login
           </Button>
 

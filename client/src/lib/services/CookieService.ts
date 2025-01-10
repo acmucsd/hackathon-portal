@@ -1,11 +1,11 @@
 import { cookies, headers } from 'next/headers';
 
-export const getCookie = async (key: string): Promise<string> => {
-  const cookie = await cookies();
+export const getCookie = (key: string): string => {
+  const cookie = cookies();
   return cookie.get(key)?.value as string;
 };
 
-export const setCookie = async (key: string, value: string): Promise<void> => {
-  const cookie = await cookies();
+export const setCookie = (key: string, value: string) => {
+  const cookie = cookies();
   cookie.set(key, value);
 };

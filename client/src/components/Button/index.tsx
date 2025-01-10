@@ -14,6 +14,7 @@ interface ButtonProps {
   for?: string;
   submit?: boolean;
   onClick?: () => void;
+  disabled?: boolean;
   className?: string;
 }
 
@@ -23,6 +24,7 @@ const Button = ({
   for: htmlFor,
   submit = false,
   onClick,
+  disabled,
   className = '',
   children,
 }: PropsWithChildren<ButtonProps>) => {
@@ -30,6 +32,7 @@ const Button = ({
     className: `${styles.button} ${className}`,
     'data-variant': variant,
     onClick,
+    disabled,
     children,
   };
   return htmlFor ? (

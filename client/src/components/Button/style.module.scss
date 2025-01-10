@@ -14,6 +14,10 @@
   letter-spacing: 0.5px;
   cursor: pointer;
 
+  &:disabled {
+    background-color: vars.$neutral;
+  }
+
   &[data-variant='primary'] {
     background-color: vars.$btn-primary;
   }

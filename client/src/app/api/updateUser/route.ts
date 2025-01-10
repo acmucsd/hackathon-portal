@@ -10,7 +10,7 @@ const updateCurrentUserProfile = async (
   token: string,
   user: UserPatches
 ): Promise<PatchUserResponse> => {
-  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.user.user}`;
+  const requestUrl = `${config.api.baseApiUrl}${config.api.endpoints.user.user}`;
 
   const requestBody: PatchUserRequest = { user };
 

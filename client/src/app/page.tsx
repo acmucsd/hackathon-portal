@@ -7,7 +7,11 @@ import { getCookie } from '@/lib/services/CookieService';
 import { CookieType } from '@/lib/types/enums';
 
 export default async function Home() {
-  const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
+  const accessToken = getCookie(CookieType.ACCESS_TOKEN);
+
+  if (!accessToken) {
+    redirect('/login');
+  }
 
   try {
     const fetchedUser = await UserAPI.getCurrentUser(accessToken);
