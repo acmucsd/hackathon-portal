@@ -26,21 +26,22 @@ const statusText = (status: string) => {
   return formatted.charAt(0).toUpperCase() + formatted.slice(1);
 };
 
-const DashboardStatus = ({ status, timeline }: DashboardStatusProps) => {
-  let statusDescription = '';
+const getStatusDescription = (status: string) => {
   switch (status) {
     case 'SUBMITTED':
-      statusDescription = 'Congrats on applying to DiamondHacks!';
+      return 'Congrats on applying to DiamondHacks!';
     default:
-      statusDescription =
-        'Our records have indicated that you have not started on your application. Click below to go on your hacker journey!';
+      return 'Our records have indicated that you have not started on your application. Click below to go on your hacker journey!';
   }
+};
+
+const DashboardStatus = ({ status, timeline }: DashboardStatusProps) => {
   // TODO
   return (
     <>
       <div className={`${styles.badge} ${styles[status]}`}>Status: {statusText(status)}</div>
       <Typography variant="body/large" component="p">
-        {statusDescription}
+        {getStatusDescription(status)}
       </Typography>
       <Typography variant="body/large" component="p">
         Please note that applications are due on {dateFormat.format(timeline.application)}.
