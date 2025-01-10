@@ -70,8 +70,8 @@ export const appQuestions: Step[] = [
       {
         type: 'phone',
         id: 'phoneNumber',
-        question: <>Phone</>,
-        placeholder: '(858) 534-2230',
+        question: <>Phone (must include country code, e.g. +1 (858) 534-2230)</>,
+        placeholder: '+1 (858) 534-2230',
       },
       {
         type: 'dropdown',
@@ -144,7 +144,6 @@ export const appQuestions: Step[] = [
         question: <>Pronouns</>,
         choices: ['She/Her', 'He/Him', 'They/Them', 'She/They', 'He/They', 'Prefer Not to Answer'],
         other: true,
-        optional: true,
       },
       {
         type: 'select-multiple',
@@ -152,7 +151,6 @@ export const appQuestions: Step[] = [
         question: <>Do you consider yourself to be any of the following?</>,
         choices: ['Heterosexual or straight', 'Gay or lesbian', 'Bisexual', 'Prefer Not to Answer'],
         other: true,
-        optional: true,
       },
       {
         type: 'select-multiple',
@@ -304,7 +302,6 @@ export const appQuestions: Step[] = [
           </>
         ),
         choices: ['Yes', 'No'],
-        optional: true,
       },
       {
         type: 'text',

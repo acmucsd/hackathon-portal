@@ -5,6 +5,11 @@ import styles from './style.module.scss';
 import { useRef, useState } from 'react';
 
 export const OTHER = '__OTHER__';
+/**
+ * Indicates that none of the items are checked. Used to enforce at least one
+ * checkbox checked if a checkbox question is required.
+ */
+const NONE = '__NONE__';
 
 interface MultipleChoiceGroupProps {
   mode: 'radio' | 'checkbox';
@@ -37,7 +42,11 @@ const MultipleChoiceGroup = ({
           ? null
           : defaultValue;
 
-  const [selected, setSelected] = useState(defaultOther !== null ? OTHER : (defaultValue ?? ''));
+  const [selected, setSelected] = useState(
+    defaultOther !== null
+      ? OTHER
+      : ((Array.isArray(defaultValue) ? defaultValue[0] : defaultValue) ?? NONE)
+  );
   const [showOther, setShowOther] = useState(defaultOther !== null);
   const ref = useRef<HTMLDivElement | null>(null);
 
@@ -55,7 +64,7 @@ const MultipleChoiceGroup = ({
                 // For checkboxes, we can require at least one checkbox by
                 // only setting all of them `required` if none of them are
                 // checked
-                required={required && (mode === 'radio' || selected === '')}
+                required={required && (mode === 'radio' || selected === NONE)}
                 checked={mode === 'radio' ? selected === choice : undefined}
                 defaultChecked={
                   defaultValue === undefined || mode === 'radio'
@@ -66,7 +75,7 @@ const MultipleChoiceGroup = ({
                   if (e.currentTarget.checked) {
                     setSelected(choice);
                   } else if (mode === 'checkbox' && !ref.current?.querySelector(':checked')) {
-                    setSelected('');
+                    setSelected(NONE);
                   }
                 }}
                 disabled={disabled}
@@ -88,7 +97,7 @@ const MultipleChoiceGroup = ({
             <Component
               name={name}
               value={OTHER}
-              required={required && (mode === 'radio' || selected === '')}
+              required={required && (mode === 'radio' || selected === NONE)}
               checked={isOtherEnabled}
               defaultChecked={
                 defaultValue === undefined || mode === 'radio' ? undefined : defaultOther !== null
@@ -98,7 +107,7 @@ const MultipleChoiceGroup = ({
                 if (e.currentTarget.checked) {
                   setSelected(OTHER);
                 } else if (mode === 'checkbox' && !ref.current?.querySelector(':checked')) {
-                  setSelected('');
+                  setSelected(NONE);
                 }
               }}
               disabled={disabled}
@@ -111,6 +120,7 @@ const MultipleChoiceGroup = ({
             aria-label="Other"
             className={styles.other}
             defaultValue={defaultValue === undefined ? undefined : (defaultOther ?? '')}
+            required={isOtherEnabled}
             disabled={!isOtherEnabled || disabled}
           />
         </p>
