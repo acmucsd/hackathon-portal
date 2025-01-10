@@ -9,6 +9,11 @@ import { CookieType } from '@/lib/types/enums';
 export default async function Home() {
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
 
+  if (!accessToken) {
+    console.log('Dashboard broke: access token undefined');
+    redirect('/login');
+  }
+
   try {
     const fetchedUser = await UserAPI.getCurrentUser(accessToken);
     return (
@@ -17,6 +22,7 @@ export default async function Home() {
       </main>
     );
   } catch (error) {
+    console.log('Dashboard broke: error in fetching');
     redirect('/login');
   }
 }

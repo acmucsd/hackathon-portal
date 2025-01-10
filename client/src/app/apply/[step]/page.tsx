@@ -12,6 +12,7 @@ import { ResponseAPI } from '@/lib/api';
 import { getCookie } from '@/lib/services/CookieService';
 import { CookieType } from '@/lib/types/enums';
 import { AxiosError } from 'axios';
+import { getErrorMessage } from '@/lib/utils';
 
 const STEP_REVIEW = appQuestions.length + 1;
 const STEP_SUBMITTED = appQuestions.length + 2;
@@ -32,7 +33,6 @@ export default async function ApplicationPage({ params }: ApplicationPageProps) 
       exists = true;
     } catch (error) {
       if (!(error instanceof AxiosError && error.status === 404)) {
-        console.log(error);
         redirect('/login');
       }
     }

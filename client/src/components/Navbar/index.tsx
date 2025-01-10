@@ -27,7 +27,6 @@ interface NavbarProps {
   user?: PrivateProfile;
 }
 export default function Navbar({ user }: NavbarProps) {
-  console.log(user);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const onLinkClick = () => {
