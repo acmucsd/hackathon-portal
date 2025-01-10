@@ -14,6 +14,7 @@ import MultipleChoiceGroup, { OTHER } from '../MultipleChoiceGroup';
 import localforage from 'localforage';
 import showToast from '@/lib/showToast';
 import { reportError } from '@/lib/utils';
+import FileSelect from '../FileSelect';
 
 export type SavedResponses = Record<string, string | string[] | File | any>;
 export const SAVED_RESPONSES_KEY = 'saved application';
@@ -109,6 +110,11 @@ const ApplicationStep = ({
         return [question.id, response];
       })
     );
+    for (const [key, value] of Object.entries(responses)) {
+      if (value instanceof File && value.size === 0) {
+        delete responses[key];
+      }
+    }
     try {
       await localforage.setItem(SAVED_RESPONSES_KEY, {
         ...(await localforage.getItem<SavedResponses | null>(SAVED_RESPONSES_KEY)),
@@ -238,22 +244,13 @@ const ApplicationStep = ({
                     {question.optional ? null : ASTERISK}
                   </label>
                 </Typography>
-                <input
-                  type="file"
+                <FileSelect
                   accept={question.fileTypes}
                   name={question.id}
-                  id={`${id}-${question.id}`}
-                  required={!responses[question.id] && !question.optional}
-                  className="accessible-but-hidden"
+                  required={!question.optional}
                   disabled={!responsesLoaded}
+                  defaultFile={responses[question.id]}
                 />
-                <Button
-                  variant="secondary"
-                  for={`${id}-${question.id}`}
-                  className={styles.uploadBtn}
-                >
-                  Upload New
-                </Button>
                 <Typography variant="label/medium" component="p" className={styles.error}>
                   <ErrorIcon /> Required.
                 </Typography>
@@ -286,6 +283,7 @@ const ApplicationStepWrapped = (
       .getItem<SavedResponses | null>(SAVED_RESPONSES_KEY)
       .then(responses => {
         if (responses) {
+          console.log(responses);
           setResponses(responses);
         }
       })

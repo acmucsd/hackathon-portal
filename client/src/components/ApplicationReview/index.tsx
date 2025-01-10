@@ -89,6 +89,9 @@ const ApplicationReview = ({
           return;
         }
 
+        // Remove saved data
+        await localforage.removeItem(SAVED_RESPONSES_KEY);
+
         router.push(next);
       }}
     >
@@ -107,7 +110,21 @@ const ApplicationReview = ({
                 ) : Array.isArray(responses[id]) ? (
                   responses[id].join(', ')
                 ) : responses[id] instanceof File ? (
-                  'FILE'
+                  <Button
+                    variant="secondary"
+                    onClick={() => {
+                      const link = document.createElement('a');
+                      const url = URL.createObjectURL(responses[id]);
+                      link.href = url;
+                      link.download = responses[id].name;
+                      document.body.append(link);
+                      link.click();
+                      link.remove();
+                      URL.revokeObjectURL(url);
+                    }}
+                  >
+                    {responses[id].name}
+                  </Button>
                 ) : (
                   <em>No response.</em>
                 )}

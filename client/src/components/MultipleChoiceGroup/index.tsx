@@ -3,8 +3,6 @@
 import { Checkbox, Radio } from '@mui/material';
 import styles from './style.module.scss';
 import { useRef, useState } from 'react';
-import Typography from '../Typography';
-import ErrorIcon from '../../../public/assets/icons/error.svg';
 
 export const OTHER = '__OTHER__';
 
