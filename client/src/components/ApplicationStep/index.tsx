@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, useId, useRef } from 'react';
+import { ReactNode, useEffect, useId, useRef, useState } from 'react';
 import Card from '../Card';
 import Heading from '../Heading';
 import Typography from '../Typography';
@@ -11,6 +11,12 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ErrorIcon from '../../../public/assets/icons/error.svg';
 import MultipleChoiceGroup, { OTHER } from '../MultipleChoiceGroup';
+import localforage from 'localforage';
+import showToast from '@/lib/showToast';
+import { reportError } from '@/lib/utils';
+
+export type SavedResponses = Record<string, string | string[] | File | any>;
+export const SAVED_RESPONSES_KEY = 'saved application';
 
 type AppQuestion = {
   id: string;
@@ -61,12 +67,16 @@ const ASTERISK = (
 
 interface ApplicationStepProps {
   step: Step;
+  responses: Record<string, string | string[] | File | any>;
+  responsesLoaded?: boolean;
   prev: string;
   next: string;
 }
 
 const ApplicationStep = ({
   step: { title, description, questions },
+  responses,
+  responsesLoaded = true,
   prev,
   next,
 }: ApplicationStepProps) => {
@@ -79,32 +89,38 @@ const ApplicationStep = ({
       return;
     }
 
-    // TODO: Save changes
     const data = new FormData(formRef.current);
-    console.log(
-      Object.fromEntries(
-        questions.map(question => {
-          if (question.type === 'select-multiple') {
-            return [
-              question.id,
-              data
-                .getAll(question.id)
-                .map(response =>
-                  response === OTHER ? `[Other] ${data.get(`${question.id}-${OTHER}`)}` : response
-                ),
-            ];
-          }
-          const response = data.get(question.id);
-          if (question.type === 'select-one') {
-            return [
-              question.id,
-              response === OTHER ? `[Other] ${data.get(`${question.id}-${OTHER}`)}` : response,
-            ];
-          }
-          return [question.id, response];
-        })
-      )
+    const responses = Object.fromEntries(
+      questions.map(question => {
+        if (question.type === 'select-multiple') {
+          return [
+            question.id,
+            data
+              .getAll(question.id)
+              .map(response =>
+                response === OTHER ? data.get(`${question.id}-${OTHER}`) : response
+              ),
+          ];
+        }
+        const response = data.get(question.id);
+        if (question.type === 'select-one') {
+          return [question.id, response === OTHER ? data.get(`${question.id}-${OTHER}`) : response];
+        }
+        return [question.id, response];
+      })
     );
+    try {
+      await localforage.setItem(SAVED_RESPONSES_KEY, {
+        ...(await localforage.getItem<SavedResponses | null>(SAVED_RESPONSES_KEY)),
+        ...responses,
+      });
+      showToast(
+        'Responses saved locally!',
+        'Your responses will be lost when you clear site data. Your browser may do this automatically after a few days. Your draft will not be accessible from other devices.'
+      );
+    } catch (error) {
+      reportError("Couldn't save your responses. Try a different browser or device.", error);
+    }
   }
 
   return (
@@ -144,6 +160,8 @@ const ApplicationStep = ({
                   inline={question.inline}
                   other={question.other}
                   required={!question.optional}
+                  defaultValue={responses[question.id]}
+                  disabled={!responsesLoaded}
                 />
                 <Typography variant="label/medium" component="p" className={styles.error}>
                   <ErrorIcon /> Required.
@@ -172,6 +190,8 @@ const ApplicationStep = ({
                     placeholder="Type answer here..."
                     required={!question.optional}
                     className={styles.textbox}
+                    defaultValue={responses[question.id] ?? ''}
+                    disabled={!responsesLoaded}
                   />
                 ) : question.type === 'dropdown' ? (
                   <select
@@ -179,7 +199,8 @@ const ApplicationStep = ({
                     name={question.id}
                     required={!question.optional}
                     className={styles.textline}
-                    defaultValue=""
+                    defaultValue={responses[question.id] ?? ''}
+                    disabled={!responsesLoaded}
                   >
                     <option value="" disabled>
                       Select one
@@ -198,6 +219,8 @@ const ApplicationStep = ({
                     placeholder={question.placeholder}
                     required={!question.optional}
                     className={styles.textline}
+                    defaultValue={responses[question.id] ?? ''}
+                    disabled={!responsesLoaded}
                   />
                 )}
                 <Typography variant="label/medium" component="p" className={styles.error}>
@@ -220,8 +243,9 @@ const ApplicationStep = ({
                   accept={question.fileTypes}
                   name={question.id}
                   id={`${id}-${question.id}`}
-                  required={!question.optional}
+                  required={!responses[question.id] && !question.optional}
                   className="accessible-but-hidden"
+                  disabled={!responsesLoaded}
                 />
                 <Button
                   variant="secondary"
@@ -242,11 +266,40 @@ const ApplicationStep = ({
           <Button variant="secondary" onClick={save}>
             Save Changes
           </Button>
-          <Button submit>Next</Button>
+          <Button submit disabled={!responsesLoaded}>
+            Next
+          </Button>
         </div>
       </Card>
     </ThemeProvider>
   );
 };
 
-export default ApplicationStep;
+const ApplicationStepWrapped = (
+  props: Omit<ApplicationStepProps, 'responses' | 'responsesLoaded'>
+) => {
+  const [responses, setResponses] = useState<Record<string, string>>({});
+  const [responsesLoaded, setResponsesLoaded] = useState(false);
+
+  useEffect(() => {
+    localforage
+      .getItem<SavedResponses | null>(SAVED_RESPONSES_KEY)
+      .then(responses => {
+        if (responses) {
+          setResponses(responses);
+        }
+      })
+      .finally(() => setResponsesLoaded(true));
+  }, []);
+
+  return (
+    <ApplicationStep
+      {...props}
+      responses={responses}
+      responsesLoaded={responsesLoaded}
+      key={String(responsesLoaded)}
+    />
+  );
+};
+
+export default ApplicationStepWrapped;

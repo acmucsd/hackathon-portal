@@ -58,7 +58,6 @@ export default async function ApplicationPage({ params }: ApplicationPageProps) 
       ) : step === STEP_REVIEW ? (
         <ApplicationReview
           accessToken={accessToken}
-          responses={{}}
           prev={`/apply/${appQuestions.length}`}
           next={`/apply/${STEP_SUBMITTED}`}
         />

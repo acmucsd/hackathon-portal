@@ -192,7 +192,7 @@ export const appQuestions: Step[] = [
       },
       {
         type: 'file',
-        id: 'resume',
+        id: 'resumeLink',
         question: <>Upload your resume in PDF format below (Max: 100MB).</>,
         fileTypes: '.pdf,.doc,.docx',
       },

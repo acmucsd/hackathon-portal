@@ -13,6 +13,7 @@ interface ButtonProps {
   href?: string;
   for?: string;
   submit?: boolean;
+  disabled?: boolean;
   onClick?: () => void;
   className?: string;
 }
@@ -22,6 +23,7 @@ const Button = ({
   href,
   for: htmlFor,
   submit = false,
+  disabled = false,
   onClick,
   className = '',
   children,
@@ -37,7 +39,7 @@ const Button = ({
   ) : href ? (
     <Link href={href} {...props} />
   ) : (
-    <button type={submit ? 'submit' : 'button'} {...props} />
+    <button type={submit ? 'submit' : 'button'} disabled={disabled} {...props} />
   );
 };
 

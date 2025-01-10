@@ -15,19 +15,32 @@ interface MultipleChoiceGroupProps {
   other?: boolean;
   inline?: boolean;
   required?: boolean;
+  defaultValue?: string | string[];
+  disabled?: boolean;
 }
 
 const MultipleChoiceGroup = ({
   mode,
   name,
   choices,
-  inline,
-  other,
-  required,
+  inline = false,
+  other = false,
+  required = false,
+  defaultValue,
+  disabled = false,
 }: MultipleChoiceGroupProps) => {
   const Component = mode === 'radio' ? Radio : Checkbox;
-  const [selected, setSelected] = useState('');
-  const [showOther, setShowOther] = useState(false);
+  const defaultOther =
+    defaultValue === undefined
+      ? null
+      : Array.isArray(defaultValue)
+        ? (defaultValue.filter(choice => !choices.includes(choice))[0] ?? null)
+        : choices.includes(defaultValue)
+          ? null
+          : defaultValue;
+
+  const [selected, setSelected] = useState(defaultOther !== null ? OTHER : (defaultValue ?? ''));
+  const [showOther, setShowOther] = useState(defaultOther !== null);
   const ref = useRef<HTMLDivElement | null>(null);
 
   const isOtherEnabled = mode === 'radio' ? selected === OTHER : showOther;
@@ -46,6 +59,11 @@ const MultipleChoiceGroup = ({
                 // checked
                 required={required && (mode === 'radio' || selected === '')}
                 checked={mode === 'radio' ? selected === choice : undefined}
+                defaultChecked={
+                  defaultValue === undefined || mode === 'radio'
+                    ? undefined
+                    : Array.isArray(defaultValue) && defaultValue.includes(choice)
+                }
                 onChange={e => {
                   if (e.currentTarget.checked) {
                     setSelected(choice);
@@ -53,6 +71,7 @@ const MultipleChoiceGroup = ({
                     setSelected('');
                   }
                 }}
+                disabled={disabled}
               />
               {choice}
             </label>
@@ -73,6 +92,9 @@ const MultipleChoiceGroup = ({
               value={OTHER}
               required={required && (mode === 'radio' || selected === '')}
               checked={isOtherEnabled}
+              defaultChecked={
+                defaultValue === undefined || mode === 'radio' ? undefined : defaultOther !== null
+              }
               onChange={e => {
                 setShowOther(e.currentTarget.checked);
                 if (e.currentTarget.checked) {
@@ -81,6 +103,7 @@ const MultipleChoiceGroup = ({
                   setSelected('');
                 }
               }}
+              disabled={disabled}
             />
             Other:&nbsp;
           </label>
@@ -89,7 +112,8 @@ const MultipleChoiceGroup = ({
             name={`${name}-${OTHER}`}
             aria-label="Other"
             className={styles.other}
-            disabled={!isOtherEnabled}
+            defaultValue={defaultValue === undefined ? undefined : (defaultOther ?? '')}
+            disabled={!isOtherEnabled || disabled}
           />
         </p>
       ) : null}
