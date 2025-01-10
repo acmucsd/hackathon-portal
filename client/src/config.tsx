@@ -69,9 +69,9 @@ export const appQuestions: Step[] = [
     questions: [
       {
         type: 'phone',
-        id: 'phone',
-        question: <>Phone</>,
-        placeholder: '(858) 534-2230',
+        id: 'phoneNumber',
+        question: <>Phone (must include country code, e.g. +1 (858) 534-2230)</>,
+        placeholder: '+1 (858) 534-2230',
       },
       {
         type: 'dropdown',
@@ -79,16 +79,16 @@ export const appQuestions: Step[] = [
         question: <>Age</>,
         choices: ['18', '19', '20', '21', '22', '23', '24', '25', '25+'],
       },
+      // {
+      //   type: 'select-one',
+      //   id: 'grad',
+      //   question: <>What is your expected graduation date?</>,
+      //   choices: ['2025', '2026', '2027', '2028'],
+      //   other: true,
+      // },
       {
         type: 'select-one',
-        id: 'grad',
-        question: <>What is your expected graduation date?</>,
-        choices: ['2025', '2026', '2027', '2028'],
-        other: true,
-      },
-      {
-        type: 'select-one',
-        id: 'level',
+        id: 'levelOfStudy',
         question: <>Level of Study</>,
         choices: [
           'Less than Secondary / High School',
@@ -133,30 +133,28 @@ export const appQuestions: Step[] = [
         choices: countries,
       },
       {
-        type: 'select-multiple',
+        type: 'select-one',
         id: 'gender',
         question: <>What is your gender?</>,
         choices: ['Male', 'Female', 'Non-binary', 'Other', 'Prefer not to say'],
       },
       {
-        type: 'select-multiple',
+        type: 'select-one',
         id: 'pronouns',
         question: <>Pronouns</>,
         choices: ['She/Her', 'He/Him', 'They/Them', 'She/They', 'He/They', 'Prefer Not to Answer'],
         other: true,
-        optional: true,
       },
       {
         type: 'select-multiple',
-        id: 'sexuality',
+        id: 'orientation',
         question: <>Do you consider yourself to be any of the following?</>,
         choices: ['Heterosexual or straight', 'Gay or lesbian', 'Bisexual', 'Prefer Not to Answer'],
         other: true,
-        optional: true,
       },
       {
         type: 'select-multiple',
-        id: 'race',
+        id: 'ethnicity',
         question: <>Race/Ethnicity</>,
         choices: [
           'Asian Indian',
@@ -192,13 +190,14 @@ export const appQuestions: Step[] = [
       },
       {
         type: 'file',
-        id: 'resume',
-        question: <>Upload your resume in PDF format below (Max: 100MB).</>,
-        fileTypes: '.pdf,.doc,.docx',
+        id: 'resumeLink',
+        question: <>Upload your resume below (max: 2 MB; accepted formats: .pdf, .doc, .docx).</>,
+        fileTypes: ['.pdf', '.doc', '.docx'],
+        maxSize: 2 * 1000 * 1000,
       },
       {
         type: 'select-multiple',
-        id: 'topics',
+        id: 'interests',
         question: <>Which topics are you most interested in?</>,
         choices: [
           'Software Engineering',
@@ -211,7 +210,7 @@ export const appQuestions: Step[] = [
       },
       {
         type: 'select-multiple',
-        id: 'how',
+        id: 'referrer',
         question: <>How did you hear about DiamondHacks?</>,
         choices: [
           'Instagram',
@@ -233,7 +232,7 @@ export const appQuestions: Step[] = [
       },
       {
         type: 'select-one',
-        id: 'will-attend',
+        id: 'willAttend',
         question: (
           <>
             If accepted, I am attending DiamondHacks on April 5-6 at UC San Diego.
@@ -247,7 +246,7 @@ export const appQuestions: Step[] = [
       },
       {
         type: 'select-one',
-        id: 'coc',
+        id: 'mlhCodeOfConduct',
         question: (
           <>
             I have read and agree to the{' '}
@@ -264,7 +263,7 @@ export const appQuestions: Step[] = [
       },
       {
         type: 'select-one',
-        id: 'share-auth',
+        id: 'mlhAuthorization',
         question: (
           <>
             I authorize you to share my application/registration information with Major League
@@ -296,7 +295,7 @@ export const appQuestions: Step[] = [
       },
       {
         type: 'select-one',
-        id: 'spam',
+        id: 'mlhEmailAuthorization',
         question: (
           <>
             I authorize MLH to send me occasional emails about relevant events, career
@@ -304,9 +303,13 @@ export const appQuestions: Step[] = [
           </>
         ),
         choices: ['Yes', 'No'],
+      },
+      {
+        type: 'text',
+        id: 'additionalComments',
+        question: 'Anything else we should know?',
         optional: true,
       },
-      { type: 'text', id: 'etc', question: 'Anything else we should know?', optional: true },
     ],
   },
 ];

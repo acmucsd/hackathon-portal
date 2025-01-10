@@ -27,12 +27,7 @@ export default function LoginPage() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginValues>({
-    defaultValues: {
-      email: '',
-      password: '',
-    },
-  });
+  } = useForm<LoginValues>();
 
   const onSubmit: SubmitHandler<LoginValues> = async credentials => {
     try {

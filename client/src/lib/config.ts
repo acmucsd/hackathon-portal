@@ -9,6 +9,10 @@ const config = {
       user: {
         user: '/user',
       },
+      response: {
+        response: '/response',
+        application: '/response/application',
+      },
     },
   },
 };

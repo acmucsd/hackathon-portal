@@ -30,7 +30,7 @@ export const getMessagesFromError = (errBody: CustomErrorBody): string[] => {
 export function getErrorMessage(error: unknown): string {
   if (error instanceof AxiosError && error.response?.data?.error) {
     const response: ApiResponse = error.response.data;
-    return getMessagesFromError(response.error).join('\n\n') || error.message;
+    return (response.error && getMessagesFromError(response.error).join('\n\n')) || error.message;
   }
   if (error instanceof Error) {
     return error.message;

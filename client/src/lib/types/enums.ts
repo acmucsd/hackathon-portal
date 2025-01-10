@@ -11,7 +11,23 @@ export enum ApplicationStatus {
   WITHDRAWN = 'WITHDRAWN',
   ACCEPTED = 'ACCEPTED',
   REJECTED = 'REJECTED',
-  ALL_DONE = 'ALL_DONE',
+  CONFIRMED = 'CONFIRMED',
+}
+
+export enum FormType {
+  APPLICATION = 'APPLICATION',
+}
+
+export enum YesOrNo {
+  YES = 'YES',
+  NO = 'NO',
+}
+
+export enum Yes {
+  YES = 'YES',
+}
+export enum MediaType {
+  RESUME = 'RESUME',
 }
 
 export enum CookieType {

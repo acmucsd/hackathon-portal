@@ -23,6 +23,18 @@ const nextConfig = {
 
     return config;
   },
+  async redirects() {
+    return [
+      {
+        source: '/apply',
+        destination: '/apply/1',
+        permanent: true,
+      },
+    ];
+  },
+  experimental: {
+    serverActions: true,
+  },
 };
 
 module.exports = nextConfig;

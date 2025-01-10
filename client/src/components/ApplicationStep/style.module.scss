@@ -49,8 +49,9 @@
     }
   }
 
-  .uploadBtn {
-    align-self: flex-start;
+  ::placeholder {
+    color: inherit;
+    opacity: 0.3;
   }
 }
 

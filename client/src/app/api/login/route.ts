@@ -23,9 +23,9 @@ export async function POST(request: NextRequest) {
     await setCookie(CookieType.USER, JSON.stringify(response.user));
     return response;
   } catch (error) {
-    if (error instanceof AxiosError) {
-      return NextResponse.json({ error: getErrorMessage(error) }, { status: error.status || 500 });
-    }
-    return NextResponse.json({ error: error }, { status: 500 });
+    return NextResponse.json(
+      { error: getErrorMessage(error) },
+      { status: error instanceof AxiosError ? error.status || 500 : 500 }
+    );
   }
 }
