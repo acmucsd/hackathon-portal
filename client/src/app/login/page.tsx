@@ -36,10 +36,10 @@ export default function LoginPage() {
   });
 
   const onSubmit: SubmitHandler<LoginValues> = async credentials => {
-    console.log('FUCK');
     try {
       const response = await UserAPI.login(credentials.email, credentials.password);
-      setTimeout(() => router.push('/'), 500);
+      router.refresh();
+      router.push('/');
     } catch (error) {
       setError(getErrorMessage(error));
     }
