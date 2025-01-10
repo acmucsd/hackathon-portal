@@ -35,7 +35,7 @@
       letter-spacing: 0.5px;
 
       option {
-        background-color: vars.$card-bg;
+        background-color: vars.$black;
       }
     }
 
@@ -45,7 +45,7 @@
   }
 
   .contents {
-    background-color: vars.$card-bg;
+    background-color: vars.$black;
     border-radius: 8px;
     box-shadow:
       0px 1px 2px 0px rgba(0, 0, 0, 0.3),
