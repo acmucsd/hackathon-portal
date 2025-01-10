@@ -27,13 +27,20 @@ const statusText = (status: string) => {
 };
 
 const DashboardStatus = ({ status, timeline }: DashboardStatusProps) => {
+  let statusDescription = '';
+  switch (status) {
+    case 'SUBMITTED':
+      statusDescription = 'Congrats on applying to DiamondHacks!';
+    default:
+      statusDescription =
+        'Our records have indicated that you have not started on your application. Click below to go on your hacker journey!';
+  }
   // TODO
   return (
     <>
       <div className={`${styles.badge} ${styles[status]}`}>Status: {statusText(status)}</div>
       <Typography variant="body/large" component="p">
-        Our records have indicated that you have not started on your application. Click below to go
-        on your hacker journey!
+        {statusDescription}
       </Typography>
       <Typography variant="body/large" component="p">
         Please note that applications are due on {dateFormat.format(timeline.application)}.

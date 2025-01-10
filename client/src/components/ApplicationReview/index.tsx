@@ -56,7 +56,9 @@ const ApplicationReview = ({
         }
 
         const application: Application = {
-          phoneNumber: responses.phoneNumber,
+          phoneNumber: (responses.phoneNumber as string).startsWith('+')
+            ? responses.phoneNumber
+            : `+${responses.phoneNumber}`,
           age: responses.age,
           university: responses.university,
           levelOfStudy: responses.levelOfStudy,
@@ -92,6 +94,7 @@ const ApplicationReview = ({
         // Remove saved data
         await localforage.removeItem(SAVED_RESPONSES_KEY);
 
+        router.refresh();
         router.push(next);
       }}
     >
