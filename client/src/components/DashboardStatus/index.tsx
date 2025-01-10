@@ -26,14 +26,22 @@ const statusText = (status: string) => {
   return formatted.charAt(0).toUpperCase() + formatted.slice(1);
 };
 
+const getStatusDescription = (status: string) => {
+  switch (status) {
+    case 'SUBMITTED':
+      return 'Congrats on applying to DiamondHacks!';
+    default:
+      return 'Our records have indicated that you have not started on your application. Click below to go on your hacker journey!';
+  }
+};
+
 const DashboardStatus = ({ status, timeline }: DashboardStatusProps) => {
   // TODO
   return (
     <>
       <div className={`${styles.badge} ${styles[status]}`}>Status: {statusText(status)}</div>
       <Typography variant="body/large" component="p">
-        Our records have indicated that you have not started on your application. Click below to go
-        on your hacker journey!
+        {getStatusDescription(status)}
       </Typography>
       <Typography variant="body/large" component="p">
         Please note that applications are due on {dateFormat.format(timeline.application)}.
