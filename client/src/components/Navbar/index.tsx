@@ -8,6 +8,8 @@ import Link from 'next/link';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import { SwipeableDrawer } from '@mui/material';
+import { PrivateProfile } from '@/lib/types/apiResponses';
+import PersonIcon from '@/../public/assets/icons/person.svg';
 
 interface LinkMetadata {
   name: string;
@@ -21,7 +23,11 @@ const links: LinkMetadata[] = [
 
 const MOBILE_BREAKPOINT = 870; // Matches $breakpoint-md from vars.scss
 
-export default function Navbar() {
+interface NavbarProps {
+  user?: PrivateProfile;
+}
+export default function Navbar({ user }: NavbarProps) {
+  console.log(user);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const onLinkClick = () => {
@@ -51,37 +57,56 @@ export default function Navbar() {
             hacks
           </Typography>
         </Link>
-        <Typography variant="body/large" className={styles.desktopLinks}>
-          {links.map(link => (
-            <Link href={link.href} className={styles.link} onClick={onLinkClick} key={link.name}>
-              {link.name}
-            </Link>
-          ))}
-        </Typography>
-        <div className={styles.flex} />
-        <div className={styles.mobileIcons}>
-          <div className={`${styles.menuIcon} ${mobileMenuOpen ? '' : styles.hidden}`}>
-            <CloseIcon onClick={() => setMobileMenuOpen(false)} />
-          </div>
-          <div className={`${styles.menuIcon} ${mobileMenuOpen ? styles.hidden : ''}`}>
-            <MenuIcon onClick={() => setMobileMenuOpen(true)} />
-          </div>
-        </div>
+        {user ? (
+          <>
+            <Typography variant="body/large" className={styles.desktopLinks}>
+              {links.map(link => (
+                <Link
+                  href={link.href}
+                  className={styles.link}
+                  onClick={onLinkClick}
+                  key={link.name}
+                >
+                  {link.name}
+                </Link>
+              ))}
+            </Typography>
+            <div className={styles.flex} />
+            <Typography variant="body/large" className={styles.desktopLinks}>
+              <Link href="/profile" className={styles.link} onClick={onLinkClick}>
+                <PersonIcon aria-hidden /> {user.firstName} {user.lastName}
+              </Link>
+            </Typography>
+            <div className={styles.mobileIcons}>
+              <div className={`${styles.menuIcon} ${mobileMenuOpen ? '' : styles.hidden}`}>
+                <CloseIcon onClick={() => setMobileMenuOpen(false)} />
+              </div>
+              <div className={`${styles.menuIcon} ${mobileMenuOpen ? styles.hidden : ''}`}>
+                <MenuIcon onClick={() => setMobileMenuOpen(true)} />
+              </div>
+            </div>
+          </>
+        ) : null}
       </div>
-      <SwipeableDrawer
-        anchor="top"
-        open={mobileMenuOpen}
-        onClose={() => setMobileMenuOpen(false)}
-        onOpen={() => setMobileMenuOpen(true)}
-      >
-        <div className={styles.mobileMenu}>
-          {links.map(link => (
-            <Link href={link.href} className={styles.link} onClick={onLinkClick} key={link.name}>
-              {link.name}
+      {user ? (
+        <SwipeableDrawer
+          anchor="top"
+          open={mobileMenuOpen}
+          onClose={() => setMobileMenuOpen(false)}
+          onOpen={() => setMobileMenuOpen(true)}
+        >
+          <div className={styles.mobileMenu}>
+            {links.map(link => (
+              <Link href={link.href} className={styles.link} onClick={onLinkClick} key={link.name}>
+                {link.name}
+              </Link>
+            ))}
+            <Link href="/profile" className={styles.link} onClick={onLinkClick}>
+              <PersonIcon aria-hidden /> {user.firstName} {user.lastName}
             </Link>
-          ))}
-        </div>
-      </SwipeableDrawer>
+          </div>
+        </SwipeableDrawer>
+      ) : null}
     </>
   );
 }
