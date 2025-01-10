@@ -15,7 +15,6 @@ export interface Application {
   interests: string[];
   major: string;
   referrer: string[];
-  // TODO: upload and save resumes to s3
   resumeLink: string;
   willAttend: YesOrNo;
   mlhCodeOfConduct: Yes;

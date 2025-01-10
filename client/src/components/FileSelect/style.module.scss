@@ -1,6 +1,15 @@
+@use '@/styles/vars.scss' as vars;
+
 .wrapper {
   display: flex;
   align-items: center;
   gap: 1rem;
   flex-wrap: wrap;
+}
+
+.error {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: vars.$error;
 }

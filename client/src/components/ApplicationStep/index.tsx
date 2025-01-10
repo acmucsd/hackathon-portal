@@ -43,7 +43,8 @@ type AppQuestion = {
     }
   | {
       type: 'file';
-      fileTypes: string;
+      fileTypes: string[];
+      maxSize: number;
     }
 );
 
@@ -245,7 +246,8 @@ const ApplicationStep = ({
                   </label>
                 </Typography>
                 <FileSelect
-                  accept={question.fileTypes}
+                  fileTypes={question.fileTypes}
+                  maxSize={question.maxSize}
                   name={question.id}
                   required={!question.optional}
                   disabled={!responsesLoaded}
