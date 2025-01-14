@@ -61,7 +61,7 @@
   gap: 0.5rem;
   color: vars.$error;
 }
-:user-invalid + .error,
+:user-invalid ~ .error,
 .multipleChoice:has(:user-invalid) .error {
   display: flex;
 }

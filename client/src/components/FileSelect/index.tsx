@@ -25,22 +25,22 @@ const FileSelect = ({
 
   return (
     <>
+      <input
+        type="file"
+        accept={fileTypes.join(',')}
+        name={name}
+        id={id}
+        required={required && !defaultFile}
+        className="accessible-but-hidden"
+        disabled={disabled}
+        onChange={e => {
+          if (e.currentTarget.files?.[0]) {
+            setSelected(e.currentTarget.files[0]);
+          }
+        }}
+      />
       <div className={styles.wrapper}>
         {selected?.name}
-        <input
-          type="file"
-          accept={fileTypes.join(',')}
-          name={name}
-          id={id}
-          required={required && !defaultFile}
-          className="accessible-but-hidden"
-          disabled={disabled}
-          onChange={e => {
-            if (e.currentTarget.files?.[0]) {
-              setSelected(e.currentTarget.files[0]);
-            }
-          }}
-        />
         <Button variant="secondary" for={id}>
           Upload New
         </Button>

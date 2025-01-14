@@ -3,6 +3,7 @@ import { FAQQuestion } from './components/FAQAccordion';
 import { Deadlines } from './components/Dashboard';
 import { Step } from './components/ApplicationStep';
 import { countries } from './lib/constants/countries';
+import universities from './lib/constants/universities';
 
 export const FAQ_QUESTIONS: FAQQuestion[] = [
   {
@@ -86,6 +87,12 @@ export const appQuestions: Step[] = [
       //   choices: ['2025', '2026', '2027', '2028'],
       //   other: true,
       // },
+      {
+        type: 'dropdown',
+        id: 'university',
+        question: <>University</>,
+        choices: universities,
+      },
       {
         type: 'select-one',
         id: 'levelOfStudy',

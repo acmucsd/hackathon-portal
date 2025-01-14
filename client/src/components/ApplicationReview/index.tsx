@@ -68,7 +68,7 @@ const ApplicationReview = ({
           pronouns: responses.pronouns,
           orientation: responses.orientation,
           ethnicity: responses.ethnicity,
-          dietary: responses.dietary,
+          dietary: ['Will be answered in follow-up form.'],
           interests: responses.interests,
           major: responses.major,
           referrer: responses.referrer,
