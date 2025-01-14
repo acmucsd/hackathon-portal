@@ -3,6 +3,7 @@ name: Frontend - Linting
 on:
   pull_request:
     branches: [main]
+    paths: client/**
 jobs:
   Linux:
     runs-on: ubuntu-latest
