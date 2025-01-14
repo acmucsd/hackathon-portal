@@ -13,6 +13,7 @@ import { reportError } from '@/lib/utils';
 import { useWindowSize } from '@/lib/hooks/useWindowSize';
 import isEmail from 'validator/lib/isEmail';
 import styles from './style.module.scss';
+import logout from './logout';
 
 interface UpdateProfileValues {
   firstName: string;
@@ -66,10 +67,15 @@ const Profile = ({ user }: ProfileClientProps) => {
           <div className={styles.profileHeader}>
             <Heading>Your Profile</Heading>
             {isMobile && editProfile ? (
-              <CloseIcon style={{ cursor: 'pointer' }} onClick={() => clearFields()} />
+              <CloseIcon className={styles.closeBtn} onClick={() => clearFields()} />
             ) : (
-              <EditIcon style={{ cursor: 'pointer' }} onClick={() => clearFields()} />
+              <EditIcon className={styles.editBtn} onClick={() => clearFields()} />
             )}
+            {!editProfile ? (
+              <Button variant="tertiary" onClick={() => logout()} className={styles.logoutBtn}>
+                Log out
+              </Button>
+            ) : null}
           </div>
           <div className={styles.profileContent}>
             <TextField
