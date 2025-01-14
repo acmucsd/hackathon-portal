@@ -6,7 +6,6 @@ import TextField from '@/components/TextField';
 import Dropdown from '@/components/Dropdown';
 import Button from '@/components/Button';
 import Typography from '@/components/Typography';
-import universities from '@/lib/constants/universities';
 import { AuthManager } from '@/lib/managers';
 import type { UserRegistration } from '@/lib/types/apiRequests';
 import type { PrivateProfile } from '@/lib/types/apiResponses';
@@ -23,7 +22,6 @@ interface RegisterFormValues {
   email: string;
   password: string;
   confirmPassword: string;
-  university: string;
 }
 
 export default function RegisterPage() {
@@ -33,11 +31,7 @@ export default function RegisterPage() {
     handleSubmit,
     getValues,
     formState: { errors },
-  } = useForm<RegisterFormValues>({
-    defaultValues: {
-      university: '',
-    },
-  });
+  } = useForm<RegisterFormValues>();
 
   const router = useRouter();
 
@@ -125,21 +119,6 @@ export default function RegisterPage() {
             })}
             type="password"
             autoComplete="new-password"
-          />
-          <Controller
-            name="university"
-            control={control}
-            render={({ field }) => (
-              <Dropdown
-                name="universityOptions"
-                ariaLabel="Select an university"
-                options={universities}
-                value={field.value}
-                onChange={field.onChange}
-                className={styles.dropdown}
-                placeholder="Select"
-              />
-            )}
           />
           <Button variant="primary" onClick={handleSubmit(onSubmit)}>
             Sign Up
