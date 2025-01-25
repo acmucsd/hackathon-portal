@@ -14,14 +14,14 @@ const login = async (email: string, password: string): Promise<LoginResponse> =>
   return response.data;
 };
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json();
     const { email, password } = body;
     const response = await login(email, password);
     await setCookie(CookieType.ACCESS_TOKEN, response.token);
     await setCookie(CookieType.USER, JSON.stringify(response.user));
-    return response;
+    return NextResponse.json(response);
   } catch (error) {
     return NextResponse.json(
       { error: getErrorMessage(error) },

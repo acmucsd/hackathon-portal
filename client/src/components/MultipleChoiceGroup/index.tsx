@@ -1,6 +1,6 @@
 'use client ';
 
-import { Checkbox, Radio } from '@mui/material';
+import { Checkbox, CheckboxProps, Radio, RadioProps } from '@mui/material';
 import styles from './style.module.scss';
 import { useRef, useState } from 'react';
 
@@ -55,31 +55,33 @@ const MultipleChoiceGroup = ({
   return (
     <div className={`${styles.wrapper} ${inline ? styles.inline : ''}`} ref={ref}>
       {choices.map(choice => {
+        const props: RadioProps & CheckboxProps = {
+          name,
+          value: choice,
+          // For checkboxes, we can require at least one checkbox by
+          // only setting all of them `required` if none of them are
+          // checked
+          required: required && (mode === 'radio' || selected === NONE),
+          onChange: e => {
+            if (e.currentTarget.checked) {
+              setSelected(choice);
+            } else if (mode === 'checkbox' && !ref.current?.querySelector(':checked')) {
+              setSelected(NONE);
+            }
+          },
+          disabled,
+        };
+        // React has a distinction between undefined and whether the prop is
+        // present at all
+        if (mode === 'radio') {
+          props.checked = selected === choice;
+        } else if (defaultValue !== undefined) {
+          props.defaultChecked = Array.isArray(defaultValue) && defaultValue.includes(choice);
+        }
         return (
           <p key={choice}>
             <label className={styles.checkboxLabel}>
-              <Component
-                name={name}
-                value={choice}
-                // For checkboxes, we can require at least one checkbox by
-                // only setting all of them `required` if none of them are
-                // checked
-                required={required && (mode === 'radio' || selected === NONE)}
-                checked={mode === 'radio' ? selected === choice : undefined}
-                defaultChecked={
-                  defaultValue === undefined || mode === 'radio'
-                    ? undefined
-                    : Array.isArray(defaultValue) && defaultValue.includes(choice)
-                }
-                onChange={e => {
-                  if (e.currentTarget.checked) {
-                    setSelected(choice);
-                  } else if (mode === 'checkbox' && !ref.current?.querySelector(':checked')) {
-                    setSelected(NONE);
-                  }
-                }}
-                disabled={disabled}
-              />
+              <Component {...props} />
               {choice}
             </label>
           </p>
@@ -99,9 +101,6 @@ const MultipleChoiceGroup = ({
               value={OTHER}
               required={required && (mode === 'radio' || selected === NONE)}
               checked={isOtherEnabled}
-              defaultChecked={
-                defaultValue === undefined || mode === 'radio' ? undefined : defaultOther !== null
-              }
               onChange={e => {
                 setShowOther(e.currentTarget.checked);
                 if (e.currentTarget.checked) {
