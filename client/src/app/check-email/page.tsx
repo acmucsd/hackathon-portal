@@ -5,10 +5,11 @@ import Button from '@/components/Button';
 import styles from './page.module.scss';
 
 interface CheckEmailProps {
-  searchParams: { email?: string };
+  searchParams: Promise<{ email?: string }>;
 }
 
-const CheckEmail = ({ searchParams }: CheckEmailProps) => {
+const CheckEmail = async (props: CheckEmailProps) => {
+  const searchParams = await props.searchParams;
   const email = searchParams.email;
 
   return (
