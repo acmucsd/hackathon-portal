@@ -1,3 +1,5 @@
+'use server';
+
 import type { UserPatches, PatchUserRequest, LoginRequest } from '@/lib/types/apiRequests';
 import type {
   PrivateProfile,
@@ -6,11 +8,13 @@ import type {
   UpdateCurrentUserReponse,
 } from '@/lib/types/apiResponses';
 import axios from 'axios';
+import config from '@/lib/config';
 
-export const login = async (email: string, password: string): Promise<string> => {
+export const login = async (email: string, password: string): Promise<LoginResponse> => {
+  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.auth.login}`;
   const requestBody: LoginRequest = { email, password };
-  const response = await axios.post<LoginResponse>('/api/login', requestBody);
-  return response.data.token;
+  const response = await axios.post<LoginResponse>(requestUrl, requestBody);
+  return response.data;
 };
 
 /**

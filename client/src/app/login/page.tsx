@@ -13,6 +13,7 @@ import { UserAPI } from '@/lib/api';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { getErrorMessage } from '@/lib/utils';
+import { login } from './login';
 
 interface LoginValues {
   email: string;
@@ -30,13 +31,10 @@ export default function LoginPage() {
   } = useForm<LoginValues>();
 
   const onSubmit: SubmitHandler<LoginValues> = async credentials => {
-    try {
-      await UserAPI.login(credentials.email, credentials.password);
-      router.refresh();
-      router.push('/');
-    } catch (error) {
-      setError(getErrorMessage(error));
-    }
+    // If successful, the page will redirect and the rest of this function will
+    // not run
+    const error = await login(credentials.email, credentials.password);
+    setError(error);
   };
 
   return (
