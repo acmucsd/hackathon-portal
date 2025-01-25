@@ -14,6 +14,7 @@ import { useWindowSize } from '@/lib/hooks/useWindowSize';
 import isEmail from 'validator/lib/isEmail';
 import styles from './style.module.scss';
 import logout from './logout';
+import showToast from '@/lib/showToast';
 
 interface UpdateProfileValues {
   firstName: string;
@@ -45,13 +46,13 @@ const Profile = ({ user }: ProfileClientProps) => {
   });
 
   const onSubmit: SubmitHandler<UpdateProfileValues> = async updateProfile => {
-    try {
-      const updatedUser = await UserAPI.updateCurrentUserProfile(updateProfile);
+    const updatedUser = await UserAPI.updateCurrentUserProfile(updateProfile);
+    if (typeof updatedUser === 'string') {
+      showToast('Changes failed to save', updatedUser);
+    } else {
       setCurrentUser(updatedUser);
       setEditProfile(prevState => !prevState);
       reset(updatedUser);
-    } catch (error) {
-      reportError('Changes failed to save', error);
     }
   };
 
