@@ -72,7 +72,7 @@ const MultipleChoiceGroup = ({
           disabled,
         };
         // React has a distinction between undefined and whether the prop is
-        // present at all
+        // present at all, and these two props can't both be present
         if (mode === 'radio') {
           props.checked = selected === choice;
         } else if (defaultValue !== undefined) {
@@ -90,7 +90,10 @@ const MultipleChoiceGroup = ({
       {other ? (
         <p
           className={styles.checkboxLabel}
-          onClick={() => {
+          onClick={e => {
+            if (e.target instanceof HTMLInputElement || e.target instanceof HTMLLabelElement) {
+              return;
+            }
             setShowOther(true);
             setSelected(OTHER);
           }}

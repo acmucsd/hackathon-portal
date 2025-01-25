@@ -9,7 +9,6 @@ import TextField from '@/components/TextField';
 import CloseIcon from '../../../public/assets/icons/close.svg';
 import EditIcon from '../../../public/assets/icons/edit.svg';
 import { UserAPI } from '@/lib/api';
-import { reportError } from '@/lib/utils';
 import { useWindowSize } from '@/lib/hooks/useWindowSize';
 import isEmail from 'validator/lib/isEmail';
 import styles from './style.module.scss';
