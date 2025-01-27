@@ -2,6 +2,7 @@ name: Auto Comment on PRs
 on:
   pull_request:
     types: [opened]
+    paths: server/**
 jobs:
   auto-comment:
     runs-on: ubuntu-latest
