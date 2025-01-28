@@ -33,6 +33,14 @@ export class ResponseService {
     return response;
   }
 
+  private async getAllResponses(): Promise<ResponseModel[]> {
+    const responses = await this.transactionsManager.readOnly(
+      async (entityManager) =>
+        Repositories.response(entityManager).findAll(),
+    );
+    return responses;
+  }
+
   public async getUserResponseByUuid(
     user: UserModel,
     uuid: string,
@@ -53,6 +61,28 @@ export class ResponseService {
     );
     if (!application) throw new NotFoundError('No application found for user');
     return application;
+  }
+
+  public async getApplicationById(uuid: string): Promise<ResponseModel> {
+    try {
+      const response = await this.transactionsManager.readOnly(
+        async (entityManager) =>
+          Repositories.response(entityManager).findByUuid(uuid),
+      );
+      if (!response || response.formType !== FormType.APPLICATION)
+        throw new NotFoundError('Application not found');
+      return response;
+    } catch (error) {
+      throw new NotFoundError('Application not found');
+    }
+  }
+
+  public async getAllApplications(): Promise<ResponseModel[]> {
+    const responses = await this.getAllResponses();
+    const applications = responses.filter(
+      (response) => response.formType === FormType.APPLICATION,
+    );
+    return applications;
   }
 
   public async submitUserApplication(
