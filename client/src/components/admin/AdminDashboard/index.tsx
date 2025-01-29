@@ -6,7 +6,7 @@ import Typography from '@/components/Typography';
 import Button from '@/components/Button';
 import TimelineItem from '@/components/TimelineItem';
 import ApplicationCount from '../ApplicationCount';
-import { PrivateProfile } from '@/lib/types/apiResponses';
+import { PrivateProfile, ResponseModel } from '@/lib/types/apiResponses';
 
 /** Dates should be at 12 am UTC. */
 export interface Deadlines {
@@ -19,11 +19,13 @@ export interface Deadlines {
 interface AdminDashboardProps {
   timeline: Deadlines;
   user: PrivateProfile;
+  applications: ResponseModel[];
 }
 
-const AdminDashboard = ({ timeline, user }: AdminDashboardProps) => {
-  const pendingApplocations = 150;
-  const totalApplications = 200;
+const AdminDashboard = ({ timeline, user, applications }: AdminDashboardProps) => {
+  // Haven't implemented reviewing apps so placeholder for pending apps
+  const pendingApplications = applications.length;
+  const totalApplications = applications.length;
 
   return (
     <div className={styles.container}>
@@ -42,7 +44,7 @@ const AdminDashboard = ({ timeline, user }: AdminDashboardProps) => {
         />
       </Card>
       <Card gap={1.5} className={`${styles.card} ${styles.status}`}>
-        <ApplicationCount pendingApps={pendingApplocations} totalApps={totalApplications} />
+        <ApplicationCount pendingApps={pendingApplications} totalApps={totalApplications} />
         <Button href="/review">Continue Reviewing</Button>
       </Card>
       <Card gap={1.5} className={`${styles.card} ${styles.timeline}`}>

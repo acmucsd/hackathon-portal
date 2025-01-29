@@ -1,15 +1,13 @@
-@use '@/styles/vars.scss' as vars;
-
 .container {
   position: relative;
 
   .info {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding: 1rem;
     position: absolute;
-    top: 20%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    padding: 2rem;
     text-align: center;
   }
 }

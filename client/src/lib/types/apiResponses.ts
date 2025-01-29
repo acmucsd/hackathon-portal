@@ -98,3 +98,9 @@ export interface SubmitApplicationResponse extends ApiResponse {
 }
 
 export interface DeleteApplicationResponse extends ApiResponse {}
+
+// Admin FormResponses
+
+export interface GetApplicationsResponse extends ApiResponse {
+  responses: ResponseModel[];
+}
