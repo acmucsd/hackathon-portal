@@ -11,7 +11,7 @@ import Alert from '@/components/Alert';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { UserAPI } from '@/lib/api';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getErrorMessage } from '@/lib/utils';
 import { clearCookies, login } from './login';
 import { CookieType } from '@/lib/types/enums';
@@ -41,19 +41,29 @@ export default function LoginPage(request: NextRequest) {
     // If successful, the page will redirect and the rest of this function will
     // not run
     const error = await login(credentials.email, credentials.password);
-    clearCookies();
+
+    console.log(`Error: ${error}`);
     setError(error);
+    // if(error !== undefined){
+    //   await clearCookies();
+    // }
+
   };
+
+  useEffect(() => {
+    const userCookie = getCookie(CookieType.USER);
+
+    // Send the user to the dashboard page if they already have a valid cookie
+    if (userCookie) {
+      console.log('Already logged in');
+      redirect('/');
+    }
+  }, []);
 
   // console.log(`Cookies: ${request.cookies}`);
   // console.log(`Request: ${request}`);
 
   const userCookie = getCookie(CookieType.USER);
-
-    // Send the user to the dashboard page if they already have a valid cookie
-    if (userCookie) {
-      return NextResponse.redirect(new URL('/dashboard', request.url));
-    }
 
   return (
     <main className={styles.main}>

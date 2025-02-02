@@ -25,9 +25,18 @@ export async function login(email: string, password: string): Promise<string> {
   redirect('/');
 }
 
-export async function clearCookies(){
-  console.log("Clearing cookies");
-  const cookieStore = await cookies();
-  cookieStore.delete(CookieType.ACCESS_TOKEN);
-  cookieStore.delete(CookieType.USER);
+// export async function clearCookies(){
+//   console.log("Clearing cookies");
+//   const cookieStore = await cookies();
+//   cookieStore.delete(CookieType.ACCESS_TOKEN);
+//   cookieStore.delete(CookieType.USER);
+// }
+
+export async function checkValidCookies(){
+  const userCookie = getCookie(CookieType.USER);
+
+  // Send the user to the dashboard page if they already have a valid cookie
+  if (userCookie) {
+    redirect('/');
+  }
 }
