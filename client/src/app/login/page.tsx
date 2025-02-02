@@ -9,14 +9,11 @@ import TextField from '@/components/TextField';
 import Link from 'next/link';
 import Alert from '@/components/Alert';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { UserAPI } from '@/lib/api';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { getErrorMessage } from '@/lib/utils';
-import { clearCookies, login } from './login';
+import { login } from './login';
 import { CookieType } from '@/lib/types/enums';
 import { redirect } from 'next/navigation';
-import { NextRequest, NextResponse } from 'next/server';
 import { getCookie } from "cookies-next";
 
 
@@ -27,7 +24,7 @@ interface LoginValues {
 
 
 
-export default function LoginPage(request: NextRequest) {
+export default function LoginPage() {
   const [error, setError] = useState<string | undefined>(undefined);
   const router = useRouter();
 
@@ -59,9 +56,6 @@ export default function LoginPage(request: NextRequest) {
       redirect('/');
     }
   }, []);
-
-  // console.log(`Cookies: ${request.cookies}`);
-  // console.log(`Request: ${request}`);
 
   const userCookie = getCookie(CookieType.USER);
 
