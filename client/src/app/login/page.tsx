@@ -13,14 +13,21 @@ import { UserAPI } from '@/lib/api';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { getErrorMessage } from '@/lib/utils';
-import { login } from './login';
+import { clearCookies, login } from './login';
+import { CookieType } from '@/lib/types/enums';
+import { redirect } from 'next/navigation';
+import { NextRequest, NextResponse } from 'next/server';
+import { getCookie } from "cookies-next";
+
 
 interface LoginValues {
   email: string;
   password: string;
 }
 
-export default function LoginPage() {
+
+
+export default function LoginPage(request: NextRequest) {
   const [error, setError] = useState<string | undefined>(undefined);
   const router = useRouter();
 
@@ -34,8 +41,19 @@ export default function LoginPage() {
     // If successful, the page will redirect and the rest of this function will
     // not run
     const error = await login(credentials.email, credentials.password);
+    clearCookies();
     setError(error);
   };
+
+  // console.log(`Cookies: ${request.cookies}`);
+  // console.log(`Request: ${request}`);
+
+  const userCookie = getCookie(CookieType.USER);
+
+    // Send the user to the dashboard page if they already have a valid cookie
+    if (userCookie) {
+      return NextResponse.redirect(new URL('/dashboard', request.url));
+    }
 
   return (
     <main className={styles.main}>
