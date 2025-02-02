@@ -6,8 +6,7 @@ import { CookieType } from '@/lib/types/enums';
 import { getErrorMessage } from '@/lib/utils';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
- import { getCookie } from "cookies-next";
-
+import { getCookie } from 'cookies-next';
 
 export async function login(email: string, password: string): Promise<string> {
   let response;

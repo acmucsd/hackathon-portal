@@ -14,15 +14,12 @@ import { useEffect, useState } from 'react';
 import { login } from './login';
 import { CookieType } from '@/lib/types/enums';
 import { redirect } from 'next/navigation';
-import { getCookie } from "cookies-next";
-
+import { getCookie } from 'cookies-next';
 
 interface LoginValues {
   email: string;
   password: string;
 }
-
-
 
 export default function LoginPage() {
   const [error, setError] = useState<string | undefined>(undefined);
@@ -41,10 +38,6 @@ export default function LoginPage() {
 
     console.log(`Error: ${error}`);
     setError(error);
-    // if(error !== undefined){
-    //   await clearCookies();
-    // }
-
   };
 
   useEffect(() => {
