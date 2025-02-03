@@ -6,7 +6,7 @@ import {
   sendEmailVerification,
   signInWithCustomToken,
   signInWithEmailAndPassword,
-  sendPasswordResetEmail
+  sendPasswordResetEmail,
 } from 'firebase/auth';
 import { FirebaseAuthError } from 'firebase-admin/auth';
 import {
@@ -178,11 +178,14 @@ export class UserService {
   public async sendPasswordResetEmail(email: string): Promise<void> {
     try {
       const firebaseRecord = await adminAuth.getUserByEmail(email);
-      if (!firebaseRecord) {
-        throw new NotFoundError('No user found with the provided email address.');
-      }
-      await sendPasswordResetEmail(auth, email);
+      if (firebaseRecord)
+        await sendPasswordResetEmail(auth, email);
     } catch (error) {
+      if (error instanceof FirebaseAuthError) {
+        if (error.code === 'auth/user-not-found') {
+          throw new NotFoundError('No user found with the provided email address.');
+        }
+      }
       throw error;
     }
   }
