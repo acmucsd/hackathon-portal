@@ -96,4 +96,11 @@ export class UserController {
     this.userService.deleteUser(user);
     return { error: null };
   }
+
+  @Post('/forgot-password')
+  async forgotPassword(@Body() body: { email: string }): Promise<{ message: string }> {
+    await this.userService.sendPasswordResetEmail(body.email);
+    return { message: 'Password reset email sent successfully.' };
+  }
+
 }
