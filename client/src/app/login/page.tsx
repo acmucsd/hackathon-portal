@@ -36,7 +36,6 @@ export default function LoginPage() {
     // not run
     const error = await login(credentials.email, credentials.password);
 
-    console.log(`Error: ${error}`);
     setError(error);
   };
 
@@ -49,8 +48,6 @@ export default function LoginPage() {
       redirect('/');
     }
   }, []);
-
-  const userCookie = getCookie(CookieType.USER);
 
   return (
     <main className={styles.main}>
