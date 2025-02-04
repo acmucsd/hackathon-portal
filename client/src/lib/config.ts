@@ -14,8 +14,8 @@ const config = {
         application: '/response/application',
       },
       admin: {
-        applications: '/admin/applications'
-      }
+        applications: '/admin/applications',
+      },
     },
   },
 };
