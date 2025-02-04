@@ -1,4 +1,5 @@
 import { UserModel } from '../models/UserModel';
+import { ApplicationDecision } from './Enums';
 
 declare global {
   namespace Express {
@@ -33,4 +34,9 @@ export interface UpdateUserRequest {
 export interface LoginRequest {
   email: string;
   password: string;
+}
+
+// Admin requests
+export interface UpdateApplicationDecisionRequest {
+  applicationDecision: ApplicationDecision;
 }

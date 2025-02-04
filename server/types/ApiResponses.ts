@@ -1,5 +1,9 @@
 import { ResponseModel } from '../models/ResponseModel';
-import { ApplicationStatus, UserAccessType } from './Enums';
+import {
+  ApplicationStatus,
+  ApplicationDecision,
+  UserAccessType,
+} from './Enums';
 
 // User responses
 export interface PublicProfile {
@@ -15,6 +19,10 @@ export interface PrivateProfile extends PublicProfile {
   createdAt: Date;
   updatedAt: Date;
   responses?: ResponseModel;
+}
+
+export interface HiddenProfile extends PrivateProfile {
+  applicationDecision: ApplicationDecision;
 }
 
 export interface CustomErrorBody {
@@ -71,3 +79,12 @@ export interface SubmitApplicationResponse extends ApiResponse {
 }
 
 export interface DeleteApplicationResponse extends ApiResponse {}
+
+// Admin responses
+export interface GetApplicationDecisionResponse extends ApiResponse {
+  user: HiddenProfile;
+}
+
+export interface UpdateApplicationDecisionResponse extends ApiResponse {
+  user: HiddenProfile;
+}
