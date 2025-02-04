@@ -9,4 +9,4 @@ const Logout = () => {
   return <></>;
 };
 
-export default Dashboard;
+export default Logout;
