@@ -9,7 +9,6 @@ import TextField from '@/components/TextField';
 import Link from 'next/link';
 import Alert from '@/components/Alert';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { login } from './login';
 import { CookieType } from '@/lib/types/enums';
@@ -23,7 +22,6 @@ interface LoginValues {
 
 export default function LoginPage() {
   const [error, setError] = useState<string | undefined>(undefined);
-  const router = useRouter();
 
   const {
     register,
