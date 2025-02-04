@@ -13,6 +13,7 @@ import { Service } from 'typedi';
 import { IdParam } from '../validators/GenericRequests';
 import {
   CreateUserRequest,
+  ForgotPasswordRequest,
   LoginRequest,
   UpdateUserRequest,
 } from '../validators/UserControllerRequests';
@@ -25,6 +26,7 @@ import {
   GetUserResponse,
   LoginResponse,
   UpdateCurrentUserReponse,
+  ForgotPasswordResponse,
 } from '../../types/ApiResponses';
 import { UserAuthentication } from '../middleware/UserAuthentication';
 
@@ -98,9 +100,11 @@ export class UserController {
   }
 
   @Post('/forgot-password')
-  async forgotPassword(@Body() body: { email: string }): Promise<{ message: string }> {
-    await this.userService.sendPasswordResetEmail(body.email);
-    return { message: 'Password reset email sent successfully.' };
+  async forgotPassword(
+    @Body() forgotPasswordRequest: ForgotPasswordRequest,
+  ): Promise<ForgotPasswordResponse> {
+    await this.userService.sendPasswordResetEmail(forgotPasswordRequest.email);
+    return { error: null };
   }
 
 }

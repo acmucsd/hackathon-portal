@@ -13,6 +13,7 @@ import {
   UpdateUser as IUpdateUser,
   UpdateUserRequest as IUpdateUserRequest,
   LoginRequest as ILoginRequest,
+  ForgotPasswordRequest as IForgotPasswordRequest,
 } from '../../types/ApiRequests';
 
 const PASSWORD_MIN_LENGTH = 8;
@@ -65,3 +66,10 @@ export class LoginRequest implements ILoginRequest {
   @IsDefined()
   password: string;
 }
+
+export class ForgotPasswordRequest implements IForgotPasswordRequest {
+  @IsDefined()
+  @IsEmail()
+  email: string;
+}
+
