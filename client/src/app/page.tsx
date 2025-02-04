@@ -12,7 +12,7 @@ export default async function Home() {
 
   if (!accessToken) {
     console.log('Dashboard broke: access token undefined');
-    redirect('/login');
+    redirect('/api/logout');
   }
 
   try {
@@ -31,6 +31,6 @@ export default async function Home() {
     );
   } catch (error) {
     console.log('Dashboard broke: error in fetching');
-    redirect('/login');
+    redirect('/api/logout');
   }
 }
