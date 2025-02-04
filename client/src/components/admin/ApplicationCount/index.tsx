@@ -17,10 +17,10 @@ const ApplicationCount = ({ pendingApps, totalApps }: ApplicationCountProps) => 
         variant="determinate"
         value={progress}
         sx={{
-          color: '#DFE2EB',
+          color: '#9ECAFF',
           thickness: 5,
           borderRadius: '50%',
-          boxShadow: `inset 0 0 0 21px #9ECAFF`,
+          boxShadow: `inset 0 0 0 21px #DFE2EB`,
         }}
       />
       <div className={styles.info}>
