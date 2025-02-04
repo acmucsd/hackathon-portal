@@ -7,8 +7,16 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { ResponseModel } from './ResponseModel';
-import { ApplicationStatus, UserAccessType } from '../types/Enums';
-import { PublicProfile, PrivateProfile } from '../types/ApiResponses';
+import {
+  ApplicationDecision,
+  ApplicationStatus,
+  UserAccessType,
+} from '../types/Enums';
+import {
+  PublicProfile,
+  PrivateProfile,
+  HiddenProfile,
+} from '../types/ApiResponses';
 
 @Entity('User')
 export class UserModel {
@@ -35,6 +43,12 @@ export class UserModel {
     default: ApplicationStatus.NOT_SUBMITTED,
   })
   applicationStatus: ApplicationStatus;
+
+  @Column('enum', {
+    enum: ApplicationDecision,
+    default: ApplicationDecision.NO_DECISION,
+  })
+  applicationDecision: ApplicationDecision;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -78,5 +92,12 @@ export class UserModel {
     };
     if (this.responses) privateProfile.responses = this.responses;
     return privateProfile;
+  }
+
+  public getHiddenProfile(): HiddenProfile {
+    return {
+      ...this.getPrivateProfile(),
+      applicationDecision: this.applicationDecision,
+    };
   }
 }
