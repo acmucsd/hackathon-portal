@@ -104,3 +104,7 @@ export interface DeleteApplicationResponse extends ApiResponse {}
 export interface GetApplicationsResponse extends ApiResponse {
   responses: ResponseModel[];
 }
+
+export interface GetApplicationResponse extends ApiResponse {
+  responses: ResponseModel;
+}

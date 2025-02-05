@@ -1,0 +1,47 @@
+@use '@/styles/vars.scss' as vars;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .tableContainer {
+    border-radius: 8px;
+    border: 1px solid #525252;
+    overflow: hidden;
+    width: 100%;
+    max-width: 1000px;
+
+    .appTable {
+      border-collapse: collapse;
+
+      .tableHeader {
+        background-color: #37393e;
+
+        th {
+          font-size: 1rem;
+          font-weight: 500;
+          line-height: 12px;
+          padding: 1.25rem;
+          text-align: left;
+          min-width: 250px;
+          border-right: 1px solid #525252;
+          border-bottom: 1px solid #525252;
+        }
+      }
+    }
+  }
+  .pagination {
+    display: flex;
+    gap: 0.5rem;
+
+    .pageButton {
+      background-color: transparent;
+      color: vars.$white;
+      padding: 0px;
+      min-width: 0px;
+      min-height: 0px;
+    }
+
+  }
+}

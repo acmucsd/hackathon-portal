@@ -1,0 +1,23 @@
+.status {
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  &.pending {
+    color: #142E52;
+    background-color: #D6E5F8;
+  }
+
+  &.accepted {
+    color: #00573F;
+    background-color: #D7EDE7;
+  }
+
+  &.waitlisted{
+    color: #8D490D;
+    background-color: #ECDF98;
+  }
+
+  &.rejected{
+    color: #8D0D25;
+    background-color: #FAD5DC;
+  }
+}

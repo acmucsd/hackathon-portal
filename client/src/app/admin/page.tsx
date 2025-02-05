@@ -1,12 +1,12 @@
-import { FAQ_QUESTIONS, TIMELINE } from '@/config';
-import styles from './page.module.scss';
-import Dashboard from '@/components/Dashboard';
-import { UserAPI } from '@/lib/api';
+import { TIMELINE } from '@/config';
+import AdminDashboard from '@/components/admin/AdminDashboard';
+import { UserAPI, AdminAPI } from '@/lib/api';
 import { redirect } from 'next/navigation';
 import { getCookie } from '@/lib/services/CookieService';
 import { CookieType } from '@/lib/types/enums';
+import styles from './page.module.scss';
 
-export default async function Home() {
+export default async function Admin() {
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
 
   if (!accessToken) {
@@ -16,10 +16,12 @@ export default async function Home() {
 
   try {
     const fetchedUser = await UserAPI.getCurrentUser(accessToken);
+    const accessType = fetchedUser.accessType;
+    const applications = accessType === 'ADMIN' ? await AdminAPI.getApplications(accessToken) : [];
 
     return (
       <main className={styles.main}>
-        <Dashboard faq={FAQ_QUESTIONS} timeline={TIMELINE} user={fetchedUser} />
+        <AdminDashboard timeline={TIMELINE} user={fetchedUser} applications={applications} />
       </main>
     );
   } catch (error) {
