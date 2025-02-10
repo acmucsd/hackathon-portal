@@ -207,7 +207,7 @@ export class UserService {
 
   public async getAllUsers(): Promise<UserModel[]> {
     return this.transactionsManager.readOnly(async (entityManager) =>
-      Repositories.user(entityManager).findAll()
+      Repositories.user(entityManager).findAll(),
     );
   }
 

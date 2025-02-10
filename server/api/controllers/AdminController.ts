@@ -104,7 +104,7 @@ export class AdminController {
   @Get('/user/:id')
   async getUserWithApplications(
     @AuthenticatedUser() currentUser: UserModel,
-    @Params() params: IdParam
+    @Params() params: IdParam,
   ) {
     if (!PermissionsService.canViewAllApplications(currentUser))
       throw new ForbiddenError();
