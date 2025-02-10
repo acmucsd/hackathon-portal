@@ -89,4 +89,30 @@ export class AdminController {
     );
     return { error: null, user: user.getHiddenProfile() };
   }
+
+  @UseBefore(UserAuthentication)
+  @Get('/users')
+  async getUsers(@AuthenticatedUser() currentUser: UserModel) {
+    if (!PermissionsService.canViewAllApplications(currentUser))
+      throw new ForbiddenError();
+
+    const users = await this.userService.getAllUsers();
+    return { error: null, users };
+  }
+
+  @UseBefore(UserAuthentication)
+  @Get('/user/:id')
+  async getUserWithApplications(
+    @AuthenticatedUser() currentUser: UserModel,
+    @Params() params: IdParam
+  ) {
+    if (!PermissionsService.canViewAllApplications(currentUser))
+      throw new ForbiddenError();
+
+    const user = await this.userService.findById(params.id);
+    const userWithApp = await this.responseService.getUserApplication(user);
+    return { error: null, application: userWithApp };
+  }
+
+
 }
