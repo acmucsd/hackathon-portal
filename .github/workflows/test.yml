@@ -30,6 +30,4 @@ jobs:
           context: "./server"
           platforms: linux/arm64
           push: true
-          tags:
-            - acmucsd/hackathon-portal-api:${{ env.GIT_HASH }}
-            - acmucsd/hackathon-portal-api:latest
+          tags: acmucsd/hackathon-portal-api:${{ env.GIT_HASH }},acmucsd/hackathon-portal-api:latest
