@@ -1,5 +1,7 @@
 name: Test Backend - Build & Push
 on:
+  push:
+    branches: [ "build-docker-image-in-github-actions" ]
   pull_request:
     branches: [ "main" ]
     paths: ".github/workflows/test.yml"
