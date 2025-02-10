@@ -27,13 +27,9 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: "./server"
-          platforms:
-            - linux/arm64
+          platforms: linux/arm64
           push: true
-          tags:
-            - acmucsd/hackathon-portal-api:${{ env.GIT_HASH }}
-            - acmucsd/hackathon-portal-api:latest
-
+          tags: acmucsd/hackathon-portal-api:${{ env.GIT_HASH }},acmucsd/hackathon-portal-api:latest
 
       - name: Deploy App to CapRover
         uses: caprover/deploy-from-github@v1.1.2
