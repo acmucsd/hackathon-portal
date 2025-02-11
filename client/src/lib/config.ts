@@ -15,6 +15,7 @@ const config = {
       },
       admin: {
         applications: '/admin/applications',
+        application: '/admin/application'
       },
     },
   },

@@ -22,8 +22,10 @@ export default async function Review() {
 
     return (
       <main className={styles.main}>
-        <Heading>Application Review</Heading>
-        <Typography variant='label/large'>Total Number of Applications: {applications.length}</Typography>
+        <Heading>Manage Users</Heading>
+        <Typography variant="body/medium">
+          All Participants ({applications.length})
+        </Typography>
         <ApplicationTable applications={applications} />
       </main>
     );

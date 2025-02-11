@@ -20,15 +20,16 @@ export const getApplications = async (token: string): Promise<ResponseModel[]> =
 
 /**
  * Get one user's application
+ * @param token
  * @param uuid
  * @returns All users application
  */
-export const getApplication = async (uuid: string): Promise<ResponseModel> => {
-  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.applications}`;
+export const getApplication = async (token: string, uuid: string): Promise<ResponseModel> => {
+  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.application}/${uuid}`;
   const response = await axios.get<GetApplicationResponse>(requestUrl, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
-  return response.data.user;
+  return response.data.response;
 };

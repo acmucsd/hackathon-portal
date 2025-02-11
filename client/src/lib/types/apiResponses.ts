@@ -106,5 +106,5 @@ export interface GetApplicationsResponse extends ApiResponse {
 }
 
 export interface GetApplicationResponse extends ApiResponse {
-  responses: ResponseModel;
+  response: ResponseModel;
 }
