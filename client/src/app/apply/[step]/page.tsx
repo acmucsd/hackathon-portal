@@ -33,7 +33,7 @@ export default async function ApplicationPage({ params }: ApplicationPageProps) 
       exists = true;
     } catch (error) {
       if (!(error instanceof AxiosError && error.status === 404)) {
-        redirect('/login');
+        redirect('/api/logout');
       }
     }
     if (exists) {

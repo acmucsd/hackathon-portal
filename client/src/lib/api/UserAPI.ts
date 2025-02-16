@@ -15,7 +15,6 @@ import { getErrorMessage } from '../utils';
 
 export const login = async (email: string, password: string): Promise<LoginResponse> => {
   const requestUrl = `${config.api.baseUrl}${config.api.endpoints.auth.login}`;
-  console.log('requestUrl', requestUrl);
   const requestBody: LoginRequest = { email, password };
   const response = await axios.post<LoginResponse>(requestUrl, requestBody);
   return response.data;

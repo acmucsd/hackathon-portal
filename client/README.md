@@ -23,6 +23,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with
    ```shell
    # in server/
    $ yarn
+   $ yarn db:migrate
    $ yarn build
    $ yarn start
    ```

@@ -6,7 +6,7 @@ export function middleware(request: NextRequest) {
 
   // Send the user to the login page if they don't have a valid cookie
   if (!userCookie) {
-    return NextResponse.redirect(new URL('/login', request.url));
+    return NextResponse.redirect(new URL('/api/logout', request.url));
   }
 
   return NextResponse.next();
