@@ -88,3 +88,5 @@ export interface GetApplicationDecisionResponse extends ApiResponse {
 export interface UpdateApplicationDecisionResponse extends ApiResponse {
   user: HiddenProfile;
 }
+
+export interface ForgotPasswordResponse extends ApiResponse {}

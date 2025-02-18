@@ -40,3 +40,7 @@ export interface LoginRequest {
 export interface UpdateApplicationDecisionRequest {
   applicationDecision: ApplicationDecision;
 }
+
+export interface ForgotPasswordRequest {
+  email: string;
+}
