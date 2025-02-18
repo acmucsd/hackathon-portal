@@ -204,4 +204,11 @@ export class UserService {
       throw error;
     }
   }
+
+  public async getAllUsers(): Promise<UserModel[]> {
+    return this.transactionsManager.readOnly(async (entityManager) =>
+      Repositories.user(entityManager).findAll(),
+    );
+  }
+
 }
