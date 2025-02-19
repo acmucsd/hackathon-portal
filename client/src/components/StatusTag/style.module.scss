@@ -1,23 +1,33 @@
 .status {
   padding: 0.5rem 0.75rem;
-  border-radius: 8px;
-  &.pending {
-    color: #142E52;
-    background-color: #D6E5F8;
+  border-radius: 0.5rem;
+  &.NOT_SUBMITTED {
+    color: #8d0d25;
+    background-color: #fad5dc;
   }
 
-  &.accepted {
-    color: #00573F;
-    background-color: #D7EDE7;
+  &.SUBMITTED {
+    color: #142e52;
+    background-color: #d6e5f8;
   }
 
-  &.waitlisted{
-    color: #8D490D;
-    background-color: #ECDF98;
+  &.ACCEPTED {
+    color: #00573f;
+    background-color: #d7ede7;
   }
 
-  &.rejected{
-    color: #8D0D25;
-    background-color: #FAD5DC;
+  &.WITHDRAWN {
+    color: #8d490d;
+    background-color: #ecdf98;
+  }
+
+  &.REJECTED {
+    color: #8d0d25;
+    background-color: #fad5dc;
+  }
+
+  &.CONFIRMED {
+    color: #35118d;
+    background-color: #ece6f9;
   }
 }

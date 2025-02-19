@@ -33,7 +33,12 @@ export default function Navbar({ user }: NavbarProps) {
     setMobileMenuOpen(false);
   };
 
-  const links = user?.accessType == 'ADMIN' ? [...baseLinks, { name: 'Admin', href: '/admin' }] : baseLinks;
+  const links =
+  user?.accessType == 'ADMIN'
+  ? [...baseLinks,
+     { name: 'Admin Dashboard', href: '/admin' },
+     { name: 'Manage Users', href: '/manageUsers' }]
+  : baseLinks;
 
   useEffect(() => {
     // Close mobile menu when screen gets larger than mobile breakpoint

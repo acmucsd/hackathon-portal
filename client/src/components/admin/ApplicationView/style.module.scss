@@ -1,5 +1,11 @@
 @use '@/styles/vars.scss' as vars;
 
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
 .responseList {
   display: flex;
   flex-direction: column;
