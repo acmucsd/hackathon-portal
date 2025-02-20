@@ -11,6 +11,6 @@ export default async function ProfilePage() {
     const fetchedUser = await UserAPI.getCurrentUser(accessToken);
     return <Profile user={fetchedUser} />;
   } catch (error) {
-    redirect('/login');
+    redirect('/api/logout');
   }
 }
