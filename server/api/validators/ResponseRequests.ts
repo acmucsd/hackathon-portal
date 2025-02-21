@@ -1,10 +1,10 @@
 import {
+  Allow,
   ArrayNotEmpty,
   IsArray,
   IsDefined,
   IsEnum,
   IsNotEmpty,
-  IsOptional,
   IsPhoneNumber,
   IsUrl,
   MinLength,
@@ -20,84 +20,101 @@ import { Yes, YesOrNo } from '../../types/Enums';
 import { Type } from 'class-transformer';
 
 export class Application implements IApplication {
+  @IsDefined()
   @IsPhoneNumber()
   phoneNumber: string;
 
+  @IsDefined()
   @IsNotEmpty()
   age: string;
 
+  @IsDefined()
   @IsNotEmpty()
   university: string;
 
+  @IsDefined()
   @IsNotEmpty()
   levelOfStudy: string;
 
+  @IsDefined()
   @IsNotEmpty()
   country: string;
 
+  @IsDefined()
   @IsNotEmpty()
   @IsUrl()
   @IsLinkedinURL()
   linkedin: string;
 
+  @IsDefined()
   @IsNotEmpty()
   gender: string;
 
+  @IsDefined()
   @IsNotEmpty()
   pronouns: string;
 
+  @IsDefined()
   @IsArray()
   @ArrayNotEmpty()
   @MinLength(1, { each: true })
   orientation: string[];
 
+  @IsDefined()
   @IsArray()
   @ArrayNotEmpty()
   @MinLength(1, { each: true })
   ethnicity: string[];
 
-  @IsArray()
+  @IsArray() // optional?
   @ArrayNotEmpty()
   @MinLength(1, { each: true })
   dietary: string[];
 
+  @IsDefined()
   @IsArray()
   @ArrayNotEmpty()
   @MinLength(1, { each: true })
   interests: string[];
 
+  @IsDefined()
   @IsNotEmpty()
   major: string;
 
+  @IsDefined()
   @IsArray()
   @ArrayNotEmpty()
   @MinLength(1, { each: true })
   referrer: string[];
 
-  @IsOptional()
+  @IsDefined()
+  @IsNotEmpty()
   motivation: string;
 
-  // TODO: replace with uploaded resume file instead
-  @IsNotEmpty()
+  @IsNotEmpty() // will be converted into link when submitted
   resumeLink: string;
 
+  @IsDefined()
   @IsNotEmpty()
   @IsEnum(YesOrNo)
   willAttend: string;
 
+  @IsDefined()
   @IsNotEmpty()
   @IsEnum(Yes)
   mlhCodeOfConduct: string;
 
+  @IsDefined()
   @IsNotEmpty()
   @IsEnum(Yes)
   mlhAuthorization: string;
 
+  @IsDefined()
   @IsNotEmpty()
   @IsEnum(YesOrNo)
   mlhEmailAuthorization: string;
 
-  @IsOptional()
+  @Allow() // optional
   additionalComments: string;
 }
 
