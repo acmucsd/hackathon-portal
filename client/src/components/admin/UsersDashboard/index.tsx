@@ -19,6 +19,13 @@ interface UsersDashboardProps {
   users: PrivateProfile[];
 }
 
+const formatTitleCase = (message: string) => {
+  return message
+    .replace('_', ' ')
+    .toLowerCase()
+    .replace(/\b\w/g, c => c.toUpperCase());
+};
+
 const UsersDashboard = ({ users }: UsersDashboardProps) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [filterStatus, setFilterStatus] = useState('All');
@@ -58,17 +65,16 @@ const UsersDashboard = ({ users }: UsersDashboardProps) => {
               className={filterStatus === status ? styles.activeFilter : ''}
               variant="tertiary"
             >
-              {status
-                .replace('_', ' ')
-                .toLowerCase()
-                .replace(/\b\w/g, c => c.toUpperCase())}
+              {formatTitleCase(status)}
             </Button>
           ))}
         </div>
         <Search query={searchQuery} setQuery={setSearchQuery} />
       </div>
       <hr className={styles.divider} />
-      <Typography variant="label/large">All Participants ({users.length})</Typography>
+      <Typography variant="label/large">
+        {formatTitleCase(filterStatus)} Participants ({filteredUsers.length})
+      </Typography>
       {isSmall ? (
         <TableList>
           {currentUsers.map(user => (
