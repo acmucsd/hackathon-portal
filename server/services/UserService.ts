@@ -6,6 +6,7 @@ import {
   sendEmailVerification,
   signInWithCustomToken,
   signInWithEmailAndPassword,
+  sendPasswordResetEmail,
 } from 'firebase/auth';
 import { FirebaseAuthError } from 'firebase-admin/auth';
 import {
@@ -16,6 +17,7 @@ import {
 import { UpdateUser } from '../api/validators/UserControllerRequests';
 import { auth, adminAuth } from '../FirebaseAuth';
 import { UserAndToken } from '../types/ApiResponses';
+import { ApplicationDecision } from '../types/Enums';
 
 @Service()
 export class UserService {
@@ -120,6 +122,20 @@ export class UserService {
     );
   }
 
+  public async updateApplicationDecision(
+    userId: string,
+    applicationDecision: ApplicationDecision,
+  ): Promise<UserModel> {
+    return this.transactionsManager.readWrite(async (entityManager) => {
+      const userRepository = Repositories.user(entityManager);
+      const user = await userRepository.findById(userId);
+      if (!user) throw new NotFoundError('User not found');
+      user.applicationDecision = applicationDecision;
+      const updatedUser = userRepository.save(user);
+      return updatedUser;
+    });
+  }
+
   public async login(email: string, password: string): Promise<UserAndToken> {
     try {
       const userCredential = await signInWithEmailAndPassword(
@@ -173,4 +189,26 @@ export class UserService {
     const userCredential = await signInWithCustomToken(auth, customToken);
     await sendEmailVerification(userCredential.user);
   }
+
+  public async sendPasswordResetEmail(email: string): Promise<void> {
+    try {
+      const firebaseRecord = await adminAuth.getUserByEmail(email);
+      if (firebaseRecord)
+        await sendPasswordResetEmail(auth, email);
+    } catch (error) {
+      if (error instanceof FirebaseAuthError) {
+        if (error.code === 'auth/user-not-found') {
+          throw new NotFoundError('No user found with the provided email address.');
+        }
+      }
+      throw error;
+    }
+  }
+
+  public async getAllUsers(): Promise<UserModel[]> {
+    return this.transactionsManager.readOnly(async (entityManager) =>
+      Repositories.user(entityManager).findAll(),
+    );
+  }
+
 }

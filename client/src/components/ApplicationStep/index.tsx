@@ -87,6 +87,7 @@ const ApplicationStep = ({
   const router = useRouter();
   const id = useId();
   const formRef = useRef<HTMLFormElement | null>(null);
+  const [showOtherInput, setShowOtherInput] = useState<{ [key: string]: boolean }>({});
 
   async function save() {
     if (!formRef.current) {
@@ -107,8 +108,13 @@ const ApplicationStep = ({
           ];
         }
         const response = data.get(question.id);
-        if (question.type === 'select-one') {
-          return [question.id, response === OTHER ? data.get(`${question.id}-${OTHER}`) : response];
+        if (question.type === 'select-one' || question.type === 'dropdown') {
+          return [
+            question.id,
+            response === 'Other' || response === OTHER
+              ? data.get(`${question.id}-${OTHER}`)
+              : response,
+          ];
         }
         return [question.id, response];
       })
@@ -203,23 +209,50 @@ const ApplicationStep = ({
                     disabled={!responsesLoaded}
                   />
                 ) : question.type === 'dropdown' ? (
-                  <select
-                    id={`${id}-${question.id}`}
-                    name={question.id}
-                    required={!question.optional}
-                    className={styles.textline}
-                    defaultValue={responses[question.id] ?? ''}
-                    disabled={!responsesLoaded}
-                  >
-                    <option value="" disabled>
-                      Select one
-                    </option>
-                    {question.choices.map(choice => (
-                      <option value={choice} key={choice}>
-                        {choice}
+                  <>
+                    {showOtherInput[question.id] === undefined &&
+                      responses[question.id] &&
+                      !question.choices.includes(responses[question.id]) &&
+                      (showOtherInput[question.id] = true)}
+                    <select
+                      id={`${id}-${question.id}`}
+                      name={question.id}
+                      required={!question.optional}
+                      className={styles.textline}
+                      defaultValue={
+                        showOtherInput[question.id] ? 'Other' : responses[question.id] || ''
+                      }
+                      disabled={!responsesLoaded}
+                      onChange={e => {
+                        const selectedValue = e.target.value;
+                        setShowOtherInput(prevState => ({
+                          ...prevState,
+                          [question.id]: selectedValue === 'Other',
+                        }));
+                      }}
+                    >
+                      <option value="" disabled>
+                        Select one
                       </option>
-                    ))}
-                  </select>
+                      {question.choices.map(choice => (
+                        <option value={choice} key={choice}>
+                          {choice}
+                        </option>
+                      ))}
+                    </select>
+                    {showOtherInput[question.id] && (
+                      <input
+                        type="text"
+                        id={`${id}-${question.id}-${OTHER}`}
+                        name={`${question.id}-${OTHER}`}
+                        placeholder="Please specify"
+                        required={!question.optional}
+                        className={styles.textline}
+                        defaultValue={responses[`${question.id}`] ?? ''}
+                        disabled={!responsesLoaded}
+                      />
+                    )}
+                  </>
                 ) : (
                   <input
                     type={question.type === 'phone' ? 'tel' : 'url'}

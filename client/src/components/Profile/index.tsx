@@ -112,7 +112,9 @@ const Profile = ({ user }: ProfileClientProps) => {
                 validate: {
                   isValidEmail: value => isEmail(value) || 'Invalid email',
                   isEduDomain: value =>
-                    value?.endsWith('.edu') || 'Please enter an .edu email address.',
+                    value?.endsWith('.edu') ||
+                    value?.endsWith('.ca') ||
+                    'Please enter a university email address.',
                 },
               })}
               type="text"

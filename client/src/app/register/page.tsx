@@ -76,7 +76,7 @@ export default function RegisterPage() {
           />
           <TextField
             id="email"
-            label="University Email (.edu)"
+            label="University Email"
             defaultText="Enter your Email"
             error={errors.email}
             formRegister={register('email', {
@@ -84,7 +84,9 @@ export default function RegisterPage() {
               validate: {
                 isValidEmail: value => isEmail(value) || 'Invalid email',
                 isEduDomain: value =>
-                  value?.endsWith('.edu') || 'Please enter an .edu email address.',
+                  value?.endsWith('.edu') ||
+                  value?.endsWith('.ca') ||
+                  'Please enter a university email address.',
               },
             })}
             type="email"
