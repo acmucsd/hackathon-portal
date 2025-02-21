@@ -322,7 +322,7 @@ const ApplicationStepWrapped = ({
       .getItem<SavedResponses | null>(SAVED_RESPONSES_KEY)
       .then(draftResponses => {
         if (draftResponses) {
-          setResponses({ ...draftResponses, ...submittedResponses });
+          setResponses({ ...submittedResponses, ...draftResponses });
         }
       })
       .finally(() => setResponsesLoaded(true));

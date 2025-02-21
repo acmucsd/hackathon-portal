@@ -72,7 +72,12 @@ export default async function ApplicationPage({ params }: ApplicationPageProps) 
             Woohooo!! You successfully submitted your DiamondHacks application! Check back for
             updates on the dashboard.
           </Typography>
-          <Button href="/">Return to Dashboard</Button>
+          <div className={styles.buttons}>
+            <Button variant="secondary" href="/apply">
+              View Application
+            </Button>
+            <Button href="/">Return to Dashboard</Button>
+          </div>
         </Card>
       ) : null}
     </main>

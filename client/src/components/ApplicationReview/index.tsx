@@ -19,6 +19,7 @@ interface ApplicationReviewProps {
   accessToken: string;
   responses: Record<string, string | string[] | File | any>;
   responsesLoaded?: boolean;
+  alreadySubmitted: boolean;
   prev: string;
   next: string;
 }
@@ -27,6 +28,7 @@ const ApplicationReview = ({
   accessToken,
   responses,
   responsesLoaded = true,
+  alreadySubmitted,
   prev,
   next,
 }: ApplicationReviewProps) => {
@@ -55,7 +57,7 @@ const ApplicationReview = ({
           return;
         }
 
-        const application: Application = {
+        const application: Omit<Application, 'resumeLink'> = {
           phoneNumber: (responses.phoneNumber as string).startsWith('+')
             ? responses.phoneNumber
             : `+${responses.phoneNumber}`,
@@ -72,7 +74,6 @@ const ApplicationReview = ({
           interests: responses.interests,
           major: responses.major,
           referrer: responses.referrer,
-          resumeLink: 'This will be populated by the backend',
           willAttend: responses.willAttend === 'Yes' ? YesOrNo.YES : YesOrNo.NO,
           mlhCodeOfConduct: Yes.YES,
           mlhAuthorization: Yes.YES,
@@ -81,19 +82,29 @@ const ApplicationReview = ({
           additionalComments: responses.additionalComments,
         };
         for (const key of Object.keys(responses)) {
-          if (!Object.hasOwn(application, key)) {
+          if (key !== 'resumeLink' && !Object.hasOwn(application, key)) {
             console.warn(`Application has unused question '${key}'`);
           }
         }
         // Files can't be passed to a server action but FormData can
         const formData = new FormData();
         formData.append('application', JSON.stringify(application));
-        formData.append('file', responses.resumeLink);
+        if (responses.resumeLink instanceof File) {
+          formData.append('file', responses.resumeLink);
+        }
 
-        const result = await ResponseAPI.submitApplication(accessToken, formData);
-        if ('error' in result) {
-          showToast("Couldn't submit application", result.error);
-          return;
+        if (alreadySubmitted) {
+          const result = await ResponseAPI.updateApplication(accessToken, formData);
+          if ('error' in result) {
+            showToast("Couldn't resubmit application", result.error);
+            return;
+          }
+        } else {
+          const result = await ResponseAPI.submitApplication(accessToken, formData);
+          if ('error' in result) {
+            showToast("Couldn't submit application", result.error);
+            return;
+          }
         }
 
         // Remove saved data
@@ -146,7 +157,7 @@ const ApplicationReview = ({
           Make Changes
         </Button>
         <Button submit disabled={!responsesLoaded}>
-          Submit
+          {alreadySubmitted ? 'Update' : 'Submit'}
         </Button>
       </div>
     </Card>
@@ -154,13 +165,14 @@ const ApplicationReview = ({
 };
 
 const ApplicationReviewWrapped = ({
-  submittedResponses = {},
+  submittedResponses,
   ...props
-}: Omit<ApplicationReviewProps, 'responses' | 'responsesLoaded'> & {
+}: Omit<ApplicationReviewProps, 'responses' | 'responsesLoaded' | 'alreadySubmitted'> & {
   submittedResponses?: Record<string, string | string[] | any>;
 }) => {
-  const [responses, setResponses] =
-    useState<Record<string, string | string[] | File | any>>(submittedResponses);
+  const [responses, setResponses] = useState<Record<string, string | string[] | File | any>>(
+    submittedResponses ?? {}
+  );
   const [responsesLoaded, setResponsesLoaded] = useState(false);
 
   useEffect(() => {
@@ -168,13 +180,20 @@ const ApplicationReviewWrapped = ({
       .getItem<SavedResponses | null>(SAVED_RESPONSES_KEY)
       .then(draftResponses => {
         if (draftResponses) {
-          setResponses({ ...draftResponses, ...submittedResponses });
+          setResponses({ ...submittedResponses, ...draftResponses });
         }
       })
       .finally(() => setResponsesLoaded(true));
   }, []);
 
-  return <ApplicationReview {...props} responses={responses} responsesLoaded={responsesLoaded} />;
+  return (
+    <ApplicationReview
+      {...props}
+      responses={responses}
+      responsesLoaded={responsesLoaded}
+      alreadySubmitted={submittedResponses !== undefined}
+    />
+  );
 };
 
 export default ApplicationReviewWrapped;

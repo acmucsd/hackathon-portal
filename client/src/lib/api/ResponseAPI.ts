@@ -45,7 +45,7 @@ export const getApplication = async (token: string): Promise<ResponseModel> => {
 
 /**
  * Create an application for the current user
- * @param application Application
+ * @param formData Application
  * @returns Created application
  */
 export const submitApplication = async (
@@ -68,28 +68,25 @@ export const submitApplication = async (
 
 /**
  * Update current user's application
- * @param application Application changes
+ * @param formData Application changes
  * @returns Updated application
  */
 export const updateApplication = async (
   token: string,
-  application: Application,
-  file?: File
-): Promise<ResponseModel> => {
+  formData: FormData
+): Promise<ResponseModel | { error: string }> => {
   const requestUrl = `${config.api.baseUrl}${config.api.endpoints.response.application}`;
 
-  const formData = new FormData();
-  formData.append('application', JSON.stringify(application));
-  if (file) {
-    formData.append('file', file);
+  try {
+    const response = await axios.patch<SubmitApplicationResponse>(requestUrl, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data.response;
+  } catch (error) {
+    return { error: getErrorMessage(error) };
   }
-
-  const response = await axios.patch<SubmitApplicationResponse>(requestUrl, formData, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return response.data.response;
 };
 
 /**
