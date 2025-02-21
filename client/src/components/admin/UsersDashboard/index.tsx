@@ -28,12 +28,13 @@ const UsersDashboard = ({ users }: UsersDashboardProps) => {
   const size = useWindowSize();
   const isSmall = (size.width ?? 0) <= 1024;
 
-  const filteredUsers =
-    filterStatus === 'All'
-      ? users
-      : users
-          .filter(user => user.applicationStatus === filterStatus)
-          .filter(user => user.firstName.toLowerCase().includes(searchQuery.toLowerCase()));
+  const filteredUsers = users
+    .filter(user => filterStatus === 'All' || user.applicationStatus === filterStatus)
+    .filter(
+      user =>
+        user.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.lastName.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
   const itemsPerPage = 5;
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);

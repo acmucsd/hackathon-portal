@@ -1,5 +1,4 @@
 import ApplicationView from '@/components/admin/ApplicationView';
-import Typography from '@/components/Typography';
 import { AdminAPI } from '@/lib/api';
 import { getCookie } from '@/lib/services/CookieService';
 import { CookieType } from '@/lib/types/enums';
@@ -16,9 +15,6 @@ export default async function ApplicationReviewPage({ params }: ApplicationRevie
 
   return (
     <main className={styles.main}>
-      <Typography href="/manageUsers" variant="label/small">
-        {'< Back to Dashboard'}
-      </Typography>
       <ApplicationView application={fetchedApplication} />
     </main>
   );

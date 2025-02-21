@@ -28,6 +28,7 @@ const UserRow = ({ user }: UserRowProps) => {
             className={styles.viewButton}
             href={`/applicationView/${user.id}`}
             variant="tertiary"
+            openNewTab
           >
             View Application
           </Button>
