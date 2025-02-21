@@ -1,6 +1,10 @@
 .status {
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 0.75rem;
   padding: 0.5rem 0.75rem;
   border-radius: 0.5rem;
+
   &.NOT_SUBMITTED {
     color: #8d0d25;
     background-color: #fad5dc;

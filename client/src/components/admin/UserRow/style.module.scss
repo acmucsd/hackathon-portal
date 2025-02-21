@@ -1,17 +1,6 @@
 @use '@/styles/vars.scss' as vars;
 
-.tableRow {
-  td {
-    font-size: 1rem;
-    font-weight: 500;
-    padding: 1.25rem;
-    border-right: 1px solid #525252;
-    border-bottom: 1px solid #525252;
-    text-align: left;
-  }
-
-  .viewButton {
-    color: vars.$white !important;
-    border-color: vars.$white !important;
-  }
+.viewButton {
+  color: vars.$white !important;
+  border-color: vars.$white !important;
 }

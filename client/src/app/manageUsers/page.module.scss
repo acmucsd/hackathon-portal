@@ -8,21 +8,3 @@
   padding: 6rem var(--side-padding);
   margin: 0 auto;
 }
-
-.isMobile {
-  display: none;
-}
-
-.isDesktop {
-  display: block;
-}
-
-@media screen and (max-width: vars.$breakpoint-lg) {
-  .isMobile {
-    display: block;
-  }
-
-  .isDesktop {
-    display: none;
-  }
-}

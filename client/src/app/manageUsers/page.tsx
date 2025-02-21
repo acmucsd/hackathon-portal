@@ -1,6 +1,5 @@
 import Typography from '@/components/Typography';
-import UserTable from '@/components/admin/UserTable';
-import UserList from '@/components/admin/UserList';
+import UsersDashboard from '@/components/admin/UsersDashboard';
 import { UserAPI, AdminAPI } from '@/lib/api';
 import { redirect } from 'next/navigation';
 import { getCookie } from '@/lib/services/CookieService';
@@ -22,13 +21,8 @@ export default async function ManageUsers() {
 
     return (
       <main className={styles.main}>
-        <Typography variant='headline/heavy/small'>Manage Users</Typography>
-        <div className={styles.isMobile}>
-          <UserList users={users} />
-        </div>
-        <div className={styles.isDesktop}>
-          <UserTable users={users} />
-        </div>
+        <Typography variant="headline/heavy/small">Manage Users</Typography>
+        <UsersDashboard users={users}/>
       </main>
     );
   } catch (error) {

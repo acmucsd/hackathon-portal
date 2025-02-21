@@ -6,7 +6,13 @@ interface StatusTagProps {
 }
 
 const StatusTag = ({ status }: StatusTagProps) => (
-  <span className={`${styles.status} ${styles[status]}`}>Status: {status}</span>
+  <span className={`${styles.status} ${styles[status]}`}>
+    Status:{' '}
+    {status
+      .replace('_', ' ')
+      .toLowerCase()
+      .replace(/\b\w/g, c => c.toUpperCase())}
+  </span>
 );
 
 export default StatusTag;

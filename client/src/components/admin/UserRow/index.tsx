@@ -1,3 +1,5 @@
+import TableRow from '@/components/TableRow';
+import TableCell from '@/components/TableCell';
 import Button from '@/components/Button';
 import StatusTag from '@/components/StatusTag';
 import { PrivateProfile } from '@/lib/types/apiResponses';
@@ -12,15 +14,15 @@ const UserRow = ({ user }: UserRowProps) => {
   const date = new Date(user.createdAt);
   const formattedDate = `${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()}`;
   return (
-    <tr className={styles.tableRow}>
-      <td>
+    <TableRow>
+      <TableCell>
         {user.firstName} {user.lastName}
-      </td>
-      <td>
+      </TableCell>
+      <TableCell>
         <StatusTag status={user.applicationStatus} />
-      </td>
-      <td>{formattedDate}</td>
-      <td>
+      </TableCell>
+      <TableCell className={styles.dateField}>{formattedDate}</TableCell>
+      <TableCell>
         {user.applicationStatus !== ApplicationStatus.NOT_SUBMITTED && (
           <Button
             className={styles.viewButton}
@@ -30,8 +32,8 @@ const UserRow = ({ user }: UserRowProps) => {
             View Application
           </Button>
         )}
-      </td>
-    </tr>
+      </TableCell>
+    </TableRow>
   );
 };
 
