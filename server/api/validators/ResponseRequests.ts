@@ -74,6 +74,9 @@ export class Application implements IApplication {
   @MinLength(1, { each: true })
   referrer: string[];
 
+  @IsOptional()
+  motivation: string;
+
   // TODO: replace with uploaded resume file instead
   @IsNotEmpty()
   resumeLink: string;
