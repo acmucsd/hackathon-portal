@@ -8,7 +8,7 @@ interface SearchProps {
 
 const Search = ({ query, setQuery }: SearchProps) => (
   <div className={styles.container}>
-    <SearchIcon/>
+    <SearchIcon />
     <input
       type="text"
       placeholder="Search Applicant"

@@ -17,7 +17,7 @@ const config = {
         applications: '/admin/applications',
         application: '/admin/application',
         users: '/admin/users',
-        userApplication: '/admin/user'
+        userApplication: '/admin/user',
       },
     },
   },
