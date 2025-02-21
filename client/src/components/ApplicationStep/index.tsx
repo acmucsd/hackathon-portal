@@ -69,7 +69,6 @@ const ASTERISK = (
 
 interface ApplicationStepProps {
   step: Step;
-  submittedResponses: Record<string, any> | null;
   responses: Record<string, string | string[] | File | any>;
   responsesLoaded?: boolean;
   prev: string;
@@ -78,7 +77,6 @@ interface ApplicationStepProps {
 
 const ApplicationStep = ({
   step: { title, description, questions },
-  submittedResponses,
   responses,
   responsesLoaded = true,
   prev,
@@ -309,19 +307,22 @@ const ApplicationStep = ({
   );
 };
 
-const ApplicationStepWrapped = (
-  props: Omit<ApplicationStepProps, 'responses' | 'responsesLoaded'>
-) => {
-  const [responses, setResponses] = useState<Record<string, string>>({});
+const ApplicationStepWrapped = ({
+  submittedResponses = {},
+  ...props
+}: Omit<ApplicationStepProps, 'responses' | 'responsesLoaded'> & {
+  submittedResponses?: Record<string, string | string[] | any>;
+}) => {
+  const [responses, setResponses] =
+    useState<Record<string, string | string[] | File | any>>(submittedResponses);
   const [responsesLoaded, setResponsesLoaded] = useState(false);
 
   useEffect(() => {
     localforage
       .getItem<SavedResponses | null>(SAVED_RESPONSES_KEY)
-      .then(responses => {
-        if (responses) {
-          console.log(responses);
-          setResponses(responses);
+      .then(draftResponses => {
+        if (draftResponses) {
+          setResponses({ ...draftResponses, ...submittedResponses });
         }
       })
       .finally(() => setResponsesLoaded(true));

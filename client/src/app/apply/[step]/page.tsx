@@ -43,7 +43,7 @@ export default async function ApplicationPage({ params }: ApplicationPageProps) 
         mlhAuthorization: response.data.mlhAuthorization === Yes.YES ? 'Yes' : 'No',
         mlhEmailAuthorization: response.data.mlhEmailAuthorization === YesOrNo.YES ? 'Yes' : 'No',
       }
-    : null;
+    : undefined;
 
   return (
     <main className={styles.main}>
@@ -60,6 +60,7 @@ export default async function ApplicationPage({ params }: ApplicationPageProps) 
         />
       ) : step === STEP_REVIEW ? (
         <ApplicationReview
+          submittedResponses={application}
           accessToken={accessToken}
           prev={`/apply/${appQuestions.length}`}
           next={`/apply/${STEP_SUBMITTED}`}

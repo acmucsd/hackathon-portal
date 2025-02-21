@@ -191,11 +191,6 @@ export const appQuestions: Step[] = [
     title: 'Additional Questions',
     questions: [
       {
-        type: 'text',
-        id: 'why',
-        question: <>Why do you want to participate in the DiamondHacks Hackathon?</>,
-      },
-      {
         type: 'file',
         id: 'resumeLink',
         question: <>Upload your resume below (max: 2 MB; accepted formats: .pdf, .doc, .docx).</>,
