@@ -69,6 +69,7 @@ const ASTERISK = (
 
 interface ApplicationStepProps {
   step: Step;
+  submittedResponses: Record<string, any> | null;
   responses: Record<string, string | string[] | File | any>;
   responsesLoaded?: boolean;
   prev: string;
@@ -77,6 +78,7 @@ interface ApplicationStepProps {
 
 const ApplicationStep = ({
   step: { title, description, questions },
+  submittedResponses,
   responses,
   responsesLoaded = true,
   prev,
