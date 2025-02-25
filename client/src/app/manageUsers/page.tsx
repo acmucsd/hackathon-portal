@@ -10,14 +10,12 @@ export default async function ManageUsers() {
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
 
   if (!accessToken) {
-    console.log('Dashboard broke: access token undefined');
+    console.log('Manage Users broke: access token undefined');
     redirect('/login');
   }
 
   try {
-    const fetchedUser = await UserAPI.getCurrentUser(accessToken);
-    const accessType = fetchedUser.accessType;
-    const users = accessType === 'ADMIN' ? await AdminAPI.getUsers(accessToken) : [];
+    const users = await AdminAPI.getUsers(accessToken);
 
     return (
       <main className={styles.main}>
@@ -26,7 +24,7 @@ export default async function ManageUsers() {
       </main>
     );
   } catch (error) {
-    console.log('Dashboard broke: error in fetching');
+    console.log('Manage Users broke: error in fetching');
     redirect('/login');
   }
 }
