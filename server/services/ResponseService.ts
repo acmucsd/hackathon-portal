@@ -4,7 +4,7 @@ import { Repositories, TransactionsManager } from '../repositories';
 import { ResponseModel } from '../models/ResponseModel';
 import { UserModel } from '../models/UserModel';
 import { ApplicationStatus, FormType, MediaType } from '../types/Enums';
-import { Application } from '../types/Application';
+import { Application, Waiver } from '../types/Application';
 import { BadRequestError, NotFoundError } from 'routing-controllers';
 import { File } from '../types/ApiRequests';
 import { StorageService } from './StorageService';
@@ -165,7 +165,8 @@ export class ResponseService {
         );
 
       // Delete previous resume
-      this.storageService.deleteAtUrl(application.data.resumeLink);
+      const applicationData = application.data as Application;
+      this.storageService.deleteAtUrl(applicationData.resumeLink);
 
       // Upload new resume
       const fileName = resume.originalname.substring(
@@ -196,7 +197,8 @@ export class ResponseService {
     const application = await this.getUserApplication(user);
 
     // Delete resume
-    this.storageService.deleteAtUrl(application.data.resumeLink);
+    const applicationData = application.data as Application;
+    this.storageService.deleteAtUrl(applicationData.resumeLink);
 
     this.transactionsManager.readWrite(async (entityManager) =>
       Repositories.response(entityManager).remove(application),
@@ -211,4 +213,42 @@ export class ResponseService {
       userRepository.save(user);
     });
   }
+
+  public async submitUserWaiver(
+    user: UserModel,
+    formData: Waiver,
+    formType: FormType,
+  ): Promise<ResponseModel> {
+    if (user.applicationStatus !== ApplicationStatus.ACCEPTED) {
+      throw new BadRequestError(
+        'User must have an accepted application to submit this form.');
+    }
+
+    const existingForms = await this.transactionsManager.readOnly(
+      async (entityManager) =>
+        Repositories.response(entityManager).findResponsesForUserByType(
+          user,
+          formType,
+        ),
+    );
+    if (existingForms.length > 0) {
+      throw new BadRequestError(`User has already submitted ${formType}`);
+    }
+
+    const response = await this.transactionsManager.readWrite(
+      async (entityManager) => {
+        const responseRepository = Repositories.response(entityManager);
+        const newResponse = responseRepository.create({
+          user,
+          formType: formType,
+          data: formData,
+        });
+        const createdResponse = responseRepository.save(newResponse);
+        return createdResponse;
+      },
+    );
+
+    return response;
+  }
+
 }

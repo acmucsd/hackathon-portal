@@ -14,6 +14,7 @@ import {
   Application as IApplication,
   CreateApplicationRequest as ICreateApplicationRequest,
   UpdateApplicationRequest as IUpdateApplicationRequest,
+  Waiver as IWaiver,
 } from '../../types/Application';
 import { IsLinkedinURL } from '../decorators/Validators';
 import { Yes, YesOrNo } from '../../types/Enums';
@@ -110,4 +111,18 @@ export class UpdateApplicationRequest implements IUpdateApplicationRequest {
   @ValidateNested()
   @IsDefined()
   application: Application;
+}
+
+export class Waiver implements IWaiver {
+  @IsNotEmpty()
+  participantName: string;
+
+  @IsNotEmpty()
+  dateOfBirth: string;
+
+  @IsNotEmpty()
+  signature: string;
+
+  @IsNotEmpty()
+  date: string;
 }
