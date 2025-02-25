@@ -8,5 +8,5 @@ export default async function logout() {
   const cookieStore = await cookies();
   cookieStore.delete(CookieType.ACCESS_TOKEN);
   cookieStore.delete(CookieType.USER);
-  redirect('/login');
+  redirect('/api/logout');
 }
