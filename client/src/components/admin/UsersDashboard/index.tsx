@@ -43,7 +43,7 @@ const UsersDashboard = ({ users }: UsersDashboardProps) => {
         user.lastName.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-  const itemsPerPage = 5;
+  const itemsPerPage = 10;
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
   const startIndex = currentPage * itemsPerPage;
   const currentUsers = filteredUsers.slice(startIndex, startIndex + itemsPerPage);

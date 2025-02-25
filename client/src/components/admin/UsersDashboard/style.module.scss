@@ -32,47 +32,8 @@
   }
 
   .divider {
-    background-color: vars.$progress-bg;
+    background-color: vars.$neutral;
     height: 2px;
     border: 0;
-  }
-
-  .tableContainer {
-    border-radius: 8px;
-    border: 1px solid #525252;
-    overflow: hidden;
-    width: 100%;
-
-    .appTable {
-      border-collapse: collapse;
-      width: 100%;
-
-      .tableHeader {
-        background-color: #37393e;
-
-        th {
-          font-size: 1rem;
-          font-weight: 500;
-          line-height: 12px;
-          padding: 1.25rem;
-          text-align: left;
-          border-right: 1px solid #525252;
-          border-bottom: 1px solid #525252;
-        }
-      }
-    }
-  }
-  .pagination {
-    display: flex;
-    gap: 0.5rem;
-    align-self: center;
-
-    .pageButton {
-      background-color: transparent;
-      color: vars.$white;
-      padding: 0px;
-      min-width: 0px;
-      min-height: 0px;
-    }
   }
 }
