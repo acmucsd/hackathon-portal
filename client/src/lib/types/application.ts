@@ -15,6 +15,7 @@ export interface Application {
   interests: string[];
   major: string;
   referrer: string[];
+  motivation: string;
   resumeLink: string;
   willAttend: YesOrNo;
   mlhCodeOfConduct: Yes;

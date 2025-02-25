@@ -3,6 +3,7 @@ import Button from '../Button';
 import styles from './style.module.scss';
 import Typography from '../Typography';
 import ErrorIcon from '../../../public/assets/icons/error.svg';
+import Link from 'next/link';
 
 interface FileSelectProps {
   fileTypes: string[];
@@ -10,7 +11,7 @@ interface FileSelectProps {
   name: string;
   required?: boolean;
   disabled?: boolean;
-  defaultFile?: File;
+  defaultFile?: File | string;
 }
 const FileSelect = ({
   fileTypes,
@@ -40,17 +41,24 @@ const FileSelect = ({
         }}
       />
       <div className={styles.wrapper}>
-        {selected?.name}
+        {typeof selected === 'string' ? (
+          <Button variant="tertiary" href={selected}>
+            {decodeURIComponent(selected.split('/').at(-1) ?? '')}
+          </Button>
+        ) : (
+          selected?.name
+        )}
         <Button variant="secondary" for={id}>
           Upload New
         </Button>
       </div>
-      {selected && selected.size > maxSize ? (
+      {selected instanceof File && selected.size > maxSize ? (
         <Typography variant="label/medium" component="p" className={styles.error}>
           <ErrorIcon /> Your file is too large.
         </Typography>
       ) : null}
-      {selected && fileTypes.every(extension => !selected.name.endsWith(extension)) ? (
+      {selected instanceof File &&
+      fileTypes.every(extension => !selected.name.endsWith(extension)) ? (
         <Typography variant="label/medium" component="p" className={styles.error}>
           <ErrorIcon /> Your file must be one of: {fileTypes.join(', ')}
         </Typography>

@@ -53,6 +53,8 @@ const DashboardStatus = ({ status, timeline }: DashboardStatusProps) => {
         <Button>Confirm Acceptance</Button>
       ) : status === 'NOT_SUBMITTED' ? (
         <Button href="/apply">Apply Now</Button>
+      ) : status === 'SUBMITTED' ? (
+        <Button href="/apply">Edit Application</Button>
       ) : null}
     </>
   );
