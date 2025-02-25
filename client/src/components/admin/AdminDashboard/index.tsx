@@ -45,6 +45,7 @@ const AdminDashboard = ({ timeline, user, applications }: AdminDashboardProps) =
       </Card>
       <Card gap={1.5} className={`${styles.card} ${styles.status}`}>
         <ApplicationCount pendingApps={pendingApplications} totalApps={totalApplications} />
+        {/* Link to Sean's application review page */}
         <Button href="/review">Continue Reviewing</Button>
       </Card>
       <Card gap={1.5} className={`${styles.card} ${styles.timeline}`}>

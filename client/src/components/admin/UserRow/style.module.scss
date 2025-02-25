@@ -1,0 +1,6 @@
+@use '@/styles/vars.scss' as vars;
+
+.viewButton {
+  color: vars.$white !important;
+  border-color: vars.$white !important;
+}

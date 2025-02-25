@@ -1,0 +1,38 @@
+@use '@/styles/vars.scss' as vars;
+
+.tableContainer {
+  overflow: hidden;
+  width: 100%;
+  border: 1px solid vars.$border-stroke;
+  border-radius: 8px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: inherit;
+
+  th,
+  td {
+    border: 1px solid vars.$border-stroke;
+  }
+
+  th:first-child,
+  td:first-child {
+    border-left: none;
+  }
+
+  th:last-child,
+  td:last-child {
+    border-right: none;
+  }
+
+  tr:first-child th,
+  tr:first-child td {
+    border-top: none;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+}
