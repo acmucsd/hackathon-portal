@@ -87,8 +87,7 @@ export class Application implements IApplication {
   @MinLength(1, { each: true })
   referrer: string[];
 
-  @IsDefined()
-  @IsNotEmpty()
+  @IsNotEmpty() // temporarily optional until fully connected with frontend
   motivation: string;
 
   @IsNotEmpty() // will be converted into link when submitted
