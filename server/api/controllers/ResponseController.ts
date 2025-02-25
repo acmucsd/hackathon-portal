@@ -1,5 +1,6 @@
 import {
   BodyParam,
+  Body,
   Delete,
   Get,
   JsonController,
@@ -18,9 +19,9 @@ import {
 } from '../../types/ApiResponses';
 import { UserAuthentication } from '../middleware/UserAuthentication';
 import { ResponseService } from '../../services/ResponseService';
-import { Application } from '../validators/ResponseRequests';
+import { Application, Waiver } from '../validators/ResponseRequests';
 import { StorageService } from '../../services/StorageService';
-import { MediaType } from '../../types/Enums';
+import { FormType, MediaType } from '../../types/Enums';
 import { File } from '../../types/ApiRequests';
 
 @JsonController('/response')
@@ -94,5 +95,33 @@ export class ResponseController {
   ): Promise<DeleteApplicationResponse> {
     await this.responseService.deleteUserApplication(user);
     return { error: null };
+  }
+
+  @UseBefore(UserAuthentication)
+  @Post('/liability-waiver')
+  async submitLiabilityWaiver(
+    @Body() waiver: Waiver,
+    @AuthenticatedUser() user: UserModel,
+  ): Promise<SubmitApplicationResponse> {
+    const response = await this.responseService.submitUserWaiver(
+      user,
+      waiver,
+      FormType.LIABILITY_WAIVER,
+    );
+    return { error: null, response: response };
+  }
+
+  @UseBefore(UserAuthentication)
+  @Post('/photo-release')
+  async submitPhotoRelease(
+    @Body() waiver: Waiver,
+    @AuthenticatedUser() user: UserModel,
+  ): Promise<SubmitApplicationResponse> {
+    const response = await this.responseService.submitUserWaiver(
+      user,
+      waiver,
+      FormType.PHOTO_RELEASE,
+    );
+    return { error: null, response: response };
   }
 }
