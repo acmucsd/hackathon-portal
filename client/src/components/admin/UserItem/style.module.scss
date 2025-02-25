@@ -1,0 +1,13 @@
+@use '@/styles/vars.scss' as vars;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  .viewButton {
+    color: vars.$white !important;
+    border-color: vars.$white !important;
+    width: 100%;
+  }
+}
