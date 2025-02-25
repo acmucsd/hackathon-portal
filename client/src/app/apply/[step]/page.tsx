@@ -13,6 +13,7 @@ import { getCookie } from '@/lib/services/CookieService';
 import { CookieType, Yes, YesOrNo } from '@/lib/types/enums';
 import { AxiosError } from 'axios';
 import { ResponseModel } from '@/lib/types/apiResponses';
+import { applicationToResponses } from '@/lib/responses';
 
 const STEP_REVIEW = appQuestions.length + 1;
 const STEP_SUBMITTED = appQuestions.length + 2;
@@ -35,15 +36,7 @@ export default async function ApplicationPage({ params }: ApplicationPageProps) 
       }
     }
   }
-  const application = response
-    ? {
-        ...response.data,
-        willAttend: response.data.willAttend === YesOrNo.YES ? 'Yes' : 'No',
-        mlhCodeOfConduct: response.data.mlhCodeOfConduct === Yes.YES ? 'Yes' : 'No',
-        mlhAuthorization: response.data.mlhAuthorization === Yes.YES ? 'Yes' : 'No',
-        mlhEmailAuthorization: response.data.mlhEmailAuthorization === YesOrNo.YES ? 'Yes' : 'No',
-      }
-    : undefined;
+  const application = response ? applicationToResponses(response.data) : undefined;
 
   return (
     <main className={styles.main}>

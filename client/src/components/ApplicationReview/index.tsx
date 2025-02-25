@@ -13,11 +13,12 @@ import { Yes, YesOrNo } from '@/lib/types/enums';
 import showToast from '@/lib/showToast';
 import { Application } from '@/lib/types/application';
 import localforage from 'localforage';
-import { SavedResponses, SAVED_RESPONSES_KEY } from '../ApplicationStep';
+import { SAVED_RESPONSES_KEY } from '../ApplicationStep';
+import { Responses, responsesToApplication } from '../../lib/responses';
 
 interface ApplicationReviewProps {
   accessToken: string;
-  responses: Record<string, string | string[] | File | any>;
+  responses: Responses;
   responsesLoaded?: boolean;
   alreadySubmitted: boolean;
   prev: string;
@@ -57,35 +58,7 @@ const ApplicationReview = ({
           return;
         }
 
-        const application: Omit<Application, 'resumeLink'> = {
-          phoneNumber: (responses.phoneNumber as string).startsWith('+')
-            ? responses.phoneNumber
-            : `+${responses.phoneNumber}`,
-          age: responses.age,
-          university: responses.university,
-          levelOfStudy: responses.levelOfStudy,
-          country: responses.country,
-          linkedin: responses.linkedin,
-          gender: responses.gender,
-          pronouns: responses.pronouns,
-          orientation: responses.orientation,
-          ethnicity: responses.ethnicity,
-          dietary: ['Will be answered in follow-up form.'],
-          interests: responses.interests,
-          major: responses.major,
-          referrer: responses.referrer,
-          willAttend: responses.willAttend === 'Yes' ? YesOrNo.YES : YesOrNo.NO,
-          mlhCodeOfConduct: Yes.YES,
-          mlhAuthorization: Yes.YES,
-          mlhEmailAuthorization:
-            responses.mlhEmailAuthorization === 'Yes' ? YesOrNo.YES : YesOrNo.NO,
-          additionalComments: responses.additionalComments,
-        };
-        for (const key of Object.keys(responses)) {
-          if (key !== 'resumeLink' && !Object.hasOwn(application, key)) {
-            console.warn(`Application has unused question '${key}'`);
-          }
-        }
+        const application: Omit<Application, 'resumeLink'> = responsesToApplication(responses);
         // Files can't be passed to a server action but FormData can
         const formData = new FormData();
         formData.append('application', JSON.stringify(application));
@@ -168,16 +141,14 @@ const ApplicationReviewWrapped = ({
   submittedResponses,
   ...props
 }: Omit<ApplicationReviewProps, 'responses' | 'responsesLoaded' | 'alreadySubmitted'> & {
-  submittedResponses?: Record<string, string | string[] | any>;
+  submittedResponses?: Responses;
 }) => {
-  const [responses, setResponses] = useState<Record<string, string | string[] | File | any>>(
-    submittedResponses ?? {}
-  );
+  const [responses, setResponses] = useState<Responses>(submittedResponses ?? {});
   const [responsesLoaded, setResponsesLoaded] = useState(false);
 
   useEffect(() => {
     localforage
-      .getItem<SavedResponses | null>(SAVED_RESPONSES_KEY)
+      .getItem<Responses | null>(SAVED_RESPONSES_KEY)
       .then(draftResponses => {
         if (draftResponses) {
           setResponses({ ...submittedResponses, ...draftResponses });
