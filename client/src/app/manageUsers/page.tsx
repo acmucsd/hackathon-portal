@@ -1,6 +1,6 @@
 import Typography from '@/components/Typography';
 import UsersDashboard from '@/components/admin/UsersDashboard';
-import { UserAPI, AdminAPI } from '@/lib/api';
+import { AdminAPI } from '@/lib/api';
 import { redirect } from 'next/navigation';
 import { getCookie } from '@/lib/services/CookieService';
 import { CookieType } from '@/lib/types/enums';
@@ -10,7 +10,6 @@ export default async function ManageUsers() {
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
 
   if (!accessToken) {
-    console.log('Manage Users broke: access token undefined');
     redirect('/login');
   }
 
@@ -24,7 +23,6 @@ export default async function ManageUsers() {
       </main>
     );
   } catch (error) {
-    console.log('Manage Users broke: error in fetching');
     redirect('/login');
   }
 }

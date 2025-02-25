@@ -10,7 +10,6 @@ export default async function Admin() {
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
 
   if (!accessToken) {
-    console.log('Dashboard broke: access token undefined');
     redirect('/login');
   }
 
@@ -25,7 +24,6 @@ export default async function Admin() {
       </main>
     );
   } catch (error) {
-    console.log('Dashboard broke: error in fetching');
     redirect('/login');
   }
 }

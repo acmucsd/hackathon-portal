@@ -14,7 +14,6 @@ export default async function ApplicationReviewPage({ params }: ApplicationRevie
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
 
   if (!accessToken) {
-    console.log('Application Review broke: access token undefined');
     redirect('/login');
   }
 
@@ -27,8 +26,6 @@ export default async function ApplicationReviewPage({ params }: ApplicationRevie
       </main>
     );
   } catch (error) {
-    console.log('Application Review broke: error in fetching application');
-    // Redirect if necessary
     redirect('/login');
   }
 }
