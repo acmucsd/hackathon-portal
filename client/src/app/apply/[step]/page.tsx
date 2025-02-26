@@ -66,7 +66,7 @@ export default async function ApplicationPage({ params }: ApplicationPageProps) 
             updates on the dashboard.
           </Typography>
           <div className={styles.buttons}>
-            <Button variant="secondary" href="/apply">
+            <Button variant="secondary" href={`/apply/${STEP_REVIEW}`}>
               View Application
             </Button>
             <Button href="/">Return to Dashboard</Button>

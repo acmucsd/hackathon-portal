@@ -41,14 +41,6 @@ const ApplicationReview = ({
       onSubmit={async e => {
         e.preventDefault();
 
-        if (
-          !confirm(
-            'Are you sure you want to submit? You currently will not be able to edit your application after submitting.'
-          )
-        ) {
-          return;
-        }
-
         if (responses.mlhCodeOfConduct !== 'Yes') {
           showToast('Please agree to the MLH code of conduct.');
           return;
