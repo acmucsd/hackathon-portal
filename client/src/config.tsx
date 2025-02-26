@@ -192,7 +192,7 @@ export const appQuestions: Step[] = [
     questions: [
       {
         type: 'text',
-        id: 'why',
+        id: 'motivation',
         question: <>Why do you want to participate in the DiamondHacks Hackathon?</>,
       },
       {

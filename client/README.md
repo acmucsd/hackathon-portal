@@ -24,6 +24,8 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with
    # in server/
    $ yarn
    $ yarn build
+   # Set up database
+   $ yarn db:migrate
    $ yarn start
    ```
 
