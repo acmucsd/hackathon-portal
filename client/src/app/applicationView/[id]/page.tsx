@@ -19,10 +19,15 @@ export default async function ApplicationReviewPage({ params }: ApplicationRevie
 
   try {
     const fetchedApplication = await AdminAPI.getUserWithApplication(accessToken, user);
+    const fetchedApplicationDecision = await AdminAPI.getApplicationDecision(accessToken, user);
 
     return (
       <main className={styles.main}>
-        <ApplicationView application={fetchedApplication} />
+        <ApplicationView
+          application={fetchedApplication}
+          token={accessToken}
+          decision={fetchedApplicationDecision.applicationDecision}
+        />
       </main>
     );
   } catch (error) {
