@@ -7,7 +7,6 @@ import Button from '@/components/Button';
 import Typography from '@/components/Typography';
 import { AuthManager } from '@/lib/managers';
 import type { ForgotPasswordRequest } from '@/lib/types/apiRequests';
-import type { ForgotPasswordResponse } from '@/lib/types/apiResponses';
 import { reportError } from '@/lib/utils';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -67,7 +66,6 @@ export default function ForgotPasswordPage() {
             type="email"
             autoComplete="email"
           />
-
 
           <Button variant="primary" onClick={handleSubmit(onSubmit)}>
             Reset Password

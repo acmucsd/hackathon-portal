@@ -1,6 +1,10 @@
 import config from '@/lib/config';
 import type { ForgotPasswordRequest, UserRegistration } from '@/lib/types/apiRequests';
-import type { PrivateProfile, CreateUserResponse, ForgotPasswordResponse } from '@/lib/types/apiResponses';
+import type {
+  PrivateProfile,
+  CreateUserResponse,
+  ForgotPasswordResponse,
+} from '@/lib/types/apiResponses';
 import axios from 'axios';
 
 /**
@@ -16,7 +20,9 @@ export const register = async (user: UserRegistration): Promise<PrivateProfile> 
   return response.data.user;
 };
 
-export const forgotPassword = async (forgotReq: ForgotPasswordRequest): Promise<ForgotPasswordResponse> => {
+export const forgotPassword = async (
+  forgotReq: ForgotPasswordRequest
+): Promise<ForgotPasswordResponse> => {
   const requestUrl = `${config.api.baseUrl}${config.api.endpoints.auth.forgotPassword}`;
 
   const response = await axios.post<ForgotPasswordResponse>(requestUrl, { email: forgotReq.email });
