@@ -4,12 +4,11 @@ import Typography from '@/components/Typography';
 import Button from '@/components/Button';
 import styles from './page.module.scss';
 
-interface CheckEmailProps {
+interface CheckResetEmailProps {
   email: string;
 }
 
-const CheckEmail = async (props: CheckEmailProps) => {
-  const email = props.email;
+const CheckEmail = async ({ email }: CheckResetEmailProps) => {
 
   return (
     <main className={styles.main}>
