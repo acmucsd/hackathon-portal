@@ -9,11 +9,11 @@ import TextField from '@/components/TextField';
 import Link from 'next/link';
 import Alert from '@/components/Alert';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { UserAPI } from '@/lib/api';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { getErrorMessage } from '@/lib/utils';
+import { useEffect, useState } from 'react';
 import { login } from './login';
+import { CookieType } from '@/lib/types/enums';
+import { redirect } from 'next/navigation';
+import { getCookie } from 'cookies-next';
 
 interface LoginValues {
   email: string;
@@ -22,7 +22,6 @@ interface LoginValues {
 
 export default function LoginPage() {
   const [error, setError] = useState<string | undefined>(undefined);
-  const router = useRouter();
 
   const {
     register,
@@ -34,8 +33,18 @@ export default function LoginPage() {
     // If successful, the page will redirect and the rest of this function will
     // not run
     const error = await login(credentials.email, credentials.password);
+
     setError(error);
   };
+
+  useEffect(() => {
+    const userCookie = getCookie(CookieType.USER);
+
+    // Send the user to the dashboard page if they already have a valid cookie
+    if (userCookie) {
+      redirect('/');
+    }
+  }, []);
 
   return (
     <main className={styles.main}>
