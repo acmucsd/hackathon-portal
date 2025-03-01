@@ -5,7 +5,7 @@ import Button from '@/components/Button';
 import styles from './page.module.scss';
 
 interface CheckEmailProps {
-  email: string
+  email: string;
 }
 
 const CheckEmail = async (props: CheckEmailProps) => {
