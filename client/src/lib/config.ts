@@ -5,6 +5,7 @@ const config = {
       auth: {
         register: '/user',
         login: '/user/login',
+        forgotPassword: '/user/forgot-password',
       },
       user: {
         user: '/user',

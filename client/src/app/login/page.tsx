@@ -87,6 +87,13 @@ export default function LoginPage() {
               Sign up!
             </Link>{' '}
           </Typography>
+
+
+          <Link href="/forgot-password" className="link">
+            {' '}
+            Forgot Password?
+          </Link>{' '}
+
         </Card>
       </div>
     </main>
