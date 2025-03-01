@@ -5,17 +5,15 @@ import Link from 'next/link';
 import Heading from '../Heading';
 import styles from './style.module.scss';
 import Button from '../Button';
-import { appQuestions } from '@/config';
-import { Fragment, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ResponseAPI } from '@/lib/api';
-import { Yes, YesOrNo } from '@/lib/types/enums';
 import showToast from '@/lib/showToast';
 import { Application } from '@/lib/types/application';
 import localforage from 'localforage';
 import { SAVED_RESPONSES_KEY } from '../ApplicationStep';
 import { Responses, responsesToApplication } from '../../lib/responses';
-import { ApplicationResponse } from '../ApplicationResponse';
+import ApplicationResponse from '../ApplicationResponse';
 
 interface ApplicationReviewProps {
   accessToken: string;

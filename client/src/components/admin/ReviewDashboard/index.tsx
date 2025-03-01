@@ -9,7 +9,7 @@ import { ApplicationStatus } from '@/lib/types/enums';
 import styles from './style.module.scss';
 import UserTable from '@/components/UserTable';
 
-interface UsersDashboardProps {
+interface ReviewDashboardProps {
   users: PrivateProfile[];
 }
 
@@ -20,7 +20,7 @@ const formatTitleCase = (message: string) => {
     .replace(/\b\w/g, c => c.toUpperCase());
 };
 
-const UsersDashboard = ({ users }: UsersDashboardProps) => {
+const ReviewDashboard = ({ users }: ReviewDashboardProps) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [filterStatus, setFilterStatus] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
@@ -77,4 +77,4 @@ const UsersDashboard = ({ users }: UsersDashboardProps) => {
   );
 };
 
-export default UsersDashboard;
+export default ReviewDashboard;

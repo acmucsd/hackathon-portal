@@ -6,13 +6,16 @@ import { PrivateProfile } from '@/lib/types/apiResponses';
 import { ApplicationStatus } from '@/lib/types/enums';
 import styles from './style.module.scss';
 
+const dateFormat = new Intl.DateTimeFormat('en-US', {
+  timeZone: 'UTC',
+  dateStyle: 'medium',
+});
+
 interface UserRowProps {
   user: PrivateProfile;
 }
 
 const UserRow = ({ user }: UserRowProps) => {
-  const date = new Date(user.createdAt);
-  const formattedDate = `${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()}`;
   return (
     <TableRow>
       <TableCell>
@@ -21,7 +24,9 @@ const UserRow = ({ user }: UserRowProps) => {
       <TableCell>
         <StatusTag status={user.applicationStatus} />
       </TableCell>
-      <TableCell className={styles.dateField}>{formattedDate}</TableCell>
+      <TableCell className={styles.dateField}>
+        {dateFormat.format(new Date(user.createdAt))}
+      </TableCell>
       <TableCell>
         {user.applicationStatus !== ApplicationStatus.NOT_SUBMITTED && (
           <Button

@@ -1,11 +1,8 @@
 import Card from '@/components/Card';
-import Button from '@/components/Button';
-import { appQuestions } from '@/config';
-import { Fragment } from 'react';
 import Heading from '@/components/Heading';
 import { ResponseModel } from '@/lib/types/apiResponses';
 import styles from './style.module.scss';
-import { ApplicationResponse } from '@/components/ApplicationResponse';
+import ApplicationResponse from '@/components/ApplicationResponse';
 import { applicationToResponses } from '@/lib/responses';
 
 interface ApplicationViewProps {

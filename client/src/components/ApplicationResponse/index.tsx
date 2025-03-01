@@ -7,7 +7,8 @@ import Button from '../Button';
 interface ApplicationResponseProps {
   responses: Responses;
 }
-export function ApplicationResponse({ responses }: ApplicationResponseProps) {
+
+const ApplicationResponse = ({ responses }: ApplicationResponseProps) => {
   return (
     <>
       {appQuestions.map(step => (
@@ -59,4 +60,6 @@ export function ApplicationResponse({ responses }: ApplicationResponseProps) {
       ))}
     </>
   );
-}
+};
+
+export default ApplicationResponse;
