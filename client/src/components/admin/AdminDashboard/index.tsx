@@ -7,14 +7,7 @@ import Button from '@/components/Button';
 import TimelineItem from '@/components/TimelineItem';
 import ApplicationCount from '../ApplicationCount';
 import { PrivateProfile, ResponseModel } from '@/lib/types/apiResponses';
-
-/** Dates should be at 12 am UTC. */
-export interface Deadlines {
-  application: Date;
-  decisions: Date;
-  acceptance: Date;
-  hackathon: Date;
-}
+import { Deadlines } from '@/components/Dashboard';
 
 interface AdminDashboardProps {
   timeline: Deadlines;

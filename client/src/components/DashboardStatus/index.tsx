@@ -12,7 +12,7 @@ export type Status =
   | 'CONFIRMED';
 
 export const dateFormat = new Intl.DateTimeFormat('en-US', {
-  timeZone: 'UTC',
+  timeZone: 'America/Los_Angeles',
   dateStyle: 'full',
 });
 
@@ -54,7 +54,9 @@ const DashboardStatus = ({ status, timeline }: DashboardStatusProps) => {
       ) : status === 'NOT_SUBMITTED' ? (
         <Button href="/apply">Apply Now</Button>
       ) : status === 'SUBMITTED' ? (
-        <Button href="/apply">Edit Application</Button>
+        <Button href="/apply">
+          {new Date() < timeline.application ? 'Edit Application' : 'View Application'}
+        </Button>
       ) : null}
     </>
   );
