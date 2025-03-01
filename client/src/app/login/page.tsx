@@ -42,7 +42,6 @@ export default function LoginPage() {
 
     // Send the user to the dashboard page if they already have a valid cookie
     if (userCookie) {
-      console.log('Already logged in');
       redirect('/');
     }
   }, []);

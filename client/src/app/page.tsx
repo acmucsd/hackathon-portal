@@ -10,7 +10,6 @@ export default async function Home() {
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
 
   if (!accessToken) {
-    console.log('Dashboard broke: access token undefined');
     redirect('/api/logout');
   }
 
