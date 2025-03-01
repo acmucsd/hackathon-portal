@@ -1,7 +1,7 @@
 @use '@/styles/vars.scss' as vars;
 
 .button {
-  display: flex;
+  display: inline-flex;
   border-radius: 2rem;
   padding: 0.5rem 2rem;
   min-width: 8.75rem;

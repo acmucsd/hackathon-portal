@@ -7,7 +7,6 @@ interface StatusTagProps {
 
 const StatusTag = ({ status }: StatusTagProps) => (
   <span className={`${styles.status} ${styles[status]}`}>
-    Status:{' '}
     {status
       .replace('_', ' ')
       .toLowerCase()

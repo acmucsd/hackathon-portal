@@ -15,6 +15,7 @@ import { Application } from '@/lib/types/application';
 import localforage from 'localforage';
 import { SAVED_RESPONSES_KEY } from '../ApplicationStep';
 import { Responses, responsesToApplication } from '../../lib/responses';
+import { ApplicationResponse } from '../ApplicationResponse';
 
 interface ApplicationReviewProps {
   accessToken: string;
@@ -37,7 +38,7 @@ const ApplicationReview = ({
 
   return (
     <Card
-      gap={2}
+      gap={1.5}
       onSubmit={async e => {
         e.preventDefault();
 
@@ -82,40 +83,7 @@ const ApplicationReview = ({
       <Link href={prev}>&lt; Back</Link>
       <Heading>Application Review</Heading>
 
-      <dl>
-        {appQuestions
-          .flatMap(step => step.questions)
-          .map(({ id, question }) => (
-            <Fragment key={id}>
-              <dt className={styles.question}>{question}</dt>
-              <dd className={styles.response}>
-                {typeof responses[id] === 'string' ? (
-                  responses[id]
-                ) : Array.isArray(responses[id]) ? (
-                  responses[id].join(', ')
-                ) : responses[id] instanceof File ? (
-                  <Button
-                    variant="secondary"
-                    onClick={() => {
-                      const link = document.createElement('a');
-                      const url = URL.createObjectURL(responses[id]);
-                      link.href = url;
-                      link.download = responses[id].name;
-                      document.body.append(link);
-                      link.click();
-                      link.remove();
-                      URL.revokeObjectURL(url);
-                    }}
-                  >
-                    {responses[id].name}
-                  </Button>
-                ) : (
-                  <em>No response.</em>
-                )}
-              </dd>
-            </Fragment>
-          ))}
-      </dl>
+      <ApplicationResponse responses={responses} />
 
       <div className={styles.buttonRow}>
         <Button href="/apply" variant="secondary">
