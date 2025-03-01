@@ -15,6 +15,7 @@ interface ButtonProps {
   submit?: boolean;
   disabled?: boolean;
   onClick?: () => void;
+  openNewTab?: boolean;
   className?: string;
 }
 
@@ -26,6 +27,7 @@ const Button = ({
   disabled = false,
   onClick,
   className = '',
+  openNewTab = false,
   children,
 }: PropsWithChildren<ButtonProps>) => {
   const props = {
@@ -37,7 +39,7 @@ const Button = ({
   return htmlFor ? (
     <label htmlFor={htmlFor} {...props} />
   ) : href ? (
-    <Link href={href} {...props} />
+    <Link target={openNewTab ? '_blank' : '_self'} href={href} {...props} />
   ) : (
     <button type={submit ? 'submit' : 'button'} disabled={disabled} {...props} />
   );

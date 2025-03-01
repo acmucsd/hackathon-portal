@@ -1,0 +1,19 @@
+@use '@/styles/vars.scss' as vars;
+
+.container {
+  display: flex;
+  align-items: center;
+  border-radius: 2rem;
+  border: 1px solid vars.$border-stroke;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  .searchBar {
+    width: 100%;
+    &::placeholder {
+      color: vars.$neutral;
+    }
+    &:focus-visible {
+      outline: none;
+    }
+  }
+}

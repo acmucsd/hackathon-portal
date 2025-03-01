@@ -13,12 +13,14 @@ import { Yes, YesOrNo } from '@/lib/types/enums';
 import showToast from '@/lib/showToast';
 import { Application } from '@/lib/types/application';
 import localforage from 'localforage';
-import { SavedResponses, SAVED_RESPONSES_KEY } from '../ApplicationStep';
+import { SAVED_RESPONSES_KEY } from '../ApplicationStep';
+import { Responses, responsesToApplication } from '../../lib/responses';
 
 interface ApplicationReviewProps {
   accessToken: string;
-  responses: Record<string, string | string[] | File | any>;
+  responses: Responses;
   responsesLoaded?: boolean;
+  alreadySubmitted: boolean;
   prev: string;
   next: string;
 }
@@ -27,6 +29,7 @@ const ApplicationReview = ({
   accessToken,
   responses,
   responsesLoaded = true,
+  alreadySubmitted,
   prev,
   next,
 }: ApplicationReviewProps) => {
@@ -38,14 +41,6 @@ const ApplicationReview = ({
       onSubmit={async e => {
         e.preventDefault();
 
-        if (
-          !confirm(
-            'Are you sure you want to submit? You currently will not be able to edit your application after submitting.'
-          )
-        ) {
-          return;
-        }
-
         if (responses.mlhCodeOfConduct !== 'Yes') {
           showToast('Please agree to the MLH code of conduct.');
           return;
@@ -55,40 +50,26 @@ const ApplicationReview = ({
           return;
         }
 
-        const application: Application = {
-          phoneNumber: (responses.phoneNumber as string).startsWith('+')
-            ? responses.phoneNumber
-            : `+${responses.phoneNumber}`,
-          age: responses.age,
-          university: responses.university,
-          levelOfStudy: responses.levelOfStudy,
-          country: responses.country,
-          linkedin: responses.linkedin,
-          gender: responses.gender,
-          pronouns: responses.pronouns,
-          orientation: responses.orientation,
-          ethnicity: responses.ethnicity,
-          dietary: ['Will be answered in follow-up form.'],
-          interests: responses.interests,
-          major: responses.major,
-          referrer: responses.referrer,
-          resumeLink: 'This will be populated by the backend',
-          willAttend: responses.willAttend === 'Yes' ? YesOrNo.YES : YesOrNo.NO,
-          mlhCodeOfConduct: Yes.YES,
-          mlhAuthorization: Yes.YES,
-          mlhEmailAuthorization:
-            responses.mlhEmailAuthorization === 'Yes' ? YesOrNo.YES : YesOrNo.NO,
-          additionalComments: responses.additionalComments,
-        };
+        const application: Omit<Application, 'resumeLink'> = responsesToApplication(responses);
         // Files can't be passed to a server action but FormData can
         const formData = new FormData();
         formData.append('application', JSON.stringify(application));
-        formData.append('file', responses.resumeLink);
+        if (responses.resumeLink instanceof File) {
+          formData.append('file', responses.resumeLink);
+        }
 
-        const result = await ResponseAPI.submitApplication(accessToken, formData);
-        if ('error' in result) {
-          showToast("Couldn't submit application", result.error);
-          return;
+        if (alreadySubmitted) {
+          const result = await ResponseAPI.updateApplication(accessToken, formData);
+          if ('error' in result) {
+            showToast("Couldn't resubmit application", result.error);
+            return;
+          }
+        } else {
+          const result = await ResponseAPI.submitApplication(accessToken, formData);
+          if ('error' in result) {
+            showToast("Couldn't submit application", result.error);
+            return;
+          }
         }
 
         // Remove saved data
@@ -141,31 +122,41 @@ const ApplicationReview = ({
           Make Changes
         </Button>
         <Button submit disabled={!responsesLoaded}>
-          Submit
+          {alreadySubmitted ? 'Update' : 'Submit'}
         </Button>
       </div>
     </Card>
   );
 };
 
-const ApplicationReviewWrapped = (
-  props: Omit<ApplicationReviewProps, 'responses' | 'responsesLoaded'>
-) => {
-  const [responses, setResponses] = useState<Record<string, string>>({});
+const ApplicationReviewWrapped = ({
+  submittedResponses,
+  ...props
+}: Omit<ApplicationReviewProps, 'responses' | 'responsesLoaded' | 'alreadySubmitted'> & {
+  submittedResponses?: Responses;
+}) => {
+  const [responses, setResponses] = useState<Responses>(submittedResponses ?? {});
   const [responsesLoaded, setResponsesLoaded] = useState(false);
 
   useEffect(() => {
     localforage
-      .getItem<SavedResponses | null>(SAVED_RESPONSES_KEY)
-      .then(responses => {
-        if (responses) {
-          setResponses(responses);
+      .getItem<Responses | null>(SAVED_RESPONSES_KEY)
+      .then(draftResponses => {
+        if (draftResponses) {
+          setResponses({ ...submittedResponses, ...draftResponses });
         }
       })
       .finally(() => setResponsesLoaded(true));
   }, []);
 
-  return <ApplicationReview {...props} responses={responses} responsesLoaded={responsesLoaded} />;
+  return (
+    <ApplicationReview
+      {...props}
+      responses={responses}
+      responsesLoaded={responsesLoaded}
+      alreadySubmitted={submittedResponses !== undefined}
+    />
+  );
 };
 
 export default ApplicationReviewWrapped;
