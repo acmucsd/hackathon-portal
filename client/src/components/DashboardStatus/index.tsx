@@ -26,12 +26,16 @@ const statusText = (status: string) => {
   return formatted.charAt(0).toUpperCase() + formatted.slice(1);
 };
 
-const getStatusDescription = (status: string) => {
+const getStatusDescription = (timeline: Deadlines, status: Status) => {
   switch (status) {
     case 'SUBMITTED':
       return 'Congrats on applying to DiamondHacks!';
     default:
-      return 'Our records have indicated that you have not started on your application. Click below to go on your hacker journey!';
+      if (new Date() < timeline.application) {
+        return 'Our records have indicated that you have not started on your application. Click below to go on your hacker journey!';
+      } else {
+        return "Our records have indicated that you have not started on your application. Unfortunately, the deadline has passed, but we'd love to see you next year at DiamondHacks!";
+      }
   }
 };
 
@@ -41,7 +45,7 @@ const DashboardStatus = ({ status, timeline }: DashboardStatusProps) => {
     <>
       <div className={`${styles.badge} ${styles[status]}`}>Status: {statusText(status)}</div>
       <Typography variant="body/large" component="p">
-        {getStatusDescription(status)}
+        {getStatusDescription(timeline, status)}
       </Typography>
       <Typography variant="body/large" component="p">
         Please note that applications are due on {dateFormat.format(timeline.application)}.
@@ -52,7 +56,9 @@ const DashboardStatus = ({ status, timeline }: DashboardStatusProps) => {
       ) : status === 'ACCEPTED' ? (
         <Button>Confirm Acceptance</Button>
       ) : status === 'NOT_SUBMITTED' ? (
-        <Button href="/apply">Apply Now</Button>
+        new Date() < timeline.application ? (
+          <Button href="/apply">Apply Now</Button>
+        ) : null
       ) : status === 'SUBMITTED' ? (
         <Button href="/apply">
           {new Date() < timeline.application ? 'Edit Application' : 'View Application'}
