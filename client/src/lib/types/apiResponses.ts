@@ -117,3 +117,5 @@ export interface GetUsersResponse extends ApiResponse {
 export interface GetUserApplicationResponse extends ApiResponse {
   application: ResponseModel;
 }
+
+export interface ForgotPasswordResponse extends ApiResponse {}

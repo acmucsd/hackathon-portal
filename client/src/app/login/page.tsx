@@ -56,7 +56,6 @@ export default function LoginPage() {
               <p>{error}</p>
             </Alert>
           ) : null}
-
           <TextField
             variant="vertical"
             id="email"
@@ -69,7 +68,6 @@ export default function LoginPage() {
             autoComplete="email"
             defaultText="Enter Email Address"
           />
-
           <TextField
             variant="vertical"
             id="password"
@@ -82,13 +80,10 @@ export default function LoginPage() {
             autoComplete="current-password"
             defaultText="Enter Password"
           />
-
           {/* <Link href="/forgot-password">Forgot your password?</Link> */}
-
           <Button variant="primary" onClick={handleSubmit(onSubmit)}>
             Login
           </Button>
-
           <Typography variant="label/small" component="p">
             Don&rsquo;t have an account?{' '}
             <Link href="/register" className="link">
@@ -96,6 +91,10 @@ export default function LoginPage() {
               Sign up!
             </Link>{' '}
           </Typography>
+          <Link href="/forgot-password" className="link">
+            {' '}
+            Forgot Password?
+          </Link>{' '}
         </Card>
       </div>
     </main>
