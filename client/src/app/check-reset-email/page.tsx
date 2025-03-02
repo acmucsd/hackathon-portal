@@ -5,10 +5,12 @@ import Button from '@/components/Button';
 import styles from './page.module.scss';
 
 interface CheckResetEmailProps {
-  email: string;
+  searchParams: Promise<{ email?: string }>;
 }
 
-const CheckEmail = async ({ email }: CheckResetEmailProps) => {
+const CheckResetEmail = async (props: CheckResetEmailProps) => {
+  const searchParams = await props.searchParams;
+  const email = searchParams.email;
 
   return (
     <main className={styles.main}>
@@ -27,4 +29,4 @@ const CheckEmail = async ({ email }: CheckResetEmailProps) => {
   );
 };
 
-export default CheckEmail;
+export default CheckResetEmail;
