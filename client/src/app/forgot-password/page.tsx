@@ -37,7 +37,7 @@ export default function ForgotPasswordPage() {
         router.push(`/check-email?email=${encodeURIComponent(req.email)}`);
       },
       onFailCallback: error => {
-        reportError('Error with password reset!', error);
+        reportError('Error resetting password!', error);
       },
     });
   };
