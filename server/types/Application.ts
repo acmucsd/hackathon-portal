@@ -13,7 +13,7 @@ export interface Application {
   interests: string[];
   major: string;
   referrer: string[];
-  // TODO: upload and save resumes to s3
+  motivation: string;
   resumeLink: string;
   willAttend: string;
   mlhCodeOfConduct: string;
@@ -23,12 +23,13 @@ export interface Application {
 }
 
 export interface CreateApplicationRequest {
-  application: Application
+  application: Application;
 }
 
 export interface UpdateApplicationRequest {
-  application: Application
+  application: Application;
 }
+
 
 export interface Waiver {
   participantName: string;

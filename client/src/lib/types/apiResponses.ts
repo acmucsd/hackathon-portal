@@ -104,3 +104,18 @@ export interface DeleteApplicationResponse extends ApiResponse {}
 export interface GetApplicationsResponse extends ApiResponse {
   responses: ResponseModel[];
 }
+
+export interface GetApplicationResponse extends ApiResponse {
+  response: ResponseModel;
+}
+
+// Admin User Responses
+export interface GetUsersResponse extends ApiResponse {
+  users: PrivateProfile[];
+}
+
+export interface GetUserApplicationResponse extends ApiResponse {
+  application: ResponseModel;
+}
+
+export interface ForgotPasswordResponse extends ApiResponse {}

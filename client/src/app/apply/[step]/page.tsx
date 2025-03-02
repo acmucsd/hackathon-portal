@@ -10,9 +10,10 @@ import PartyPopper from '@/../public/assets/party-popper.svg';
 import { redirect } from 'next/navigation';
 import { ResponseAPI } from '@/lib/api';
 import { getCookie } from '@/lib/services/CookieService';
-import { CookieType } from '@/lib/types/enums';
+import { CookieType, Yes, YesOrNo } from '@/lib/types/enums';
 import { AxiosError } from 'axios';
-import { getErrorMessage } from '@/lib/utils';
+import { ResponseModel } from '@/lib/types/apiResponses';
+import { applicationToResponses } from '@/lib/responses';
 
 const STEP_REVIEW = appQuestions.length + 1;
 const STEP_SUBMITTED = appQuestions.length + 2;
@@ -25,23 +26,17 @@ export default async function ApplicationPage({ params }: ApplicationPageProps) 
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
   const step = Number((await params).step);
 
-  // For now, prohibit user from editing application
+  let response: ResponseModel | null = null;
   if (step < STEP_SUBMITTED) {
-    let exists = false;
     try {
-      await ResponseAPI.getApplication(accessToken);
-      exists = true;
+      response = await ResponseAPI.getApplication(accessToken);
     } catch (error) {
       if (!(error instanceof AxiosError && error.status === 404)) {
-        redirect('/login');
+        redirect('/api/logout');
       }
     }
-    if (exists) {
-      // If it exists, they've submitted their application
-      // NOTE: Cannot redirect inside try-catch
-      redirect(`/apply/${STEP_SUBMITTED}`);
-    }
   }
+  const application = response ? applicationToResponses(response.data) : undefined;
 
   return (
     <main className={styles.main}>
@@ -51,12 +46,14 @@ export default async function ApplicationPage({ params }: ApplicationPageProps) 
       />
       {appQuestions[step - 1] ? (
         <ApplicationStep
+          submittedResponses={application}
           step={appQuestions[step - 1]}
           prev={step === 1 ? '/' : `/apply/${step - 1}`}
           next={`/apply/${step + 1}`}
         />
       ) : step === STEP_REVIEW ? (
         <ApplicationReview
+          submittedResponses={application}
           accessToken={accessToken}
           prev={`/apply/${appQuestions.length}`}
           next={`/apply/${STEP_SUBMITTED}`}
@@ -68,7 +65,12 @@ export default async function ApplicationPage({ params }: ApplicationPageProps) 
             Woohooo!! You successfully submitted your DiamondHacks application! Check back for
             updates on the dashboard.
           </Typography>
-          <Button href="/">Return to Dashboard</Button>
+          <div className={styles.buttons}>
+            <Button variant="secondary" href={`/apply/${STEP_REVIEW}`}>
+              View Application
+            </Button>
+            <Button href="/">Return to Dashboard</Button>
+          </div>
         </Card>
       ) : null}
     </main>

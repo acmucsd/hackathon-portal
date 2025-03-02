@@ -1,0 +1,37 @@
+.status {
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+
+  &.NOT_SUBMITTED {
+    color: #8d0d25;
+    background-color: #fad5dc;
+  }
+
+  &.SUBMITTED {
+    color: #142e52;
+    background-color: #d6e5f8;
+  }
+
+  &.ACCEPTED {
+    color: #00573f;
+    background-color: #d7ede7;
+  }
+
+  &.WITHDRAWN {
+    color: #8d490d;
+    background-color: #ecdf98;
+  }
+
+  &.REJECTED {
+    color: #8d0d25;
+    background-color: #fad5dc;
+  }
+
+  &.CONFIRMED {
+    color: #35118d;
+    background-color: #ece6f9;
+  }
+}

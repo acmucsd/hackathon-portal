@@ -16,7 +16,7 @@ interface LinkMetadata {
   href: string;
 }
 
-const links: LinkMetadata[] = [
+const baseLinks: LinkMetadata[] = [
   { name: 'Dashboard', href: '/' },
   { name: 'Application', href: '/apply' },
 ];
@@ -32,6 +32,15 @@ export default function Navbar({ user }: NavbarProps) {
   const onLinkClick = () => {
     setMobileMenuOpen(false);
   };
+
+  const links =
+    user?.accessType == 'ADMIN'
+      ? [
+          ...baseLinks,
+          { name: 'Admin', href: '/admin' },
+          { name: 'Manage Users', href: '/manageUsers' },
+        ]
+      : baseLinks;
 
   useEffect(() => {
     // Close mobile menu when screen gets larger than mobile breakpoint

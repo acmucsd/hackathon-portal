@@ -1,0 +1,15 @@
+@use '../../styles/vars.scss' as vars;
+
+.pagination {
+  display: flex;
+  gap: 0.5rem;
+  align-self: center;
+
+  .pageButton {
+    background-color: transparent;
+    color: vars.$white;
+    padding: 0px;
+    min-width: 0px;
+    min-height: 0px;
+  }
+}

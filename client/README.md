@@ -23,7 +23,10 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with
    ```shell
    # in server/
    $ yarn
+   $ yarn db:migrate
    $ yarn build
+   # Set up database
+   $ yarn db:migrate
    $ yarn start
    ```
 
@@ -57,6 +60,7 @@ feedback and contributions are welcome!
 - https://nextjs.org/docs/app/getting-started/layouts-and-pages (Creating new routes)
 - We use `React-Hook-Form` for authentication: https://react-hook-form.com/
 - We use useRouter to make API calls: https://nextjs.org/docs/app/api-reference/functions/use-router
+- `NextResponse` for cookies: https://nextjs.org/docs/app/api-reference/functions/next-response
 
 ## Deploy on Vercel
 

@@ -15,12 +15,13 @@ import localforage from 'localforage';
 import showToast from '@/lib/showToast';
 import { reportError } from '@/lib/utils';
 import FileSelect from '../FileSelect';
+import { Application } from '@/lib/types/application';
+import { Responses } from '../../lib/responses';
 
-export type SavedResponses = Record<string, string | string[] | File | any>;
 export const SAVED_RESPONSES_KEY = 'saved application';
 
 type AppQuestion = {
-  id: string;
+  id: keyof Application;
   question: ReactNode;
   optional?: boolean;
 } & (
@@ -69,7 +70,7 @@ const ASTERISK = (
 
 interface ApplicationStepProps {
   step: Step;
-  responses: Record<string, string | string[] | File | any>;
+  responses: Responses;
   responsesLoaded?: boolean;
   prev: string;
   next: string;
@@ -124,7 +125,7 @@ const ApplicationStep = ({
     }
     try {
       await localforage.setItem(SAVED_RESPONSES_KEY, {
-        ...(await localforage.getItem<SavedResponses | null>(SAVED_RESPONSES_KEY)),
+        ...(await localforage.getItem<Responses | null>(SAVED_RESPONSES_KEY)),
         ...responses,
       });
       showToast(
@@ -307,19 +308,21 @@ const ApplicationStep = ({
   );
 };
 
-const ApplicationStepWrapped = (
-  props: Omit<ApplicationStepProps, 'responses' | 'responsesLoaded'>
-) => {
-  const [responses, setResponses] = useState<Record<string, string>>({});
+const ApplicationStepWrapped = ({
+  submittedResponses = {},
+  ...props
+}: Omit<ApplicationStepProps, 'responses' | 'responsesLoaded'> & {
+  submittedResponses?: Responses;
+}) => {
+  const [responses, setResponses] = useState<Responses>(submittedResponses);
   const [responsesLoaded, setResponsesLoaded] = useState(false);
 
   useEffect(() => {
     localforage
-      .getItem<SavedResponses | null>(SAVED_RESPONSES_KEY)
-      .then(responses => {
-        if (responses) {
-          console.log(responses);
-          setResponses(responses);
+      .getItem<Responses | null>(SAVED_RESPONSES_KEY)
+      .then(draftResponses => {
+        if (draftResponses) {
+          setResponses({ ...submittedResponses, ...draftResponses });
         }
       })
       .finally(() => setResponsesLoaded(true));
