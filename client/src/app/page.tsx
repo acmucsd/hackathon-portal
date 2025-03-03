@@ -10,7 +10,7 @@ export default async function Home() {
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
 
   if (!accessToken) {
-    redirect('/login');
+    redirect('/api/logout');
   }
 
   try {
@@ -22,6 +22,6 @@ export default async function Home() {
       </main>
     );
   } catch (error) {
-    redirect('/login');
+    redirect('/api/logout');
   }
 }

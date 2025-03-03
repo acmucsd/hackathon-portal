@@ -122,6 +122,8 @@ export interface GetUserApplicationResponse extends ApiResponse {
   application: ResponseModel;
 }
 
+export interface ForgotPasswordResponse extends ApiResponse {}
+
 // Admin Application Decision Responses
 
 export interface GetApplicationDecisionResponse extends ApiResponse {

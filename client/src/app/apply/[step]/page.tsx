@@ -32,7 +32,7 @@ export default async function ApplicationPage({ params }: ApplicationPageProps) 
       response = await ResponseAPI.getApplication(accessToken);
     } catch (error) {
       if (!(error instanceof AxiosError && error.status === 404)) {
-        redirect('/login');
+        redirect('/api/logout');
       }
     }
   }
