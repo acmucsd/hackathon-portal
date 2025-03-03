@@ -251,4 +251,14 @@ export class ResponseService {
     return response;
   }
 
+  public async getUserWaivers(user: UserModel): Promise<ResponseModel[]> {
+    const userResponses = await this.getUserResponses(user);
+    const waivers = userResponses.filter(
+      (response) =>
+        response.formType === FormType.LIABILITY_WAIVER ||
+        response.formType === FormType.PHOTO_RELEASE,
+    );
+    if (!waivers) throw new NotFoundError('No waivers found for user');
+    return waivers;
+  }
 }
