@@ -4,12 +4,12 @@ import { PropsWithChildren } from 'react';
 import CheckIcon from '@/../public/assets/icons/check.svg';
 
 export const dateFormat = new Intl.DateTimeFormat('en-US', {
-  timeZone: 'UTC',
+  timeZone: 'America/Los_Angeles',
   dateStyle: 'medium',
 });
 
 interface TimelineItemProps {
-  /** In UTC */
+  /** In local time (America/Los_Angeles) */
   date: Date;
   first?: boolean;
 }
