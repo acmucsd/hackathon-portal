@@ -1,5 +1,5 @@
 import { Application } from './application';
-import { ApplicationStatus, FormType, UserAccessType } from './enums';
+import { ApplicationStatus, ApplicationDecision, FormType, UserAccessType } from './enums';
 
 export interface ResponseModel {
   uuid: string;
@@ -24,6 +24,10 @@ export interface PrivateProfile extends PublicProfile {
   createdAt: Date;
   updatedAt: Date;
   responses?: ResponseModel;
+}
+
+export interface HiddenProfile extends PrivateProfile {
+  applicationDecision: ApplicationDecision;
 }
 
 export interface ValidatorError {
@@ -119,3 +123,13 @@ export interface GetUserApplicationResponse extends ApiResponse {
 }
 
 export interface ForgotPasswordResponse extends ApiResponse {}
+
+// Admin Application Decision Responses
+
+export interface GetApplicationDecisionResponse extends ApiResponse {
+  user: HiddenProfile;
+}
+
+export interface UpdateApplicationDecisionResponse extends ApiResponse {
+  user: HiddenProfile;
+}
