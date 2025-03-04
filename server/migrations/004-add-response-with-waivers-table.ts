@@ -1,8 +1,8 @@
 /* eslint-disable max-len */
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class TestMigration1740453404021 implements MigrationInterface {
-    name = 'TestMigration1740453404021';
+export class AddResponseWithWaiversTable1740453404021 implements MigrationInterface {
+    name = 'AddResponseWithWaiversTable1740453404021';
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(
