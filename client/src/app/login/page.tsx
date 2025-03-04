@@ -35,6 +35,7 @@ export default function LoginPage() {
     const error = await login(credentials.email, credentials.password);
 
     setError(error);
+    redirect('/api/logout');
   };
 
   useEffect(() => {

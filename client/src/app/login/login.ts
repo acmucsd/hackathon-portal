@@ -11,7 +11,6 @@ export async function login(email: string, password: string): Promise<string> {
   try {
     response = await apiLogin(email, password);
   } catch (error) {
-    redirect('/api/logout');
     return getErrorMessage(error);
   }
   await setCookie(CookieType.ACCESS_TOKEN, response.token);
