@@ -31,7 +31,7 @@ const ApplicationView = ({ application, token, decision }: ApplicationViewProps)
       setCurrentDecision(updatedDecision);
       showToast(`${updatedDecision}ED`, `You marked the application as "${updatedDecision}ED".`);
     } catch (error) {
-      reportError('Application decision not updated', error);
+      reportError("Couldn't update application decision", error);
     }
   };
 
