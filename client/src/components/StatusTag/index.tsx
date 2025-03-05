@@ -1,8 +1,8 @@
-import { ApplicationStatus } from '@/lib/types/enums';
+import { ApplicationStatus, ApplicationDecision } from '@/lib/types/enums';
 import styles from './style.module.scss';
 
 interface StatusTagProps {
-  status: ApplicationStatus;
+  status: ApplicationStatus | ApplicationDecision;
 }
 
 const StatusTag = ({ status }: StatusTagProps) => (
