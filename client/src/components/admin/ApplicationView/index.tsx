@@ -11,6 +11,7 @@ import { useState } from 'react';
 import styles from './style.module.scss';
 import ApplicationResponse from '@/components/ApplicationResponse';
 import { applicationToResponses } from '@/lib/responses';
+import Button from '@/components/Button';
 
 interface ApplicationViewProps {
   application: ResponseModel;
