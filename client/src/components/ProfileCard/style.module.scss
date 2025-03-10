@@ -1,0 +1,43 @@
+@use '../../styles/vars.scss' as vars;
+
+.profileHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  .editBtn,
+  .closeBtn {
+    flex: none;
+    cursor: pointer;
+  }
+
+  .closeBtn {
+    margin-left: auto;
+  }
+
+  .logoutBtn {
+    margin-left: auto;
+  }
+}
+
+.profileContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+
+  @media screen and (max-width: vars.$breakpoint-md) {
+    .discardButton {
+      display: none;
+    }
+
+    .saveButton {
+      width: 100%;
+    }
+  }
+}

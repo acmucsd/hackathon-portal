@@ -1,4 +1,4 @@
-import { UserAPI } from '@/lib/api';
+import { UserAPI, ResponseAPI } from '@/lib/api';
 import { getCookie } from '@/lib/services/CookieService';
 import { CookieType } from '@/lib/types/enums';
 import Profile from '@/components/Profile';
@@ -9,7 +9,8 @@ export default async function ProfilePage() {
 
   try {
     const fetchedUser = await UserAPI.getCurrentUser(accessToken);
-    return <Profile user={fetchedUser} />;
+    const fetchedApplication = await ResponseAPI.getApplication(accessToken);
+    return <Profile user={fetchedUser} application={fetchedApplication} />;
   } catch (error) {
     redirect('/api/logout');
   }
