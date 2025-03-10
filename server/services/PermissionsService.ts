@@ -14,4 +14,8 @@ export default class PermissionsService {
   public static canEditApplicationDecisions(user: UserModel): boolean {
     return user.isAdmin();
   }
+
+  public static canSubmitApplications(user: UserModel): boolean {
+    return user.isAdmin();
+  }
 }
