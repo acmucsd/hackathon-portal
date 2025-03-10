@@ -322,8 +322,8 @@ export const appQuestions: Step[] = [
 ];
 
 export const TIMELINE: Deadlines = {
-  application: new Date('2025-02-28'),
-  decisions: new Date('2025-03-07'),
-  acceptance: new Date('2025-03-21'),
+  application: new Date('2025-03-09'),
+  decisions: new Date('2025-03-21'),
+  acceptance: new Date('2025-03-28'),
   hackathon: new Date('2025-04-05'),
 };
