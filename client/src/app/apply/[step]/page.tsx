@@ -1,5 +1,5 @@
 import ApplicationStep from '@/components/ApplicationStep';
-import { appQuestions } from '@/config';
+import { appQuestions, TIMELINE } from '@/config';
 import styles from './page.module.scss';
 import ApplicationReview from '@/components/ApplicationReview';
 import Progress from '@/components/Progress';
@@ -25,6 +25,7 @@ type ApplicationPageProps = {
 export default async function ApplicationPage({ params }: ApplicationPageProps) {
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
   const step = Number((await params).step);
+  const deadlinePassed = new Date() >= TIMELINE.application;
 
   let response: ResponseModel | null = null;
   if (step < STEP_SUBMITTED) {
@@ -34,6 +35,15 @@ export default async function ApplicationPage({ params }: ApplicationPageProps) 
       if (!(error instanceof AxiosError && error.status === 404)) {
         redirect('/api/logout');
       }
+    }
+  }
+  if (deadlinePassed) {
+    if (response) {
+      if (step < STEP_REVIEW) {
+        redirect(`/apply/${STEP_REVIEW}`);
+      }
+    } else {
+      redirect('/');
     }
   }
   const application = response ? applicationToResponses(response.data) : undefined;
@@ -57,6 +67,7 @@ export default async function ApplicationPage({ params }: ApplicationPageProps) 
           accessToken={accessToken}
           prev={`/apply/${appQuestions.length}`}
           next={`/apply/${STEP_SUBMITTED}`}
+          allowChanges={!deadlinePassed}
         />
       ) : step === STEP_SUBMITTED ? (
         <Card gap={2.5} className={styles.submitted}>
