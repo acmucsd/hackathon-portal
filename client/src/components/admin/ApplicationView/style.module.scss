@@ -37,3 +37,40 @@
   flex-wrap: wrap;
   gap: 0.5rem;
 }
+
+.divider {
+  background-color: vars.$neutral;
+  height: 2px;
+  border: 0;
+}
+
+.submissionHeader {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.decisionButtons {
+  display: flex;
+  gap: 1rem;
+  align-self: center;
+
+  button {
+    border-radius: 0.5rem;
+  }
+
+  .reject {
+    color: #8d0d25;
+    background-color: #fad5dc;
+  }
+
+  .waitlist {
+    color: #8d490d;
+    background-color: #ecdf98;
+  }
+
+  .accept {
+    color: #00573f;
+    background-color: #d7ede7;
+  }
+}

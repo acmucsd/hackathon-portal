@@ -14,6 +14,13 @@ export enum ApplicationStatus {
   CONFIRMED = 'CONFIRMED',
 }
 
+export enum ApplicationDecision {
+  NO_DECISION = 'NO_DECISION',
+  ACCEPT = 'ACCEPT',
+  REJECT = 'REJECT',
+  WAITLIST = 'WAITLIST',
+}
+
 export enum FormType {
   APPLICATION = 'APPLICATION',
 }

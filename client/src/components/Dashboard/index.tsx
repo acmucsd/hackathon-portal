@@ -11,7 +11,7 @@ import { PrivateProfile } from '@/lib/types/apiResponses';
 
 type Status = 'NOT_SUBMITTED' | 'SUBMITTED' | 'WITHDRAWN' | 'ACCEPTED' | 'REJECTED' | 'CONFIRMED';
 
-/** Dates should be at 12 am UTC. */
+/** Dates are in local time (America/Los_Angeles) */
 export interface Deadlines {
   application: Date;
   decisions: Date;

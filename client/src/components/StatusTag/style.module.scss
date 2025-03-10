@@ -10,22 +10,26 @@
     background-color: #fad5dc;
   }
 
-  &.SUBMITTED {
+  &.SUBMITTED,
+  &.NO_DECISION {
     color: #142e52;
     background-color: #d6e5f8;
   }
 
-  &.ACCEPTED {
+  &.ACCEPTED,
+  &.ACCEPT {
     color: #00573f;
     background-color: #d7ede7;
   }
 
-  &.WITHDRAWN {
+  &.WITHDRAWN,
+  &.WAITLIST {
     color: #8d490d;
     background-color: #ecdf98;
   }
 
-  &.REJECTED {
+  &.REJECTED,
+  &.REJECT {
     color: #8d0d25;
     background-color: #fad5dc;
   }
