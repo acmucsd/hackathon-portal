@@ -62,7 +62,7 @@ export class EventController {
   }
 
   @UseBefore(UserAuthentication)
-  @Get()
+  @Get('/published')
   async getPublishedEvents(
     @AuthenticatedUser() user: UserModel,
   ): Promise<GetPublishedEventsResponse> {
