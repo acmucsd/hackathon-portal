@@ -39,3 +39,15 @@ export enum Yes {
 export enum MediaType {
   RESUME = 'RESUME',
 }
+
+export enum EventType {
+  INFO = 'INFO',
+  MAIN_EVENT = 'MAIN_EVENT',
+  SOCIAL = 'SOCIAL',
+  WORKSHOP = 'WORKSHOP',
+}
+
+export enum Day {
+  SATURDAY = 'SATURDAY',
+  SUNDAY = 'SUNDAY',
+}

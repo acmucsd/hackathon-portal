@@ -2,6 +2,7 @@ import { Service } from 'typedi';
 import { DataSource, EntityManager } from 'typeorm';
 import { UserRepository } from './UserRepository';
 import { ResponseRepository } from './ResponseRepository';
+import { EventRepository } from './EventRepository';
 
 export class Repositories {
   public static user(entityManager: EntityManager) {
@@ -10,6 +11,10 @@ export class Repositories {
 
   public static response(entityManager: EntityManager) {
     return entityManager.withRepository(ResponseRepository);
+  }
+
+  public static event(entityManager: EntityManager) {
+    return entityManager.withRepository(EventRepository);
   }
 }
 
