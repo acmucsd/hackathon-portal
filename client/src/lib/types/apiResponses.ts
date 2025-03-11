@@ -115,7 +115,7 @@ export interface GetApplicationResponse extends ApiResponse {
 
 // Admin User Responses
 export interface GetUsersResponse extends ApiResponse {
-  users: PrivateProfile[];
+  users: HiddenProfile[];
 }
 
 export interface GetUserApplicationResponse extends ApiResponse {

@@ -50,7 +50,7 @@ export const getApplication = async (token: string, uuid: string): Promise<Respo
  * @param token
  * @returns All users application
  */
-export const getUsers = async (token: string): Promise<PrivateProfile[]> => {
+export const getUsers = async (token: string): Promise<HiddenProfile[]> => {
   const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.users}`;
   const response = await axios.get<GetUsersResponse>(requestUrl, {
     headers: {
