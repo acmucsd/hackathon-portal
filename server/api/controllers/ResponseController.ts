@@ -63,7 +63,9 @@ export class ResponseController {
     file: File,
   ): Promise<SubmitApplicationResponse> {
     if (!PermissionsService.canSubmitApplications(user)) {
-      throw new ForbiddenError();
+      throw new ForbiddenError(
+        "Can't submit application. The deadline has passed.",
+      );
     }
     const response = await this.responseService.submitUserApplication(
       user,
@@ -85,7 +87,9 @@ export class ResponseController {
     file?: File,
   ): Promise<SubmitApplicationResponse> {
     if (!PermissionsService.canSubmitApplications(user)) {
-      throw new ForbiddenError();
+      throw new ForbiddenError(
+        "Can't update application. The deadline has passed.",
+      );
     }
     const response = await this.responseService.updateUserApplication(
       user,
@@ -101,7 +105,9 @@ export class ResponseController {
     @AuthenticatedUser() user: UserModel,
   ): Promise<DeleteApplicationResponse> {
     if (!PermissionsService.canSubmitApplications(user)) {
-      throw new ForbiddenError();
+      throw new ForbiddenError(
+        "Can't delete application. The deadline has passed.",
+      );
     }
     await this.responseService.deleteUserApplication(user);
     return { error: null };
