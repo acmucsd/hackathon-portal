@@ -46,6 +46,7 @@
 
 .submissionHeader {
   display: flex;
+  flex-flow: row wrap;
   align-items: center;
   gap: 2rem;
 }
@@ -54,6 +55,11 @@
   display: flex;
   gap: 1rem;
   align-self: center;
+
+  @media screen and (max-width: vars.$breakpoint-md) {
+    flex-direction: column;
+    width: 100%;
+  }
 
   button {
     border-radius: 0.5rem;

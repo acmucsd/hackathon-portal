@@ -2,12 +2,12 @@ import Card from '@/components/Card';
 import Typography from '@/components/Typography';
 import StatusTag from '@/components/StatusTag';
 import Button from '@/components/Button';
-import { HiddenProfile } from '@/lib/types/apiResponses';
+import { FullProfile } from '@/lib/types/apiResponses';
 import { ApplicationStatus } from '@/lib/types/enums';
 import styles from './style.module.scss';
 
 interface UserItemProps {
-  user: HiddenProfile;
+  user: FullProfile;
 }
 
 const UserItem = ({ user }: UserItemProps) => {

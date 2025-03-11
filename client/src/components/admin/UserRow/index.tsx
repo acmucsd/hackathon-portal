@@ -2,12 +2,12 @@ import TableRow from '@/components/TableRow';
 import TableCell from '@/components/TableCell';
 import Button from '@/components/Button';
 import StatusTag from '@/components/StatusTag';
-import { HiddenProfile } from '@/lib/types/apiResponses';
+import { FullProfile } from '@/lib/types/apiResponses';
 import { ApplicationStatus } from '@/lib/types/enums';
 import styles from './style.module.scss';
 
 interface UserRowProps {
-  user: HiddenProfile;
+  user: FullProfile;
 }
 
 const UserRow = ({ user }: UserRowProps) => {

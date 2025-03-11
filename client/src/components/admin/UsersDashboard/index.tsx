@@ -10,13 +10,13 @@ import TableList from '@/components/TableList';
 import UserRow from '../UserRow';
 import UserItem from '../UserItem';
 import Pagination from '@/components/Pagination';
-import { HiddenProfile } from '@/lib/types/apiResponses';
+import { FullProfile } from '@/lib/types/apiResponses';
 import { ApplicationStatus, ApplicationDecision } from '@/lib/types/enums';
 import { useWindowSize } from '@/lib/hooks/useWindowSize';
 import styles from './style.module.scss';
 
 interface UsersDashboardProps {
-  users: HiddenProfile[];
+  users: FullProfile[];
 }
 
 const formatTitleCase = (message: string) => {

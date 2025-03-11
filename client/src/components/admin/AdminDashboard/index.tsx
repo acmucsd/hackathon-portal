@@ -6,14 +6,14 @@ import Typography from '@/components/Typography';
 import Button from '@/components/Button';
 import TimelineItem from '@/components/TimelineItem';
 import ApplicationCount from '../ApplicationCount';
-import { PrivateProfile, HiddenProfile } from '@/lib/types/apiResponses';
+import { PrivateProfile, FullProfile } from '@/lib/types/apiResponses';
 import { ApplicationDecision, ApplicationStatus } from '@/lib/types/enums';
 import { Deadlines } from '@/components/Dashboard';
 
 interface AdminDashboardProps {
   timeline: Deadlines;
   user: PrivateProfile;
-  applications: HiddenProfile[];
+  applications: FullProfile[];
 }
 
 const AdminDashboard = ({ timeline, user, applications }: AdminDashboardProps) => {
