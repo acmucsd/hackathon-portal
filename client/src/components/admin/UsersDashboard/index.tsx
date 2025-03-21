@@ -45,10 +45,8 @@ const UsersDashboard = ({ users }: UsersDashboardProps) => {
 
       return user.applicationDecision === filterStatus;
     })
-    .filter(
-      user =>
-        user.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.lastName.toLowerCase().includes(searchQuery.toLowerCase())
+    .filter(user =>
+      `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
   const itemsPerPage = 10;
