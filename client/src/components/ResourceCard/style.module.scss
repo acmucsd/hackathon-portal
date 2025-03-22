@@ -1,0 +1,87 @@
+@use 'src/styles/vars.scss' as vars;
+
+// .card {
+//   flex: none;
+//   height: auto;
+//   // (2 rem (content) + 1.5rem (carousel)) * 2 (on both sides) + 2 rem (gap) = 9 rem
+//   // We then add 1 more rem so we can see the start of the next card.
+//   width: min(100vw - 10rem, 20rem);
+// }
+
+.container {
+  background: vars.$card-bg;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+  outline: 0 solid vars.$card-stroke;
+  padding: 0;
+  position: relative;
+  text-align: left;
+  transition: all 0.3s;
+  width: 20rem;
+
+  &.bordered {
+    border: 1px solid vars.$border-stroke;
+    border-radius: 10px;
+  }
+
+  &.interactive:not([data-disabled]):hover {
+    outline-width: 4px;
+    transform: scale(0.975);
+
+    &[data-community='General'] {
+      border-color: vars.$blue-4;
+      outline-color: vars.$blue-4;
+    }
+
+    // &[data-community='Ai'] {
+    //   border-color: vars.$scarlet-4;
+    //   outline-color: vars.$scarlet-4;
+    // }
+
+    // &[data-community='Hack'] {
+    //   border-color: vars.$orange-4;
+    //   outline-color: vars.$orange-4;
+    // }
+
+    // &[data-community='Cyber'] {
+    //   border-color: vars.$cyan-4;
+    //   outline-color: vars.$cyan-4;
+    // }
+
+    // &[data-community='Design'] {
+    //   border-color: vars.$pink-4;
+    //   outline-color: vars.$pink-4;
+    // }
+  }
+
+  &:disabled {
+    cursor: default;
+  }
+
+  .image {
+    aspect-ratio: 1920 / 1080;
+    border-top-left-radius: 9px;
+    border-top-right-radius: 9px;
+    flex-shrink: 0;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+  }
+
+  .info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 1rem 1.5rem;
+    white-space: nowrap;
+    width: 100%;
+
+    .infoText {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+  }
+}

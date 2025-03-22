@@ -1,0 +1,63 @@
+@use 'src/styles/vars.scss' as vars;
+
+.wrapper {
+  background-color: var(--theme-elevated-background);
+  border: 1px solid var(--theme-elevated-stroke);
+  border-radius: 0.75rem;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  // overflow: hidden;
+  padding: 2rem;
+  height: 100%;
+
+  .header {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-between;
+
+    .headerText {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .viewToggle {
+      background: none;
+      flex: none;
+      font: inherit;
+      padding: 0;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .card {
+    flex: none;
+    height: auto;
+    // (2 rem (content) + 1.5rem (carousel)) * 2 (on both sides) + 2 rem (gap) = 9 rem
+    // We then add 1 more rem so we can see the start of the next card.
+    width: min(100vw - 10rem, 20rem);
+  }
+
+  .noEvents {
+    align-items: center;
+    background-color: vars.$card-bg;
+    border: 1px solid vars.$card-stroke;
+    border-radius: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1rem;
+    overflow: hidden;
+    padding: 2rem 1rem;
+    text-align: center;
+  }
+}
