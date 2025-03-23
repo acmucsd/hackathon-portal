@@ -16,7 +16,7 @@ interface ResourcesAllProps {
 
 const ResourcesAll = ({ title, resources, placeholder, className = '' }: ResourcesAllProps) => {
   return (
-    <main className={styles.main}>
+    <>
       <Typography variant="headline/heavy/small">{title}</Typography>
       {resources.length > 0 ? (
         <div className={styles.wrapper}>
@@ -30,7 +30,7 @@ const ResourcesAll = ({ title, resources, placeholder, className = '' }: Resourc
           <Typography variant="label/medium">{placeholder}</Typography>
         </div>
       )}
-    </main>
+    </>
   );
 };
 
