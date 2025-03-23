@@ -14,12 +14,8 @@ interface ResourcesAllProps {
   className?: string;
 }
 
-const ResourcesAll = ({
-  title,
-  resources,
-  placeholder,
-  className = '',
-}: ResourcesAllProps) => {  return (
+const ResourcesAll = ({ title, resources, placeholder, className = '' }: ResourcesAllProps) => {
+  return (
     <main className={styles.main}>
       <Typography variant="headline/heavy/small">{title}</Typography>
       {resources.length > 0 ? (
@@ -36,6 +32,6 @@ const ResourcesAll = ({
       )}
     </main>
   );
-}
+};
 
 export default ResourcesAll;

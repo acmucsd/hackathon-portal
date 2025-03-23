@@ -10,7 +10,11 @@ import ResourcesAll from '@/components/ResourcesAll';
 export default function FrontendResourcePage() {
   return (
     <main className={styles.main}>
-      <ResourcesAll title={'All Frontend Resources'} resources={FRONTEND_RESOURCES} placeholder='No Resources Here!' />
+      <ResourcesAll
+        title={'All Frontend Resources'}
+        resources={FRONTEND_RESOURCES}
+        placeholder="No Resources Here!"
+      />
     </main>
   );
 }

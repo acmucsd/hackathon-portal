@@ -4,6 +4,7 @@ import { ComponentType, Fragment, ReactNode } from 'react';
 import styles from './style.module.scss';
 
 import type { Resource } from '../../sections/Resources/resources';
+import Link from 'next/link';
 
 interface ResourceCardProps {
   resource: Resource;
@@ -43,12 +44,9 @@ const ResourceCard = ({ resource, className, borderless, hideInfo }: ResourceCar
               >
                 {title}
               </Typography>
-              <Typography
-                variant="body/small"
-                style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
-              >
+              <Link href={link} style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {link}
-              </Typography>
+              </Link>
             </div>
           </div>
         ) : null}

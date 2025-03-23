@@ -6,7 +6,11 @@ import ResourcesAll from '@/components/ResourcesAll';
 export default function BackendResourcePage() {
   return (
     <main className={styles.main}>
-      <ResourcesAll title={'All Backend Resources'} resources={BACKEND_RESOURCES} placeholder='No Resources Here!' />
+      <ResourcesAll
+        title={'All Backend Resources'}
+        resources={BACKEND_RESOURCES}
+        placeholder="No Resources Here!"
+      />
     </main>
   );
 }

@@ -1,5 +1,9 @@
 import ResourceCarousel from '@/components/ResourceCarousel';
-import { API_RESOURCES, BACKEND_RESOURCES, FRONTEND_RESOURCES } from '@/sections/Resources/resources';
+import {
+  API_RESOURCES,
+  BACKEND_RESOURCES,
+  FRONTEND_RESOURCES,
+} from '@/sections/Resources/resources';
 import ResourceBanner from '@/../public/assets/resources.svg';
 import styles from './page.module.scss';
 
