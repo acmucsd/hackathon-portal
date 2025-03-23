@@ -1,5 +1,5 @@
 import ResourceCarousel from '@/components/ResourceCarousel';
-import { FRONTEND_RESOURCES } from '@/sections/Resources/resources';
+import { API_RESOURCES, BACKEND_RESOURCES, FRONTEND_RESOURCES } from '@/sections/Resources/resources';
 import ResourceBanner from '@/../public/assets/resources.svg';
 import styles from './page.module.scss';
 
@@ -11,16 +11,19 @@ export default function ResourcePage() {
         title="Frontend"
         resources={FRONTEND_RESOURCES}
         placeholder={'No Resources Here!'}
+        link="frontend"
       />
       <ResourceCarousel
         title="Backend"
-        resources={FRONTEND_RESOURCES}
+        resources={BACKEND_RESOURCES}
         placeholder={'No Resources Here!'}
+        link="backend"
       />
       <ResourceCarousel
         title="APIs"
-        resources={FRONTEND_RESOURCES}
+        resources={API_RESOURCES}
         placeholder={'No Resources Here!'}
+        link="api"
       />
     </main>
   );

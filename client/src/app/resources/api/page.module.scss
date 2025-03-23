@@ -1,0 +1,16 @@
+@use '@/styles/vars.scss' as vars;
+
+.main {
+  flex: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 6rem var(--side-padding);
+}
+
+.wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+  width: 100%;
+}

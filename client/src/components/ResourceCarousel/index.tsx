@@ -7,6 +7,7 @@ import type { ReactNode } from 'react';
 import ResourceCard from '../ResourceCard';
 import styles from './style.module.scss';
 import type { Resource } from '../../sections/Resources/resources';
+import { link } from 'fs';
 
 interface ResourceCarousel {
   title: string | ReactNode;
@@ -14,6 +15,7 @@ interface ResourceCarousel {
   resources: Resource[];
   placeholder: string;
   className?: string;
+  link: string;
 }
 
 const ResourceCarousel = ({
@@ -22,6 +24,7 @@ const ResourceCarousel = ({
   titleClassName,
   placeholder,
   className = '',
+  link,
 }: ResourceCarousel) => {
   return (
     <div className={`${styles.wrapper} ${className}`}>
@@ -31,7 +34,7 @@ const ResourceCarousel = ({
             {title}
           </Typography>
         </div>
-        <Link className={styles.viewToggle} href={`/TOIMPLEMENT`}>
+        <Link className={styles.viewToggle} href={`/resources/${link}`}>
           See all resources &gt;
         </Link>
       </div>
