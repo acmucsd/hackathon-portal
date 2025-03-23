@@ -5,7 +5,6 @@ import styles from './style.module.scss';
 
 import type { Resource } from '../../sections/Resources/resources';
 
-
 interface ResourceCardProps {
   resource: Resource;
   className?: string;
@@ -14,23 +13,17 @@ interface ResourceCardProps {
   interactive?: boolean;
 }
 
-const ResourceCard = ({
-  resource,
-  className,
-  borderless,
-  hideInfo,
-}: ResourceCardProps) => {
-  const {title, link, resource_type, cover_image } = resource;
+const ResourceCard = ({ resource, className, borderless, hideInfo }: ResourceCardProps) => {
+  const { title, link, resource_type, cover_image } = resource;
 
   const Component = 'div';
 
   return (
     <>
-       <Component
-        data-community={"General"}
+      <Component
+        data-community={'General'}
         data-disabled={borderless}
         className={`${styles.container} ${borderless ? '' : styles.bordered} ${className || ''} `}
-
       >
         <div className={styles.image}>
           <Image

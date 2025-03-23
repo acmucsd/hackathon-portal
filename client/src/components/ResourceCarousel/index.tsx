@@ -1,4 +1,4 @@
-import Carousel  from '../Carousel';
+import Carousel from '../Carousel';
 import Typography from '@/components/Typography';
 
 import DiamondFriends from '@/../../public/assets/diamond-friends.svg';
@@ -23,7 +23,6 @@ const ResourceCarousel = ({
   placeholder,
   className = '',
 }: ResourceCarousel) => {
-
   return (
     <div className={`${styles.wrapper} ${className}`}>
       <div className={styles.header}>
@@ -32,21 +31,14 @@ const ResourceCarousel = ({
             {title}
           </Typography>
         </div>
-        <Link
-          className={styles.viewToggle}
-          href={`/TOIMPLEMENT`}
-        >
+        <Link className={styles.viewToggle} href={`/TOIMPLEMENT`}>
           See all resources &gt;
         </Link>
       </div>
       {resources.length > 0 ? (
         <Carousel>
           {resources.map(resource => (
-            <ResourceCard
-              className={styles.card}
-              key={resource.title}
-              resource={resource}
-            />
+            <ResourceCard className={styles.card} key={resource.title} resource={resource} />
           ))}
         </Carousel>
       ) : (
