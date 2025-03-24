@@ -3,8 +3,17 @@
 .wrapper {
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: auto;
+  grid-template-areas: 'main';
+}
+.video,
+.svg {
+  grid-area: main;
 }
 .video {
   max-width: 100%;
+  background-color: black;
+}
+.svg {
+  position: relative;
+  z-index: 1;
 }

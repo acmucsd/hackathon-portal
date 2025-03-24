@@ -1,0 +1,40 @@
+@use '@/styles/vars.scss' as vars;
+
+.gradient {
+  display: flex;
+  background-image: conic-gradient(
+    #ff6d6d 0turn,
+    #fda44e 0.17turn,
+    #ffdc24 0.35turn,
+    #38cf6b 0.53turn,
+    #62b0ff 0.71turn,
+    #816dff 0.88turn,
+    #ff6d6d 1turn
+  );
+  padding: 1rem;
+  border-radius: 2rem;
+  transform: rotate(45deg) scale(#{sqrt(0.5)});
+  max-width: 20rem;
+  margin: 0 auto;
+}
+
+.svg {
+  background-color: white;
+  padding: 0.5rem;
+  border-radius: 1rem;
+  fill: black;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+}
+
+.finderOutline {
+  rx: 2;
+  fill: none;
+  stroke: black;
+  stroke-width: 2;
+}
+
+.finderCenter {
+  rx: 2;
+}
