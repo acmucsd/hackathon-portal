@@ -22,6 +22,7 @@ interface ApplicationReviewProps {
   alreadySubmitted: boolean;
   prev: string;
   next: string;
+  allowChanges: boolean;
 }
 
 const ApplicationReview = ({
@@ -31,6 +32,7 @@ const ApplicationReview = ({
   alreadySubmitted,
   prev,
   next,
+  allowChanges,
 }: ApplicationReviewProps) => {
   const router = useRouter();
 
@@ -83,14 +85,16 @@ const ApplicationReview = ({
 
       <ApplicationResponse responses={responses} />
 
-      <div className={styles.buttonRow}>
-        <Button href="/apply" variant="secondary">
-          Make Changes
-        </Button>
-        <Button submit disabled={!responsesLoaded}>
-          {alreadySubmitted ? 'Update' : 'Submit'}
-        </Button>
-      </div>
+      {allowChanges ? (
+        <div className={styles.buttonRow}>
+          <Button href="/apply" variant="secondary">
+            Make Changes
+          </Button>
+          <Button submit disabled={!responsesLoaded}>
+            {alreadySubmitted ? 'Update' : 'Submit'}
+          </Button>
+        </div>
+      ) : null}
     </Card>
   );
 };
@@ -109,7 +113,7 @@ const ApplicationReviewWrapped = ({
       .getItem<Responses | null>(SAVED_RESPONSES_KEY)
       .then(draftResponses => {
         if (draftResponses) {
-          setResponses({ ...submittedResponses, ...draftResponses });
+          setResponses(submittedResponses => ({ ...submittedResponses, ...draftResponses }));
         }
       })
       .finally(() => setResponsesLoaded(true));

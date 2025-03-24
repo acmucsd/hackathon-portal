@@ -3,6 +3,8 @@ import {
   ApplicationStatus,
   ApplicationDecision,
   UserAccessType,
+  EventType,
+  Day,
 } from './Enums';
 
 // User responses
@@ -79,6 +81,43 @@ export interface SubmitApplicationResponse extends ApiResponse {
 }
 
 export interface DeleteApplicationResponse extends ApiResponse {}
+
+// Event responses
+export interface PublicEvent {
+  uuid: string;
+  name: string;
+  type: EventType;
+  host: string;
+  location: string;
+  locationLink?: string;
+  description: string;
+  day: Day;
+  startTime: string;
+  endTime: string;
+  published: boolean;
+}
+
+export interface CreateEventResponse extends ApiResponse {
+  event: PublicEvent;
+}
+
+export interface GetAllEventsResponse extends ApiResponse {
+  events: PublicEvent[];
+}
+
+export interface GetPublishedEventsResponse extends ApiResponse {
+  events: PublicEvent[];
+}
+
+export interface GetOneEventResponse extends ApiResponse {
+  event: PublicEvent;
+}
+
+export interface UpdateEventResponse extends ApiResponse {
+  event: PublicEvent;
+}
+
+export interface DeleteEventResponse extends ApiResponse {}
 
 // Admin responses
 export interface GetApplicationDecisionResponse extends ApiResponse {

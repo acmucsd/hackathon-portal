@@ -24,6 +24,8 @@ export enum ApplicationDecision {
 
 export enum FormType {
   APPLICATION = 'APPLICATION',
+  LIABILITY_WAIVER = 'LIABILITY_WAIVER',
+  PHOTO_RELEASE = 'PHOTO_RELEASE',
 }
 
 export enum YesOrNo {
@@ -36,4 +38,16 @@ export enum Yes {
 }
 export enum MediaType {
   RESUME = 'RESUME',
+}
+
+export enum EventType {
+  INFO = 'INFO',
+  MAIN_EVENT = 'MAIN_EVENT',
+  SOCIAL = 'SOCIAL',
+  WORKSHOP = 'WORKSHOP',
+}
+
+export enum Day {
+  SATURDAY = 'SATURDAY',
+  SUNDAY = 'SUNDAY',
 }

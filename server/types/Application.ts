@@ -29,3 +29,11 @@ export interface CreateApplicationRequest {
 export interface UpdateApplicationRequest {
   application: Application;
 }
+
+
+export interface Waiver {
+  participantName: string;
+  dateOfBirth: string;
+  signature: string;
+  date: string;
+}

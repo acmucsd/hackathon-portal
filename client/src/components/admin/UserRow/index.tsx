@@ -2,7 +2,7 @@ import TableRow from '@/components/TableRow';
 import TableCell from '@/components/TableCell';
 import Button from '@/components/Button';
 import StatusTag from '@/components/StatusTag';
-import { PrivateProfile } from '@/lib/types/apiResponses';
+import { FullProfile } from '@/lib/types/apiResponses';
 import { ApplicationStatus } from '@/lib/types/enums';
 import styles from './style.module.scss';
 
@@ -12,17 +12,21 @@ const dateFormat = new Intl.DateTimeFormat('en-US', {
 });
 
 interface UserRowProps {
-  user: PrivateProfile;
+  user: FullProfile;
 }
 
 const UserRow = ({ user }: UserRowProps) => {
+  const displayStatus =
+    user.applicationStatus === ApplicationStatus.SUBMITTED
+      ? user.applicationDecision
+      : user.applicationStatus;
   return (
     <TableRow>
       <TableCell>
         {user.firstName} {user.lastName}
       </TableCell>
       <TableCell>
-        <StatusTag status={user.applicationStatus} />
+        <StatusTag status={displayStatus} />
       </TableCell>
       <TableCell className={styles.dateField}>
         {dateFormat.format(new Date(user.createdAt))}

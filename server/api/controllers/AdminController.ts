@@ -114,5 +114,19 @@ export class AdminController {
     return { error: null, application: userWithApp };
   }
 
+  @UseBefore(UserAuthentication)
+  @Get('/waivers/:id')
+  async getWaiversById(
+    @AuthenticatedUser() currentUser: UserModel,
+    @Params() params: IdParam,
+  ): Promise<GetFormsResponse> {
+    if (!PermissionsService.canViewAllApplications(currentUser))
+      throw new ForbiddenError();
+
+    const user = await this.userService.findById(params.id);
+    const responses = await this.responseService.getUserWaivers(user);
+    return { error: null, responses: responses };
+  }
+
 
 }
