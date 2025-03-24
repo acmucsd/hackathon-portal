@@ -8,6 +8,7 @@ import FAQ, { FAQQuestion } from '../FAQAccordion';
 import DashboardStatus from '../DashboardStatus';
 import TimelineItem from '../TimelineItem';
 import { PrivateProfile } from '@/lib/types/apiResponses';
+import QrCode from '../QrCode';
 
 type Status = 'NOT_SUBMITTED' | 'SUBMITTED' | 'WITHDRAWN' | 'ACCEPTED' | 'REJECTED' | 'CONFIRMED';
 
@@ -47,6 +48,7 @@ const Dashboard = ({ faq, timeline, user }: DashboardProps) => {
           Application Status
         </Typography>
         <DashboardStatus status={user.applicationStatus as Status} timeline={timeline} />
+        <QrCode data="I play Pokemon Go.. every day!" />
       </Card>
       <Card gap={1.5} className={`${styles.card} ${styles.timeline}`}>
         <Typography variant="headline/heavy/small" component="h2">
