@@ -1,0 +1,10 @@
+@use '@/styles/vars.scss' as vars;
+
+.wrapper {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto;
+}
+.video {
+  max-width: 100%;
+}
