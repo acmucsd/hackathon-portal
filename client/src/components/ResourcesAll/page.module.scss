@@ -10,7 +10,7 @@
 
 .wrapper {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 2rem;
-  width: 100%;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 320px));
+  grid-gap: 2rem;
+  justify-content: flex-start;
 }
