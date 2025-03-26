@@ -8,7 +8,7 @@ import type {
   UpdateApplicationDecisionResponse,
   ResponseModel,
   PrivateProfile,
-  HiddenProfile,
+  FullProfile,
 } from '@/lib/types/apiResponses';
 import { ApplicationDecision } from '@/lib/types/enums';
 import axios from 'axios';
@@ -50,7 +50,7 @@ export const getApplication = async (token: string, uuid: string): Promise<Respo
  * @param token
  * @returns All users application
  */
-export const getUsers = async (token: string): Promise<PrivateProfile[]> => {
+export const getUsers = async (token: string): Promise<FullProfile[]> => {
   const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.users}`;
   const response = await axios.get<GetUsersResponse>(requestUrl, {
     headers: {
@@ -82,7 +82,7 @@ export const getUserWithApplication = async (token: string, id: string): Promise
  * @param id
  * @returns User's profile with decision
  */
-export const getApplicationDecision = async (token: string, id: string): Promise<HiddenProfile> => {
+export const getApplicationDecision = async (token: string, id: string): Promise<FullProfile> => {
   const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.application}/${id}/decision`;
   const response = await axios.get<GetApplicationDecisionResponse>(requestUrl, {
     headers: {
@@ -102,7 +102,7 @@ export const updateApplicationDecision = async (
   token: string,
   id: string,
   applicationDecision: ApplicationDecision
-): Promise<HiddenProfile> => {
+): Promise<FullProfile> => {
   const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.application}/${id}/decision`;
   const response = await axios.post<UpdateApplicationDecisionResponse>(
     requestUrl,

@@ -6,19 +6,25 @@ import Typography from '@/components/Typography';
 import Button from '@/components/Button';
 import TimelineItem from '@/components/TimelineItem';
 import ApplicationCount from '../ApplicationCount';
-import { PrivateProfile, ResponseModel } from '@/lib/types/apiResponses';
+import { PrivateProfile, FullProfile } from '@/lib/types/apiResponses';
+import { ApplicationDecision, ApplicationStatus } from '@/lib/types/enums';
 import { Deadlines } from '@/components/Dashboard';
 
 interface AdminDashboardProps {
   timeline: Deadlines;
   user: PrivateProfile;
-  applications: ResponseModel[];
+  applications: FullProfile[];
 }
 
 const AdminDashboard = ({ timeline, user, applications }: AdminDashboardProps) => {
-  // Haven't implemented reviewing apps so placeholder for pending apps
-  const pendingApplications = applications.length;
-  const totalApplications = applications.length;
+  const pendingApplications = applications.filter(
+    user =>
+      user.applicationDecision === ApplicationDecision.NO_DECISION &&
+      user.applicationStatus === ApplicationStatus.SUBMITTED
+  ).length;
+  const totalApplications = applications.filter(
+    user => user.applicationStatus !== ApplicationStatus.NOT_SUBMITTED
+  ).length;
 
   return (
     <div className={styles.container}>
@@ -38,8 +44,7 @@ const AdminDashboard = ({ timeline, user, applications }: AdminDashboardProps) =
       </Card>
       <Card gap={1.5} className={`${styles.card} ${styles.status}`}>
         <ApplicationCount pendingApps={pendingApplications} totalApps={totalApplications} />
-        {/* Link to Sean's application review page */}
-        <Button href="/review">Continue Reviewing</Button>
+        <Button href="/manageUsers">Continue Reviewing</Button>
       </Card>
       <Card gap={1.5} className={`${styles.card} ${styles.timeline}`}>
         <Typography variant="headline/heavy/small" component="h2">
