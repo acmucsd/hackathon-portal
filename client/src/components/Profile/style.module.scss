@@ -1,57 +1,28 @@
 @use '../../styles/vars.scss' as vars;
 
-.main {
-  flex: auto;
+.profileContainer {
   display: flex;
   flex-direction: column;
-  gap: 10rem;
-  padding: 6rem var(--side-padding);
-}
+  gap: 2rem;
 
-.profile {
-  margin: 0 auto;
-  max-width: 646px;
-  width: 100%;
-
-  .profileHeader {
+  .formsContainer {
     display: flex;
-    align-items: center;
-    gap: 1rem;
-
-    .editBtn,
-    .closeBtn {
-      flex: none;
-      cursor: pointer;
-    }
-
-    .closeBtn {
-      margin-left: auto;
-    }
-
-    .logoutBtn {
-      margin-left: auto;
-    }
-  }
-
-  .profileContent {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-
-  .buttonGroup {
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.5rem;
+    width: 100%;
+    gap: 2rem;
 
     @media screen and (max-width: vars.$breakpoint-md) {
-      .discardButton {
-        display: none;
-      }
+      flex-direction: column;
+    }
+  }
 
-      .saveButton {
-        width: 100%;
-      }
+  .liability,
+  .photo {
+    flex: 1 1 50%;
+    display: flex;
+    align-items: flex-start;
+
+    a {
+      width: 100%;
     }
   }
 }

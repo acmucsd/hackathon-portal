@@ -1,148 +1,106 @@
-'use client';
-
-import { useState } from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import Button from '@/components/Button';
-import Card from '@/components/Card';
+import ProfileCard from '@/components/ProfileCard';
+import ApplicationCard from '@/components/ApplicationCard';
 import Heading from '@/components/Heading';
-import TextField from '@/components/TextField';
-import CloseIcon from '../../../public/assets/icons/close.svg';
-import EditIcon from '../../../public/assets/icons/edit.svg';
-import { UserAPI } from '@/lib/api';
-import { useWindowSize } from '@/lib/hooks/useWindowSize';
-import isEmail from 'validator/lib/isEmail';
+import StatusTag from '@/components/StatusTag';
+import Typography from '@/components/Typography';
+import Card from '@/components/Card';
+import Button from '@/components/Button';
 import styles from './style.module.scss';
-import logout from './logout';
-import showToast from '@/lib/showToast';
-
-interface UpdateProfileValues {
-  firstName: string;
-  lastName: string;
-  email: string;
-}
+import { ApplicationStatus, FormType } from '@/lib/types/enums';
+import { PrivateProfile, ResponseModel } from '@/lib/types/apiResponses';
 
 interface ProfileClientProps {
-  user: {
-    firstName: string;
-    lastName: string;
-    email: string;
-  };
+  user: PrivateProfile;
+  responses: ResponseModel[];
 }
 
-const Profile = ({ user }: ProfileClientProps) => {
-  const size = useWindowSize();
-  const isMobile = (size.width ?? 0) <= 870;
-  const [editProfile, setEditProfile] = useState(false);
-  const [currentUser, setCurrentUser] = useState(user);
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<UpdateProfileValues>({
-    defaultValues: currentUser,
-  });
-
-  const onSubmit: SubmitHandler<UpdateProfileValues> = async updateProfile => {
-    const updatedUser = await UserAPI.updateCurrentUserProfile(updateProfile);
-    if (typeof updatedUser === 'string') {
-      showToast('Changes failed to save', updatedUser);
-    } else {
-      setCurrentUser(updatedUser);
-      setEditProfile(prevState => !prevState);
-      reset(updatedUser);
-    }
-  };
-
-  const clearFields = () => {
-    reset(currentUser);
-    setEditProfile(prevState => !prevState);
-  };
+const Profile = ({ user, responses }: ProfileClientProps) => {
+  const applicationStatus = user.applicationStatus;
+  const application = responses.find(response => response.formType === FormType.APPLICATION);
+  const liabilitySubmitted = !!responses.find(
+    response => response.formType === FormType.LIABILITY_WAIVER
+  );
+  const photoReleaseSubmitted = !!responses.find(
+    response => response.formType === FormType.PHOTO_RELEASE
+  );
 
   return (
-    <main className={styles.main}>
-      <div className={styles.profile}>
-        <Card gap={2}>
-          <div className={styles.profileHeader}>
-            <Heading>Your Profile</Heading>
-            {isMobile && editProfile ? (
-              <CloseIcon className={styles.closeBtn} onClick={() => clearFields()} />
+    <div className={styles.profileContainer}>
+      <ProfileCard user={user} />
+      {applicationStatus === ApplicationStatus.ACCEPTED && (
+        <div className={styles.formsContainer}>
+          <Card gap={1.5} className={styles.liability}>
+            <Heading>Liability Form Status</Heading>
+            <StatusTag
+              status={
+                liabilitySubmitted ? ApplicationStatus.SUBMITTED : ApplicationStatus.NOT_SUBMITTED
+              }
+            ></StatusTag>
+            {!liabilitySubmitted ? (
+              <>
+                <Typography variant="body/large">
+                  Our records have indicated that you have not started on your liability waiver.
+                  Click below to begin your hacker journey!
+                </Typography>
+                <Typography variant="body/large">
+                  Please note that forms are due on April 04, 2025. Reference the hackathon timeline
+                  for more information.
+                </Typography>
+                <Button href="/liability">Complete Now</Button>
+              </>
             ) : (
-              <EditIcon className={styles.editBtn} onClick={() => clearFields()} />
+              <>
+                <Typography variant="body/large">
+                  Thank you for completing your liability waiver! You&apos;re one step closer to
+                  your hacker journey.
+                </Typography>
+                <Typography variant="body/large">
+                  Remember, the hackathon will take place on April 5-6, 2025. We look forward to
+                  seeing you there!
+                </Typography>
+              </>
             )}
-            {!editProfile ? (
-              <Button variant="tertiary" onClick={() => logout()} className={styles.logoutBtn}>
-                Log out
-              </Button>
-            ) : null}
-          </div>
-          <div className={styles.profileContent}>
-            <TextField
-              variant="horizontal"
-              id="firstName"
-              label="First Name"
-              error={errors.firstName}
-              formRegister={register('firstName', {
-                required: 'Missing input/field.',
-              })}
-              type="text"
-              autoComplete="given-name"
-              disabled={!editProfile}
-            />
-            <TextField
-              variant="horizontal"
-              id="lastName"
-              label="Last Name"
-              error={errors.lastName}
-              formRegister={register('lastName', {
-                required: 'Missing input/field.',
-              })}
-              type="text"
-              autoComplete="given-name"
-              disabled={!editProfile}
-            />
-            <TextField
-              variant="horizontal"
-              id="email"
-              label="Email Address"
-              error={errors.email}
-              formRegister={register('email', {
-                required: 'Missing input/field.',
-                validate: {
-                  isValidEmail: value => isEmail(value) || 'Invalid email',
-                  isEduDomain: value =>
-                    value?.endsWith('.edu') ||
-                    value?.endsWith('.ca') ||
-                    'Please enter a university email address.',
-                },
-              })}
-              type="text"
-              autoComplete="given-name"
-              disabled
-            />
-          </div>
-          {editProfile && (
-            <div className={styles.buttonGroup}>
-              <Button
-                className={styles.discardButton}
-                onClick={() => clearFields()}
-                variant="tertiary"
-              >
-                Discard Changes
-              </Button>
-              <Button
-                className={styles.saveButton}
-                onClick={handleSubmit(onSubmit)}
-                variant="primary"
-              >
-                Save
-              </Button>
-            </div>
-          )}
-        </Card>
-      </div>
-    </main>
+          </Card>
+          <Card gap={1.5} className={styles.photo}>
+            <Heading>Photo Release Form Status</Heading>
+            <StatusTag
+              status={
+                photoReleaseSubmitted
+                  ? ApplicationStatus.SUBMITTED
+                  : ApplicationStatus.NOT_SUBMITTED
+              }
+            ></StatusTag>
+            {!photoReleaseSubmitted ? (
+              <>
+                <Typography variant="body/large">
+                  Our records have indicated that you have not started on your photo release form.
+                  Click below to begin your hacker journey!
+                </Typography>
+                <Typography variant="body/large">
+                  Please note that forms are due on April 04, 2025. Reference the hackathon timeline
+                  for more information.
+                </Typography>
+                <Button href="/photoRelease">Complete Now</Button>
+              </>
+            ) : (
+              <>
+                <Typography variant="body/large">
+                  Thank you for completing your photo release form! You&apos;re one step closer to
+                  your hacker journey.
+                </Typography>
+                <Typography variant="body/large">
+                  Remember, the hackathon will take place on April 5-6, 2025. We look forward to
+                  seeing you there!
+                </Typography>
+              </>
+            )}
+          </Card>
+        </div>
+      )}
+      {application && (
+        <ApplicationCard application={application} applicationStatus={user.applicationStatus} />
+      )}
+    </div>
   );
 };
 

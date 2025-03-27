@@ -13,6 +13,8 @@ const config = {
       response: {
         response: '/response',
         application: '/response/application',
+        liabilityWaiver: '/response/liability-waiver',
+        photoRelease: '/response/photo-release',
       },
       admin: {
         applications: '/admin/applications',
