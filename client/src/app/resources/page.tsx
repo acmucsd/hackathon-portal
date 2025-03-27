@@ -10,7 +10,9 @@ import styles from './page.module.scss';
 export default function ResourcePage() {
   return (
     <main className={styles.main}>
-      <ResourceBanner className={styles.banner} />
+      <div className={styles.bannerContainer}>
+        <ResourceBanner className={styles.banner} />
+      </div>
       <ResourceCarousel
         title="Frontend"
         resources={FRONTEND_RESOURCES}
