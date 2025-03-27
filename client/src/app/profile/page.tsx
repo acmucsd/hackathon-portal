@@ -3,14 +3,20 @@ import { getCookie } from '@/lib/services/CookieService';
 import { CookieType } from '@/lib/types/enums';
 import Profile from '@/components/Profile';
 import { redirect } from 'next/navigation';
+import styles from './page.module.scss';
 
 export default async function ProfilePage() {
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
 
   try {
     const fetchedUser = await UserAPI.getCurrentUser(accessToken);
-    const fetchedApplication = await ResponseAPI.getApplication(accessToken);
-    return <Profile user={fetchedUser} application={fetchedApplication} />;
+    const fetchedResponses = await ResponseAPI.getResponsesForCurrentUser(accessToken);
+    console.log(fetchedResponses);
+    return (
+      <main className={styles.main}>
+        <Profile user={fetchedUser} responses={fetchedResponses} />
+      </main>
+    );
   } catch (error) {
     redirect('/api/logout');
   }

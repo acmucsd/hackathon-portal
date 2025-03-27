@@ -24,10 +24,9 @@ interface UpdateProfileValues {
 
 interface ProfileCardProps {
   user: PrivateProfile;
-  className?: string;
 }
 
-const ProfileCard = ({ user, className }: ProfileCardProps) => {
+const ProfileCard = ({ user }: ProfileCardProps) => {
   const size = useWindowSize();
   const isMobile = (size.width ?? 0) <= 870;
   const [editProfile, setEditProfile] = useState(false);
@@ -59,7 +58,7 @@ const ProfileCard = ({ user, className }: ProfileCardProps) => {
   };
 
   return (
-    <Card gap={2} className={className}>
+    <Card gap={2}>
       <div className={styles.profileHeader}>
         <Heading>Your Profile</Heading>
         {isMobile && editProfile ? (

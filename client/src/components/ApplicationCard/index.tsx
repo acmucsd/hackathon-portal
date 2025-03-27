@@ -12,47 +12,42 @@ import styles from './style.module.scss';
 interface ApplicationCardProps {
   application: ResponseModel;
   applicationStatus: ApplicationStatus;
-  className?: string;
 }
 
-const ApplicationCard = ({ application, applicationStatus, className }: ApplicationCardProps) => {
+const ApplicationCard = ({ application, applicationStatus }: ApplicationCardProps) => {
   const responses: Record<string, string | string[] | File | any> = application.data;
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <Card gap={2} className={className}>
+    <Card gap={2}>
       <div className={styles.submissionHeader}>
         <Heading>Application Submission</Heading>
         <StatusTag status={applicationStatus} />
       </div>
-      <div
-        className={`${styles.responseContainer} ${expanded ? styles.expanded : styles.collapsed}`}
-      >
-        <dl className={styles.responseList}>
-          {appQuestions
-            .flatMap(step => step.questions)
-            .map(({ id, question }) => (
-              <Fragment key={id}>
-                <dt className={styles.question}>{question}</dt>
-                <dd className={styles.response}>
-                  {typeof responses[id] === 'string' ? (
-                    id === 'resumeLink' ? (
-                      <Button variant="secondary" href={responses[id]}>
-                        View Resume
-                      </Button>
-                    ) : (
-                      responses[id]
-                    )
-                  ) : Array.isArray(responses[id]) ? (
-                    responses[id].join(', ')
+      <dl className={`${styles.responseList} ${expanded ? styles.expanded : styles.collapsed}`}>
+        {appQuestions
+          .flatMap(step => step.questions)
+          .map(({ id, question }) => (
+            <Fragment key={id}>
+              <dt className={styles.question}>{question}</dt>
+              <dd className={styles.response}>
+                {typeof responses[id] === 'string' ? (
+                  id === 'resumeLink' ? (
+                    <Button variant="secondary" href={responses[id]}>
+                      View Resume
+                    </Button>
                   ) : (
-                    <em>No response.</em>
-                  )}
-                </dd>
-              </Fragment>
-            ))}
-        </dl>
-      </div>
+                    responses[id]
+                  )
+                ) : Array.isArray(responses[id]) ? (
+                  responses[id].join(', ')
+                ) : (
+                  <em>No response.</em>
+                )}
+              </dd>
+            </Fragment>
+          ))}
+      </dl>
       <Button variant="tertiary" onClick={() => setExpanded(!expanded)}>
         {expanded ? 'See Less' : 'See More'}
       </Button>

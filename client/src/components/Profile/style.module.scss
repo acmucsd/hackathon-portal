@@ -1,26 +1,37 @@
 @use '../../styles/vars.scss' as vars;
 
-.main {
-  flex: auto;
+.profileContainer {
   display: flex;
   flex-direction: column;
-  gap: 10rem;
-  padding: 6rem var(--side-padding);
-}
-
-.profileContainer {
-  display: grid;
-  grid-template-areas:
-    'profile profile'
-    'liability photo'
-    'application application';
   gap: 2rem;
-}
 
-.profile {
-  grid-area: profile;
-}
+  .formsContainer {
+    display: flex;
+    width: 100%;
+    gap: 2rem;
 
-.application {
-  grid-area: application;
+    @media screen and (max-width: vars.$breakpoint-md) {
+      flex-direction: column;
+    }
+  }
+
+  .liability {
+    flex: 1 1 50%;
+    display: flex;
+    align-items: flex-start;
+
+    a {
+      width: 100%;
+    }
+  }
+
+  .photo {
+    flex: 1 1 50%;
+    display: flex;
+    align-items: flex-start;
+
+    a {
+      width: 100%;
+    }
+  }
 }
