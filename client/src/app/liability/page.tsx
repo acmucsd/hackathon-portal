@@ -12,20 +12,21 @@ export default async function LiabilityPage() {
     redirect('/api/logout');
   }
 
+  let fetchedUser;
   try {
-    const fetchedUser = await UserAPI.getCurrentUser(accessToken);
-
-    // Only allow accepted participants to fill out liability form
-    if (fetchedUser.applicationStatus !== ApplicationStatus.ACCEPTED) {
-      redirect('/profile');
-    }
-
-    return (
-      <main className={styles.main}>
-        <LiabilityForm accessToken={accessToken} />
-      </main>
-    );
+    fetchedUser = await UserAPI.getCurrentUser(accessToken);
   } catch (error) {
     redirect('/api/logout');
   }
+
+  // Only allow accepted participants to fill out liability form
+  if (fetchedUser.applicationStatus !== ApplicationStatus.ACCEPTED) {
+    redirect('/profile');
+  }
+
+  return (
+    <main className={styles.main}>
+      <LiabilityForm accessToken={accessToken} />
+    </main>
+  );
 }
