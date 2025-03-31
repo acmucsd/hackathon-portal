@@ -11,7 +11,6 @@ export default async function ProfilePage() {
   try {
     const fetchedUser = await UserAPI.getCurrentUser(accessToken);
     const fetchedResponses = await ResponseAPI.getResponsesForCurrentUser(accessToken);
-    console.log(fetchedResponses);
     return (
       <main className={styles.main}>
         <Profile user={fetchedUser} responses={fetchedResponses} />
