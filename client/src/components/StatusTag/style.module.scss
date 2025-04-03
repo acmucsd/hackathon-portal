@@ -23,7 +23,8 @@
   }
 
   &.WITHDRAWN,
-  &.WAITLIST {
+  &.WAITLIST,
+  &.WAITLISTED {
     color: #8d490d;
     background-color: #ecdf98;
   }
