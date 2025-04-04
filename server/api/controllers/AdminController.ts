@@ -11,6 +11,7 @@ import { Service } from 'typedi';
 import { AuthenticatedUser } from '../decorators/AuthenticatedUser';
 import { UserModel } from '../../models/UserModel';
 import {
+  AttendEventResponse,
   GetApplicationDecisionResponse,
   GetFormResponse,
   GetFormsResponse,
@@ -20,9 +21,10 @@ import { UpdateApplicationDecisionRequest } from '../validators/AdminControllerR
 import { UserAuthentication } from '../middleware/UserAuthentication';
 import { UserService } from '../../services/UserService';
 import { ResponseService } from '../../services/ResponseService';
-import { IdParam } from '../validators/GenericRequests';
+import { IdParam, UuidAndIdParam, UuidParam } from '../validators/GenericRequests';
 import PermissionsService from '../../services/PermissionsService';
 import { ApplicationStatus } from '../../types/Enums';
+import { AttendanceService } from '../../services/AttendanceService';
 
 @JsonController('/admin')
 @Service()
@@ -31,9 +33,12 @@ export class AdminController {
 
   private responseService: ResponseService;
 
-  constructor(userService: UserService, responseService: ResponseService) {
+  private attendanceService: AttendanceService;
+
+  constructor(userService: UserService, responseService: ResponseService, attendanceService: AttendanceService) {
     this.userService = userService;
     this.responseService = responseService;
+    this.attendanceService = attendanceService;
   }
 
   @UseBefore(UserAuthentication)
@@ -145,6 +150,36 @@ export class AdminController {
     const user = await this.userService.findById(params.id);
     const responses = await this.responseService.getUserWaivers(user);
     return { error: null, responses: responses };
+  }
+
+  @UseBefore(UserAuthentication)
+  @Get('/attendance/:uuid')
+  async getAttendanceForEvent(
+    @AuthenticatedUser() currentUser: UserModel,
+    @Params() params: UuidParam,
+  ) {
+    if (!PermissionsService.canViewAllApplications(currentUser))
+      throw new ForbiddenError();
+
+    const attendances = await this.attendanceService.getAttendancesForEvent(params.uuid);
+    return {
+      error: null,
+      attendances: attendances.map((attendance) => attendance.getPublicAttendance()),
+    };
+  }
+
+  @UseBefore(UserAuthentication)
+  @Post('/attendance/:uuid/:id')
+  async attendEvent(
+    @AuthenticatedUser() currentUser: UserModel,
+    @Params() params: UuidAndIdParam,
+  ): Promise<AttendEventResponse> {
+    if (!PermissionsService.canViewAllApplications(currentUser))
+      throw new ForbiddenError();
+
+    const attendance = await this.attendanceService.attendEvent(params.id, params.uuid);
+    const { event } = attendance.getPublicAttendance();
+    return { error: null, event };
   }
 
 }

@@ -1,6 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Day, EventType } from '../types/Enums';
 import { PublicEvent } from '../types/ApiResponses';
+import { AttendanceModel } from './AttendanceModel';
 
 @Entity('Event')
 export class EventModel {
@@ -40,6 +41,9 @@ export class EventModel {
 
   @Column()
   published: boolean;
+
+  @OneToMany((type) => AttendanceModel, (attendance) => attendance.event, { cascade: true })
+  attendances: AttendanceModel[];
 
   public getPublicEvent(): PublicEvent {
     return {
