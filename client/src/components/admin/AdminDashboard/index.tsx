@@ -10,6 +10,7 @@ import { PrivateProfile, FullProfile } from '@/lib/types/apiResponses';
 import { ApplicationDecision, ApplicationStatus } from '@/lib/types/enums';
 import { Deadlines } from '@/components/Dashboard';
 import Heading from '@/components/Heading';
+import QrCode from '@/components/QrCode';
 
 interface AdminDashboardProps {
   timeline: Deadlines;
@@ -45,6 +46,7 @@ const AdminDashboard = ({ timeline, user, applications }: AdminDashboardProps) =
       </Card>
       <Card gap={1.5} className={`${styles.card}`}>
         <Heading>QR Code Check-In</Heading>
+        <QrCode data="I play Pokemon Go.. every day!" />
         <Button href="/admin/scan">Scan QR Codes</Button>
       </Card>
       <Card gap={1.5} className={`${styles.card} ${styles.status}`}>
