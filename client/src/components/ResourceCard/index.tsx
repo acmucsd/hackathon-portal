@@ -14,7 +14,13 @@ interface ResourceCardProps {
   interactive?: boolean;
 }
 
-const ResourceCard = ({ resource, className, borderless, hideInfo, interactive=true }: ResourceCardProps) => {
+const ResourceCard = ({
+  resource,
+  className,
+  borderless,
+  hideInfo,
+  interactive = true,
+}: ResourceCardProps) => {
   const { title, link, resource_type, cover_image } = resource;
 
   const Component = interactive ? Link : 'div';
