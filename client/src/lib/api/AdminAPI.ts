@@ -1,13 +1,14 @@
 import config from '@/lib/config';
-import {
-  type GetApplicationsResponse,
-  type GetApplicationResponse,
-  type GetUsersResponse,
-  type GetUserApplicationResponse,
-  type GetApplicationDecisionResponse,
-  type UpdateApplicationDecisionResponse,
-  type ResponseModel,
-  type FullProfile,
+import type {
+  GetApplicationsResponse,
+  GetApplicationResponse,
+  GetUsersResponse,
+  GetUserApplicationResponse,
+  GetApplicationDecisionResponse,
+  UpdateApplicationDecisionResponse,
+  ResponseModel,
+  FullProfile,
+  GetFormsResponse,
   ConfirmUserStatusResponse,
 } from '@/lib/types/apiResponses';
 import { ApplicationDecision } from '@/lib/types/enums';
@@ -64,7 +65,7 @@ export const getUsers = async (token: string): Promise<FullProfile[]> => {
  * Get user's application based on user id
  * @param token
  * @param id
- * @returns All users application
+ * @returns User's application
  */
 export const getUserWithApplication = async (token: string, id: string): Promise<ResponseModel> => {
   const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.userApplication}/${id}`;
@@ -130,4 +131,20 @@ export const confirmUserStatus = async (token: string, id: string): Promise<Full
     },
   });
   return response.data.user;
+};
+
+/**
+ * Get user's waivers based on user id
+ * @param token
+ * @param id
+ * @returns User's waivers
+ */
+export const getWaiversById = async (token: string, id: string): Promise<ResponseModel[]> => {
+  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.waivers}/${id}`;
+  const response = await axios.get<GetFormsResponse>(requestUrl, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data.responses;
 };
