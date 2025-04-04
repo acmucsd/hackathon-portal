@@ -104,7 +104,7 @@ export class AdminController {
 
     const user = await this.userService.updateUserStatus(
       params.id,
-      ApplicationStatus.CONFIRMED
+      ApplicationStatus.CONFIRMED,
     );
     return { error: null, user };
   }
