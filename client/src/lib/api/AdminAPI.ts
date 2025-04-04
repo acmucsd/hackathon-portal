@@ -10,6 +10,8 @@ import type {
   FullProfile,
   GetFormsResponse,
   ConfirmUserStatusResponse,
+  AttendEventResponse,
+  PublicEvent,
 } from '@/lib/types/apiResponses';
 import { ApplicationDecision } from '@/lib/types/enums';
 import axios from 'axios';
@@ -147,4 +149,28 @@ export const getWaiversById = async (token: string, id: string): Promise<Respons
     },
   });
   return response.data.responses;
+};
+
+/**
+ * Get user's waivers based on user id
+ * @param token
+ * @param id
+ * @returns User's waivers
+ */
+export const attendEvent = async (
+  token: string,
+  userId: string,
+  eventId: string
+): Promise<PublicEvent> => {
+  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.attendance}/${eventId}/${userId}`;
+  const response = await axios.post<AttendEventResponse>(
+    requestUrl,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data.event;
 };
