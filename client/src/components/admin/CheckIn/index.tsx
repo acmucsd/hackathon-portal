@@ -13,6 +13,9 @@ const CheckIn = ({}: CheckInProps) => {
   const handleScan = useCallback((data: string) => {
     console.log(data);
     new Audio('/assets/sounds/scan-success (TEMPORARY!!!).mp3').play();
+    if ('vibrate' in navigator) {
+      navigator.vibrate(100);
+    }
   }, []);
 
   return (

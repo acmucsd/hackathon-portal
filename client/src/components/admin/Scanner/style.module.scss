@@ -8,12 +8,29 @@
 .video,
 .svg {
   grid-area: main;
+  max-width: 100%;
 }
 .video {
-  max-width: 100%;
   background-color: black;
+  border-radius: 1rem;
 }
 .svg {
   position: relative;
   z-index: 1;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 3;
+  vector-effect: non-scaling-stroke;
+}
+.svg circle {
+  transform-origin: center;
+  animation: pulse infinite ease-in-out 1s alternate;
+}
+@keyframes pulse {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(0.95);
+  }
 }

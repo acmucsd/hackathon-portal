@@ -9,6 +9,7 @@ import ApplicationCount from '../ApplicationCount';
 import { PrivateProfile, FullProfile } from '@/lib/types/apiResponses';
 import { ApplicationDecision, ApplicationStatus } from '@/lib/types/enums';
 import { Deadlines } from '@/components/Dashboard';
+import Heading from '@/components/Heading';
 
 interface AdminDashboardProps {
   timeline: Deadlines;
@@ -41,6 +42,10 @@ const AdminDashboard = ({ timeline, user, applications }: AdminDashboardProps) =
           quality={100}
           className={styles.bannerImage}
         />
+      </Card>
+      <Card gap={1.5} className={`${styles.card}`}>
+        <Heading>QR Code Check-In</Heading>
+        <Button href="/admin/scan">Scan QR Codes</Button>
       </Card>
       <Card gap={1.5} className={`${styles.card} ${styles.status}`}>
         <ApplicationCount pendingApps={pendingApplications} totalApps={totalApplications} />

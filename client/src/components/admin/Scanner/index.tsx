@@ -12,11 +12,13 @@ const Scanner = ({ onScan }: ScannerProps) => {
   const video = useRef<HTMLVideoElement>(null);
   const scanner = useRef<QrScanner>(null);
   const lastScanned = useRef('');
+  const [videoSize, setVideoSize] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
-    if (video.current && !scanner.current) {
+    const videoElem = video.current;
+    if (videoElem && !scanner.current) {
       scanner.current = new QrScanner(
-        video.current,
+        videoElem,
         result => {
           // Prevent scanning the same QR code again
           if (lastScanned.current !== result.data) {
@@ -26,17 +28,29 @@ const Scanner = ({ onScan }: ScannerProps) => {
         },
         {}
       );
+      scanner.current.start().then(() => {
+        setVideoSize({ width: videoElem.videoWidth, height: videoElem.videoHeight });
+      });
     }
     return () => {
       scanner.current?.destroy();
+      scanner.current = null;
     };
   }, [onScan]);
 
   return (
     <div className={styles.wrapper}>
       <video className={styles.video} ref={video} />
-      <svg xmlns="http://www.w3.org/2000/svg" className={styles.svg}>
-        <circle cx="50" cy="50" r="40" stroke="currentColor" />
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className={styles.svg}
+        viewBox={`0 0 ${videoSize.width} ${videoSize.height}`}
+      >
+        <circle
+          cx={videoSize.width / 2}
+          cy={videoSize.height / 2}
+          r={Math.min(videoSize.width / 2, videoSize.height / 2) * (2 / 3)}
+        />
       </svg>
     </div>
   );
