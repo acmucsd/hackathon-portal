@@ -6,7 +6,8 @@
   gap: 1rem;
   color: vars.$white;
 
-  input {
+  input,
+  textarea {
     border-radius: 8px;
     border: 2px solid vars.$card-stroke;
     background: vars.$card-bg;
@@ -39,8 +40,17 @@
 
   /* Horizontal Layout */
   &.horizontal {
+    flex-direction: row;
     align-items: center;
-    flex-flow: row wrap;
+
+    @media screen and (max-width: vars.$breakpoint-md) {
+      flex-direction: column;
+      align-items: flex-start;
+
+      input {
+        width: 100%;
+      }
+    }
 
     label {
       flex: 0 0 150px;

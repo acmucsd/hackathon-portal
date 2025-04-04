@@ -3,9 +3,18 @@
 .dropdownWrapper {
   cursor: pointer;
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 9px;
   position: relative;
+
+  @media screen and (max-width: vars.$breakpoint-md) {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .selector {
+      width: 100%;
+    }
+  }
 
   &.readOnly {
     cursor: unset;
@@ -21,6 +30,8 @@
     border-radius: 8px;
     border: 2px solid vars.$card-stroke;
     padding: 12px;
+    background-color: vars.$card-bg;
+    flex-grow: 1;
 
     select {
       appearance: none;

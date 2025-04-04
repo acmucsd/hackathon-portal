@@ -52,6 +52,33 @@ export function reportError(title: string, error: unknown) {
   showToast(title, getErrorMessage(error));
 }
 
+/**
+ * Formats message into title case
+ *
+ * @param message - Message to be formatted
+ */
+export function formatTitleCase(message: string) {
+  return message
+    .replace('_', ' ')
+    .toLowerCase()
+    .replace(/\b\w/g, c => c.toUpperCase());
+}
+
+/**
+ * Formats military time to 12-hour time
+ *
+ * @param time - Time to be formatted
+ */
+export function formatTime(time: string) {
+  const [hours, minutes] = time.split(':').map(Number);
+
+  const period = hours >= 12 ? 'PM' : 'AM';
+  const adjustedHours = hours % 12 || 12;
+  const formattedTime = `${adjustedHours}:${minutes.toString().padStart(2, '0')} ${period}`;
+
+  return formattedTime;
+}
+
 export function canUserSubmitWaivers(applicationStatus: ApplicationStatus): boolean {
   return (
     applicationStatus === ApplicationStatus.ACCEPTED ||

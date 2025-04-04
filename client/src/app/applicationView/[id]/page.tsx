@@ -14,7 +14,7 @@ export default async function ApplicationReviewPage({ params }: ApplicationRevie
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
 
   if (!accessToken) {
-    redirect('/login');
+    redirect('/api/logout');
   }
 
   try {
@@ -33,6 +33,6 @@ export default async function ApplicationReviewPage({ params }: ApplicationRevie
       </main>
     );
   } catch (error) {
-    redirect('/login');
+    redirect('/api/logout');
   }
 }

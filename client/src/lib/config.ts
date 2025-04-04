@@ -24,6 +24,13 @@ const config = {
         waivers: '/admin/waivers',
         confirmUser: '/admin/user/confirm',
       },
+      event: {
+        createEvent: '/event',
+        getAllEvents: '/event',
+        getEvent: '/event',
+        updateEvent: '/event',
+        deleteEvent: '/event',
+      },
     },
   },
 };
