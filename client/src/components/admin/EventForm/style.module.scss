@@ -4,6 +4,26 @@
   display: flex;
   flex-direction: column;
 
+  .modalContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+
+    .confirmModal {
+      background-color: vars.$popup-bg;
+    }
+
+    @media screen and (max-width: vars.$breakpoint-md) {
+      padding: 1rem;
+    }
+  }
+
   .form {
     display: flex;
     flex-direction: column;
@@ -19,21 +39,16 @@
         align-items: flex-start;
       }
     }
+  }
 
-    .buttonContainer {
-      align-self: flex-end;
-      display: flex;
-      gap: 1rem;
+  .buttonContainer {
+    align-self: flex-end;
+    display: flex;
+    gap: 1rem;
 
-      @media screen and (max-width: vars.$breakpoint-md) {
-        flex-direction: column;
-        align-self: stretch;
-      }
-
-      .deleteButton {
-        background-color: vars.$error-dark-red;
-        color: vars.$white;
-      }
+    @media screen and (max-width: vars.$breakpoint-md) {
+      flex-direction: column;
+      align-self: stretch;
     }
   }
 
@@ -43,5 +58,10 @@
     align-self: flex-start;
     min-width: 0px;
     padding: 0px;
+  }
+
+  .deleteButton {
+    background-color: vars.$error-dark-red;
+    color: vars.$white;
   }
 }

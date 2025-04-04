@@ -7,6 +7,7 @@ import StatusTag from '@/components/StatusTag';
 import { PublicEvent } from '@/lib/types/apiResponses';
 import EditIcon from '../../../public/assets/icons/edit.svg';
 import UpArrow from '../../../public/assets/icons/up-arrow.svg';
+import { formatTime } from '@/lib/utils';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './style.module.scss';
@@ -16,17 +17,7 @@ interface EventRowProps {
   editable?: boolean;
 }
 
-const formatTime = (time: string) => {
-  const [hours, minutes] = time.split(':').map(Number);
-
-  const period = hours >= 12 ? 'PM' : 'AM';
-  const adjustedHours = hours % 12 || 12;
-  const formattedTime = `${adjustedHours}:${minutes.toString().padStart(2, '0')} ${period}`;
-
-  return formattedTime;
-};
-
-const EventRow = ({ event, editable = true }: EventRowProps) => {
+const EventRow = ({ event, editable = false }: EventRowProps) => {
   const startTimeFormatted = formatTime(event.startTime);
   const endTimeFormatted = formatTime(event.endTime);
   const formattedDate = `${startTimeFormatted} - ${endTimeFormatted}`;
@@ -73,8 +64,10 @@ const EventRow = ({ event, editable = true }: EventRowProps) => {
           <TableCell className={styles.popupCell} colSpan={4}>
             <div className={styles.popupContent}>
               <div className={styles.popupHeader}>
-                <Typography variant="title/small">{event.name}</Typography>
-                <StatusTag status={event.type} />
+                <div className={styles.popupTitle}>
+                  <Typography variant="title/small">{event.name}</Typography>
+                  <StatusTag status={event.type} />
+                </div>
                 <EditIcon className={styles.editIcon} onClick={handleEdit} />
               </div>
               <Typography variant="body/medium">hosted by {event.host} </Typography>

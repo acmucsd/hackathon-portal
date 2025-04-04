@@ -3,8 +3,8 @@
 .locationButton {
   border: none !important;
   color: vars.$white !important;
-  padding: 0px;
-  justify-content: flex-start;
+  padding: 0px !important;
+  justify-content: flex-start !important;
 }
 
 .accordion,
@@ -12,12 +12,16 @@
   cursor: pointer;
 }
 
+.accordion {
+  transform: rotate(90deg);
+}
+
 .rotate {
   transform: rotate(180deg);
 }
 
 .popupRow {
-  background-color: #37393e;
+  background-color: vars.$popup-bg;
 
   .popupContent {
     display: flex;
@@ -26,7 +30,13 @@
 
     .popupHeader {
       display: flex;
-      gap: 1rem;
+      align-items: center;
+      justify-content: space-between;
+
+      .popupTitle {
+        display: flex;
+        gap: 1rem;
+      }
     }
   }
 }

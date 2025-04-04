@@ -62,3 +62,18 @@ export function formatTitleCase(message: string) {
     .toLowerCase()
     .replace(/\b\w/g, c => c.toUpperCase());
 }
+
+/**
+ * Formats military time to 12-hour time
+ *
+ * @param time - Time to be formatted
+ */
+export function formatTime(time: string) {
+  const [hours, minutes] = time.split(':').map(Number);
+
+  const period = hours >= 12 ? 'PM' : 'AM';
+  const adjustedHours = hours % 12 || 12;
+  const formattedTime = `${adjustedHours}:${minutes.toString().padStart(2, '0')} ${period}`;
+
+  return formattedTime;
+}

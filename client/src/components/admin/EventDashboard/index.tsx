@@ -1,18 +1,16 @@
 'use client';
 import Heading from '@/components/Heading';
 import Button from '@/components/Button';
-import Table from '@/components/Table';
 import Typography from '@/components/Typography';
-import TableHeader from '@/components/TableHeader';
-import TableCell from '@/components/TableCell';
-import EventItem from '@/components/EventItem';
-import EventRow from '@/components/EventRow';
+import EventTable from '@/components/EventTable';
 import EditIcon from '../../../../public/assets/icons/edit.svg';
 import { Day } from '@/lib/types/enums';
+import { useWindowSize } from '@/lib/hooks/useWindowSize';
 import { PublicEvent } from '@/lib/types/apiResponses';
 import { formatTitleCase } from '@/lib/utils';
 import { useState } from 'react';
 import styles from './style.module.scss';
+import EventList from '@/components/EventList';
 
 interface EventDashboardProps {
   events: PublicEvent[];
@@ -20,7 +18,13 @@ interface EventDashboardProps {
 
 const EventDashboard = ({ events }: EventDashboardProps) => {
   const [filterDay, setFilterDay] = useState(Day.SATURDAY);
+  const [allowEditPublished, setAllowEditPublished] = useState(false);
+  const [allowEditUnpublished, setAllowEditUnpublished] = useState(false);
+
   const headers = ['Time', 'Event', 'Type', 'Location'];
+
+  const size = useWindowSize();
+  const isSmall = (size.width ?? 0) <= 1024;
 
   const filterAndSortEvents = (events: PublicEvent[], day: Day, published: boolean) => {
     return events
@@ -53,46 +57,34 @@ const EventDashboard = ({ events }: EventDashboardProps) => {
         <div className={styles.events}>
           <div className={styles.titleHeader}>
             <Typography variant="title/medium">Published</Typography>
-            <EditIcon />
+            <EditIcon
+              className={styles.editIcon}
+              onClick={() => setAllowEditPublished(prev => !prev)}
+            />
           </div>
-          <Table>
-            <thead>
-              <TableHeader>
-                {headers.map(header => (
-                  <TableCell key={header} type="th">
-                    {header}
-                  </TableCell>
-                ))}
-              </TableHeader>
-            </thead>
-            <tbody>
-              {publishedEvents.map(event => (
-                <EventRow key={event.uuid} event={event} />
-              ))}
-            </tbody>
-          </Table>
+          {isSmall ? (
+            <EventList events={publishedEvents} editable={allowEditPublished} />
+          ) : (
+            <EventTable headers={headers} events={publishedEvents} editable={allowEditPublished} />
+          )}
         </div>
         <div className={styles.events}>
           <div className={styles.titleHeader}>
             <Typography variant="title/medium">Unpublished</Typography>
-            <EditIcon />
+            <EditIcon
+              className={styles.editIcon}
+              onClick={() => setAllowEditUnpublished(prev => !prev)}
+            />
           </div>
-          <Table>
-            <thead>
-              <TableHeader>
-                {headers.map(header => (
-                  <TableCell key={header} type="th">
-                    {header}
-                  </TableCell>
-                ))}
-              </TableHeader>
-            </thead>
-            <tbody>
-              {unpublishedEvents.map(event => (
-                <EventRow key={event.uuid} event={event} />
-              ))}
-            </tbody>
-          </Table>
+          {isSmall ? (
+            <EventList events={unpublishedEvents} editable={allowEditUnpublished} />
+          ) : (
+            <EventTable
+              headers={headers}
+              events={unpublishedEvents}
+              editable={allowEditUnpublished}
+            />
+          )}
         </div>
       </div>
     </div>

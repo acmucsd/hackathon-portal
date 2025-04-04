@@ -5,6 +5,7 @@ import TextField from '@/components/TextField';
 import Button from '@/components/Button';
 import Dropdown from '@/components/Dropdown';
 import ToggleSwitch from '@/components/ToggleSwitch';
+import Typography from '@/components/Typography';
 import Card from '@/components/Card';
 import Heading from '@/components/Heading';
 import { EventAPI } from '@/lib/api';
@@ -50,6 +51,10 @@ const EventForm = ({ accessToken, event }: EventFormProps) => {
 
   const onSubmit: SubmitHandler<PublicEvent> = async eventData => {
     try {
+      if (!eventData.locationLink?.trim()) {
+        delete eventData.locationLink;
+      }
+
       if (event) {
         const updatedEvent = await EventAPI.updateEvent(accessToken, eventData, event.uuid);
         if ('error' in updatedEvent) {
@@ -88,11 +93,36 @@ const EventForm = ({ accessToken, event }: EventFormProps) => {
     }
   };
 
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  const handleDeleteClick = () => setShowConfirm(true);
+  const handleCancel = () => setShowConfirm(false);
+  const handleConfirmDelete = () => {
+    deleteEvent();
+    setShowConfirm(false);
+  };
+
   return (
     <Card gap={2} className={styles.container}>
       <Button href="/manageEvents" variant="tertiary" className={styles.backButton}>
         {'< Back'}
       </Button>
+      {showConfirm && (
+        <div className={styles.modalContainer} onClick={handleCancel}>
+          <Card gap={1} className={styles.confirmModal}>
+            <Heading>Are you sure you want to delete this event?</Heading>
+            <Typography variant="body/large">
+              Click below to confirm the deletion of the event.
+            </Typography>
+            <div className={styles.buttonContainer}>
+              <Button className={styles.deleteButton} onClick={handleConfirmDelete}>
+                Yes, Delete
+              </Button>
+              <Button onClick={handleCancel}>Cancel</Button>
+            </div>
+          </Card>
+        </div>
+      )}
       <Heading>{currentEvent ? 'Modify Event' : 'Create Event'}</Heading>
       <hr className={styles.divider} />
       <div className={styles.form}>
@@ -219,7 +249,7 @@ const EventForm = ({ accessToken, event }: EventFormProps) => {
         <div className={styles.buttonContainer}>
           {event && (
             <>
-              <Button className={styles.deleteButton} onClick={deleteEvent}>
+              <Button className={styles.deleteButton} onClick={handleDeleteClick}>
                 Delete Event
               </Button>
               <Button variant="tertiary" onClick={discardChanges}>
