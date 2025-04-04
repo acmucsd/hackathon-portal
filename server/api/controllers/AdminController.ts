@@ -22,6 +22,7 @@ import { UserService } from '../../services/UserService';
 import { ResponseService } from '../../services/ResponseService';
 import { IdParam } from '../validators/GenericRequests';
 import PermissionsService from '../../services/PermissionsService';
+import { ApplicationStatus } from '../../types/Enums';
 
 @JsonController('/admin')
 @Service()
@@ -90,6 +91,24 @@ export class AdminController {
     return { error: null, user: user.getHiddenProfile() };
   }
 
+
+
+  @UseBefore(UserAuthentication)
+  @Post('/user/confirm/:id')
+  async confirmUserStatus(
+    @AuthenticatedUser() currentUser: UserModel,
+    @Params() params: IdParam,
+  ) {
+    if (!PermissionsService.canEditApplicationDecisions(currentUser))
+      throw new ForbiddenError();
+
+    const user = await this.userService.updateUserStatus(
+      params.id,
+      ApplicationStatus.CONFIRMED
+    );
+    return { error: null, user };
+  }
+
   @UseBefore(UserAuthentication)
   @Get('/users')
   async getUsers(@AuthenticatedUser() currentUser: UserModel) {
@@ -127,6 +146,5 @@ export class AdminController {
     const responses = await this.responseService.getUserWaivers(user);
     return { error: null, responses: responses };
   }
-
 
 }

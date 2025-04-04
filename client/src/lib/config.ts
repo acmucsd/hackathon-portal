@@ -21,6 +21,7 @@ const config = {
         application: '/admin/application',
         users: '/admin/users',
         userApplication: '/admin/user',
+        confirmUser: '/admin/user/confirm',
       },
     },
   },
