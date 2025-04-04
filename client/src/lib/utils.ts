@@ -1,6 +1,7 @@
 import type { ApiResponse, CustomErrorBody, ValidatorError } from '@/lib/types/apiResponses';
 import showToast from '@/lib/showToast';
 import { AxiosError } from 'axios';
+import { ApplicationStatus } from './types/enums';
 
 /**
  * Parse nested error object for messages
@@ -76,4 +77,11 @@ export function formatTime(time: string) {
   const formattedTime = `${adjustedHours}:${minutes.toString().padStart(2, '0')} ${period}`;
 
   return formattedTime;
+}
+
+export function canUserSubmitWaivers(applicationStatus: ApplicationStatus): boolean {
+  return (
+    applicationStatus === ApplicationStatus.ACCEPTED ||
+    applicationStatus === ApplicationStatus.CONFIRMED
+  );
 }

@@ -172,3 +172,7 @@ export interface GetOneEventResponse extends ApiResponse {
 export interface UpdateEventResponse extends ApiResponse {
   event: PublicEvent;
 }
+
+export interface ConfirmUserStatusResponse extends ApiResponse {
+  user: FullProfile;
+}

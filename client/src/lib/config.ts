@@ -21,6 +21,8 @@ const config = {
         application: '/admin/application',
         users: '/admin/users',
         userApplication: '/admin/user',
+        waivers: '/admin/waivers',
+        confirmUser: '/admin/user/confirm',
       },
       event: {
         createEvent: '/event',

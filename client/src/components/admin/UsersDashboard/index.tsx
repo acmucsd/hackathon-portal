@@ -32,12 +32,7 @@ const UsersDashboard = ({ users }: UsersDashboardProps) => {
   const filteredUsers = users
     .filter(user => {
       if (filterStatus === 'All') return true;
-
-      if (user.applicationStatus === ApplicationStatus.NOT_SUBMITTED) {
-        return user.applicationStatus === filterStatus;
-      }
-
-      return user.applicationDecision === filterStatus;
+      return user.applicationStatus === filterStatus;
     })
     .filter(user =>
       `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase())
@@ -55,7 +50,7 @@ const UsersDashboard = ({ users }: UsersDashboardProps) => {
     <div className={styles.container}>
       <div className={styles.filterContainer}>
         <div className={styles.filterButtons}>
-          {['All', 'NOT_SUBMITTED', ...Object.values(ApplicationDecision)].map(status => (
+          {['All', ...Object.values(ApplicationStatus)].map(status => (
             <Button
               key={status}
               onClick={() => {

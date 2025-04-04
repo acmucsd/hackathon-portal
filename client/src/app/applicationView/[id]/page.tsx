@@ -20,6 +20,7 @@ export default async function ApplicationReviewPage({ params }: ApplicationRevie
   try {
     const fetchedApplication = await AdminAPI.getUserWithApplication(accessToken, user);
     const fetchedApplicationDecision = await AdminAPI.getApplicationDecision(accessToken, user);
+    const fetchedWaivers = await AdminAPI.getWaiversById(accessToken, user).catch(() => []);
 
     return (
       <main className={styles.main}>
@@ -27,6 +28,7 @@ export default async function ApplicationReviewPage({ params }: ApplicationRevie
           application={fetchedApplication}
           token={accessToken}
           decision={fetchedApplicationDecision.applicationDecision}
+          waivers={fetchedWaivers}
         />
       </main>
     );

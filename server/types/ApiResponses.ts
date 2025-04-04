@@ -129,3 +129,13 @@ export interface UpdateApplicationDecisionResponse extends ApiResponse {
 }
 
 export interface ForgotPasswordResponse extends ApiResponse {}
+
+export interface PublicAttendance {
+  user: PublicProfile;
+  event: PublicEvent;
+  timestamp: Date;
+}
+
+export interface AttendEventResponse extends ApiResponse {
+  event: PublicEvent;
+}

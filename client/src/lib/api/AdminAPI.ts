@@ -7,8 +7,9 @@ import type {
   GetApplicationDecisionResponse,
   UpdateApplicationDecisionResponse,
   ResponseModel,
-  PrivateProfile,
   FullProfile,
+  GetFormsResponse,
+  ConfirmUserStatusResponse,
 } from '@/lib/types/apiResponses';
 import { ApplicationDecision } from '@/lib/types/enums';
 import axios from 'axios';
@@ -64,7 +65,7 @@ export const getUsers = async (token: string): Promise<FullProfile[]> => {
  * Get user's application based on user id
  * @param token
  * @param id
- * @returns All users application
+ * @returns User's application
  */
 export const getUserWithApplication = async (token: string, id: string): Promise<ResponseModel> => {
   const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.userApplication}/${id}`;
@@ -114,4 +115,36 @@ export const updateApplicationDecision = async (
     }
   );
   return response.data.user;
+};
+
+/**
+ * Updates user status to CONFIRMED in the portal.
+ * @param token
+ * @param id
+ * @returns User's updated profile.
+ */
+export const confirmUserStatus = async (token: string, id: string): Promise<FullProfile> => {
+  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.confirmUser}/${id}`;
+  const response = await axios.post<ConfirmUserStatusResponse>(requestUrl, null, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data.user;
+};
+
+/**
+ * Get user's waivers based on user id
+ * @param token
+ * @param id
+ * @returns User's waivers
+ */
+export const getWaiversById = async (token: string, id: string): Promise<ResponseModel[]> => {
+  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.waivers}/${id}`;
+  const response = await axios.get<GetFormsResponse>(requestUrl, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data.responses;
 };
