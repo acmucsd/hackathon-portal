@@ -8,7 +8,7 @@ import type {
   SubmitApplicationResponse,
 } from '@/lib/types/apiResponses';
 import axios from 'axios';
-import { Application } from '../types/application';
+import { Application, Waiver } from '../types/application';
 import { getErrorMessage } from '../utils';
 
 /**
@@ -98,4 +98,50 @@ export const deleteApplication = async (token: string): Promise<void> => {
       Authorization: `Bearer ${token}`,
     },
   });
+};
+
+/**
+ * Submit liability waiver for the current user
+ * @param waiver Waiver
+ * @returns Created waiver
+ */
+export const submitLiabilityWaiver = async (
+  token: string,
+  waiver: Waiver
+): Promise<ResponseModel | { error: string }> => {
+  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.response.liabilityWaiver}`;
+
+  try {
+    const response = await axios.post<SubmitApplicationResponse>(requestUrl, waiver, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data.response;
+  } catch (error) {
+    return { error: getErrorMessage(error) };
+  }
+};
+
+/**
+ * Submit photo release form for the current user
+ * @param waiver Waiver
+ * @returns Created waiver
+ */
+export const submitPhotoRelease = async (
+  token: string,
+  waiver: Waiver
+): Promise<ResponseModel | { error: string }> => {
+  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.response.photoRelease}`;
+
+  try {
+    const response = await axios.post<SubmitApplicationResponse>(requestUrl, waiver, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data.response;
+  } catch (error) {
+    return { error: getErrorMessage(error) };
+  }
 };

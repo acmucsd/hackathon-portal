@@ -7,7 +7,7 @@ import Heading from '@/components/Heading';
 import StatusTag from '@/components/StatusTag';
 import { AdminAPI } from '@/lib/api';
 import { ResponseModel } from '@/lib/types/apiResponses';
-import { ApplicationDecision } from '@/lib/types/enums';
+import { ApplicationDecision, ApplicationStatus } from '@/lib/types/enums';
 import { reportError } from '@/lib/utils';
 import showToast from '@/lib/showToast';
 import { useState } from 'react';
@@ -23,8 +23,16 @@ const ApplicationView = ({ application, token, decision }: ApplicationViewProps)
   const responses: Record<string, string | string[] | File | any> = application.data;
   const user = application.user;
   const [currentDecision, setCurrentDecision] = useState(decision);
+  const [currentStatus, setCurrentStatus] = useState(user.applicationStatus);
 
   const handleDecision = async (decision: ApplicationDecision) => {
+    if (currentStatus === ApplicationStatus.CONFIRMED) {
+      showToast(
+        "Couldn't update application decision",
+        'User has already been confirmed for the hackathon.'
+      );
+      return;
+    }
     try {
       const updatedUser = await AdminAPI.updateApplicationDecision(token, user.id, decision);
       const updatedDecision = updatedUser.applicationDecision;
@@ -32,6 +40,20 @@ const ApplicationView = ({ application, token, decision }: ApplicationViewProps)
       showToast(`${updatedDecision}ED`, `You marked the application as "${updatedDecision}ED".`);
     } catch (error) {
       reportError("Couldn't update application decision", error);
+    }
+  };
+
+  const handleConfirmUser = async () => {
+    if (currentDecision !== ApplicationDecision.ACCEPT) {
+      showToast("Couldn't confirm user", "User hasn't been accepted to the hackathon.");
+      return;
+    }
+    try {
+      const updatedUser = await AdminAPI.confirmUserStatus(token, user.id);
+      showToast('CONFIRMED', 'Successfully marked the user as CONFIRMED');
+      setCurrentStatus(updatedUser.applicationStatus);
+    } catch (error) {
+      reportError("Couldn't confirm user", error);
     }
   };
 
@@ -97,6 +119,9 @@ const ApplicationView = ({ application, token, decision }: ApplicationViewProps)
           onClick={() => handleDecision(ApplicationDecision.ACCEPT)}
         >
           Accept
+        </Button>
+        <Button className={styles.accept} onClick={handleConfirmUser}>
+          Confirm
         </Button>
       </div>
     </div>
