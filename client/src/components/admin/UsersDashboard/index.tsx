@@ -10,13 +10,13 @@ import TableList from '@/components/TableList';
 import UserRow from '../UserRow';
 import UserItem from '../UserItem';
 import Pagination from '@/components/Pagination';
-import { PrivateProfile } from '@/lib/types/apiResponses';
-import { ApplicationStatus } from '@/lib/types/enums';
+import { FullProfile } from '@/lib/types/apiResponses';
+import { ApplicationStatus, ApplicationDecision } from '@/lib/types/enums';
 import { useWindowSize } from '@/lib/hooks/useWindowSize';
 import styles from './style.module.scss';
 
 interface UsersDashboardProps {
-  users: PrivateProfile[];
+  users: FullProfile[];
 }
 
 const formatTitleCase = (message: string) => {
@@ -36,11 +36,12 @@ const UsersDashboard = ({ users }: UsersDashboardProps) => {
   const isSmall = (size.width ?? 0) <= 1024;
 
   const filteredUsers = users
-    .filter(user => filterStatus === 'All' || user.applicationStatus === filterStatus)
-    .filter(
-      user =>
-        user.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.lastName.toLowerCase().includes(searchQuery.toLowerCase())
+    .filter(user => {
+      if (filterStatus === 'All') return true;
+      return user.applicationStatus === filterStatus;
+    })
+    .filter(user =>
+      `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
   const itemsPerPage = 10;

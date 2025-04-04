@@ -6,12 +6,12 @@ export enum UserAccessType {
 }
 
 export enum ApplicationStatus {
+  CONFIRMED = 'CONFIRMED',
+  ACCEPTED = 'ACCEPTED',
+  REJECTED = 'REJECTED',
   NOT_SUBMITTED = 'NOT_SUBMITTED',
   SUBMITTED = 'SUBMITTED',
   WITHDRAWN = 'WITHDRAWN',
-  ACCEPTED = 'ACCEPTED',
-  REJECTED = 'REJECTED',
-  CONFIRMED = 'CONFIRMED',
 }
 
 export enum ApplicationDecision {
@@ -23,6 +23,8 @@ export enum ApplicationDecision {
 
 export enum FormType {
   APPLICATION = 'APPLICATION',
+  LIABILITY_WAIVER = 'LIABILITY_WAIVER',
+  PHOTO_RELEASE = 'PHOTO_RELEASE',
 }
 
 export enum YesOrNo {

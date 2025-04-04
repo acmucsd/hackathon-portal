@@ -1,14 +1,14 @@
 import config from '@/lib/config';
-import type {
-  GetApplicationsResponse,
-  GetApplicationResponse,
-  GetUsersResponse,
-  GetUserApplicationResponse,
-  GetApplicationDecisionResponse,
-  UpdateApplicationDecisionResponse,
-  ResponseModel,
-  PrivateProfile,
-  HiddenProfile,
+import {
+  type GetApplicationsResponse,
+  type GetApplicationResponse,
+  type GetUsersResponse,
+  type GetUserApplicationResponse,
+  type GetApplicationDecisionResponse,
+  type UpdateApplicationDecisionResponse,
+  type ResponseModel,
+  type FullProfile,
+  ConfirmUserStatusResponse,
 } from '@/lib/types/apiResponses';
 import { ApplicationDecision } from '@/lib/types/enums';
 import axios from 'axios';
@@ -50,7 +50,7 @@ export const getApplication = async (token: string, uuid: string): Promise<Respo
  * @param token
  * @returns All users application
  */
-export const getUsers = async (token: string): Promise<PrivateProfile[]> => {
+export const getUsers = async (token: string): Promise<FullProfile[]> => {
   const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.users}`;
   const response = await axios.get<GetUsersResponse>(requestUrl, {
     headers: {
@@ -82,7 +82,7 @@ export const getUserWithApplication = async (token: string, id: string): Promise
  * @param id
  * @returns User's profile with decision
  */
-export const getApplicationDecision = async (token: string, id: string): Promise<HiddenProfile> => {
+export const getApplicationDecision = async (token: string, id: string): Promise<FullProfile> => {
   const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.application}/${id}/decision`;
   const response = await axios.get<GetApplicationDecisionResponse>(requestUrl, {
     headers: {
@@ -102,7 +102,7 @@ export const updateApplicationDecision = async (
   token: string,
   id: string,
   applicationDecision: ApplicationDecision
-): Promise<HiddenProfile> => {
+): Promise<FullProfile> => {
   const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.application}/${id}/decision`;
   const response = await axios.post<UpdateApplicationDecisionResponse>(
     requestUrl,
@@ -113,5 +113,21 @@ export const updateApplicationDecision = async (
       },
     }
   );
+  return response.data.user;
+};
+
+/**
+ * Updates user status to CONFIRMED in the portal.
+ * @param token
+ * @param id
+ * @returns User's updated profile.
+ */
+export const confirmUserStatus = async (token: string, id: string): Promise<FullProfile> => {
+  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.confirmUser}/${id}`;
+  const response = await axios.post<ConfirmUserStatusResponse>(requestUrl, null, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return response.data.user;
 };

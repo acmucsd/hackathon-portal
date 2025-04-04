@@ -26,7 +26,7 @@ export interface PrivateProfile extends PublicProfile {
   responses?: ResponseModel;
 }
 
-export interface HiddenProfile extends PrivateProfile {
+export interface FullProfile extends PrivateProfile {
   applicationDecision: ApplicationDecision;
 }
 
@@ -115,7 +115,7 @@ export interface GetApplicationResponse extends ApiResponse {
 
 // Admin User Responses
 export interface GetUsersResponse extends ApiResponse {
-  users: PrivateProfile[];
+  users: FullProfile[];
 }
 
 export interface GetUserApplicationResponse extends ApiResponse {
@@ -127,9 +127,13 @@ export interface ForgotPasswordResponse extends ApiResponse {}
 // Admin Application Decision Responses
 
 export interface GetApplicationDecisionResponse extends ApiResponse {
-  user: HiddenProfile;
+  user: FullProfile;
 }
 
 export interface UpdateApplicationDecisionResponse extends ApiResponse {
-  user: HiddenProfile;
+  user: FullProfile;
+}
+
+export interface ConfirmUserStatusResponse extends ApiResponse {
+  user: FullProfile;
 }
