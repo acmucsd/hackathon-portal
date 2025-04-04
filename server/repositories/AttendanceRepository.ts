@@ -13,4 +13,14 @@ export const AttendanceRepository = Container.get(DataSource)
       const attendance = this.create({ user: { id: userId }, event: { uuid: eventId } });
       return this.save(attendance);
     },
+
+    async getAttendancesForEvent(event: string): Promise<AttendanceModel[]> {
+      return this.find({
+        where: {
+          event: { uuid: event },
+        },
+        relations: ['user', 'event'],
+      });
+    },
+
   });

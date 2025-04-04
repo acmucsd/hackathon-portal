@@ -28,4 +28,10 @@ export class AttendanceService {
     });
   }
 
+  public async getAttendancesForEvent(eventId: string): Promise<AttendanceModel[]> {
+    return this.transactionsManager.readOnly(async (txn) => {
+      return Repositories.attendance(txn).getAttendancesForEvent(eventId);
+    });
+  }
+
 }

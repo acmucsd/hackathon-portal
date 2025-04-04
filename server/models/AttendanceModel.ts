@@ -14,7 +14,7 @@ export class AttendanceModel {
   @ManyToOne(() => EventModel, (event) => event.attendances)
   event: EventModel;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
   timestamp: Date;
 
   public getPublicAttendance(): PublicAttendance {

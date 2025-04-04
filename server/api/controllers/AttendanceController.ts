@@ -19,6 +19,10 @@ import { UuidParam } from '../validators/GenericRequests';
 export class AttendanceController {
   private attendanceService: AttendanceService;
 
+  constructor(attendanceService: AttendanceService) {
+      this.attendanceService = attendanceService;
+  }
+
   @UseBefore(UserAuthentication)
   @Post('/:uuid')
   async attendEvent(
