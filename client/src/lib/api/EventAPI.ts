@@ -49,6 +49,23 @@ export const getEvents = async (token: string): Promise<PublicEvent[]> => {
 };
 
 /**
+ * Get all published events
+ * @param token Access token for user
+ * @returns All published events
+ */
+export const getPublishedEvents = async (token: string): Promise<PublicEvent[]> => {
+  const response = await axios.get<GetAllEventsResponse>(
+    `${config.api.baseUrl}${config.api.endpoints.event.getAllEvents}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data.events;
+};
+
+/**
  * Get event based on id
  * @param token Access token for admin
  * @param uuid Event id
