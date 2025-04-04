@@ -136,13 +136,12 @@ export class AdminController {
   @Get('/attendance/:uuid')
   async getAttendanceForEvent(
     @AuthenticatedUser() currentUser: UserModel,
-    @Params() params: UuidParam
+    @Params() params: UuidParam,
   ) {
     if (!PermissionsService.canViewAllApplications(currentUser))
       throw new ForbiddenError();
 
     const attendances = await this.attendanceService.getAttendancesForEvent(params.uuid);
-    console.log("attendances", attendances);
     return {
       error: null,
       attendances: attendances.map((attendance) => attendance.getPublicAttendance()),
