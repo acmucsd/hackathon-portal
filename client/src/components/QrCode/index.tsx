@@ -22,9 +22,6 @@ interface QrCodeProps {
 const QrCode = ({ data }: QrCodeProps) => {
   const code = useMemo(() => QRCode.create(data).modules, [data]);
   const finderSize = getFinderSize(code);
-  console.log(code);
-
-  console.log(finderSize);
 
   return (
     <div className={styles.gradient}>
