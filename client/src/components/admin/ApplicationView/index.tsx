@@ -30,8 +30,16 @@ const ApplicationView = ({ application, token, decision, waivers }: ApplicationV
   const photoReleaseSubmitted = !!waivers.find(
     response => response.formType === FormType.PHOTO_RELEASE
   );
+  const [currentStatus, setCurrentStatus] = useState(user.applicationStatus);
 
   const handleDecision = async (decision: ApplicationDecision) => {
+    if (currentStatus === ApplicationStatus.CONFIRMED) {
+      showToast(
+        "Couldn't update application decision",
+        'User has already been confirmed for the hackathon.'
+      );
+      return;
+    }
     try {
       const updatedUser = await AdminAPI.updateApplicationDecision(token, user.id, decision);
       const updatedDecision = updatedUser.applicationDecision;
@@ -39,6 +47,20 @@ const ApplicationView = ({ application, token, decision, waivers }: ApplicationV
       showToast(`${updatedDecision}ED`, `You marked the application as "${updatedDecision}ED".`);
     } catch (error) {
       reportError("Couldn't update application decision", error);
+    }
+  };
+
+  const handleConfirmUser = async () => {
+    if (currentDecision !== ApplicationDecision.ACCEPT) {
+      showToast("Couldn't confirm user", "User hasn't been accepted to the hackathon.");
+      return;
+    }
+    try {
+      const updatedUser = await AdminAPI.confirmUserStatus(token, user.id);
+      showToast('CONFIRMED', 'Successfully marked the user as CONFIRMED');
+      setCurrentStatus(updatedUser.applicationStatus);
+    } catch (error) {
+      reportError("Couldn't confirm user", error);
     }
   };
 
@@ -122,6 +144,9 @@ const ApplicationView = ({ application, token, decision, waivers }: ApplicationV
           onClick={() => handleDecision(ApplicationDecision.ACCEPT)}
         >
           Accept
+        </Button>
+        <Button className={styles.accept} onClick={handleConfirmUser}>
+          Confirm
         </Button>
       </div>
     </div>
