@@ -8,6 +8,7 @@ import Button from '@/components/Button';
 import styles from './style.module.scss';
 import { ApplicationStatus, FormType } from '@/lib/types/enums';
 import { PrivateProfile, ResponseModel } from '@/lib/types/apiResponses';
+import { canUserSubmitWaivers } from '@/lib/utils';
 
 interface ProfileClientProps {
   user: PrivateProfile;
@@ -27,7 +28,7 @@ const Profile = ({ user, responses }: ProfileClientProps) => {
   return (
     <div className={styles.profileContainer}>
       <ProfileCard user={user} />
-      {applicationStatus === ApplicationStatus.ACCEPTED && (
+      {canUserSubmitWaivers(applicationStatus) && (
         <div className={styles.formsContainer}>
           <Card gap={1.5} className={styles.liability}>
             <Heading>Liability Form Status</Heading>

@@ -133,3 +133,7 @@ export interface GetApplicationDecisionResponse extends ApiResponse {
 export interface UpdateApplicationDecisionResponse extends ApiResponse {
   user: FullProfile;
 }
+
+export interface ConfirmUserStatusResponse extends ApiResponse {
+  user: FullProfile;
+}
