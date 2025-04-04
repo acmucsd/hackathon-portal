@@ -6,12 +6,17 @@ import {
 } from '@/sections/Resources/resources';
 import ResourceBanner from '@/../public/assets/resources.svg';
 import styles from './page.module.scss';
+import Typography from '@/components/Typography';
 
 export default function ResourcePage() {
   return (
     <main className={styles.main}>
       <div className={styles.bannerContainer}>
-        <ResourceBanner className={styles.banner} />
+        <ResourceBanner className={`${styles.banner}, ${styles.desktop}`} />
+
+        <Typography variant="headline/heavy/medium" className={styles.mobile}>
+          Hackathon Resources
+        </Typography>
       </div>
       <ResourceCarousel
         title="Frontend"
