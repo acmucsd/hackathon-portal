@@ -6,7 +6,7 @@ import { getCookie } from '@/lib/services/CookieService';
 import { CookieType } from '@/lib/types/enums';
 import styles from './page.module.scss';
 
-export default async function ManageUsers() {
+export default async function ManageEvents() {
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
 
   if (!accessToken) {
@@ -18,8 +18,6 @@ export default async function ManageUsers() {
 
     return (
       <main className={styles.main}>
-        <Typography variant="headline/heavy/small">Manage Users</Typography>
-        <UsersDashboard users={users} />
       </main>
     );
   } catch (error) {

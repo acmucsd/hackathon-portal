@@ -22,6 +22,9 @@ const config = {
         users: '/admin/users',
         userApplication: '/admin/user',
       },
+      event: {
+        createEvent: '/event'
+      }
     },
   },
 };

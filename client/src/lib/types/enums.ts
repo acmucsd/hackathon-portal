@@ -43,3 +43,15 @@ export enum CookieType {
   USER = 'USER',
   ACCESS_TOKEN = 'ACCESS_TOKEN',
 }
+
+export enum EventType {
+  INFO = 'INFO',
+  MAIN_EVENT = 'MAIN_EVENT',
+  SOCIAL = 'SOCIAL',
+  WORKSHOP = 'WORKSHOP',
+}
+
+export enum Day {
+  SATURDAY = 'SATURDAY',
+  SUNDAY = 'SUNDAY',
+}
