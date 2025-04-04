@@ -14,21 +14,25 @@ interface ResourceCardProps {
   interactive?: boolean;
 }
 
-const ResourceCard = ({ resource, className, borderless, hideInfo }: ResourceCardProps) => {
+const ResourceCard = ({ resource, className, borderless, hideInfo, interactive=true }: ResourceCardProps) => {
   const { title, link, resource_type, cover_image } = resource;
 
-  const Component = 'div';
+  const Component = interactive ? Link : 'div';
+
+  const imageSrc = cover_image.startsWith('http') ? `/${cover_image}` : cover_image;
 
   return (
     <>
       <Component
+        href={link}
+        target="_blank"
         data-community={'General'}
         data-disabled={borderless}
         className={`${styles.container} ${borderless ? '' : styles.bordered} ${className || ''} `}
       >
         <div className={styles.image}>
           <Image
-            src={cover_image}
+            src={`${imageSrc}`}
             alt={`${resource.title} cover image`}
             style={{ objectFit: 'cover' }}
             sizes="20rem"
@@ -44,9 +48,12 @@ const ResourceCard = ({ resource, className, borderless, hideInfo }: ResourceCar
               >
                 {title}
               </Typography>
-              <Link href={link} style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <Typography
+                variant="body/small"
+                style={{ fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis' }}
+              >
                 {link}
-              </Link>
+              </Typography>
             </div>
           </div>
         ) : null}
