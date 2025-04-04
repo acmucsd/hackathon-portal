@@ -11,8 +11,8 @@ interface TextFieldProps {
   defaultText?: string;
   formRegister: UseFormRegisterReturn;
   error: any;
-  type: HTMLInputTypeAttribute;
-  autoComplete: string;
+  type: HTMLInputTypeAttribute | 'textarea';
+  autoComplete?: string;
   disabled?: boolean;
 }
 
@@ -32,14 +32,24 @@ const TextField = ({
       <Typography variant="label/medium" component="p">
         <label htmlFor={id}>{label}</label>
       </Typography>
-      <input
-        id={id}
-        type={type}
-        autoComplete={autoComplete}
-        placeholder={defaultText ? defaultText : ''}
-        disabled={disabled}
-        {...formRegister}
-      />
+      {type === 'textarea' ? (
+        <textarea
+          id={id}
+          placeholder={defaultText || ''}
+          disabled={disabled}
+          {...formRegister}
+          className={styles.textarea}
+        />
+      ) : (
+        <input
+          id={id}
+          type={type}
+          autoComplete={autoComplete}
+          placeholder={defaultText || ''}
+          disabled={disabled}
+          {...formRegister}
+        />
+      )}
       {error && (
         <Typography variant="label/small" component="p" className={styles.formError}>
           {error && <ErrorIcon />}

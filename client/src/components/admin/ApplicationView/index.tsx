@@ -7,7 +7,7 @@ import Heading from '@/components/Heading';
 import StatusTag from '@/components/StatusTag';
 import { AdminAPI } from '@/lib/api';
 import { ResponseModel } from '@/lib/types/apiResponses';
-import { ApplicationDecision, ApplicationStatus } from '@/lib/types/enums';
+import { ApplicationDecision, ApplicationStatus, FormType } from '@/lib/types/enums';
 import { reportError } from '@/lib/utils';
 import showToast from '@/lib/showToast';
 import { useState } from 'react';
@@ -17,12 +17,19 @@ interface ApplicationViewProps {
   application: ResponseModel;
   token: string;
   decision: ApplicationDecision;
+  waivers: ResponseModel[];
 }
 
-const ApplicationView = ({ application, token, decision }: ApplicationViewProps) => {
+const ApplicationView = ({ application, token, decision, waivers }: ApplicationViewProps) => {
   const responses: Record<string, string | string[] | File | any> = application.data;
   const user = application.user;
   const [currentDecision, setCurrentDecision] = useState(decision);
+  const liabilitySubmitted = !!waivers.find(
+    response => response.formType === FormType.LIABILITY_WAIVER
+  );
+  const photoReleaseSubmitted = !!waivers.find(
+    response => response.formType === FormType.PHOTO_RELEASE
+  );
   const [currentStatus, setCurrentStatus] = useState(user.applicationStatus);
 
   const handleDecision = async (decision: ApplicationDecision) => {
@@ -68,6 +75,24 @@ const ApplicationView = ({ application, token, decision }: ApplicationViewProps)
           <dd className={styles.response}>{user.lastName}</dd>
           <dt className={styles.question}>Email Address</dt>
           <dd className={styles.response}>{user.email}</dd>
+          <dt className={styles.question}>Liability Waiver</dt>
+          <dd className={styles.response}>
+            <StatusTag
+              status={
+                liabilitySubmitted ? ApplicationStatus.SUBMITTED : ApplicationStatus.NOT_SUBMITTED
+              }
+            ></StatusTag>
+          </dd>
+          <dt className={styles.question}>Photo Release</dt>
+          <dd className={styles.response}>
+            <StatusTag
+              status={
+                photoReleaseSubmitted
+                  ? ApplicationStatus.SUBMITTED
+                  : ApplicationStatus.NOT_SUBMITTED
+              }
+            ></StatusTag>
+          </dd>
         </dl>
       </Card>
       <Card gap={2}>

@@ -23,6 +23,6 @@ export default async function ManageUsers() {
       </main>
     );
   } catch (error) {
-    redirect('/login');
+    redirect('/api/logout');
   }
 }

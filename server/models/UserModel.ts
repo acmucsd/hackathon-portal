@@ -17,6 +17,7 @@ import {
   PrivateProfile,
   HiddenProfile,
 } from '../types/ApiResponses';
+import { AttendanceModel } from './AttendanceModel';
 
 @Entity('User')
 export class UserModel {
@@ -60,6 +61,9 @@ export class UserModel {
     cascade: true,
   })
   responses: ResponseModel;
+
+  @OneToMany((type) => AttendanceModel, (attendance) => attendance.user, { cascade: true })
+  attendances: AttendanceModel[];
 
   public isRestricted(): boolean {
     return this.accessType === UserAccessType.RESTRICTED;

@@ -1,0 +1,31 @@
+@use '@/styles/vars.scss' as vars;
+
+.container {
+  display: flex;
+  gap: 1rem;
+
+  .roundedBackground {
+    width: 48px;
+    background-color: #f0f0f0;
+    border-radius: 100px;
+    padding: 3px 4px;
+    cursor: pointer;
+    transition: background-color 0.3s cubic-bezier(0.17, 0.67, 0.14, 1.03);
+
+    .circle {
+      width: 18px;
+      height: 18px;
+      background-color: vars.$blue;
+      border-radius: 50%;
+      transition: transform 0.6s cubic-bezier(0.02, 0.94, 0.09, 0.97);
+    }
+  }
+
+  .onBackground {
+    background-color: vars.$card-stroke;
+  }
+
+  .moveCircle {
+    transform: translateX(22px);
+  }
+}

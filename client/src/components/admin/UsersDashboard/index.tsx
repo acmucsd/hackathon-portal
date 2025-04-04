@@ -13,18 +13,12 @@ import Pagination from '@/components/Pagination';
 import { FullProfile } from '@/lib/types/apiResponses';
 import { ApplicationStatus, ApplicationDecision } from '@/lib/types/enums';
 import { useWindowSize } from '@/lib/hooks/useWindowSize';
+import { formatTitleCase } from '@/lib/utils';
 import styles from './style.module.scss';
 
 interface UsersDashboardProps {
   users: FullProfile[];
 }
-
-const formatTitleCase = (message: string) => {
-  return message
-    .replace('_', ' ')
-    .toLowerCase()
-    .replace(/\b\w/g, c => c.toUpperCase());
-};
 
 const UsersDashboard = ({ users }: UsersDashboardProps) => {
   const [currentPage, setCurrentPage] = useState(0);

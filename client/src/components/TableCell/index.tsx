@@ -5,11 +5,21 @@ interface TableCellProps {
   children: React.ReactNode;
   className?: string;
   type?: 'th' | 'td';
+  colSpan?: number;
 }
 
-const TableCell = ({ children, className, type = 'td' }: PropsWithChildren<TableCellProps>) => {
+const TableCell = ({
+  children,
+  className,
+  type = 'td',
+  colSpan,
+}: PropsWithChildren<TableCellProps>) => {
   const Component = type;
-  return <Component className={`${styles.cellContainer} ${className}`}>{children}</Component>;
+  return (
+    <Component colSpan={colSpan} className={`${styles.cellContainer} ${className}`}>
+      {children}
+    </Component>
+  );
 };
 
 export default TableCell;

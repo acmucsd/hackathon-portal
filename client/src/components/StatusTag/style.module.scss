@@ -11,19 +11,23 @@
   }
 
   &.SUBMITTED,
-  &.NO_DECISION {
+  &.NO_DECISION,
+  &.MAIN_EVENT {
     color: #142e52;
     background-color: #d6e5f8;
   }
 
   &.ACCEPTED,
-  &.ACCEPT {
+  &.ACCEPT,
+  &.INFO,
+  &.SOCIAL {
     color: #00573f;
     background-color: #d7ede7;
   }
 
   &.WITHDRAWN,
-  &.WAITLIST {
+  &.WAITLIST,
+  &.WAITLISTED {
     color: #8d490d;
     background-color: #ecdf98;
   }
@@ -34,7 +38,8 @@
     background-color: #fad5dc;
   }
 
-  &.CONFIRMED {
+  &.CONFIRMED,
+  &.WORKSHOP {
     color: #35118d;
     background-color: #ece6f9;
   }
