@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "prettier --write ./src && next lint --fix",
-    "lint:check": "prettier --check ./src && next lint",
+    "lint:check": "prettier --check ./src && next lint"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
