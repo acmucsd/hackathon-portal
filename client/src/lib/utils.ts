@@ -50,3 +50,15 @@ export function getErrorMessage(error: unknown): string {
 export function reportError(title: string, error: unknown) {
   showToast(title, getErrorMessage(error));
 }
+
+/**
+ * Formats message into title case
+ *
+ * @param message - Message to be formatted
+ */
+export function formatTitleCase(message: string) {
+  return message
+    .replace('_', ' ')
+    .toLowerCase()
+    .replace(/\b\w/g, c => c.toUpperCase());
+}

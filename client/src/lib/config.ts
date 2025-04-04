@@ -23,8 +23,12 @@ const config = {
         userApplication: '/admin/user',
       },
       event: {
-        createEvent: '/event'
-      }
+        createEvent: '/event',
+        getAllEvents: '/event',
+        getEvent: '/event',
+        updateEvent: '/event',
+        deleteEvent: '/event',
+      },
     },
   },
 };

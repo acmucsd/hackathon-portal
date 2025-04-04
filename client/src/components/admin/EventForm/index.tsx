@@ -1,51 +1,106 @@
 'use client';
 
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import TextField from '@/components/TextField';
 import Button from '@/components/Button';
 import Dropdown from '@/components/Dropdown';
 import ToggleSwitch from '@/components/ToggleSwitch';
 import Card from '@/components/Card';
 import Heading from '@/components/Heading';
+import { EventAPI } from '@/lib/api';
 import { Day, EventType } from '@/lib/types/enums';
+import { PublicEvent } from '@/lib/types/apiResponses';
 import styles from './style.module.scss';
+import { reportError } from '@/lib/utils';
+import showToast from '@/lib/showToast';
+import { useState, useEffect } from 'react';
 
-interface EventFormData {
-  name: string;
-  type: EventType;
-  host: string;
-  location: string;
-  locationLink?: string;
-  description: string;
-  day: Day;
-  startTime: string;
-  endTime: string;
-  published: boolean;
+interface EventFormProps {
+  accessToken: string;
+  event?: PublicEvent;
 }
 
-export default function EventForm() {
+const EventForm = ({ accessToken, event }: EventFormProps) => {
+  const [currentEvent, setCurrentEvent] = useState<PublicEvent | undefined>(event);
+
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<EventFormData>();
+    setValue,
+    reset,
+  } = useForm<PublicEvent>({
+    defaultValues: currentEvent || {
+      type: EventType.INFO,
+      day: Day.SATURDAY,
+      published: false,
+    },
+  });
 
-  const onSubmit = (data: EventFormData) => {
-    console.log('Submitting event:', data);
-    // TODO: Send data to backend
+  useEffect(() => {
+    if (currentEvent) {
+      Object.keys(currentEvent).forEach(key => {
+        setValue(key as keyof PublicEvent, currentEvent[key as keyof PublicEvent]);
+      });
+    }
+  }, [currentEvent, setValue]);
+
+  // Update or create event
+
+  const onSubmit: SubmitHandler<PublicEvent> = async eventData => {
+    try {
+      if (event) {
+        const updatedEvent = await EventAPI.updateEvent(accessToken, eventData, event.uuid);
+        if ('error' in updatedEvent) {
+          showToast('Changes failed to save', updatedEvent.error);
+          return;
+        }
+        showToast(`Successfully updated event: ${updatedEvent.name}`);
+        setCurrentEvent(updatedEvent);
+      } else {
+        const createdEvent = await EventAPI.createEvent(accessToken, eventData);
+        showToast(`Successfully created event: ${createdEvent.name}`);
+      }
+    } catch (error) {
+      reportError("Couldn't save event", error);
+    }
+  };
+
+  const discardChanges = () => {
+    reset(
+      currentEvent || {
+        type: EventType.INFO,
+        day: Day.SATURDAY,
+        published: false,
+      }
+    );
+  };
+
+  const deleteEvent = async () => {
+    if (currentEvent) {
+      try {
+        await EventAPI.deleteEvent(accessToken, currentEvent.uuid);
+        showToast(`Successfully deleted event: ${currentEvent.name}`);
+      } catch (error) {
+        reportError("Couldn't delete event", error);
+      }
+    }
   };
 
   return (
-    <Card gap={2}>
-      <Heading>Create Event</Heading>
+    <Card gap={2} className={styles.container}>
+      <Button href="/manageEvents" variant="tertiary" className={styles.backButton}>
+        {'< Back'}
+      </Button>
+      <Heading>{currentEvent ? 'Modify Event' : 'Create Event'}</Heading>
       <hr className={styles.divider} />
       <div className={styles.form}>
         <TextField
           id="name"
           label="Event Name"
-          defaultText="Enter name of event"
           error={errors.name}
+          defaultText={currentEvent?.name || 'Enter name of event'}
           formRegister={register('name', {
             required: 'Missing input/field.',
           })}
@@ -72,8 +127,8 @@ export default function EventForm() {
         <TextField
           id="host"
           label="Event Host"
-          defaultText="Enter host(s) of event"
           error={errors.host}
+          defaultText={currentEvent?.host || 'Enter host(s) of event'}
           formRegister={register('host', {
             required: 'Missing input/field.',
           })}
@@ -84,8 +139,8 @@ export default function EventForm() {
         <TextField
           id="location"
           label="Location"
-          defaultText="Enter location of event"
           error={errors.location}
+          defaultText={currentEvent?.location || 'Enter location of event'}
           formRegister={register('location', {
             required: 'Missing input/field.',
           })}
@@ -94,10 +149,20 @@ export default function EventForm() {
           variant="horizontal"
         />
         <TextField
+          id="locationLink"
+          label="Location Link (Optional)"
+          error={errors.locationLink}
+          defaultText={currentEvent?.locationLink || 'Enter location link of event'}
+          formRegister={register('locationLink')}
+          type="text"
+          autoComplete="off"
+          variant="horizontal"
+        />
+        <TextField
           id="description"
           label="Description"
-          defaultText="Enter description of event"
           error={errors.description}
+          defaultText={currentEvent?.description || 'Enter description of event'}
           formRegister={register('description', {
             required: 'Missing input/field.',
           })}
@@ -128,6 +193,7 @@ export default function EventForm() {
             formRegister={register('startTime', {
               required: 'Missing input/field.',
             })}
+            defaultText={currentEvent?.startTime || '0:00'}
             type="time"
             autoComplete="off"
             variant="horizontal"
@@ -139,6 +205,7 @@ export default function EventForm() {
             formRegister={register('endTime', {
               required: 'Missing input/field.',
             })}
+            defaultText={currentEvent?.endTime || '0:00'}
             type="time"
             autoComplete="off"
             variant="horizontal"
@@ -149,8 +216,24 @@ export default function EventForm() {
           control={control}
           render={({ field }) => <ToggleSwitch label="Published?" onToggle={field.onChange} />}
         />
-        <Button onClick={handleSubmit(onSubmit)}>Create Event</Button>
+        <div className={styles.buttonContainer}>
+          {event && (
+            <>
+              <Button className={styles.deleteButton} onClick={deleteEvent}>
+                Delete Event
+              </Button>
+              <Button variant="tertiary" onClick={discardChanges}>
+                Discard Changes
+              </Button>
+            </>
+          )}
+          <Button onClick={handleSubmit(onSubmit)}>
+            {event ? 'Update Event' : 'Create Event'}
+          </Button>
+        </div>
       </div>
     </Card>
   );
-}
+};
+
+export default EventForm;

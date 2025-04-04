@@ -39,6 +39,8 @@ export default function Navbar({ user }: NavbarProps) {
           ...baseLinks,
           { name: 'Admin', href: '/admin' },
           { name: 'Manage Users', href: '/manageUsers' },
+          { name: 'Manage Events', href: '/manageEvents' },
+          { name: 'Create Event', href: '/createEvent' },
         ]
       : baseLinks;
 

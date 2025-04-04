@@ -1,0 +1,32 @@
+@use '@/styles/vars.scss' as vars;
+
+.locationButton {
+  border: none !important;
+  color: vars.$white !important;
+  padding: 0px;
+  justify-content: flex-start;
+}
+
+.accordion,
+.editIcon {
+  cursor: pointer;
+}
+
+.rotate {
+  transform: rotate(180deg);
+}
+
+.popupRow {
+  background-color: #37393e;
+
+  .popupContent {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .popupHeader {
+      display: flex;
+      gap: 1rem;
+    }
+  }
+}

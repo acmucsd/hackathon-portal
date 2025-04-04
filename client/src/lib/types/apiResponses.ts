@@ -1,5 +1,12 @@
 import { Application } from './application';
-import { ApplicationStatus, ApplicationDecision, FormType, UserAccessType, Day, EventType } from './enums';
+import {
+  ApplicationStatus,
+  ApplicationDecision,
+  FormType,
+  UserAccessType,
+  Day,
+  EventType,
+} from './enums';
 
 export interface ResponseModel {
   uuid: string;
@@ -151,5 +158,17 @@ export interface PublicEvent {
 }
 
 export interface CreateEventResponse extends ApiResponse {
+  event: PublicEvent;
+}
+
+export interface GetAllEventsResponse extends ApiResponse {
+  events: PublicEvent[];
+}
+
+export interface GetOneEventResponse extends ApiResponse {
+  event: PublicEvent;
+}
+
+export interface UpdateEventResponse extends ApiResponse {
   event: PublicEvent;
 }

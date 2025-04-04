@@ -1,4 +1,4 @@
-import { Day, EventType } from "./enums";
+import { Day, EventType } from './enums';
 
 export interface UserRegistration {
   firstName: string;
@@ -49,12 +49,4 @@ export interface UpdateEvent {
   startTime?: string;
   endTime?: string;
   published?: boolean;
-}
-
-export interface CreateEventRequest {
-  event: CreateEvent;
-}
-
-export interface UpdateEventRequest {
-  event: UpdateEvent;
 }

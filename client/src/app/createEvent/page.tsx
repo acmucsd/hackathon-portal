@@ -26,7 +26,7 @@ export default async function CreateEvent() {
 
   return (
     <main className={styles.main}>
-      <EventForm />
+      <EventForm accessToken={accessToken} />
     </main>
   );
 }

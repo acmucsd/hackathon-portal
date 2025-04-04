@@ -1,11 +1,16 @@
 import { EventAPI } from '@/lib/api';
+import EventForm from '@/components/admin/EventForm';
 import { redirect } from 'next/navigation';
 import { getCookie } from '@/lib/services/CookieService';
 import { CookieType } from '@/lib/types/enums';
 import styles from './page.module.scss';
-import EventDashboard from '@/components/admin/EventDashboard';
 
-export default async function ManageEvents() {
+interface ModifyEventProps {
+  params: Promise<{ uuid: string }>;
+}
+
+export default async function ModifyEvent({ params }: ModifyEventProps) {
+  const event = (await params).uuid;
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
 
   if (!accessToken) {
@@ -13,11 +18,11 @@ export default async function ManageEvents() {
   }
 
   try {
-    const events = await EventAPI.getEvents(accessToken);
+    const fetchedEvent = await EventAPI.getEvent(accessToken, event);
 
     return (
       <main className={styles.main}>
-        <EventDashboard events={events} />
+        <EventForm accessToken={accessToken} event={fetchedEvent} />
       </main>
     );
   } catch (error) {
