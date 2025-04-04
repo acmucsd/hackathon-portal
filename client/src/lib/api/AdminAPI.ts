@@ -1,14 +1,14 @@
 import config from '@/lib/config';
-import type {
-  GetApplicationsResponse,
-  GetApplicationResponse,
-  GetUsersResponse,
-  GetUserApplicationResponse,
-  GetApplicationDecisionResponse,
-  UpdateApplicationDecisionResponse,
-  ResponseModel,
-  PrivateProfile,
-  FullProfile,
+import {
+  type GetApplicationsResponse,
+  type GetApplicationResponse,
+  type GetUsersResponse,
+  type GetUserApplicationResponse,
+  type GetApplicationDecisionResponse,
+  type UpdateApplicationDecisionResponse,
+  type ResponseModel,
+  type FullProfile,
+  ConfirmUserStatusResponse,
 } from '@/lib/types/apiResponses';
 import { ApplicationDecision } from '@/lib/types/enums';
 import axios from 'axios';
@@ -113,5 +113,21 @@ export const updateApplicationDecision = async (
       },
     }
   );
+  return response.data.user;
+};
+
+/**
+ * Updates user status to CONFIRMED in the portal.
+ * @param token
+ * @param id
+ * @returns User's updated profile.
+ */
+export const confirmUserStatus = async (token: string, id: string): Promise<FullProfile> => {
+  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.confirmUser}/${id}`;
+  const response = await axios.post<ConfirmUserStatusResponse>(requestUrl, null, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return response.data.user;
 };

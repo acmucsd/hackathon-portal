@@ -1,6 +1,7 @@
 import type { ApiResponse, CustomErrorBody, ValidatorError } from '@/lib/types/apiResponses';
 import showToast from '@/lib/showToast';
 import { AxiosError } from 'axios';
+import { ApplicationStatus } from './types/enums';
 
 /**
  * Parse nested error object for messages
@@ -49,4 +50,11 @@ export function getErrorMessage(error: unknown): string {
  */
 export function reportError(title: string, error: unknown) {
   showToast(title, getErrorMessage(error));
+}
+
+export function canUserSubmitWaivers(applicationStatus: ApplicationStatus): boolean {
+  return (
+    applicationStatus === ApplicationStatus.ACCEPTED ||
+    applicationStatus === ApplicationStatus.CONFIRMED
+  );
 }
