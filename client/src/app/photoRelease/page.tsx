@@ -4,6 +4,7 @@ import { getCookie } from '@/lib/services/CookieService';
 import { CookieType, ApplicationStatus } from '@/lib/types/enums';
 import { redirect } from 'next/navigation';
 import styles from './page.module.scss';
+import { canUserSubmitWaivers } from '@/lib/utils';
 
 export default async function PhotoReleasePage() {
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
@@ -20,7 +21,7 @@ export default async function PhotoReleasePage() {
   }
 
   // Only allow accepted participants to fill out photo release form
-  if (fetchedUser.applicationStatus !== ApplicationStatus.ACCEPTED) {
+  if (!canUserSubmitWaivers(fetchedUser.applicationStatus)) {
     redirect('/profile');
   }
 
