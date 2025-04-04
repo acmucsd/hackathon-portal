@@ -17,11 +17,48 @@ function getFinderSize(modules: BitMatrix): number {
 
 interface QrCodeProps {
   data: string;
+  /**
+   * Whether to use dots or squares for the QR code modules. Defaults to `false`, i.e. dots.
+   */
+  square?: boolean;
 }
 
-const QrCode = ({ data }: QrCodeProps) => {
+const QrCode = ({ data, square = false }: QrCodeProps) => {
   const code = useMemo(() => QRCode.create(data).modules, [data]);
   const finderSize = getFinderSize(code);
+
+  if (square) {
+    let path = '';
+    for (let row = 0; row < code.size; row++) {
+      let start: number | null = null;
+      for (let col = 0; col < code.size; col++) {
+        if (code.get(row, col)) {
+          if (start === null) {
+            start = col;
+            path += `M${col * 2} ${row * 2 + 1}`;
+          }
+        } else if (start !== null) {
+          path += `H${col * 2}`;
+          start = null;
+        }
+      }
+      if (start !== null) {
+        path += `H${code.size * 2}`;
+      }
+    }
+
+    return (
+      <div className={styles.gradient}>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className={styles.svg}
+          viewBox={`-2 -2 ${(code.size + 2) * 2} ${(code.size + 2) * 2}`}
+        >
+          <path d={path} className={styles.codeSquare} />
+        </svg>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.gradient}>

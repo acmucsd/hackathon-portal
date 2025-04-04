@@ -8,6 +8,9 @@ import FAQ, { FAQQuestion } from '../FAQAccordion';
 import DashboardStatus from '../DashboardStatus';
 import TimelineItem from '../TimelineItem';
 import { PrivateProfile } from '@/lib/types/apiResponses';
+import QrCode from '../QrCode';
+import Button from '../Button';
+import { ApplicationStatus } from '@/lib/types/enums';
 
 type Status = 'NOT_SUBMITTED' | 'SUBMITTED' | 'WITHDRAWN' | 'ACCEPTED' | 'REJECTED' | 'CONFIRMED';
 
@@ -42,12 +45,26 @@ const Dashboard = ({ faq, timeline, user }: DashboardProps) => {
           className={styles.bannerImage}
         />
       </Card>
-      <Card gap={1.5} className={`${styles.card} ${styles.status}`}>
-        <Typography variant="headline/heavy/small" component="h2">
-          Application Status
-        </Typography>
-        <DashboardStatus status={user.applicationStatus as Status} timeline={timeline} />
-      </Card>
+      {user.applicationStatus === ApplicationStatus.REJECTED ? ( // TEMP
+        <Card gap={1.5} className={`${styles.card} ${styles.status}`}>
+          <Typography variant="headline/heavy/small" component="h2">
+            QR Code Check-In
+          </Typography>
+          <QrCode data={user.id} />
+          <Typography variant="body/medium" component="p">
+            Use the QR Code above to check into ACM-affiliated hackathon events, grab free food, and
+            more!
+          </Typography>
+          <Button>Enlarge QR Code</Button>
+        </Card>
+      ) : (
+        <Card gap={1.5} className={`${styles.card} ${styles.status}`}>
+          <Typography variant="headline/heavy/small" component="h2">
+            Application Status
+          </Typography>
+          <DashboardStatus status={user.applicationStatus as Status} timeline={timeline} />
+        </Card>
+      )}
       <Card gap={1.5} className={`${styles.card} ${styles.timeline}`}>
         <Typography variant="headline/heavy/small" component="h2">
           Timeline

@@ -6,6 +6,8 @@ import type {
   GetCurrentUserResponse,
   LoginResponse,
   UpdateCurrentUserReponse,
+  PublicProfile,
+  GetUserResponse,
 } from '@/lib/types/apiResponses';
 import axios from 'axios';
 import config from '@/lib/config';
@@ -33,6 +35,29 @@ export const getCurrentUser = async (token: string): Promise<PrivateProfile> => 
     },
   });
   return response.data.user;
+};
+
+/**
+ * Get a user's public profile
+ * @param userId User ID
+ * @returns User's profile
+ */
+export const getUser = async (userId: string): Promise<PublicProfile | string> => {
+  const authToken = await getCookie(CookieType.ACCESS_TOKEN);
+
+  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.user.user}/${userId}`;
+
+  try {
+    const response = await axios.get<GetUserResponse>(requestUrl, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+
+    return response.data.user;
+  } catch (error) {
+    return getErrorMessage(error);
+  }
 };
 
 /**
