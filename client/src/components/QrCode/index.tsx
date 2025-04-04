@@ -21,9 +21,10 @@ interface QrCodeProps {
    * Whether to use dots or squares for the QR code modules. Defaults to `false`, i.e. dots.
    */
   square?: boolean;
+  className?: string;
 }
 
-const QrCode = ({ data, square = false }: QrCodeProps) => {
+const QrCode = ({ data, square = false, className = '' }: QrCodeProps) => {
   const code = useMemo(() => QRCode.create(data).modules, [data]);
   const finderSize = getFinderSize(code);
 
@@ -48,7 +49,7 @@ const QrCode = ({ data, square = false }: QrCodeProps) => {
     }
 
     return (
-      <div className={styles.gradient}>
+      <div className={`${styles.gradient} ${className}`}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className={styles.svg}
@@ -61,7 +62,7 @@ const QrCode = ({ data, square = false }: QrCodeProps) => {
   }
 
   return (
-    <div className={styles.gradient}>
+    <div className={`${styles.gradient} ${className}`}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         className={styles.svg}

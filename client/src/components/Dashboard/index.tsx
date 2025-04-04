@@ -1,3 +1,5 @@
+'use client';
+
 import Image from 'next/image';
 import Card from '../Card';
 import styles from './style.module.scss';
@@ -11,6 +13,8 @@ import { PrivateProfile } from '@/lib/types/apiResponses';
 import QrCode from '../QrCode';
 import Button from '../Button';
 import { ApplicationStatus } from '@/lib/types/enums';
+import Modal from '../Modal';
+import { useState } from 'react';
 
 type Status = 'NOT_SUBMITTED' | 'SUBMITTED' | 'WITHDRAWN' | 'ACCEPTED' | 'REJECTED' | 'CONFIRMED';
 
@@ -29,6 +33,8 @@ interface DashboardProps {
 }
 
 const Dashboard = ({ faq, timeline, user }: DashboardProps) => {
+  const [showBigQr, setShowBigQr] = useState(false);
+
   return (
     <div className={styles.container}>
       <Card gap={1.5} className={`${styles.card} ${styles.banner}`}>
@@ -55,7 +61,7 @@ const Dashboard = ({ faq, timeline, user }: DashboardProps) => {
             Use the QR Code above to check into ACM-affiliated hackathon events, grab free food, and
             more!
           </Typography>
-          <Button>Enlarge QR Code</Button>
+          <Button onClick={() => setShowBigQr(true)}>Enlarge QR Code</Button>
         </Card>
       ) : (
         <Card gap={1.5} className={`${styles.card} ${styles.status}`}>
@@ -93,6 +99,9 @@ const Dashboard = ({ faq, timeline, user }: DashboardProps) => {
           to reach DiamondHacks’s organizers!
         </Typography>
       </Card>
+      <Modal title="Your QR Code" open={showBigQr} onClose={() => setShowBigQr(false)}>
+        <QrCode data={user.id} square className={styles.bigQr} />
+      </Modal>
     </div>
   );
 };
