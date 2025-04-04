@@ -9,3 +9,11 @@ export class UuidParam {
   @IsUUID()
   uuid: string;
 }
+
+export class UuidAndIdParam {
+  @IsUUID()
+  uuid: string;
+
+  @IsString()
+  id: string;
+}

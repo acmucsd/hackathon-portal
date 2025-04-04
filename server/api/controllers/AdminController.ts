@@ -11,6 +11,7 @@ import { Service } from 'typedi';
 import { AuthenticatedUser } from '../decorators/AuthenticatedUser';
 import { UserModel } from '../../models/UserModel';
 import {
+  AttendEventResponse,
   GetApplicationDecisionResponse,
   GetFormResponse,
   GetFormsResponse,
@@ -20,7 +21,7 @@ import { UpdateApplicationDecisionRequest } from '../validators/AdminControllerR
 import { UserAuthentication } from '../middleware/UserAuthentication';
 import { UserService } from '../../services/UserService';
 import { ResponseService } from '../../services/ResponseService';
-import { IdParam, UuidParam } from '../validators/GenericRequests';
+import { IdParam, UuidAndIdParam, UuidParam } from '../validators/GenericRequests';
 import PermissionsService from '../../services/PermissionsService';
 import { AttendanceService } from '../../services/AttendanceService';
 
@@ -146,6 +147,20 @@ export class AdminController {
       error: null,
       attendances: attendances.map((attendance) => attendance.getPublicAttendance()),
     };
+  }
+
+  @UseBefore(UserAuthentication)
+  @Post('/attendance/:uuid/:id')
+  async attendEvent(
+    @AuthenticatedUser() currentUser: UserModel,
+    @Params() params: UuidAndIdParam,
+  ): Promise<AttendEventResponse> {
+    if (!PermissionsService.canViewAllApplications(currentUser))
+      throw new ForbiddenError();
+
+    const attendance = await this.attendanceService.attendEvent(params.id, params.uuid);
+    const { event } = attendance.getPublicAttendance();
+    return { error: null, event };
   }
 
 
