@@ -28,16 +28,15 @@ const EventRow = ({ event, editable = false }: EventRowProps) => {
   const handleEdit = () => {
     router.push(`/modifyEvent/${event.uuid}`);
   };
+
   return (
     <>
       <TableRow>
         <TableCell>
-          {editable && (
-            <UpArrow
-              className={`${styles.accordion} ${showDetails ? styles.rotate : ''}`}
-              onClick={() => setShowDetails(prev => !prev)}
-            ></UpArrow>
-          )}{' '}
+          <UpArrow
+            className={`${styles.accordion} ${showDetails ? styles.rotate : ''}`}
+            onClick={() => setShowDetails(prev => !prev)}
+          />
           {formattedDate}
         </TableCell>
         <TableCell>{event.name}</TableCell>
@@ -59,7 +58,8 @@ const EventRow = ({ event, editable = false }: EventRowProps) => {
           )}
         </TableCell>
       </TableRow>
-      {editable && showDetails && (
+
+      {showDetails && (
         <TableRow className={styles.popupRow}>
           <TableCell className={styles.popupCell} colSpan={4}>
             <div className={styles.popupContent}>
@@ -68,11 +68,11 @@ const EventRow = ({ event, editable = false }: EventRowProps) => {
                   <Typography variant="title/small">{event.name}</Typography>
                   <StatusTag status={event.type} />
                 </div>
-                <EditIcon className={styles.editIcon} onClick={handleEdit} />
+                {editable && <EditIcon className={styles.editIcon} onClick={handleEdit} />}
               </div>
-              <Typography variant="body/medium">hosted by {event.host} </Typography>
+              <Typography variant="body/medium">hosted by {event.host}</Typography>
               <Typography variant="body/medium">
-                {formattedDate} | {event.location}{' '}
+                {formattedDate} | {event.location}
               </Typography>
               <Typography variant="body/medium">{event.description}</Typography>
             </div>
