@@ -165,6 +165,10 @@ export interface GetAllEventsResponse extends ApiResponse {
   events: PublicEvent[];
 }
 
+export interface GetPublishedEventsResponse extends ApiResponse {
+  events: PublicEvent[];
+}
+
 export interface GetOneEventResponse extends ApiResponse {
   event: PublicEvent;
 }

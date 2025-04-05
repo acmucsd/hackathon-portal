@@ -19,6 +19,7 @@ interface LinkMetadata {
 const baseLinks: LinkMetadata[] = [
   { name: 'Dashboard', href: '/' },
   { name: 'Application', href: '/apply' },
+  { name: 'Schedule', href: '/schedule' },
   { name: 'Resources', href: '/resources' },
 ];
 

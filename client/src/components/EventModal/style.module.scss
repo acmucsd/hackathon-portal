@@ -42,5 +42,12 @@
       gap: 1rem;
       align-self: flex-end;
     }
+
+    .locationButton {
+      border: none !important;
+      color: vars.$white !important;
+      padding: 0px !important;
+      justify-content: flex-start !important;
+    }
   }
 }
