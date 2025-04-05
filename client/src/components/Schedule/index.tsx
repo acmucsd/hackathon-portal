@@ -18,7 +18,7 @@ interface ScheduleProps {
 const Schedule = ({ events }: ScheduleProps) => {
   const [filterDay, setFilterDay] = useState(Day.SATURDAY);
 
-  const headers = ['Time', 'Event', 'Type', 'Location'];
+  const headers = ['Time', 'Event', 'Type', 'Hosts', 'Location'];
 
   const size = useWindowSize();
   const isSmall = (size.width ?? 0) <= 1024;
