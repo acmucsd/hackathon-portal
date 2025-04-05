@@ -51,7 +51,7 @@ const Dashboard = ({ faq, timeline, user }: DashboardProps) => {
           className={styles.bannerImage}
         />
       </Card>
-      {user.applicationStatus === ApplicationStatus.REJECTED ? ( // TEMP
+      {user.applicationStatus === ApplicationStatus.CONFIRMED ? (
         <Card gap={1.5} className={`${styles.card} ${styles.status}`}>
           <Typography variant="headline/heavy/small" component="h2">
             QR Code Check-In
