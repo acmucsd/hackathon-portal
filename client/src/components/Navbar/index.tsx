@@ -20,6 +20,7 @@ const baseLinks: LinkMetadata[] = [
   { name: 'Dashboard', href: '/' },
   { name: 'Application', href: '/apply' },
   { name: 'Schedule', href: '/schedule' },
+  { name: 'Resources', href: '/resources' },
 ];
 
 const MOBILE_BREAKPOINT = 870; // Matches $breakpoint-md from vars.scss
