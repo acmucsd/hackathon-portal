@@ -13,6 +13,11 @@ const Scanner = ({ onScan }: ScannerProps) => {
   const scanner = useRef<QrScanner>(null);
   const lastScanned = useRef('');
   const [videoSize, setVideoSize] = useState({ width: 0, height: 0 });
+  const onScanRef = useRef<(data: string) => void>(() => {});
+
+  useEffect(() => {
+    onScanRef.current = onScan;
+  }, [onScan]);
 
   useEffect(() => {
     const videoElem = video.current;
@@ -22,7 +27,7 @@ const Scanner = ({ onScan }: ScannerProps) => {
         result => {
           // Prevent scanning the same QR code again
           if (lastScanned.current !== result.data) {
-            onScan(result.data);
+            onScanRef.current(result.data);
             lastScanned.current = result.data;
           }
         },
@@ -36,7 +41,7 @@ const Scanner = ({ onScan }: ScannerProps) => {
       scanner.current?.destroy();
       scanner.current = null;
     };
-  }, [onScan]);
+  }, []);
 
   return (
     <div className={styles.wrapper}>

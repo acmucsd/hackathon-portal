@@ -23,6 +23,7 @@ const config = {
         userApplication: '/admin/user',
         waivers: '/admin/waivers',
         confirmUser: '/admin/user/confirm',
+        attendance: '/admin/attendance',
       },
       event: {
         createEvent: '/event',

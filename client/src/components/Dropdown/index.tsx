@@ -6,7 +6,7 @@ import styles from './style.module.scss';
 interface DropdownProps {
   name: string;
   ariaLabel: string;
-  options: string[];
+  options: (string | { value: string; display: string })[];
   value: string;
   onChange: (value: string) => void;
   readOnly?: boolean;
@@ -35,20 +35,25 @@ const Dropdown = ({
     });
   }, [open]);
 
-  const optionButtons: ReactNode[] = options.map(option => (
-    <button
-      type="button"
-      className={styles.option}
-      onClick={event => {
-        onChange(option);
-        setOpen(false);
-        event.stopPropagation();
-      }}
-      key={option}
-    >
-      {option}
-    </button>
-  ));
+  const optionButtons: ReactNode[] = options.map(option => {
+    const { value, display } =
+      typeof option === 'string' ? { value: option, display: option } : option;
+
+    return (
+      <button
+        type="button"
+        className={styles.option}
+        onClick={event => {
+          onChange(value);
+          setOpen(false);
+          event.stopPropagation();
+        }}
+        key={value}
+      >
+        {display}
+      </button>
+    );
+  });
 
   return (
     <div
@@ -82,11 +87,16 @@ const Dropdown = ({
               {placeholder}
             </option>
           )}
-          {options.map(option => (
-            <option value={option} key={option}>
-              {option}
-            </option>
-          ))}
+          {options.map(option => {
+            const { value, display } =
+              typeof option === 'string' ? { value: option, display: option } : option;
+
+            return (
+              <option value={value} key={value}>
+                {display}
+              </option>
+            );
+          })}
         </select>
         <DropdownArrow className={styles.arrow} aria-hidden />
       </div>

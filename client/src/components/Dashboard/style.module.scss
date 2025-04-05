@@ -126,4 +126,9 @@
   .faq {
     grid-area: faq;
   }
+
+  .bigQr {
+    max-width: unset;
+    width: 100%;
+  }
 }

@@ -1,3 +1,5 @@
+'use client';
+
 import Image from 'next/image';
 import Card from '../Card';
 import styles from './style.module.scss';
@@ -8,6 +10,11 @@ import FAQ, { FAQQuestion } from '../FAQAccordion';
 import DashboardStatus from '../DashboardStatus';
 import TimelineItem from '../TimelineItem';
 import { PrivateProfile } from '@/lib/types/apiResponses';
+import QrCode from '../QrCode';
+import Button from '../Button';
+import { ApplicationStatus } from '@/lib/types/enums';
+import Modal from '../Modal';
+import { useState } from 'react';
 
 type Status = 'NOT_SUBMITTED' | 'SUBMITTED' | 'WITHDRAWN' | 'ACCEPTED' | 'REJECTED' | 'CONFIRMED';
 
@@ -26,6 +33,8 @@ interface DashboardProps {
 }
 
 const Dashboard = ({ faq, timeline, user }: DashboardProps) => {
+  const [showBigQr, setShowBigQr] = useState(false);
+
   return (
     <div className={styles.container}>
       <Card gap={1.5} className={`${styles.card} ${styles.banner}`}>
@@ -42,12 +51,26 @@ const Dashboard = ({ faq, timeline, user }: DashboardProps) => {
           className={styles.bannerImage}
         />
       </Card>
-      <Card gap={1.5} className={`${styles.card} ${styles.status}`}>
-        <Typography variant="headline/heavy/small" component="h2">
-          Application Status
-        </Typography>
-        <DashboardStatus status={user.applicationStatus as Status} timeline={timeline} />
-      </Card>
+      {user.applicationStatus === ApplicationStatus.CONFIRMED ? (
+        <Card gap={1.5} className={`${styles.card} ${styles.status}`}>
+          <Typography variant="headline/heavy/small" component="h2">
+            QR Code Check-In
+          </Typography>
+          <QrCode data={user.id} />
+          <Typography variant="body/medium" component="p">
+            Use the QR Code above to check into ACM-affiliated hackathon events, grab free food, and
+            more!
+          </Typography>
+          <Button onClick={() => setShowBigQr(true)}>Enlarge QR Code</Button>
+        </Card>
+      ) : (
+        <Card gap={1.5} className={`${styles.card} ${styles.status}`}>
+          <Typography variant="headline/heavy/small" component="h2">
+            Application Status
+          </Typography>
+          <DashboardStatus status={user.applicationStatus as Status} timeline={timeline} />
+        </Card>
+      )}
       <Card gap={1.5} className={`${styles.card} ${styles.timeline}`}>
         <Typography variant="headline/heavy/small" component="h2">
           Timeline
@@ -76,6 +99,9 @@ const Dashboard = ({ faq, timeline, user }: DashboardProps) => {
           to reach DiamondHacks’s organizers!
         </Typography>
       </Card>
+      <Modal title="Your QR Code" open={showBigQr} onClose={() => setShowBigQr(false)}>
+        <QrCode data={user.id} square className={styles.bigQr} />
+      </Modal>
     </div>
   );
 };

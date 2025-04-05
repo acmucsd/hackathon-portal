@@ -1,1 +1,11 @@
 @use '@/styles/vars.scss' as vars;
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.icon {
+  margin: 0 auto;
+}

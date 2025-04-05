@@ -39,7 +39,7 @@ const AdminDashboard = ({ timeline, user, applications }: AdminDashboardProps) =
       </Card>
       <Card gap={1.5} className={`${styles.card} ${styles.checkin}`}>
         <Heading>QR Code Check-In</Heading>
-        <QrCode data="I play Pokemon Go.. every day!" />
+        <p>Tap below to scan participants’ uniquely generated QR Codes. </p>
         <Button href="/admin/scan">Scan QR Codes</Button>
       </Card>
     </div>

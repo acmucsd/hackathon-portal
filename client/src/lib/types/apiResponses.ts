@@ -176,7 +176,29 @@ export interface GetOneEventResponse extends ApiResponse {
 export interface UpdateEventResponse extends ApiResponse {
   event: PublicEvent;
 }
-
 export interface ConfirmUserStatusResponse extends ApiResponse {
   user: FullProfile;
+}
+
+export interface DeleteEventResponse extends ApiResponse {}
+
+// Admin responses
+export interface GetApplicationDecisionResponse extends ApiResponse {
+  user: FullProfile;
+}
+
+export interface UpdateApplicationDecisionResponse extends ApiResponse {
+  user: FullProfile;
+}
+
+export interface ForgotPasswordResponse extends ApiResponse {}
+
+export interface PublicAttendance {
+  user: PublicProfile;
+  event: PublicEvent;
+  timestamp: Date;
+}
+
+export interface AttendEventResponse extends ApiResponse {
+  event: PublicEvent;
 }

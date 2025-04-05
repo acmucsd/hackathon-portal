@@ -20,11 +20,11 @@
   stroke: currentColor;
   fill: none;
   stroke-width: 3;
-  vector-effect: non-scaling-stroke;
 }
 .svg circle {
   transform-origin: center;
   animation: pulse infinite ease-in-out 1s alternate;
+  vector-effect: non-scaling-stroke;
 }
 @keyframes pulse {
   from {
