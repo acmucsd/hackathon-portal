@@ -3,6 +3,7 @@ import {
   PublicEvent,
   CreateEventResponse,
   GetAllEventsResponse,
+  GetPublishedEventsResponse,
   UpdateEventResponse,
   GetOneEventResponse,
 } from '../types/apiResponses';
@@ -54,8 +55,8 @@ export const getEvents = async (token: string): Promise<PublicEvent[]> => {
  * @returns All published events
  */
 export const getPublishedEvents = async (token: string): Promise<PublicEvent[]> => {
-  const response = await axios.get<GetAllEventsResponse>(
-    `${config.api.baseUrl}${config.api.endpoints.event.getAllEvents}`,
+  const response = await axios.get<GetPublishedEventsResponse>(
+    `${config.api.baseUrl}${config.api.endpoints.event.getPublishedEvents}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
