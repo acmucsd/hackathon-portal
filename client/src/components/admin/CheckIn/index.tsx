@@ -5,22 +5,30 @@ import Scanner from '../Scanner';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
 import styles from './style.module.scss';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { getUser } from '@/lib/api/UserAPI';
 import showToast from '@/lib/showToast';
-import { PublicEvent, PublicProfile } from '@/lib/types/apiResponses';
+import { PrivateProfile, PublicEvent, PublicProfile } from '@/lib/types/apiResponses';
 import Typography from '@/components/Typography';
 import Image from 'next/image';
 import Dropdown from '@/components/Dropdown';
 import { attendEvent } from '@/lib/api/AdminAPI';
 import { reportError } from '@/lib/utils';
+import { Autocomplete, TextField } from '@mui/material';
+import { ApplicationStatus } from '@/lib/types/enums';
 
 interface CheckInProps {
   token: string;
   events: PublicEvent[];
+  users: PrivateProfile[];
 }
 
-const CheckIn = ({ token, events }: CheckInProps) => {
+interface UserOption {
+  label: string;
+  id: string;
+}
+
+const CheckIn = ({ token, events, users }: CheckInProps) => {
   const [scannedUser, setScannedUser] = useState<PublicProfile | null>(null);
   const [success, setSuccess] = useState<boolean | null>(null);
   const [event, setEvent] = useState<PublicEvent | undefined>(() =>
@@ -29,6 +37,27 @@ const CheckIn = ({ token, events }: CheckInProps) => {
     )
   );
   const [scanTime, setScanTime] = useState<Date | null>(null);
+  const [searchedUser, setSearchedUser] = useState<UserOption | null>(null);
+
+  const userOptions = useMemo(
+    () =>
+      users
+        .filter(user => user.applicationStatus === ApplicationStatus.CONFIRMED)
+        .map(user => ({
+          label: `${user.firstName} ${user.lastName}`,
+          id: user.id,
+        })),
+    [users]
+  );
+
+  const handleNameCheckin = useCallback(async () => {
+    if (searchedUser === null) {
+      showToast('Please select a user first.');
+      setSuccess(false);
+      return;
+    }
+    handleScan(searchedUser.id);
+  }, [token, event, searchedUser]);
 
   const handleScan = useCallback(
     async (data: string) => {
@@ -72,10 +101,38 @@ const CheckIn = ({ token, events }: CheckInProps) => {
         onChange={eventId => setEvent(events.find(evevent => evevent.uuid === eventId))}
         options={[
           { value: '', display: 'Select an event' },
-          ...events.map(event => ({ value: event.uuid, display: event.name })),
+          ...events.map(event => ({ value: event.uuid, display: `${event.name} (${event.day})` })),
         ]}
       />
       {event ? <Scanner onScan={handleScan} /> : null}
+      {event ? (
+        <>
+          <Autocomplete
+            disablePortal
+            options={userOptions}
+            renderInput={params => <TextField label="Search by name..." {...params} />}
+            value={searchedUser}
+            onChange={(event, newValue) => setSearchedUser(newValue)}
+            className={styles.autocomplete}
+            sx={{
+              '& .MuiOutlinedInput-notchedOutline': {
+                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                border: '2px solid rgba(255, 255, 255, 0.15)',
+              },
+              '& .MuiFormLabel-root': {
+                color: '#a1acbd',
+              },
+              '& .MuiInputBase-root': {
+                color: '#a1acbd',
+              },
+              '& .MuiSvgIcon-root': {
+                fill: 'white',
+              },
+            }}
+          />
+          <Button onClick={handleNameCheckin}>Check-in by name</Button>
+        </>
+      ) : null}
       <Button variant="secondary" href="/admin">
         Close
       </Button>
