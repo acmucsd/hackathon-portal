@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { CSSProperties, HTMLAttributes, PropsWithChildren } from 'react';
+import styles from './style.module.scss';
 
 type V2StandardStyle = 'title' | 'label' | 'body';
 type V2WeightedStyle = 'display' | 'headline';
@@ -164,6 +165,37 @@ const variantToCSS = (variant: V2Variant): CSSProperties => {
   };
 };
 
+const variantToClassName = (variant: V2Variant): string | undefined => {
+  switch (variant) {
+    case 'headline/heavy/large':
+      return styles.headlineHeavyLarge;
+    case 'headline/heavy/medium':
+      return styles.headlineHeavyMedium;
+    case 'headline/heavy/small':
+      return styles.headlineHeavySmall;
+    case 'title/large':
+      return styles.titleLarge;
+    case 'title/medium':
+      return styles.titleMedium;
+    case 'title/small':
+      return styles.titleSmall;
+    case 'label/large':
+      return styles.labelLarge;
+    case 'label/medium':
+      return styles.labelMedium;
+    case 'label/small':
+      return styles.labelSmall;
+    case 'body/large':
+      return styles.bodyLarge;
+    case 'body/medium':
+      return styles.bodyMedium;
+    case 'body/small':
+      return styles.bodySmall;
+    default:
+      return undefined;
+  }
+};
+
 /**
  * Typography component applies h1-h6 styles from Diamond Design System.
  *
@@ -177,6 +209,9 @@ const variantToCSS = (variant: V2Variant): CSSProperties => {
 const Typography = (props: PropsWithChildren<TypographyProps>) => {
   const { variant, component, style, children, ...restProps } = props;
 
+  const { className, ...remainingProps } = restProps;
+  const varClassName = `${variantToClassName(variant)} ${className || ''}`;
+
   if (restProps.href) {
     return (
       <Link
@@ -185,7 +220,8 @@ const Typography = (props: PropsWithChildren<TypographyProps>) => {
           ...variantToCSS(variant),
           ...style, // other styles can be customized via style prop
         }}
-        {...restProps}
+        className={varClassName}
+        {...remainingProps}
       >
         {children}
       </Link>
@@ -200,7 +236,8 @@ const Typography = (props: PropsWithChildren<TypographyProps>) => {
         ...variantToCSS(variant),
         ...style, // other styles can be customized via style prop
       }}
-      {...restProps}
+      className={varClassName}
+      {...remainingProps}
     >
       {children}
     </Component>
