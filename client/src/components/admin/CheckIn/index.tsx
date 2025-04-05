@@ -101,7 +101,7 @@ const CheckIn = ({ token, events, users }: CheckInProps) => {
         onChange={eventId => setEvent(events.find(evevent => evevent.uuid === eventId))}
         options={[
           { value: '', display: 'Select an event' },
-          ...events.map(event => ({ value: event.uuid, display: `${event.name} (${event.day})` })),
+          ...events.map(event => ({ value: event.uuid, display: event.name })),
         ]}
       />
       {event ? <Scanner onScan={handleScan} /> : null}
