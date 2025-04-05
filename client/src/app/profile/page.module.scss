@@ -3,5 +3,5 @@
   display: flex;
   flex-direction: column;
   gap: 10rem;
-  padding: 6rem var(--side-padding);
+  padding: var(--top-padding) var(--side-padding);
 }

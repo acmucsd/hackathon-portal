@@ -36,15 +36,7 @@ export default function Navbar({ user }: NavbarProps) {
   };
 
   const links =
-    user?.accessType == 'ADMIN'
-      ? [
-          ...baseLinks,
-          { name: 'Admin', href: '/admin' },
-          { name: 'Manage Users', href: '/manageUsers' },
-          { name: 'Manage Events', href: '/manageEvents' },
-          { name: 'Create Event', href: '/createEvent' },
-        ]
-      : baseLinks;
+    user?.accessType == 'ADMIN' ? [...baseLinks, { name: 'Admin', href: '/admin' }] : baseLinks;
 
   useEffect(() => {
     // Close mobile menu when screen gets larger than mobile breakpoint
