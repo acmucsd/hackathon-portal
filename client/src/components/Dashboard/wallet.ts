@@ -36,7 +36,7 @@ export async function addToGoogleWallet(baseUrl: string): Promise<string> {
       genericClass = await client.patchClass(classData);
     }
 
-    const objectSuffix = 'diamondhacks2025';
+    const objectSuffix = user.id;
     const objectId = `${ISSUER_ID}.${objectSuffix}`;
     const objectData: GenericObject = {
       id: objectId,
