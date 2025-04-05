@@ -2,10 +2,12 @@
 
 :root {
   --side-padding: #{vars.$side-padding};
+  --top-padding: #{vars.$top-padding};
   color-scheme: dark;
 
   @media screen and (max-width: vars.$breakpoint-md) {
     --side-padding: #{vars.$side-padding-mobile};
+    --top-padding: #{vars.$top-padding-mobile};
   }
 }
 
