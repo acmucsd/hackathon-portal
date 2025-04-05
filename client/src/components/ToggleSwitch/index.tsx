@@ -5,10 +5,11 @@ import styles from './style.module.scss';
 interface ToggleProps {
   onToggle?: (state: boolean) => void;
   label?: string;
+  checked?: boolean;
 }
 
-const ToggleSwitch = ({ onToggle, label }: ToggleProps) => {
-  const [isOn, setIsOn] = useState(false);
+const ToggleSwitch = ({ onToggle, label, checked = false }: ToggleProps) => {
+  const [isOn, setIsOn] = useState(checked);
 
   const toggle = () => {
     setIsOn(!isOn);

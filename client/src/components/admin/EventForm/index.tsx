@@ -244,7 +244,9 @@ const EventForm = ({ accessToken, event }: EventFormProps) => {
         <Controller
           name="published"
           control={control}
-          render={({ field }) => <ToggleSwitch label="Published?" onToggle={field.onChange} />}
+          render={({ field }) => (
+            <ToggleSwitch label="Published?" onToggle={field.onChange} checked={field.value} />
+          )}
         />
         <div className={styles.buttonContainer}>
           {event && (
