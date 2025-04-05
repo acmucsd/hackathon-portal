@@ -15,6 +15,8 @@ import Button from '../Button';
 import { ApplicationStatus, Day } from '@/lib/types/enums';
 import Modal from '../Modal';
 import { useState } from 'react';
+import { addToGoogleWallet } from './wallet';
+import showToast from '@/lib/showToast';
 
 type Status = 'NOT_SUBMITTED' | 'SUBMITTED' | 'WITHDRAWN' | 'ACCEPTED' | 'REJECTED' | 'CONFIRMED';
 
@@ -62,6 +64,17 @@ const Dashboard = ({ faq, timeline, user }: DashboardProps) => {
             more!
           </Typography>
           <Button onClick={() => setShowBigQr(true)}>Enlarge QR Code</Button>
+          <Button
+            onClick={async () => {
+              const error = await addToGoogleWallet(window.location.origin);
+              if (error) {
+                showToast('Failed to create a pass', error);
+              }
+            }}
+            variant="secondary"
+          >
+            Add to Google Wallet
+          </Button>
         </Card>
       ) : (
         <Card gap={1.5} className={`${styles.card} ${styles.status}`}>
