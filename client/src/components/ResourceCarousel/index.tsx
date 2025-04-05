@@ -1,7 +1,6 @@
 import Carousel from '../Carousel';
 import Typography from '@/components/Typography';
 
-import DiamondFriends from '@/../../public/assets/diamond-friends.svg';
 import type { ReactNode } from 'react';
 import ResourceCard from '../ResourceCard';
 import styles from './style.module.scss';

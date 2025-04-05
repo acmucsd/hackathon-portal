@@ -10,10 +10,6 @@ const config = {
       user: {
         user: '/user',
       },
-      resources: {
-        allResources: '/resources/all',
-        resource: '/resources',
-      },
       response: {
         response: '/response',
         application: '/response/application',
