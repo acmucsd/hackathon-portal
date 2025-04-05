@@ -84,6 +84,7 @@ const QrCode = ({ data, square = false, className = '' }: QrCodeProps) => {
             .join('')}
         />
         <rect
+          rx={2}
           x={1}
           y={1}
           width={(finderSize - 1) * 2}
@@ -91,6 +92,7 @@ const QrCode = ({ data, square = false, className = '' }: QrCodeProps) => {
           className={styles.finderOutline}
         />
         <rect
+          rx={2}
           x={1}
           y={(code.size - finderSize) * 2 + 1}
           width={(finderSize - 1) * 2}
@@ -98,6 +100,7 @@ const QrCode = ({ data, square = false, className = '' }: QrCodeProps) => {
           className={styles.finderOutline}
         />
         <rect
+          rx={2}
           x={(code.size - finderSize) * 2 + 1}
           y={1}
           width={(finderSize - 1) * 2}
@@ -105,6 +108,7 @@ const QrCode = ({ data, square = false, className = '' }: QrCodeProps) => {
           className={styles.finderOutline}
         />
         <rect
+          rx={4}
           x={4}
           y={4}
           width={(finderSize - 4) * 2}
@@ -112,6 +116,7 @@ const QrCode = ({ data, square = false, className = '' }: QrCodeProps) => {
           className={styles.finderCenter}
         />
         <rect
+          rx={4}
           x={(code.size - (finderSize - 2)) * 2}
           y={4}
           width={(finderSize - 4) * 2}
@@ -119,6 +124,7 @@ const QrCode = ({ data, square = false, className = '' }: QrCodeProps) => {
           className={styles.finderCenter}
         />
         <rect
+          rx={4}
           x={4}
           y={(code.size - (finderSize - 2)) * 2}
           width={(finderSize - 4) * 2}
