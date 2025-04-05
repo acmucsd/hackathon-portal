@@ -1,5 +1,19 @@
 @use 'src/styles/vars.scss' as vars;
 
+.tagsContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  margin: 4px 0;
+
+  .tag {
+    padding: 1px 4px;
+    border: 1px solid vars.$card-stroke;
+    border-radius: 4px;
+    background-color: vars.$dark-blue;
+  }
+}
+
 .container {
   background: vars.$card-bg;
   border-radius: 10px;
@@ -16,16 +30,6 @@
   &.bordered {
     border: 1px solid vars.$border-stroke;
     border-radius: 10px;
-  }
-
-  &.interactive:not([data-disabled]):hover {
-    outline-width: 4px;
-    transform: scale(0.975);
-
-    &[data-community='General'] {
-      border-color: vars.$blue-4;
-      outline-color: vars.$blue-4;
-    }
   }
 
   &:disabled {

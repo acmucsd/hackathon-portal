@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { ComponentType, Fragment, ReactNode } from 'react';
 import styles from './style.module.scss';
 
-import type { Resource } from '../../sections/Resources/resources';
+import type { Resource } from '@/app/resources/resources';
 import Link from 'next/link';
 
 interface ResourceCardProps {
@@ -14,6 +14,18 @@ interface ResourceCardProps {
   interactive?: boolean;
 }
 
+const ResourceTags = ({ resource }: { resource: Resource }) => {
+  return (
+    <div className={styles.tagsContainer}>
+      {resource.tags?.map(tag => (
+        <Typography variant="body/small" key={tag} className={styles.tag}>
+          {tag}
+        </Typography>
+      ))}
+    </div>
+  );
+};
+
 const ResourceCard = ({
   resource,
   className,
@@ -21,7 +33,7 @@ const ResourceCard = ({
   hideInfo,
   interactive = true,
 }: ResourceCardProps) => {
-  const { title, link, resource_type, cover_image } = resource;
+  const { title, link, cover_image, tags } = resource;
 
   const Component = interactive ? Link : 'div';
 
@@ -54,6 +66,7 @@ const ResourceCard = ({
               >
                 {title}
               </Typography>
+              <ResourceTags resource={resource} />
               <Typography
                 variant="body/small"
                 style={{ fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis' }}

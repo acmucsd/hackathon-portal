@@ -1,9 +1,5 @@
 import ResourceCarousel from '@/components/ResourceCarousel';
-import {
-  API_RESOURCES,
-  BACKEND_RESOURCES,
-  FRONTEND_RESOURCES,
-} from '@/sections/Resources/resources';
+import { RESOURCES } from './resources';
 import ResourceBanner from '@/../public/assets/resources.svg';
 import styles from './page.module.scss';
 import Typography from '@/components/Typography';
@@ -19,22 +15,12 @@ export default function ResourcePage() {
         </Typography>
       </div>
       <ResourceCarousel
-        title="Frontend"
-        resources={FRONTEND_RESOURCES}
-        placeholder={'No Resources Here!'}
-        link="frontend"
+        title="Starter Packs"
+        resources={RESOURCES.filter(r => r.resource_type === 'starter_pack')}
       />
       <ResourceCarousel
-        title="Backend"
-        resources={BACKEND_RESOURCES}
-        placeholder={'No Resources Here!'}
-        link="backend"
-      />
-      <ResourceCarousel
-        title="APIs"
-        resources={API_RESOURCES}
-        placeholder={'No Resources Here!'}
-        link="api"
+        title="Tutorials"
+        resources={RESOURCES.filter(r => r.resource_type === 'tutorial')}
       />
     </main>
   );
