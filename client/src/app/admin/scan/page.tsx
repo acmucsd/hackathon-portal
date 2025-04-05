@@ -12,7 +12,13 @@ export default async function EventScan() {
     redirect('/login');
   }
 
-  const events = await EventAPI.getEvents(accessToken);
+  let events;
+  try {
+    events = await EventAPI.getEvents(accessToken);
+  } catch (error) {
+    console.error('Failed to fetch events:', error);
+    redirect('/login');
+  }
 
   return (
     <div className={styles.main}>

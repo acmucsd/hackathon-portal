@@ -28,11 +28,18 @@ const CheckIn = ({ token, events }: CheckInProps) => {
       event => new Date(event.startTime) <= new Date() && new Date() < new Date(event.endTime)
     )
   );
+  const [scanTime, setScanTime] = useState<Date | null>(null);
 
   const handleScan = useCallback(
     async (data: string) => {
       setSuccess(null);
       setScannedUser(null);
+      setScanTime(null);
+      if (!event) {
+        showToast('Select an event first.');
+        setSuccess(false);
+        return;
+      }
       const user = await getUser(data);
       if (typeof user === 'string') {
         showToast('Invalid QR Code.', user);
@@ -40,14 +47,10 @@ const CheckIn = ({ token, events }: CheckInProps) => {
         setSuccess(false);
         return;
       }
-      if (!event) {
-        showToast('Select an event first.');
-        setSuccess(false);
-        return;
-      }
       setScannedUser(user);
       try {
         await attendEvent(token, user.id, event.uuid);
+        setScanTime(new Date());
         setSuccess(true);
         new Audio('/assets/sounds/scan-success (TEMPORARY!!!).mp3').play();
       } catch (error) {
@@ -72,7 +75,7 @@ const CheckIn = ({ token, events }: CheckInProps) => {
           ...events.map(event => ({ value: event.uuid, display: event.name })),
         ]}
       />
-      <Scanner onScan={handleScan} />
+      {event ? <Scanner onScan={handleScan} /> : null}
       <Button variant="secondary" href="/admin">
         Close
       </Button>
@@ -100,8 +103,10 @@ const CheckIn = ({ token, events }: CheckInProps) => {
           <Typography variant="headline/heavy/medium">
             {scannedUser.firstName} {scannedUser.lastName}
           </Typography>
-          <Typography variant="body/medium">Event name</Typography>
-          <Typography variant="body/medium">Time</Typography>
+          <Typography variant="body/medium">{event?.name}</Typography>
+          <Typography variant="body/medium">
+            {scanTime?.toLocaleTimeString('en-US', { timeStyle: 'long' })}
+          </Typography>
         </div>
       ) : null}
     </Card>
