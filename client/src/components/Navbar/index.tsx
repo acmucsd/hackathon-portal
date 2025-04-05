@@ -14,12 +14,14 @@ import PersonIcon from '@/../public/assets/icons/person.svg';
 interface LinkMetadata {
   name: string;
   href: string;
+  external?: boolean;
 }
 
 const baseLinks: LinkMetadata[] = [
   { name: 'Dashboard', href: '/' },
   { name: 'Schedule', href: '/schedule' },
   { name: 'Resources', href: '/resources' },
+  { name: 'Hacker Guide', href: 'http://acmurl.com/diamondhacks25-guide', external: true },
 ];
 
 const MOBILE_BREAKPOINT = 870; // Matches $breakpoint-md from vars.scss
@@ -69,6 +71,8 @@ export default function Navbar({ user }: NavbarProps) {
                   className={styles.link}
                   onClick={onLinkClick}
                   key={link.name}
+                  rel={link.external ? 'noopener noreferrer' : undefined}
+                  target={link.external ? '_blank' : undefined}
                 >
                   {link.name}
                 </Link>

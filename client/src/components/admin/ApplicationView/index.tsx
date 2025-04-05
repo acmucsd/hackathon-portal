@@ -57,8 +57,8 @@ const ApplicationView = ({ application, token, decision, waivers }: ApplicationV
     }
     try {
       const updatedUser = await AdminAPI.confirmUserStatus(token, user.id);
-      showToast('CONFIRMED', 'Successfully marked the user as CONFIRMED');
       setCurrentStatus(updatedUser.applicationStatus);
+      showToast('CONFIRMED', 'Successfully marked the user as CONFIRMED');
     } catch (error) {
       reportError("Couldn't confirm user", error);
     }

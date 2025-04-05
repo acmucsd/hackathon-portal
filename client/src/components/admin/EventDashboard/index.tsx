@@ -21,7 +21,7 @@ const EventDashboard = ({ events }: EventDashboardProps) => {
   const [allowEditPublished, setAllowEditPublished] = useState(false);
   const [allowEditUnpublished, setAllowEditUnpublished] = useState(false);
 
-  const headers = ['Time', 'Event', 'Type', 'Location'];
+  const headers = ['Time', 'Event', 'Type', 'Hosts', 'Location'];
 
   const size = useWindowSize();
   const isSmall = (size.width ?? 0) <= 1024;

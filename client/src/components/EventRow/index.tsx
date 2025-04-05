@@ -37,12 +37,14 @@ const EventRow = ({ event, editable = false }: EventRowProps) => {
             className={`${styles.accordion} ${showDetails ? styles.rotate : ''}`}
             onClick={() => setShowDetails(prev => !prev)}
           />
+          {'  '}
           {formattedDate}
         </TableCell>
         <TableCell>{event.name}</TableCell>
         <TableCell>
           <StatusTag status={event.type} />
         </TableCell>
+        <TableCell>{event.host}</TableCell>
         <TableCell>
           {event.locationLink ? (
             <Button
@@ -61,7 +63,7 @@ const EventRow = ({ event, editable = false }: EventRowProps) => {
 
       {showDetails && (
         <TableRow className={styles.popupRow}>
-          <TableCell className={styles.popupCell} colSpan={4}>
+          <TableCell className={styles.popupCell} colSpan={5}>
             <div className={styles.popupContent}>
               <div className={styles.popupHeader}>
                 <div className={styles.popupTitle}>
