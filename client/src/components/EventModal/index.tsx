@@ -1,5 +1,6 @@
 import Card from '@/components/Card';
 import Typography from '@/components/Typography';
+import Button from '@/components/Button';
 import StatusTag from '@/components/StatusTag';
 import CloseIcon from '../../../public/assets/icons/close.svg';
 import EditIcon from '../../../public/assets/icons/edit.svg';
@@ -33,7 +34,20 @@ const EventModal = ({ event, onClick, editable = false }: EventModalProps) => {
         <Typography variant="body/large">
           {eventDay} {formatTime(event.startTime)} - {formatTime(event.endTime)}
         </Typography>
-        <Typography variant="body/large">{event.location}</Typography>
+        <Typography variant="body/large">
+          {event.locationLink ? (
+            <Button
+              variant="tertiary"
+              className={styles.locationButton}
+              href={event.locationLink}
+              openNewTab
+            >
+              {event.location} ↗
+            </Button>
+          ) : (
+            event.location
+          )}
+        </Typography>
         <StatusTag status={event.type} />
         <Typography variant="body/medium">{event.description}</Typography>
         <Typography variant="body/large">
