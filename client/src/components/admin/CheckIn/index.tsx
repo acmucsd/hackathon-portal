@@ -5,7 +5,7 @@ import Scanner from '../Scanner';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
 import styles from './style.module.scss';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { getUser } from '@/lib/api/UserAPI';
 import showToast from '@/lib/showToast';
 import { PrivateProfile, PublicEvent, PublicProfile } from '@/lib/types/apiResponses';
@@ -38,6 +38,10 @@ const CheckIn = ({ token, events, users }: CheckInProps) => {
   );
   const [scanTime, setScanTime] = useState<Date | null>(null);
   const [searchedUser, setSearchedUser] = useState<UserOption | null>(null);
+
+  const successAudioRef = useRef<HTMLAudioElement>(null);
+  const badUserAudioRef = useRef<HTMLAudioElement>(null);
+  const checkinFailAudioRef = useRef<HTMLAudioElement>(null);
 
   const userOptions = useMemo(
     () =>
@@ -72,8 +76,11 @@ const CheckIn = ({ token, events, users }: CheckInProps) => {
       const user = await getUser(data);
       if (typeof user === 'string') {
         showToast('Invalid QR Code.', user);
-        new Audio('/assets/sounds/bad user (TEMP).wav').play();
         setSuccess(false);
+        if (badUserAudioRef.current) {
+          badUserAudioRef.current.currentTime = 0;
+          badUserAudioRef.current.play();
+        }
         return;
       }
       setScannedUser(user);
@@ -81,11 +88,18 @@ const CheckIn = ({ token, events, users }: CheckInProps) => {
         await attendEvent(token, user.id, event.uuid);
         setScanTime(new Date());
         setSuccess(true);
-        new Audio('/assets/sounds/scan-success (TEMPORARY!!!).mp3').play();
+        showToast(`${user.firstName} ${user.lastName} checked in!`, `Checked into ${event.name}`);
+        if (successAudioRef.current) {
+          successAudioRef.current.currentTime = 0;
+          successAudioRef.current.play();
+        }
       } catch (error) {
         reportError('Failed to check user in', error);
         setSuccess(false);
-        new Audio('/assets/sounds/already checked in (FINAL).wav').play();
+        if (checkinFailAudioRef.current) {
+          checkinFailAudioRef.current.currentTime = 0;
+          checkinFailAudioRef.current.play();
+        }
       }
     },
     [token, event]
@@ -93,6 +107,9 @@ const CheckIn = ({ token, events, users }: CheckInProps) => {
 
   return (
     <Card gap={1.5}>
+      <audio src="/assets/sounds/scan-success (TEMPORARY!!!).mp3" ref={successAudioRef}></audio>
+      <audio src="/assets/sounds/bad user (TEMP).wav" ref={badUserAudioRef}></audio>
+      <audio src="/assets/sounds/already checked in (FINAL).wav" ref={checkinFailAudioRef}></audio>
       <Heading>QR Code Check-in</Heading>
       <Dropdown
         ariaLabel="Select an event"
