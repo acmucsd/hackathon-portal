@@ -1,0 +1,37 @@
+@use '@/styles/vars.scss' as vars;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  .filterButtons {
+    display: flex;
+    gap: 1rem;
+
+    button {
+      border-radius: 0.75rem;
+      color: vars.$white;
+      border-color: vars.$white;
+      padding: 0.5rem 1rem;
+      min-width: 0;
+    }
+
+    .activeFilter {
+      background-color: vars.$light-blue;
+      color: vars.$black;
+      border-color: transparent;
+    }
+  }
+  .eventContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+
+    .events {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+  }
+}

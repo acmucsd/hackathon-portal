@@ -28,6 +28,7 @@ const config = {
       event: {
         createEvent: '/event',
         getAllEvents: '/event',
+        getPublishedEvents: '/event/published',
         getEvent: '/event',
         updateEvent: '/event',
         deleteEvent: '/event',

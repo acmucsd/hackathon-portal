@@ -1,0 +1,63 @@
+@use 'src/styles/vars.scss' as vars;
+
+.tagsContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  margin: 4px 0;
+
+  .tag {
+    padding: 1px 4px;
+    border: 1px solid vars.$card-stroke;
+    border-radius: 4px;
+    background-color: vars.$dark-blue;
+  }
+}
+
+.container {
+  background: vars.$card-bg;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+  outline: 0 solid vars.$card-stroke;
+  padding: 0;
+  position: relative;
+  text-align: left;
+  transition: all 0.3s;
+  width: 20rem;
+
+  &.bordered {
+    border: 1px solid vars.$border-stroke;
+    border-radius: 10px;
+  }
+
+  &:disabled {
+    cursor: default;
+  }
+
+  .image {
+    aspect-ratio: 1920 / 1080;
+    border-top-left-radius: 9px;
+    border-top-right-radius: 9px;
+    flex-shrink: 0;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+  }
+
+  .info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 1rem 1.5rem;
+    white-space: nowrap;
+    width: 100%;
+
+    .infoText {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+  }
+}

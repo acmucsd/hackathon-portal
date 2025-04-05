@@ -30,41 +30,17 @@ const AdminDashboard = ({ timeline, user, applications }: AdminDashboardProps) =
 
   return (
     <div className={styles.container}>
-      <Card gap={1.5} className={`${styles.card} ${styles.banner}`}>
-        <Typography variant="headline/heavy/large" component="h1" className={styles.title}>
-          Welcome, {user.firstName + ' ' + user.lastName}!
-        </Typography>
-        <Typography variant="body/medium" component="p" className={styles.subtitle}>
-          Review applications and send application status updates below.
-        </Typography>
-        <Image
-          src={Banner}
-          alt="Two diamond critters find a large jewel in a vault"
-          quality={100}
-          className={styles.bannerImage}
-        />
+      <Card gap={1.5} className={`${styles.card} ${styles.actions}`}>
+        <Heading>Admin Actions</Heading>
+        <Button href="/manageUsers">Manage Users</Button>
+        <Button href="/manageEvents">Manage Events</Button>
+        <Button href="/createEvent">Create Events</Button>
+        <Button href="/admin/scan">QR Code Check-In</Button>
       </Card>
-      <Card gap={1.5} className={`${styles.card}`}>
+      <Card gap={1.5} className={`${styles.card} ${styles.checkin}`}>
         <Heading>QR Code Check-In</Heading>
         <p>Tap below to scan participants’ uniquely generated QR Codes. </p>
         <Button href="/admin/scan">Scan QR Codes</Button>
-      </Card>
-      <Card gap={1.5} className={`${styles.card} ${styles.status}`}>
-        <ApplicationCount pendingApps={pendingApplications} totalApps={totalApplications} />
-        <Button href="/manageUsers">Continue Reviewing</Button>
-      </Card>
-      <Card gap={1.5} className={`${styles.card} ${styles.timeline}`}>
-        <Typography variant="headline/heavy/small" component="h2">
-          Timeline
-        </Typography>
-        <div className={styles.timelineItemWrapper}>
-          <TimelineItem date={timeline.application} first>
-            Application Deadline
-          </TimelineItem>
-          <TimelineItem date={timeline.decisions}>Decisions Released</TimelineItem>
-          <TimelineItem date={timeline.acceptance}>Acceptance Deadline</TimelineItem>
-          <TimelineItem date={timeline.hackathon}>Hackathon Day!</TimelineItem>
-        </div>
       </Card>
     </div>
   );

@@ -1,0 +1,34 @@
+@use '@/styles/vars.scss' as vars;
+
+.main {
+  flex: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6rem;
+  padding: var(--top-padding) var(--side-padding);
+  justify-content: flex-start;
+
+  @media screen and (max-width: vars.$breakpoint-md) {
+    gap: 2rem;
+  }
+}
+
+.banner {
+  width: 100%;
+}
+
+.bannerContainer {
+  width: 100%;
+}
+
+.desktop {
+  @media screen and (max-width: vars.$breakpoint-md) {
+    display: none;
+  }
+}
+
+.mobile {
+  @media screen and (min-width: vars.$breakpoint-md) {
+    display: none;
+  }
+}
