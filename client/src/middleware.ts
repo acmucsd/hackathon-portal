@@ -2,16 +2,17 @@ import { NextResponse, NextRequest } from 'next/server';
 import { CookieType } from './lib/types/enums';
 
 export function middleware(request: NextRequest) {
-  const userCookie = request.cookies.get(CookieType.USER);
+  const url = new URL(request.url);
+  const pathname = url.pathname;
+  const allowedPaths = ['/closed', '/_next', '/favicon', '/assets'];
 
-  // Send the user to the login page if they don't have a valid cookie
-  if (!userCookie) {
-    return NextResponse.redirect(new URL('/api/logout', request.url));
+  if (allowedPaths.some(path => pathname.startsWith(path))) {
+    return NextResponse.next();
   }
 
-  return NextResponse.next();
+  return NextResponse.redirect(new URL('/closed', request.url));
 }
 
 export const config = {
-  matcher: ['/', '/profile', '/apply/:step'],
+  matcher: '/:path*',
 };
