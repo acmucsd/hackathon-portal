@@ -21,19 +21,19 @@ export interface Application {
 
   // ### Optional Demographic Fields ###
   dietary: string[]; 
-  underrepresented?: string; // added
+  underrepresented: string; // added
   gender: string; 
   pronouns: string;
   ethnicity: string[];
   orientation: string[];
-  educationLevel?: string; // added
-  tshirtSize?: string; // added
-  address1Shipping?: string; // added
-  address2Shipping?: string; // added
-  cityShipping?: string; // added
-  stateShipping?: string; // added
-  countryShipping?: string; // added
-  zipcodeShipping?: string; // added
+  educationLevel: string; // added
+  tshirtSize: string; // added
+  address1Shipping: string; // added
+  address2Shipping: string; // added
+  cityShipping: string; // added
+  stateShipping: string; // added
+  countryShipping: string; // added
+  zipcodeShipping: string; // added
   major: string;
   
   // ### Not in official requirements list ###
