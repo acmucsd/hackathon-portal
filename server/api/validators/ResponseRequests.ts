@@ -120,20 +120,28 @@ export class Application implements IApplication {
   // ### Optional Demographic Fields ###
   @IsDefined()
   underrepresented: string; // added
+
   @IsDefined()
   educationLevel: string; // added
+
   @IsDefined()
   tshirtSize: string; // added
+
   @IsDefined()
   address1Shipping: string; // added
+
   @IsDefined()
   address2Shipping: string; // added
+
   @IsDefined()
   cityShipping: string; // added
+
   @IsDefined()
   stateShipping: string; // added
+
   @IsDefined()
   countryShipping: string; // added
+  
   @IsDefined()
   zipcodeShipping: string; // added  
 }
