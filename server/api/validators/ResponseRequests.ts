@@ -1,5 +1,4 @@
 import {
-  Allow,
   ArrayNotEmpty,
   IsArray,
   IsDefined,
@@ -114,36 +113,36 @@ export class Application implements IApplication {
   @IsEnum(YesOrNo)
   mlhEmailAuthorization: string;
 
-  @Allow() // optional
+  @IsDefined()
   additionalComments: string;
 
   // ### Optional Demographic Fields ###
   @IsDefined()
-  underrepresented: string; // added
+  underrepresented: string;
 
   @IsDefined()
-  educationLevel: string; // added
+  educationLevel: string;
 
   @IsDefined()
-  tshirtSize: string; // added
+  tshirtSize: string;
 
   @IsDefined()
-  address1Shipping: string; // added
+  address1Shipping: string;
 
   @IsDefined()
-  address2Shipping: string; // added
+  address2Shipping: string;
 
   @IsDefined()
-  cityShipping: string; // added
+  cityShipping: string;
 
   @IsDefined()
-  stateShipping: string; // added
+  stateShipping: string;
 
   @IsDefined()
-  countryShipping: string; // added
-  
+  countryShipping: string;
+
   @IsDefined()
-  zipcodeShipping: string; // added  
+  zipcodeShipping: string;
 }
 
 export class CreateApplicationRequest implements ICreateApplicationRequest {
