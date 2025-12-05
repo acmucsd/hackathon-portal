@@ -20,22 +20,22 @@ export interface Application {
   mlhEmailAuthorization: string;
 
   // ### Optional Demographic Fields ###
-  dietary: string[];
-  underrepresented: string;
-  gender: string;
+  dietary: string[]; 
+  underrepresented: string; // added
+  gender: string; 
   pronouns: string;
   ethnicity: string[];
   orientation: string[];
-  educationLevel: string;
-  tshirtSize: string;
-  address1Shipping: string;
-  address2Shipping: string;
-  cityShipping: string;
-  stateShipping: string;
-  countryShipping: string;
-  zipcodeShipping: string;
+  educationLevel: string; // added
+  tshirtSize: string; // added
+  address1Shipping: string; // added
+  address2Shipping: string; // added
+  cityShipping: string; // added
+  stateShipping: string; // added
+  countryShipping: string; // added
+  zipcodeShipping: string; // added
   major: string;
-
+  
   // ### Not in official requirements list ###
   interests: string[];
   referrer: string[];

@@ -114,36 +114,36 @@ export class Application implements IApplication {
   @IsEnum(YesOrNo)
   mlhEmailAuthorization: string;
 
-  @IsDefined()
+  @Allow() // optional
   additionalComments: string;
 
   // ### Optional Demographic Fields ###
   @IsDefined()
-  underrepresented: string;
+  underrepresented: string; // added
 
   @IsDefined()
-  educationLevel: string;
+  educationLevel: string; // added
 
   @IsDefined()
-  tshirtSize: string;
+  tshirtSize: string; // added
 
   @IsDefined()
-  address1Shipping: string;
+  address1Shipping: string; // added
 
   @IsDefined()
-  address2Shipping: string;
+  address2Shipping: string; // added
 
   @IsDefined()
-  cityShipping: string;
+  cityShipping: string; // added
 
   @IsDefined()
-  stateShipping: string;
+  stateShipping: string; // added
 
   @IsDefined()
-  countryShipping: string;
-
+  countryShipping: string; // added
+  
   @IsDefined()
-  zipcodeShipping: string;
+  zipcodeShipping: string; // added  
 }
 
 export class CreateApplicationRequest implements ICreateApplicationRequest {
