@@ -1,4 +1,5 @@
 import {
+  Allow,
   ArrayNotEmpty,
   IsArray,
   IsDefined,
@@ -113,7 +114,7 @@ export class Application implements IApplication {
   @IsEnum(YesOrNo)
   mlhEmailAuthorization: string;
 
-  @IsDefined()
+  @Allow()
   additionalComments: string;
 
   // ### Optional Demographic Fields ###
