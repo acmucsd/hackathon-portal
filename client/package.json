@@ -24,7 +24,7 @@
     "google-wallet": "^1.0.21",
     "jsonwebtoken": "^9.0.2",
     "localforage": "^1.10.0",
-    "next": "15.1.6",
+    "next": "15.1.9",
     "qr-scanner": "^1.4.2",
     "qrcode": "^1.5.4",
     "react": "19.0.0",
