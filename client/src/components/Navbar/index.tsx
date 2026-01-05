@@ -21,7 +21,7 @@ const baseLinks: LinkMetadata[] = [
   { name: 'Dashboard', href: '/' },
   { name: 'Schedule', href: '/schedule' },
   { name: 'Resources', href: '/resources' },
-  { name: 'Hacker Guide', href: 'http://acmurl.com/diamondhacks25-guide', external: true },
+  // { name: 'Hacker Guide', href: 'http://acmurl.com/diamondhacks25-guide', external: true },
 ];
 
 const MOBILE_BREAKPOINT = 870; // Matches $breakpoint-md from vars.scss
