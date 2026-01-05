@@ -16,4 +16,22 @@ export class ApplicationConfigService {
       return config?.applicationsOpen === true;
     });
   }
+
+  public async setApplicationSingleton(applicationsOpen: boolean, updateBy: string): Promise<ApplicationConfigModel> {
+    return this.transactionsManager.readWrite(async (entityManager) => {
+      const configRepository = Repositories.applicationConfig(entityManager);
+      let config = await configRepository.findSingleton();
+
+      if (!config) {
+        throw new Error('ApplicationConfig singleton not found');
+      } else {
+        config.applicationsOpen = applicationsOpen;
+        config.updatedBy = updateBy;
+        config.updatedAt = new Date();
+      }
+
+      return configRepository.save(config);
+    });
+  }
+
 }
