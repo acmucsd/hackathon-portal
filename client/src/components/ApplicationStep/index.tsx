@@ -36,7 +36,12 @@ type AppQuestion = {
       choices: string[];
     }
   | {
-      type: 'text';
+      type: 'short-text';
+      placeholder?: string;
+    }
+  | {
+      type: 'long-text';
+      placeholder?: string;
     }
   | {
       type: 'url' | 'phone';
@@ -184,11 +189,13 @@ const ApplicationStep = ({
             );
           }
           if (
-            question.type === 'text' ||
+            question.type === 'short-text' ||
+            question.type === 'long-text' ||
             question.type === 'phone' ||
             question.type === 'url' ||
             question.type === 'dropdown'
-          ) {
+          )
+          {
             return (
               <div className={styles.questionWrapper} key={question.id}>
                 <Typography variant="body/medium" component="p" className={styles.question}>
@@ -197,17 +204,29 @@ const ApplicationStep = ({
                     {question.optional ? null : ASTERISK}
                   </label>
                 </Typography>
-                {question.type === 'text' ? (
+                { question.type === 'long-text' ? (
                   <textarea
                     id={`${id}-${question.id}`}
                     name={question.id}
-                    placeholder="Type answer here..."
+                    placeholder={question.placeholder ?? 'Type answer here...'}
                     required={!question.optional}
                     className={styles.textbox}
                     defaultValue={responses[question.id] ?? ''}
                     disabled={!responsesLoaded}
                   />
-                ) : question.type === 'dropdown' ? (
+                ) : question.type === 'short-text' ? (
+                  <input
+                    type="text"
+                    id={`${id}-${question.id}`}
+                    name={question.id}
+                    placeholder={question.placeholder}
+                    required={!question.optional}
+                    className={styles.textline}
+                    defaultValue={responses[question.id] ?? ''}
+                    disabled={!responsesLoaded}
+                  />
+                )
+                 : question.type === 'dropdown' ? (
                   <>
                     {showOtherInput[question.id] === undefined &&
                       responses[question.id] &&

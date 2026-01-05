@@ -4,6 +4,7 @@ export interface Application {
   phoneNumber: string;
   age: string;
   university: string;
+  educationLevel: string;
   levelOfStudy: string;
   country: string;
   linkedin: string;
@@ -11,7 +12,15 @@ export interface Application {
   pronouns: string;
   orientation: string[];
   ethnicity: string[];
+  underrepresented: string;
   dietary: string[];
+  tshirtSize: string;
+  address1Shipping: string;
+  address2Shipping: string;
+  cityShipping: string;
+  stateShipping: string;
+  countryShipping: string;
+  zipcodeShipping: string;
   interests: string[];
   major: string;
   referrer: string[];
@@ -23,7 +32,6 @@ export interface Application {
   mlhEmailAuthorization: YesOrNo;
   additionalComments: string;
 }
-
 export interface CreateApplicationRequest {
   application: Application;
 }
