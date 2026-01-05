@@ -4,6 +4,7 @@ import { UserRepository } from './UserRepository';
 import { ResponseRepository } from './ResponseRepository';
 import { EventRepository } from './EventRepository';
 import { AttendanceRepository } from './AttendanceRepository';
+import { ApplicationConfigRepository } from './ApplicationConfigRepository';
 
 export class Repositories {
   public static user(entityManager: EntityManager) {
@@ -20,6 +21,10 @@ export class Repositories {
 
   public static attendance(entityManager: EntityManager) {
     return entityManager.withRepository(AttendanceRepository);
+  }
+
+  public static applicationConfig(entityManager: EntityManager) {
+    return entityManager.withRepository(ApplicationConfigRepository);
   }
 }
 

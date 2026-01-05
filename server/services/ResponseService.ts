@@ -5,9 +5,10 @@ import { ResponseModel } from '../models/ResponseModel';
 import { UserModel } from '../models/UserModel';
 import { ApplicationStatus, FormType, MediaType } from '../types/Enums';
 import { Application, Waiver } from '../types/Application';
-import { BadRequestError, NotFoundError } from 'routing-controllers';
+import { BadRequestError, ForbiddenError, NotFoundError } from 'routing-controllers';
 import { File } from '../types/ApiRequests';
 import { StorageService } from './StorageService';
+import { ApplicationConfigService } from './ApplicationConfigService';
 
 const RESUME_ALLOWED_EXTENSIONS = ['.pdf', '.doc', 'docx'];
 
@@ -17,12 +18,16 @@ export class ResponseService {
 
   private transactionsManager: TransactionsManager;
 
+  private applicationConfigService: ApplicationConfigService;
+
   constructor(
     storageService: StorageService,
     transactionsManager: TransactionsManager,
+    applicationConfigService: ApplicationConfigService,
   ) {
     this.storageService = storageService;
     this.transactionsManager = transactionsManager;
+    this.applicationConfigService = applicationConfigService;
   }
 
   public async getUserResponses(user: UserModel): Promise<ResponseModel[]> {
@@ -90,6 +95,14 @@ export class ResponseService {
     application: Application,
     resume: File,
   ) {
+
+    // 0. Check if application submission is open
+    const isOpen = await this.applicationConfigService.isOpen();
+
+    if (!isOpen) {
+      throw new ForbiddenError('The application submission is not open yet');
+    }
+
     // 1. Error if the user has already applied.
     if (user.applicationStatus !== ApplicationStatus.NOT_SUBMITTED) {
       throw new Error('User has already applied');
