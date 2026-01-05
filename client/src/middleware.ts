@@ -2,7 +2,6 @@ import { NextResponse, NextRequest } from 'next/server';
 // import { CookieType } from './lib/types/enums';
 
 export function middleware(request: NextRequest) {
-
   // don't block any paths
   return NextResponse.next();
 

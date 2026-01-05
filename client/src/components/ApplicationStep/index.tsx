@@ -194,8 +194,7 @@ const ApplicationStep = ({
             question.type === 'phone' ||
             question.type === 'url' ||
             question.type === 'dropdown'
-          )
-          {
+          ) {
             return (
               <div className={styles.questionWrapper} key={question.id}>
                 <Typography variant="body/medium" component="p" className={styles.question}>
@@ -204,7 +203,7 @@ const ApplicationStep = ({
                     {question.optional ? null : ASTERISK}
                   </label>
                 </Typography>
-                { question.type === 'long-text' ? (
+                {question.type === 'long-text' ? (
                   <textarea
                     id={`${id}-${question.id}`}
                     name={question.id}
@@ -225,8 +224,7 @@ const ApplicationStep = ({
                     defaultValue={responses[question.id] ?? ''}
                     disabled={!responsesLoaded}
                   />
-                )
-                 : question.type === 'dropdown' ? (
+                ) : question.type === 'dropdown' ? (
                   <>
                     {showOtherInput[question.id] === undefined &&
                       responses[question.id] &&

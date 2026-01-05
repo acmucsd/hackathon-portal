@@ -266,7 +266,7 @@ export const appQuestions: Step[] = [
         id: 'zipcodeShipping',
         question: <>ZIP / Postal Code</>,
         optional: true,
-      }
+      },
     ],
   },
   {
