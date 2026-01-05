@@ -1,5 +1,4 @@
 import {
-  Allow,
   ArrayNotEmpty,
   IsArray,
   IsDefined,
@@ -23,7 +22,7 @@ import { Type } from 'class-transformer';
 export class Application implements IApplication {
   @IsDefined()
   @IsPhoneNumber()
-  phoneNumber: string;
+  phoneNumber: string; //this IsPhoneNumber check is very strict, you need +country code in front
 
   @IsDefined()
   @IsNotEmpty()
@@ -114,8 +113,36 @@ export class Application implements IApplication {
   @IsEnum(YesOrNo)
   mlhEmailAuthorization: string;
 
-  @Allow() // optional
+  @IsDefined()
   additionalComments: string;
+
+  // ### Optional Demographic Fields ###
+  @IsDefined()
+  underrepresented: string;
+
+  @IsDefined()
+  educationLevel: string;
+
+  @IsDefined()
+  tshirtSize: string;
+
+  @IsDefined()
+  address1Shipping: string;
+
+  @IsDefined()
+  address2Shipping: string;
+
+  @IsDefined()
+  cityShipping: string;
+
+  @IsDefined()
+  stateShipping: string;
+
+  @IsDefined()
+  countryShipping: string;
+
+  @IsDefined()
+  zipcodeShipping: string;
 }
 
 export class CreateApplicationRequest implements ICreateApplicationRequest {

@@ -1,24 +1,47 @@
 export interface Application {
-  phoneNumber: string;
+  //link to Hackathon Organizers Guide:
+  //https://guide.mlh.io/general-information/managing-registrations/registrations#important-registration-fields
+  //(Some of following are multiple-choice questions, and options are in this guide.)
+
+  // ### Important Registration Fields ###
+  // firstName: string; from user model
+  // lastName: string; from user model
+  // email: string; from user model
   age: string;
+  phoneNumber: string;
   university: string;
   levelOfStudy: string;
   country: string;
   linkedin: string;
+
+  // ### MLH Checkboxes ###
+  mlhCodeOfConduct: string;
+  mlhAuthorization: string;
+  mlhEmailAuthorization: string;
+
+  // ### Optional Demographic Fields ###
+  dietary: string[];
+  underrepresented: string;
   gender: string;
   pronouns: string;
-  orientation: string[];
   ethnicity: string[];
-  dietary: string[];
-  interests: string[];
+  orientation: string[];
+  educationLevel: string;
+  tshirtSize: string;
+  address1Shipping: string;
+  address2Shipping: string;
+  cityShipping: string;
+  stateShipping: string;
+  countryShipping: string;
+  zipcodeShipping: string;
   major: string;
+
+  // ### Not in official requirements list ###
+  interests: string[];
   referrer: string[];
   motivation: string;
   resumeLink: string;
   willAttend: string;
-  mlhCodeOfConduct: string;
-  mlhAuthorization: string;
-  mlhEmailAuthorization: string;
   additionalComments: string;
 }
 
