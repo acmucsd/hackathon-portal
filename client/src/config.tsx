@@ -230,43 +230,6 @@ export const appQuestions: Step[] = [
         choices: ['XS', 'S', 'M', 'L', 'XL', 'XXL+'],
         optional: true,
       },
-      {
-        type: 'short-text',
-        id: 'address1Shipping',
-        question: <>Shipping Address Line 1</>,
-        optional: true,
-      },
-      {
-        type: 'short-text',
-        id: 'address2Shipping',
-        question: <>Shipping Address Line 2 (leave empty if none)</>,
-        optional: true,
-      },
-      {
-        type: 'short-text',
-        id: 'cityShipping',
-        question: <>City</>,
-        optional: true,
-      },
-      {
-        type: 'short-text',
-        id: 'stateShipping',
-        question: <>State / Province / Region</>,
-        optional: true,
-      },
-      {
-        type: 'dropdown',
-        id: 'countryShipping',
-        question: <>Country</>,
-        choices: countries,
-        optional: true,
-      },
-      {
-        type: 'short-text',
-        id: 'zipcodeShipping',
-        question: <>ZIP / Postal Code</>,
-        optional: true,
-      },
     ],
   },
   {
