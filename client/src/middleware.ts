@@ -1,9 +1,14 @@
 import { NextResponse, NextRequest } from 'next/server';
-// import { CookieType } from './lib/types/enums';
+import { CookieType } from './lib/types/enums';
 
 export function middleware(request: NextRequest) {
   // don't block any paths
-  return NextResponse.next();
+  const userCookie = request.cookies.get(CookieType.USER);
+
+  // Send the user to the login page if they don't have a valid cookie
+  if (!userCookie) {
+    return NextResponse.redirect(new URL('/api/logout', request.url));
+  }
 
   // uncomment the below to redirect most paths to /closed
   // const url = new URL(request.url);
@@ -18,5 +23,6 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: '/:path*',
+  // matcher: '/:path*',  // used for redirecting paths to /closed
+  matcher: ['/', '/profile', '/apply/:step'],
 };
