@@ -40,7 +40,8 @@ export class AdminController {
 
   private applicationConfigService: ApplicationConfigService;
 
-  constructor(userService: UserService, responseService: ResponseService, attendanceService: AttendanceService, applicationConfigService: ApplicationConfigService) {
+  constructor(userService: UserService, responseService: ResponseService,
+    attendanceService: AttendanceService, applicationConfigService: ApplicationConfigService) {
     this.userService = userService;
     this.responseService = responseService;
     this.attendanceService = attendanceService;
@@ -196,7 +197,8 @@ export class AdminController {
   ) {
 
     if (!PermissionsService.canSetApplicationOpeningStatus(currentUser)) {
-      throw new ForbiddenError('You do not have permission to set the application opening status. Only admins can perform this action.');
+      throw new ForbiddenError('You do not have permission to set the application'+
+        ' opening status. Only admins can perform this action.');
     }
 
     const updatedBy = currentUser.id;

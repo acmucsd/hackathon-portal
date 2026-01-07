@@ -28,6 +28,6 @@ export class AddApplicationConfig1767587254964 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(`DROP TABLE "ApplicationConfig"`);
+    await queryRunner.query('DROP TABLE "ApplicationConfig"');
   }
 }
