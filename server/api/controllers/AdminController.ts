@@ -197,7 +197,7 @@ export class AdminController {
   ) {
 
     if (!PermissionsService.canSetApplicationOpeningStatus(currentUser)) {
-      throw new ForbiddenError('You do not have permission to set the application'+
+      throw new ForbiddenError('You do not have permission to set the application' +
         ' opening status. Only admins can perform this action.');
     }
 
