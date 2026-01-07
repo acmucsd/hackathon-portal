@@ -109,7 +109,6 @@ export const appQuestions: Step[] = [
           'I’m not currently a student',
           'Prefer not to answer',
         ],
-        optional: true,
       },
       {
         type: 'select-one',
