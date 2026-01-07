@@ -4,6 +4,7 @@ import {
   IsDefined,
   IsEnum,
   IsNotEmpty,
+  IsOptional,
   IsPhoneNumber,
   IsUrl,
   MinLength,
@@ -66,9 +67,8 @@ export class Application implements IApplication {
   @MinLength(1, { each: true })
   ethnicity: string[];
 
-  @IsArray() // optional?
-  @ArrayNotEmpty()
-  @MinLength(1, { each: true })
+  @IsOptional()
+  @IsArray()
   dietary: string[];
 
   @IsDefined()
@@ -158,7 +158,6 @@ export class UpdateApplicationRequest implements IUpdateApplicationRequest {
   @IsDefined()
   application: Application;
 }
-
 
 export class Waiver implements IWaiver {
   @IsNotEmpty()
