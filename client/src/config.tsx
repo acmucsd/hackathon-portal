@@ -150,7 +150,6 @@ export const appQuestions: Step[] = [
           'Prefer not to answer',
         ],
         other: true,
-        optional: true,
       },
       {
         type: 'dropdown',
@@ -228,7 +227,6 @@ export const appQuestions: Step[] = [
         id: 'tshirtSize',
         question: <>T-shirt Size</>,
         choices: ['XS', 'S', 'M', 'L', 'XL', 'XXL+'],
-        optional: true,
       },
     ],
   },
@@ -291,8 +289,8 @@ export const appQuestions: Step[] = [
             If accepted, I am attending DiamondHacks on April 4-5 at UC San Diego.
             <br />
             <br />
-            Please note that we are unfortunately unable to provide travel reimbursements or
-            accommodations at this time!
+            Limited travel reimbursement and or accommodations may be available, but are not
+            guaranteed at this time
           </>
         ),
         choices: ['Yes', 'No'],
@@ -368,8 +366,8 @@ export const appQuestions: Step[] = [
 ];
 
 export const TIMELINE: Deadlines = {
-  application: new Date('2026-03-08T00:00-08:00'),
-  decisions: new Date('2026-03-20T00:00-08:00'),
-  acceptance: new Date('2026-03-27T00:00-07:00'),
+  application: new Date('2026-02-27T00:00-08:00'),
+  decisions: new Date('2026-03-06T00:00-08:00'),
+  acceptance: new Date('2026-03-20T00:00-07:00'),
   hackathon: new Date('2026-04-04T00:00-07:00'),
 };
