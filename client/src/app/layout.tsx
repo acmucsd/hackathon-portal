@@ -12,7 +12,7 @@ import { PrivateProfile } from '@/lib/types/apiResponses';
 const dmSans = DM_Sans({ subsets: ['latin'], weight: ['200', '400', '500', '600', '700'] });
 
 export const metadata: Metadata = {
-  title: 'DiamondHacks 2025',
+  title: 'DiamondHacks 2026',
   description: "ACM at UCSD's annual hackathon",
 };
 
