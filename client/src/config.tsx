@@ -162,7 +162,6 @@ export const appQuestions: Step[] = [
         id: 'gender',
         question: <>What is your gender?</>,
         choices: ['Male', 'Female', 'Non-binary', 'Other', 'Prefer not to say'],
-        optional: true,
       },
       {
         type: 'select-one',
@@ -170,7 +169,6 @@ export const appQuestions: Step[] = [
         question: <>Pronouns</>,
         choices: ['She/Her', 'He/Him', 'They/Them', 'She/They', 'He/They', 'Prefer Not to Answer'],
         other: true,
-        optional: true,
       },
       {
         type: 'select-multiple',
@@ -178,7 +176,6 @@ export const appQuestions: Step[] = [
         question: <>Do you consider yourself to be any of the following?</>,
         choices: ['Heterosexual or straight', 'Gay or lesbian', 'Bisexual', 'Prefer Not to Answer'],
         other: true,
-        optional: true,
       },
       {
         type: 'select-multiple',
@@ -204,14 +201,12 @@ export const appQuestions: Step[] = [
           'Prefer Not To Answer',
         ],
         other: true,
-        optional: true,
       },
       {
         type: 'select-one',
         id: 'underrepresented',
         question: <>Do you identify as part of an underrepresented group in tech?</>,
         choices: ['Yes', 'No', 'Unsure'],
-        optional: true,
       },
       {
         // TODO: check this one
