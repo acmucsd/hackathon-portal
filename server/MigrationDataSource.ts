@@ -12,7 +12,4 @@ export default new DataSource({
   database: Config.database.name,
   entities: models,
   migrations: ['migrations/*.ts'],
-  ssl: {
-    rejectUnauthorized: false,
-  },
 });

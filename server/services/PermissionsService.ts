@@ -15,10 +15,6 @@ export default class PermissionsService {
     return user.isAdmin();
   }
 
-  public static canSubmitApplications(user: UserModel): boolean {
-    return user.isAdmin();
-  }
-
   public static canEditEvents(user: UserModel): boolean {
     return user.isAdmin();
   }

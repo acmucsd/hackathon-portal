@@ -2,7 +2,6 @@ import {
   BodyParam,
   Body,
   Delete,
-  ForbiddenError,
   Get,
   JsonController,
   Patch,
@@ -24,7 +23,6 @@ import { Application, Waiver } from '../validators/ResponseRequests';
 import { StorageService } from '../../services/StorageService';
 import { FormType, MediaType } from '../../types/Enums';
 import { File } from '../../types/ApiRequests';
-import PermissionsService from '../../services/PermissionsService';
 
 @JsonController('/response')
 @Service()
@@ -63,11 +61,6 @@ export class ResponseController {
     })
     file: File,
   ): Promise<SubmitApplicationResponse> {
-    if (!PermissionsService.canSubmitApplications(user)) {
-      throw new ForbiddenError(
-        "Can't submit application. The deadline has passed.",
-      );
-    }
     const response = await this.responseService.submitUserApplication(
       user,
       application,
@@ -87,11 +80,6 @@ export class ResponseController {
     })
     file?: File,
   ): Promise<SubmitApplicationResponse> {
-    if (!PermissionsService.canSubmitApplications(user)) {
-      throw new ForbiddenError(
-        "Can't update application. The deadline has passed.",
-      );
-    }
     const response = await this.responseService.updateUserApplication(
       user,
       application,
@@ -105,11 +93,6 @@ export class ResponseController {
   async deleteApplication(
     @AuthenticatedUser() user: UserModel,
   ): Promise<DeleteApplicationResponse> {
-    if (!PermissionsService.canSubmitApplications(user)) {
-      throw new ForbiddenError(
-        "Can't delete application. The deadline has passed.",
-      );
-    }
     await this.responseService.deleteUserApplication(user);
     return { error: null };
   }
