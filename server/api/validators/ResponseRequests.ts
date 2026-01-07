@@ -1,10 +1,10 @@
 import {
+  Allow,
   ArrayNotEmpty,
   IsArray,
   IsDefined,
   IsEnum,
   IsNotEmpty,
-  IsOptional,
   IsPhoneNumber,
   IsUrl,
   MinLength,
@@ -20,6 +20,9 @@ import { IsLinkedinURL } from '../decorators/Validators';
 import { Yes, YesOrNo } from '../../types/Enums';
 import { Type } from 'class-transformer';
 
+// because skipMissingProperties is enabled, everything is optional by default unless annotated with @IsDefined()
+// because whitelist is enabled, annotate fields that don't have any other annotations with @Allow()
+// to prevent them from being stripped off
 export class Application implements IApplication {
   @IsDefined()
   @IsPhoneNumber()
@@ -67,7 +70,7 @@ export class Application implements IApplication {
   @MinLength(1, { each: true })
   ethnicity: string[];
 
-  @IsOptional()
+  // optional because no @IsDefined()
   @IsArray()
   dietary: string[];
 
@@ -87,10 +90,11 @@ export class Application implements IApplication {
   @MinLength(1, { each: true })
   referrer: string[];
 
-  @IsNotEmpty() // temporarily optional until fully connected with frontend
+  @IsDefined()
+  @IsNotEmpty()
   motivation: string;
 
-  @IsNotEmpty() // will be converted into link when submitted
+  @Allow() // will be converted into link when submitted
   resumeLink: string;
 
   @IsDefined()
@@ -113,35 +117,38 @@ export class Application implements IApplication {
   @IsEnum(YesOrNo)
   mlhEmailAuthorization: string;
 
-  @IsDefined()
+  @Allow()
   additionalComments: string;
 
-  // ### Optional Demographic Fields ###
+  // ### Optional Demographic Fields (to MLH) ###
   @IsDefined()
+  @IsNotEmpty()
   underrepresented: string;
 
   @IsDefined()
+  @IsNotEmpty()
   educationLevel: string;
 
   @IsDefined()
+  @IsNotEmpty()
   tshirtSize: string;
 
-  @IsDefined()
+  @Allow()
   address1Shipping: string;
 
-  @IsDefined()
+  @Allow()
   address2Shipping: string;
 
-  @IsDefined()
+  @Allow()
   cityShipping: string;
 
-  @IsDefined()
+  @Allow()
   stateShipping: string;
 
-  @IsDefined()
+  @Allow()
   countryShipping: string;
 
-  @IsDefined()
+  @Allow()
   zipcodeShipping: string;
 }
 
