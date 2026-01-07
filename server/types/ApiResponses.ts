@@ -1,3 +1,4 @@
+import { InterestFormResponseModel } from '../models/InterestFormResponseModel';
 import { ResponseModel } from '../models/ResponseModel';
 import {
   ApplicationStatus,
@@ -139,3 +140,20 @@ export interface PublicAttendance {
 export interface AttendEventResponse extends ApiResponse {
   event: PublicEvent;
 }
+
+//InterestForm responses
+export interface CheckInterestByEmailResponse extends ApiResponse{
+  interest: Boolean;
+}
+export interface AddInterestedEmailResponse extends ApiResponse{
+  interest: InterestFormResponseModel;
+}
+
+export interface GetAllInterestedUserEmailsResponse extends ApiResponse{
+  interested: InterestFormResponseModel[]
+}
+
+export interface RemoveInterestedEmailResponse extends ApiResponse {}
+
+
+
