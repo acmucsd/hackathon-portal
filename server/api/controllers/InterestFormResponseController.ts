@@ -1,4 +1,4 @@
-import { Body, ForbiddenError, Get, JsonController, Post, UseBefore } from "routing-controllers";
+import { Body, Delete, ForbiddenError, Get, JsonController, Post, UseBefore } from "routing-controllers";
 import { Service } from "typedi";
 import { InterestFormResponseService } from "../../services/InterestFormResponseService";
 import { UserAuthentication } from "../middleware/UserAuthentication";
@@ -6,6 +6,7 @@ import { AuthenticatedUser } from "../decorators/AuthenticatedUser";
 import { UserModel } from "../../models/UserModel";
 import { AddInterestedEmailResponse, CheckInterestByEmailResponse, GetAllInterestedUserEmailsResponse, RemoveInterestedEmailResponse, } from "../../types/ApiResponses";
 import PermissionsService from "../../services/PermissionsService";
+import { AddInterestedEmailRequest, RemoveInterestedEmailRequest } from "../../types/ApiRequests";
 
 @JsonController('/interest')
 @Service()
@@ -17,7 +18,7 @@ export class InterestFormResponseController {
   }
 
     @UseBefore(UserAuthentication)
-    @Post()
+    @Get()
     async checkInterestByEmail(
      @AuthenticatedUser() user: UserModel,
     ): Promise<CheckInterestByEmailResponse> {
@@ -29,28 +30,28 @@ export class InterestFormResponseController {
     @UseBefore(UserAuthentication)
     @Post('/add')
     async addInterestedUserEmail(
-      @Body() email: string,
+      @Body() addInterestedEmailRequest: AddInterestedEmailRequest,
       @AuthenticatedUser() user: UserModel,
     ): Promise<AddInterestedEmailResponse> {
       //need to change to the correct permissions
       if (!PermissionsService.canEditInterestEmails(user))
         throw new ForbiddenError();
 //need to change response logic
-      const interestEmail = await this.interestFormResponseService.addInterestedEmail(user.email);
+      const interestEmail = await this.interestFormResponseService.addInterestedEmail(addInterestedEmailRequest.email);
       return { error: null, interest: interestEmail };
     }
 
     @UseBefore(UserAuthentication)
-    @Post('/remove')
+    @Delete('/remove')
     async removeInterestedUserEmail(
-      @Body() email: string,
+      @Body() removeInterestedEmailRequest: RemoveInterestedEmailRequest,
       @AuthenticatedUser() user: UserModel,
     ): Promise<RemoveInterestedEmailResponse> {
       //need to change to the correct permissions
       if (!PermissionsService.canEditInterestEmails(user))
         throw new ForbiddenError();
 
-      await this.interestFormResponseService.removeInterestedEmail(user.email);
+      await this.interestFormResponseService.removeInterestedEmail(removeInterestedEmailRequest.email);
       return { error: null };
     }
 

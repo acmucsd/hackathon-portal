@@ -81,6 +81,9 @@ export interface ForgotPasswordRequest {
 }
 
 //InterestForm request
-export interface FindInterestedEmailRequest{
+export interface AddInterestedEmailRequest{
+  email: string;
+}
+export interface RemoveInterestedEmailRequest{
   email: string;
 }
