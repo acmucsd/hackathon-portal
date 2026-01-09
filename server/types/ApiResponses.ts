@@ -142,14 +142,14 @@ export interface AttendEventResponse extends ApiResponse {
 }
 
 //InterestForm responses
-export interface CheckInterestByEmailResponse extends ApiResponse{
+export interface CheckInterestByEmailResponse extends ApiResponse {
   interest: Boolean;
 }
-export interface AddInterestedEmailResponse extends ApiResponse{
+export interface AddInterestedEmailResponse extends ApiResponse {
   interest: InterestFormResponseModel;
 }
 
-export interface GetAllInterestedUserEmailsResponse extends ApiResponse{
+export interface GetAllInterestedUserEmailsResponse extends ApiResponse {
   interested: InterestFormResponseModel[]
 }
 

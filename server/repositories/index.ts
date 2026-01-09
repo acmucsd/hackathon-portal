@@ -22,6 +22,7 @@ export class Repositories {
   public static attendance(entityManager: EntityManager) {
     return entityManager.withRepository(AttendanceRepository);
   }
+
   public static interestFormResponse(entityManager: EntityManager) {
     return entityManager.withRepository(InterestFormResponseRepository);
   }

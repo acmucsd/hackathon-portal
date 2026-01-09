@@ -1,7 +1,7 @@
-import { Service } from "typedi";
-import { Repositories, TransactionsManager } from "../repositories";
-import { NotFoundError } from "routing-controllers";
-import { InterestFormResponseModel } from "../models/InterestFormResponseModel";
+import { Service } from 'typedi';
+import { Repositories, TransactionsManager } from '../repositories';
+import { NotFoundError } from 'routing-controllers';
+import { InterestFormResponseModel } from '../models/InterestFormResponseModel';
 
 @Service()
 export class InterestFormResponseService {
@@ -68,7 +68,7 @@ export class InterestFormResponseService {
   }
 
 
-  public async checkEmailForInterest(email: string): Promise<boolean>{
+  public async checkEmailForInterest(email: string): Promise<boolean> {
 
     const interestedEmail = await this.transactionsManager.readOnly(
          async (entityManager) =>
@@ -79,7 +79,7 @@ export class InterestFormResponseService {
 
   }
 
-    public async findAllInterestedEmail(): Promise<InterestFormResponseModel[]>{
+    public async findAllInterestedEmail(): Promise<InterestFormResponseModel[]> {
 
     const interestedEmailList = await this.transactionsManager.readOnly(
          async (entityManager) =>

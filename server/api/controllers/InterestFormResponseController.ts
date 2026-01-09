@@ -1,12 +1,13 @@
-import { Body, Delete, ForbiddenError, Get, JsonController, Post, UseBefore } from "routing-controllers";
-import { Service } from "typedi";
-import { InterestFormResponseService } from "../../services/InterestFormResponseService";
-import { UserAuthentication } from "../middleware/UserAuthentication";
-import { AuthenticatedUser } from "../decorators/AuthenticatedUser";
-import { UserModel } from "../../models/UserModel";
-import { AddInterestedEmailResponse, CheckInterestByEmailResponse, GetAllInterestedUserEmailsResponse, RemoveInterestedEmailResponse, } from "../../types/ApiResponses";
-import PermissionsService from "../../services/PermissionsService";
-import { AddInterestedEmailRequest, RemoveInterestedEmailRequest } from "../../types/ApiRequests";
+import { Body, Delete, ForbiddenError, Get, JsonController, Post, UseBefore } from 'routing-controllers';
+import { Service } from 'typedi';
+import { InterestFormResponseService } from '../../services/InterestFormResponseService';
+import { UserAuthentication } from '../middleware/UserAuthentication';
+import { AuthenticatedUser } from '../decorators/AuthenticatedUser';
+import { UserModel } from '../../models/UserModel';
+import { AddInterestedEmailResponse, CheckInterestByEmailResponse,
+  GetAllInterestedUserEmailsResponse, RemoveInterestedEmailResponse } from '../../types/ApiResponses';
+import PermissionsService from '../../services/PermissionsService';
+import { AddInterestedEmailRequest, RemoveInterestedEmailRequest } from '../../types/ApiRequests';
 
 @JsonController('/interest')
 @Service()
@@ -33,10 +34,10 @@ export class InterestFormResponseController {
       @Body() addInterestedEmailRequest: AddInterestedEmailRequest,
       @AuthenticatedUser() user: UserModel,
     ): Promise<AddInterestedEmailResponse> {
-      //need to change to the correct permissions
+
       if (!PermissionsService.canEditInterestEmails(user))
         throw new ForbiddenError();
-//need to change response logic
+
       const interestEmail = await this.interestFormResponseService.addInterestedEmail(addInterestedEmailRequest.email);
       return { error: null, interest: interestEmail };
     }
@@ -47,7 +48,7 @@ export class InterestFormResponseController {
       @Body() removeInterestedEmailRequest: RemoveInterestedEmailRequest,
       @AuthenticatedUser() user: UserModel,
     ): Promise<RemoveInterestedEmailResponse> {
-      //need to change to the correct permissions
+
       if (!PermissionsService.canEditInterestEmails(user))
         throw new ForbiddenError();
 
@@ -60,12 +61,12 @@ export class InterestFormResponseController {
     async getAllInterestedUserEmails(
      @AuthenticatedUser() user: UserModel,
     ): Promise<GetAllInterestedUserEmailsResponse> {
-      //need to change to the correct permissions
+
       if (!PermissionsService.canEditInterestEmails(user))
         throw new ForbiddenError();
-//need to change response logic
+
       const interestEmails = await this.interestFormResponseService.findAllInterestedEmail();
-      //fix
+
       return { error: null, interested: interestEmails };
     }
 
