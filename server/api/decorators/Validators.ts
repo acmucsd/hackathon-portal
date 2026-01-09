@@ -6,7 +6,7 @@ import {
 } from 'class-validator';
 import { ApplicationDecision } from '../../types/Enums';
 
-const ALLOWED_EMAIL_DOMAINS = ['.edu', '.ca'];
+const ALLOWED_EMAIL_DOMAINS = ['.edu', '.ca', '.mx'];
 
 function templatedValidationDecorator(
   validator: ValidatorConstraintInterface | Function,

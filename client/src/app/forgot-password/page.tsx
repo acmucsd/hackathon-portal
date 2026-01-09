@@ -60,6 +60,7 @@ export default function ForgotPasswordPage() {
                 isEduDomain: value =>
                   value?.endsWith('.edu') ||
                   value?.endsWith('.ca') ||
+                  value?.endsWith('.mx') ||
                   'Please enter a university email address.',
               },
             })}
