@@ -7,7 +7,10 @@ import { UserModel } from '../../models/UserModel';
 import { AddInterestedEmailResponse, CheckInterestByEmailResponse,
   GetAllInterestedUserEmailsResponse, RemoveInterestedEmailResponse } from '../../types/ApiResponses';
 import PermissionsService from '../../services/PermissionsService';
-import { AddInterestedEmailRequest, RemoveInterestedEmailRequest } from '../../types/ApiRequests';
+import { AddInterestedEmailRequest,
+         RemoveInterestedEmailRequest }
+from '../validators/InterestFormResponseControllerRequests';
+
 
 @JsonController('/interest')
 @Service()
