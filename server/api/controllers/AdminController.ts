@@ -5,6 +5,7 @@ import {
   JsonController,
   Params,
   Post,
+  QueryParams,
   UseBefore,
 } from 'routing-controllers';
 import { Service } from 'typedi';
@@ -21,7 +22,12 @@ import { UpdateApplicationDecisionRequest } from '../validators/AdminControllerR
 import { UserAuthentication } from '../middleware/UserAuthentication';
 import { UserService } from '../../services/UserService';
 import { ResponseService } from '../../services/ResponseService';
-import { IdParam, UuidAndIdParam, UuidParam } from '../validators/GenericRequests';
+import {
+  EmailParam,
+  IdParam,
+  UuidAndIdParam,
+  UuidParam,
+} from '../validators/GenericRequests';
 import PermissionsService from '../../services/PermissionsService';
 import { ApplicationStatus } from '../../types/Enums';
 import { AttendanceService } from '../../services/AttendanceService';
@@ -35,7 +41,11 @@ export class AdminController {
 
   private attendanceService: AttendanceService;
 
-  constructor(userService: UserService, responseService: ResponseService, attendanceService: AttendanceService) {
+  constructor(
+    userService: UserService,
+    responseService: ResponseService,
+    attendanceService: AttendanceService,
+  ) {
     this.userService = userService;
     this.responseService = responseService;
     this.attendanceService = attendanceService;
@@ -96,8 +106,6 @@ export class AdminController {
     return { error: null, user: user.getHiddenProfile() };
   }
 
-
-
   @UseBefore(UserAuthentication)
   @Post('/user/confirm/:id')
   async confirmUserStatus(
@@ -139,6 +147,19 @@ export class AdminController {
   }
 
   @UseBefore(UserAuthentication)
+  @Get('/email-verification-link')
+  async getUserEmailVerificationLink(
+    @AuthenticatedUser() currentUser: UserModel,
+    @QueryParams() queryParams: EmailParam,
+  ) {
+    if (!PermissionsService.canGetEmailVerificationLinks(currentUser))
+      throw new ForbiddenError();
+    const emailVerificationLink =
+      await this.userService.getEmailVerificationLink(queryParams.email);
+    return { error: null, emailVerificationLink };
+  }
+
+  @UseBefore(UserAuthentication)
   @Get('/waivers/:id')
   async getWaiversById(
     @AuthenticatedUser() currentUser: UserModel,
@@ -161,10 +182,14 @@ export class AdminController {
     if (!PermissionsService.canViewAllApplications(currentUser))
       throw new ForbiddenError();
 
-    const attendances = await this.attendanceService.getAttendancesForEvent(params.uuid);
+    const attendances = await this.attendanceService.getAttendancesForEvent(
+      params.uuid,
+    );
     return {
       error: null,
-      attendances: attendances.map((attendance) => attendance.getPublicAttendance()),
+      attendances: attendances.map((attendance) =>
+        attendance.getPublicAttendance(),
+      ),
     };
   }
 
@@ -177,9 +202,11 @@ export class AdminController {
     if (!PermissionsService.canViewAllApplications(currentUser))
       throw new ForbiddenError();
 
-    const attendance = await this.attendanceService.attendEvent(params.id, params.uuid);
+    const attendance = await this.attendanceService.attendEvent(
+      params.id,
+      params.uuid,
+    );
     const { event } = attendance.getPublicAttendance();
     return { error: null, event };
   }
-
 }

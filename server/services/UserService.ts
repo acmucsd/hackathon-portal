@@ -10,6 +10,7 @@ import {
 } from 'firebase/auth';
 import { FirebaseAuthError } from 'firebase-admin/auth';
 import {
+  BadRequestError,
   ForbiddenError,
   NotFoundError,
   UnauthorizedError,
@@ -198,6 +199,24 @@ export class UserService {
     return user;
   }
 
+  public async getEmailVerificationLink(email: string): Promise<string> {
+    try {
+      const firebaseUser = await adminAuth.getUserByEmail(email);
+      if (firebaseUser.emailVerified)
+        throw new BadRequestError('User email already verified');
+      return await adminAuth.generateEmailVerificationLink(email);
+    } catch (error) {
+      if (error instanceof FirebaseAuthError) {
+        if (error.code === 'auth/user-not-found') {
+          throw new NotFoundError(
+            'No user found with the provided email address.',
+          );
+        }
+      }
+      throw error;
+    }
+  }
+
   private async sendEmailVerification(id: string): Promise<void> {
     const customToken = await adminAuth.createCustomToken(id);
     const userCredential = await signInWithCustomToken(auth, customToken);
@@ -207,12 +226,13 @@ export class UserService {
   public async sendPasswordResetEmail(email: string): Promise<void> {
     try {
       const firebaseRecord = await adminAuth.getUserByEmail(email);
-      if (firebaseRecord)
-        await sendPasswordResetEmail(auth, email);
+      if (firebaseRecord) await sendPasswordResetEmail(auth, email);
     } catch (error) {
       if (error instanceof FirebaseAuthError) {
         if (error.code === 'auth/user-not-found') {
-          throw new NotFoundError('No user found with the provided email address.');
+          throw new NotFoundError(
+            'No user found with the provided email address.',
+          );
         }
       }
       throw error;
@@ -224,5 +244,4 @@ export class UserService {
       Repositories.user(entityManager).findAll(),
     );
   }
-
 }
