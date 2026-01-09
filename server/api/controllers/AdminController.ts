@@ -148,7 +148,7 @@ export class AdminController {
 
   @UseBefore(UserAuthentication)
   @Get('/email-verification-link')
-  async getUserEmailVerificationLink(
+  async getEmailVerificationLink(
     @AuthenticatedUser() currentUser: UserModel,
     @QueryParams() queryParams: EmailParam,
   ) {
