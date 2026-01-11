@@ -202,3 +202,7 @@ export interface PublicAttendance {
 export interface AttendEventResponse extends ApiResponse {
   event: PublicEvent;
 }
+
+export interface GetEmailVerificationLinkResponse extends ApiResponse {
+  emailVerificationLink: string;
+}
