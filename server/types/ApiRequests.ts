@@ -79,3 +79,11 @@ export interface UpdateApplicationDecisionRequest {
 export interface ForgotPasswordRequest {
   email: string;
 }
+
+//InterestForm request
+export interface AddInterestedEmailRequest {
+  email: string;
+}
+export interface RemoveInterestedEmailRequest {
+  email: string;
+}
