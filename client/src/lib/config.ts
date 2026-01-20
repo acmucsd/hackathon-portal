@@ -25,6 +25,7 @@ const config = {
         confirmUser: '/admin/user/confirm',
         attendance: '/admin/attendance',
         emailVerificationLink: '/admin/email-verification-link',
+        assignments: '/admin/assignments',
       },
       event: {
         createEvent: '/event',

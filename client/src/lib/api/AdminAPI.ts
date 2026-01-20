@@ -13,6 +13,9 @@ import type {
   AttendEventResponse,
   PublicEvent,
   GetEmailVerificationLinkResponse,
+  PostAssignmentsResponse,
+  GetAssignmentsResponse,
+  AssignmentModel,
 } from '@/lib/types/apiResponses';
 import { ApplicationDecision } from '@/lib/types/enums';
 import axios from 'axios';
@@ -190,4 +193,58 @@ export const getEmailVerificationLink = async (token: string, email: string): Pr
     },
   });
   return response.data.emailVerificationLink;
+};
+
+
+/**
+ * Assign applications to reviewers randomly
+ * @param token
+ */
+export const postAssigments = async (token: string): Promise<AssignmentModel[]> => {
+  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.assignments}`;
+  const response = await axios.post<PostAssignmentsResponse>(
+    requestUrl,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data.assignments;
+};
+
+/**
+ * Get all existing assignments
+ * @param token
+ */
+export const getAllAssignments = async (token: string): Promise<AssignmentModel[]> => {
+  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.assignments}`;
+  const response = await axios.get<GetAssignmentsResponse>(
+    requestUrl,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data.assignments;
+};
+
+/**
+ * Get all existing assignments for reviewer
+ * @param token
+ * @param reviewerId
+ */
+export const getAssignmentsByReviewer = async (token: string, reviewerId: string): Promise<AssignmentModel[]> => {
+  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.assignments}/${reviewerId}`;
+  const response = await axios.get<GetAssignmentsResponse>(
+    requestUrl,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data.assignments;
 };

@@ -206,3 +206,18 @@ export interface AttendEventResponse extends ApiResponse {
 export interface GetEmailVerificationLinkResponse extends ApiResponse {
   emailVerificationLink: string;
 }
+
+// Assignment Responses
+
+export interface AssignmentModel {
+  reviewerId: string;
+  applicantId: string;
+}
+
+export interface PostAssignmentsResponse extends ApiResponse { // POST /assignments
+  assignments: AssignmentModel[];
+}
+
+export interface GetAssignmentsResponse extends ApiResponse {
+  assignments: AssignmentModel[];
+}
