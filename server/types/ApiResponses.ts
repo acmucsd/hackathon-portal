@@ -139,3 +139,16 @@ export interface PublicAttendance {
 export interface AttendEventResponse extends ApiResponse {
   event: PublicEvent;
 }
+
+export interface ReviewAssignment {
+  applicant: PublicProfile;
+  reviewer: PublicProfile | undefined;
+}
+
+export interface PostAssignmentsResponse extends ApiResponse {
+  newAssignments: ReviewAssignment[];
+}
+
+export interface GetAssignmentsResponse extends ApiResponse {
+  assignments: ReviewAssignment[];
+}

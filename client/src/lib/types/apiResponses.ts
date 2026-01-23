@@ -209,15 +209,15 @@ export interface GetEmailVerificationLinkResponse extends ApiResponse {
 
 // Assignment Responses
 
-export interface AssignmentModel {
-  reviewerId: string;
-  applicantId: string;
+export interface ReviewAssignment {
+  applicant: PublicProfile;
+  reviewer: PublicProfile | undefined;
 }
 
-export interface PostAssignmentsResponse extends ApiResponse { // POST /assignments
-  assignments: AssignmentModel[];
+export interface PostAssignmentsResponse extends ApiResponse {
+  newAssignments: ReviewAssignment[];
 }
 
 export interface GetAssignmentsResponse extends ApiResponse {
-  assignments: AssignmentModel[];
+  assignments: ReviewAssignment[];
 }

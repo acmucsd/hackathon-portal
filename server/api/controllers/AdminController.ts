@@ -14,8 +14,11 @@ import { UserModel } from '../../models/UserModel';
 import {
   AttendEventResponse,
   GetApplicationDecisionResponse,
+  GetAssignmentsResponse,
   GetFormResponse,
   GetFormsResponse,
+  PostAssignmentsResponse,
+  ReviewAssignment,
   UpdateApplicationDecisionResponse,
 } from '../../types/ApiResponses';
 import { UpdateApplicationDecisionRequest } from '../validators/AdminControllerRequests';
@@ -208,5 +211,90 @@ export class AdminController {
     );
     const { event } = attendance.getPublicAttendance();
     return { error: null, event };
+  }
+
+  @UseBefore(UserAuthentication)
+  @Post('/assignments')
+  async postAssignments(
+    @AuthenticatedUser() currentUser: UserModel,
+  ): Promise<PostAssignmentsResponse> {
+    if (!PermissionsService.canViewAllApplications(currentUser))
+      throw new ForbiddenError();
+
+    const users = await this.userService.getAllUsers();
+
+    const admins = users.filter((user) => user.isAdmin())
+    const unassignedApplicants = users.filter((user) => !user.isAdmin() && !user.reviewer)
+
+    function getRandomIntInclusive(min: number, max: number): number {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      // generates a random number in the range [min, max]
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    const modifiedAdmins = new Set<UserModel>();
+    const newAssignments = new Array<ReviewAssignment>();
+
+    unassignedApplicants.forEach((reviewee) => {
+      const R = getRandomIntInclusive(0, admins.length - 1);
+      const reviewer = admins[R];
+
+      reviewee.reviewer = reviewer;
+      reviewer.reviewees = [...reviewer.reviewees ?? [], reviewee];
+
+      modifiedAdmins.add(reviewer);
+      newAssignments.push({
+        applicant: reviewee.getPublicProfile(),
+        reviewer: reviewer.getPublicProfile(),
+      });
+    })
+
+    const usersToSave = [...unassignedApplicants, ...modifiedAdmins];
+    await this.userService.saveManyUsers(usersToSave);
+
+    return { error: null, newAssignments };
+  }
+
+  @UseBefore(UserAuthentication)
+  @Get('/assignments')
+  async getAssignments(
+    @AuthenticatedUser() currentUser: UserModel,
+  ): Promise<GetAssignmentsResponse> {
+    if (!PermissionsService.canViewAllApplications(currentUser))
+      throw new ForbiddenError();
+
+    const users = await this.userService.getAllUsers();
+
+    const applicants = users.filter((user) => !user.isAdmin());
+    const assignments = applicants.map((user) => {
+      return {
+        applicant: user.getPublicProfile(),
+        reviewer: user.reviewer?.getPublicProfile(),
+      } as ReviewAssignment;
+    })
+
+    return { error: null, assignments };
+  }
+
+  @UseBefore(UserAuthentication)
+  @Get('/assignments/:id')
+  async getMyAssignments(
+    @AuthenticatedUser() currentUser: UserModel,
+    @Params() params: IdParam,
+  ): Promise<GetAssignmentsResponse> {
+    if (!PermissionsService.canViewAllApplications(currentUser))
+      throw new ForbiddenError();
+
+    const admin = await this.userService.findById(params.id);
+    const reviewees = admin.reviewees ?? [];
+    const assignments = reviewees.map((reviewee) => {
+      return {
+        applicant: reviewee.getPublicProfile(),
+        reviewer: admin.getPublicProfile(),
+      } as ReviewAssignment;
+    });
+
+    return { error: null, assignments };
   }
 }

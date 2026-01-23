@@ -15,7 +15,7 @@ import type {
   GetEmailVerificationLinkResponse,
   PostAssignmentsResponse,
   GetAssignmentsResponse,
-  AssignmentModel,
+  ReviewAssignment,
 } from '@/lib/types/apiResponses';
 import { ApplicationDecision } from '@/lib/types/enums';
 import axios from 'axios';
@@ -200,7 +200,7 @@ export const getEmailVerificationLink = async (token: string, email: string): Pr
  * Assign applications to reviewers randomly
  * @param token
  */
-export const postAssigments = async (token: string): Promise<AssignmentModel[]> => {
+export const postAssigments = async (token: string): Promise<ReviewAssignment[]> => {
   const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.assignments}`;
   const response = await axios.post<PostAssignmentsResponse>(
     requestUrl,
@@ -211,14 +211,14 @@ export const postAssigments = async (token: string): Promise<AssignmentModel[]> 
       },
     }
   );
-  return response.data.assignments;
+  return response.data.newAssignments;
 };
 
 /**
  * Get all existing assignments
  * @param token
  */
-export const getAllAssignments = async (token: string): Promise<AssignmentModel[]> => {
+export const getAllAssignments = async (token: string): Promise<ReviewAssignment[]> => {
   const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.assignments}`;
   const response = await axios.get<GetAssignmentsResponse>(
     requestUrl,
@@ -236,7 +236,7 @@ export const getAllAssignments = async (token: string): Promise<AssignmentModel[
  * @param token
  * @param reviewerId
  */
-export const getAssignmentsByReviewer = async (token: string, reviewerId: string): Promise<AssignmentModel[]> => {
+export const getAssignmentsByReviewer = async (token: string, reviewerId: string): Promise<ReviewAssignment[]> => {
   const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.assignments}/${reviewerId}`;
   const response = await axios.get<GetAssignmentsResponse>(
     requestUrl,

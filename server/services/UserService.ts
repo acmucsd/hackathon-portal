@@ -244,4 +244,13 @@ export class UserService {
       Repositories.user(entityManager).findAll(),
     );
   }
+
+  public async saveManyUsers(
+    users: UserModel[],
+  ): Promise<UserModel[]> {
+    return this.transactionsManager.readWrite(async (entityManager) => {
+      const userRepository = Repositories.user(entityManager);
+      return userRepository.save(users);
+    });
+  }
 }
