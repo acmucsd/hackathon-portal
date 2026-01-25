@@ -36,6 +36,7 @@ const AdminDashboard = ({ timeline, user, applications }: AdminDashboardProps) =
         <Button href="/manageEvents">Manage Events</Button>
         <Button href="/createEvent">Create Events</Button>
         <Button href="/admin/scan">QR Code Check-In</Button>
+        <Button href="/admin/verify-email">Send Email Verification</Button>
       </Card>
       <Card gap={1.5} className={`${styles.card} ${styles.checkin}`}>
         <Heading>QR Code Check-In</Heading>

@@ -14,8 +14,11 @@ import { UserModel } from '../../models/UserModel';
 import {
   AttendEventResponse,
   GetApplicationDecisionResponse,
+  GetAssignmentsResponse,
   GetFormResponse,
   GetFormsResponse,
+  PostAssignmentsResponse,
+  ReviewAssignment,
   UpdateApplicationDecisionResponse,
 } from '../../types/ApiResponses';
 import { UpdateApplicationDecisionRequest } from '../validators/AdminControllerRequests';
@@ -29,8 +32,9 @@ import {
   UuidParam,
 } from '../validators/GenericRequests';
 import PermissionsService from '../../services/PermissionsService';
-import { ApplicationStatus } from '../../types/Enums';
+import { ApplicationDecision, ApplicationStatus } from '../../types/Enums';
 import { AttendanceService } from '../../services/AttendanceService';
+import { PostAssignmentsRequest } from '../../types/ApiRequests';
 
 @JsonController('/admin')
 @Service()
@@ -208,5 +212,152 @@ export class AdminController {
     );
     const { event } = attendance.getPublicAttendance();
     return { error: null, event };
+  }
+
+  @UseBefore(UserAuthentication)
+  @Post('/assignments/random')
+  async postAssignmentsRandom(
+    @AuthenticatedUser() currentUser: UserModel,
+  ): Promise<PostAssignmentsResponse> {
+    if (!PermissionsService.canViewAllApplications(currentUser))
+      throw new ForbiddenError();
+
+    const users = await this.userService.getAllUsersWithReviewerRelation();
+
+    const admins = users.filter((user) => user.isAdmin())
+    const unassignedApplicants = users.filter((user) =>
+      !user.isAdmin() &&
+      !user.reviewer &&
+      user.applicationDecision == ApplicationDecision.NO_DECISION &&
+      user.applicationStatus == ApplicationStatus.SUBMITTED
+    )
+
+    function getRandomIntInclusive(min: number, max: number): number {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      // generates a random number in the range [min, max]
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    const modifiedAdmins = new Set<UserModel>();
+    const newAssignments = new Array<ReviewAssignment>();
+
+    unassignedApplicants.forEach((reviewee) => {
+      const R = getRandomIntInclusive(0, admins.length - 1);
+      const reviewer = admins[R];
+
+      reviewee.reviewer = reviewer;
+      const alreadyAssigned = reviewer.reviewees?.some((r) => r.id === reviewee.id) ?? false;
+      if (!alreadyAssigned) {
+        reviewer.reviewees = [...(reviewer.reviewees ?? []), reviewee];
+      }
+
+      modifiedAdmins.add(reviewer);
+      newAssignments.push({
+        applicant: reviewee.getHiddenProfile(),
+        reviewer: reviewer.getHiddenProfile(),
+      });
+    })
+
+    const usersToSave = [...unassignedApplicants, ...modifiedAdmins];
+    await this.userService.saveManyUsers(usersToSave);
+
+    return { error: null, newAssignments };
+  }
+
+  @UseBefore(UserAuthentication)
+  @Post('/assignments')
+  async postAssignments(
+    @Body() postAssignmentsRequest: PostAssignmentsRequest,
+    @AuthenticatedUser() currentUser: UserModel,
+  ): Promise<PostAssignmentsResponse> {
+    if (!PermissionsService.canViewAllApplications(currentUser))
+      throw new ForbiddenError();
+
+    const modifiedApplicants = new Set<UserModel>();
+    const modifiedAdmins = new Set<UserModel>();
+    const newAssignments = new Array<ReviewAssignment>();
+
+    await Promise.all(postAssignmentsRequest.assignments.map(async (assignment) => {
+      const reviewee = await this.userService.findByIdWithReviewerRelation(assignment.applicantId);
+      if (!reviewee) return;
+
+      const reviewer = assignment.reviewerId
+        ? await this.userService.findByIdWithReviewerRelation(assignment.reviewerId)
+        : undefined;
+
+      // unlink old reviewer (if exists)
+      const previousReviewer = reviewee.reviewer;
+      if (previousReviewer) {
+        previousReviewer.reviewees = previousReviewer.reviewees?.filter(r => r.id !== reviewee.id) ?? [];
+        modifiedAdmins.add(previousReviewer);
+      }
+
+      // set reviewee's new reviewer
+      reviewee.reviewer = reviewer;
+      modifiedApplicants.add(reviewee);
+
+      // link new reviewer (if exists)
+      if (reviewer) {
+        const alreadyAssigned = reviewer.reviewees?.some((r) => r.id === reviewee.id) ?? false;
+        if (!alreadyAssigned) {
+          reviewer.reviewees = [...(reviewer.reviewees ?? []), reviewee];
+          modifiedAdmins.add(reviewer);
+        }
+      }
+
+      newAssignments.push({
+        applicant: reviewee.getHiddenProfile(),
+        reviewer: reviewer?.getHiddenProfile(),
+      });
+    })
+  );
+
+    const usersToSave = [...modifiedApplicants, ...modifiedAdmins];
+    await this.userService.saveManyUsers(usersToSave);
+
+    return { error: null, newAssignments };
+  }
+
+  @UseBefore(UserAuthentication)
+  @Get('/assignments')
+  async getAssignments(
+    @AuthenticatedUser() currentUser: UserModel,
+  ): Promise<GetAssignmentsResponse> {
+    if (!PermissionsService.canViewAllApplications(currentUser))
+      throw new ForbiddenError();
+
+    const users = await this.userService.getAllUsersWithReviewerRelation();
+
+    const applicants = users.filter((user) => !user.isAdmin());
+    const assignments = applicants.map((user) => {
+      return {
+        applicant: user.getHiddenProfile(),
+        reviewer: user.reviewer?.getHiddenProfile(),
+      } as ReviewAssignment;
+    })
+
+    return { error: null, assignments };
+  }
+
+  @UseBefore(UserAuthentication)
+  @Get('/assignments/:id')
+  async getMyAssignments(
+    @AuthenticatedUser() currentUser: UserModel,
+    @Params() params: IdParam,
+  ): Promise<GetAssignmentsResponse> {
+    if (!PermissionsService.canViewAllApplications(currentUser))
+      throw new ForbiddenError();
+
+    const admin = await this.userService.findByIdWithReviewerRelation(params.id);
+    const reviewees = admin.reviewees ?? [];
+    const assignments = reviewees.map((reviewee) => {
+      return {
+        applicant: reviewee.getHiddenProfile(),
+        reviewer: admin.getHiddenProfile(),
+      } as ReviewAssignment;
+    });
+
+    return { error: null, assignments };
   }
 }

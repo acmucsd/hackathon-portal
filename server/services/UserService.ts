@@ -244,4 +244,27 @@ export class UserService {
       Repositories.user(entityManager).findAll(),
     );
   }
+
+  public async findByIdWithReviewerRelation(id: string): Promise<UserModel> {
+    const user = await this.transactionsManager.readOnly(
+      async (entityManager) => Repositories.user(entityManager).findByIdWithReviewerRelation(id),
+    );
+    if (!user) throw new NotFoundError('User not found');
+    return user;
+  }
+
+  public async getAllUsersWithReviewerRelation(): Promise<UserModel[]> {
+    return this.transactionsManager.readOnly(async (entityManager) =>
+      Repositories.user(entityManager).findAllWithReviewerRelation(),
+    );
+  }
+
+  public async saveManyUsers(
+    users: UserModel[],
+  ): Promise<UserModel[]> {
+    return this.transactionsManager.readWrite(async (entityManager) => {
+      const userRepository = Repositories.user(entityManager);
+      return userRepository.save(users);
+    });
+  }
 }

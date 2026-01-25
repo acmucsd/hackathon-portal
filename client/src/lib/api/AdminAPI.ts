@@ -12,9 +12,14 @@ import type {
   ConfirmUserStatusResponse,
   AttendEventResponse,
   PublicEvent,
+  GetEmailVerificationLinkResponse,
+  PostAssignmentsResponse,
+  GetAssignmentsResponse,
+  ReviewAssignment,
 } from '@/lib/types/apiResponses';
 import { ApplicationDecision } from '@/lib/types/enums';
 import axios from 'axios';
+import { PostAssignmentsRequest } from '../types/apiRequests';
 
 /**
  * Get all applications
@@ -173,4 +178,94 @@ export const attendEvent = async (
     }
   );
   return response.data.event;
+};
+
+/**
+ * Get email verification link for a user
+ * @param token
+ * @param email User's email address
+ * @returns Email verification link
+ */
+export const getEmailVerificationLink = async (token: string, email: string): Promise<string> => {
+  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.emailVerificationLink}?email=${encodeURIComponent(email)}`;
+  const response = await axios.get<GetEmailVerificationLinkResponse>(requestUrl, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data.emailVerificationLink;
+};
+
+
+/**
+ * Assign applications to reviewers randomly
+ * @param token
+ */
+export const postAssigments = async (token: string, newAssignments: PostAssignmentsRequest): Promise<ReviewAssignment[]> => {
+  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.assignments}`;
+  const response = await axios.post<PostAssignmentsResponse>(
+    requestUrl,
+    { newAssignments },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  console.log(requestUrl, response.data)
+  return response.data.newAssignments;
+};
+
+/**
+ * Randomly assign all unassigned applications to reviewers
+ * @param token
+ */
+export const randomizeAssigments = async (token: string): Promise<ReviewAssignment[]> => {
+  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.randomizeAssignments}`;
+  const response = await axios.post<PostAssignmentsResponse>(
+    requestUrl,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  console.log(requestUrl, response.data)
+  return response.data.newAssignments;
+};
+
+/**
+ * Get all existing assignments
+ * @param token
+ */
+export const getAllAssignments = async (token: string): Promise<ReviewAssignment[]> => {
+  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.assignments}`;
+  const response = await axios.get<GetAssignmentsResponse>(
+    requestUrl,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data.assignments;
+};
+
+/**
+ * Get all existing assignments for reviewer
+ * @param token
+ * @param reviewerId
+ */
+export const getAssignmentsByReviewer = async (token: string, reviewerId: string): Promise<ReviewAssignment[]> => {
+  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.assignments}/${reviewerId}`;
+  const response = await axios.get<GetAssignmentsResponse>(
+    requestUrl,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data.assignments;
 };
