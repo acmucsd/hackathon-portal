@@ -251,8 +251,8 @@ export class AdminController {
 
       modifiedAdmins.add(reviewer);
       newAssignments.push({
-        applicant: reviewee.getPublicProfile(),
-        reviewer: reviewer.getPublicProfile(),
+        applicant: reviewee.getHiddenProfile(),
+        reviewer: reviewer.getHiddenProfile(),
       });
     })
 
@@ -275,8 +275,8 @@ export class AdminController {
     const applicants = users.filter((user) => !user.isAdmin());
     const assignments = applicants.map((user) => {
       return {
-        applicant: user.getPublicProfile(),
-        reviewer: user.reviewer?.getPublicProfile(),
+        applicant: user.getHiddenProfile(),
+        reviewer: user.reviewer?.getHiddenProfile(),
       } as ReviewAssignment;
     })
 
@@ -296,8 +296,8 @@ export class AdminController {
     const reviewees = admin.reviewees ?? [];
     const assignments = reviewees.map((reviewee) => {
       return {
-        applicant: reviewee.getPublicProfile(),
-        reviewer: admin.getPublicProfile(),
+        applicant: reviewee.getHiddenProfile(),
+        reviewer: admin.getHiddenProfile(),
       } as ReviewAssignment;
     });
 
