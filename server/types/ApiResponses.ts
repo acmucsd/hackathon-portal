@@ -141,8 +141,8 @@ export interface AttendEventResponse extends ApiResponse {
 }
 
 export interface ReviewAssignment {
-  applicant: PublicProfile;
-  reviewer: PublicProfile | undefined;
+  applicant: HiddenProfile;
+  reviewer: HiddenProfile | undefined;
 }
 
 export interface PostAssignmentsResponse extends ApiResponse {
