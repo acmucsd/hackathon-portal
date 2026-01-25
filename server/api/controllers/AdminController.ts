@@ -32,7 +32,7 @@ import {
   UuidParam,
 } from '../validators/GenericRequests';
 import PermissionsService from '../../services/PermissionsService';
-import { ApplicationStatus } from '../../types/Enums';
+import { ApplicationDecision, ApplicationStatus } from '../../types/Enums';
 import { AttendanceService } from '../../services/AttendanceService';
 
 @JsonController('/admin')
@@ -221,10 +221,16 @@ export class AdminController {
     if (!PermissionsService.canViewAllApplications(currentUser))
       throw new ForbiddenError();
 
-    const users = await this.userService.getAllUsers();
+    const users = await this.userService.getAllUsersWithReviewerRelation();
 
     const admins = users.filter((user) => user.isAdmin())
-    const unassignedApplicants = users.filter((user) => !user.isAdmin() && !user.reviewer)
+    const unassignedApplicants = users.filter((user) =>
+      !user.isAdmin() &&
+      !user.reviewer &&
+      user.applicationDecision == ApplicationDecision.NO_DECISION &&
+      user.applicationStatus == ApplicationStatus.SUBMITTED
+    )
+    console.log(unassignedApplicants);
 
     function getRandomIntInclusive(min: number, max: number): number {
       min = Math.ceil(min);
@@ -264,7 +270,7 @@ export class AdminController {
     if (!PermissionsService.canViewAllApplications(currentUser))
       throw new ForbiddenError();
 
-    const users = await this.userService.getAllUsers();
+    const users = await this.userService.getAllUsersWithReviewerRelation();
 
     const applicants = users.filter((user) => !user.isAdmin());
     const assignments = applicants.map((user) => {
@@ -286,7 +292,7 @@ export class AdminController {
     if (!PermissionsService.canViewAllApplications(currentUser))
       throw new ForbiddenError();
 
-    const admin = await this.userService.findById(params.id);
+    const admin = await this.userService.findByIdWithReviewerRelation(params.id);
     const reviewees = admin.reviewees ?? [];
     const assignments = reviewees.map((reviewee) => {
       return {

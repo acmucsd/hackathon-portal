@@ -211,6 +211,7 @@ export const postAssigments = async (token: string): Promise<ReviewAssignment[]>
       },
     }
   );
+  console.log(requestUrl, response.data)
   return response.data.newAssignments;
 };
 
