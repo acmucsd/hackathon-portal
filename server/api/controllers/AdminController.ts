@@ -34,6 +34,7 @@ import {
 import PermissionsService from '../../services/PermissionsService';
 import { ApplicationDecision, ApplicationStatus } from '../../types/Enums';
 import { AttendanceService } from '../../services/AttendanceService';
+import { PostAssignmentsRequest } from '../../types/ApiRequests';
 
 @JsonController('/admin')
 @Service()
@@ -214,8 +215,8 @@ export class AdminController {
   }
 
   @UseBefore(UserAuthentication)
-  @Post('/assignments')
-  async postAssignments(
+  @Post('/assignments/random')
+  async postAssignmentsRandom(
     @AuthenticatedUser() currentUser: UserModel,
   ): Promise<PostAssignmentsResponse> {
     if (!PermissionsService.canViewAllApplications(currentUser))
@@ -230,7 +231,6 @@ export class AdminController {
       user.applicationDecision == ApplicationDecision.NO_DECISION &&
       user.applicationStatus == ApplicationStatus.SUBMITTED
     )
-    console.log(unassignedApplicants);
 
     function getRandomIntInclusive(min: number, max: number): number {
       min = Math.ceil(min);
@@ -247,7 +247,10 @@ export class AdminController {
       const reviewer = admins[R];
 
       reviewee.reviewer = reviewer;
-      reviewer.reviewees = [...reviewer.reviewees ?? [], reviewee];
+      const alreadyAssigned = reviewer.reviewees?.some((r) => r.id === reviewee.id) ?? false;
+      if (!alreadyAssigned) {
+        reviewer.reviewees = [...(reviewer.reviewees ?? []), reviewee];
+      }
 
       modifiedAdmins.add(reviewer);
       newAssignments.push({
@@ -257,6 +260,60 @@ export class AdminController {
     })
 
     const usersToSave = [...unassignedApplicants, ...modifiedAdmins];
+    await this.userService.saveManyUsers(usersToSave);
+
+    return { error: null, newAssignments };
+  }
+
+  @UseBefore(UserAuthentication)
+  @Post('/assignments')
+  async postAssignments(
+    @Body() postAssignmentsRequest: PostAssignmentsRequest,
+    @AuthenticatedUser() currentUser: UserModel,
+  ): Promise<PostAssignmentsResponse> {
+    if (!PermissionsService.canViewAllApplications(currentUser))
+      throw new ForbiddenError();
+
+    const modifiedApplicants = new Set<UserModel>();
+    const modifiedAdmins = new Set<UserModel>();
+    const newAssignments = new Array<ReviewAssignment>();
+
+    await Promise.all(postAssignmentsRequest.assignments.map(async (assignment) => {
+      const reviewee = await this.userService.findByIdWithReviewerRelation(assignment.applicantId);
+      if (!reviewee) return;
+
+      const reviewer = assignment.reviewerId
+        ? await this.userService.findByIdWithReviewerRelation(assignment.reviewerId)
+        : undefined;
+
+      // unlink old reviewer (if exists)
+      const previousReviewer = reviewee.reviewer;
+      if (previousReviewer) {
+        previousReviewer.reviewees = previousReviewer.reviewees?.filter(r => r.id !== reviewee.id) ?? [];
+        modifiedAdmins.add(previousReviewer);
+      }
+
+      // set reviewee's new reviewer
+      reviewee.reviewer = reviewer;
+      modifiedApplicants.add(reviewee);
+
+      // link new reviewer (if exists)
+      if (reviewer) {
+        const alreadyAssigned = reviewer.reviewees?.some((r) => r.id === reviewee.id) ?? false;
+        if (!alreadyAssigned) {
+          reviewer.reviewees = [...(reviewer.reviewees ?? []), reviewee];
+          modifiedAdmins.add(reviewer);
+        }
+      }
+
+      newAssignments.push({
+        applicant: reviewee.getHiddenProfile(),
+        reviewer: reviewer?.getHiddenProfile(),
+      });
+    })
+  );
+
+    const usersToSave = [...modifiedApplicants, ...modifiedAdmins];
     await this.userService.saveManyUsers(usersToSave);
 
     return { error: null, newAssignments };
