@@ -1,4 +1,5 @@
 import ApplicationView from '@/components/admin/ApplicationView';
+import ApplicationReviewPanel from '@/components/ApplicationReviewPanel';
 import { AdminAPI } from '@/lib/api';
 import { getCookie } from '@/lib/services/CookieService';
 import { CookieType } from '@/lib/types/enums';
@@ -24,12 +25,17 @@ export default async function ApplicationReviewPage({ params }: ApplicationRevie
 
     return (
       <main className={styles.main}>
-        <ApplicationView
-          application={fetchedApplication}
-          token={accessToken}
-          decision={fetchedApplicationDecision.applicationDecision}
-          waivers={fetchedWaivers}
-        />
+        <div className={styles.appView}>
+          <ApplicationView
+            application={fetchedApplication}
+            token={accessToken}
+            decision={fetchedApplicationDecision.applicationDecision}
+            waivers={fetchedWaivers}
+          />
+        </div>
+        <div className={styles.appReviewPanel}>
+          <ApplicationReviewPanel />
+        </div>
       </main>
     );
   } catch (error) {

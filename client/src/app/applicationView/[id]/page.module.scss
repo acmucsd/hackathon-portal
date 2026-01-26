@@ -1,9 +1,30 @@
 @use '@/styles/vars.scss' as vars;
 
 .main {
-  flex: auto;
   display: flex;
-  flex-direction: column;
+  flex: 1 1 auto;
+  flex-direction: row;
   gap: 2rem;
-  padding: var(--top-padding) var(--side-padding);
+  padding-left: var(--side-padding);
+  align-items: flex-start;
+}
+
+.appView {
+  display: flex;
+  gap: 2rem;
+  padding-top: var(--top-padding);
+  width: 100%;
+}
+
+.appContent {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.appReviewPanel {
+  flex: 0 0 max(30vw, 300px);
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+  overflow: hidden;
 }
