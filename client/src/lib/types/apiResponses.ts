@@ -210,8 +210,8 @@ export interface GetEmailVerificationLinkResponse extends ApiResponse {
 // Assignment Responses
 
 export interface ReviewAssignment {
-  applicant: PublicProfile;
-  reviewer: PublicProfile | undefined;
+  applicant: FullProfile;
+  reviewer: FullProfile | undefined;
 }
 
 export interface PostAssignmentsResponse extends ApiResponse {
