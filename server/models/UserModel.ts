@@ -63,6 +63,7 @@ export class UserModel {
   })
   responses: ResponseModel;
 
+
   @OneToMany((type) => AttendanceModel, (attendance) => attendance.user, { cascade: true })
   attendances: AttendanceModel[];
 
