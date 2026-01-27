@@ -74,6 +74,7 @@ export interface UpdateEventRequest {
 // Admin requests
 export interface UpdateApplicationDecisionRequest {
   applicationDecision: ApplicationDecision;
+  reviewerComments?: string;
 }
 
 export interface ForgotPasswordRequest {

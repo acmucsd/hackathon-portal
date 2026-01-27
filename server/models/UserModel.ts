@@ -78,6 +78,9 @@ export class UserModel {
   @OneToMany(() => UserModel, (user) => user.reviewer)
   reviewees?: UserModel[];
 
+  @Column()
+  reviewerComments: string;
+
   public isRestricted(): boolean {
     return this.accessType === UserAccessType.RESTRICTED;
   }
@@ -115,6 +118,7 @@ export class UserModel {
     return {
       ...this.getPrivateProfile(),
       applicationDecision: this.applicationDecision,
+      reviewerComments: this.reviewerComments,
     };
   }
 }

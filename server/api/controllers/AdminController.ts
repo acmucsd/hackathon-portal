@@ -106,6 +106,7 @@ export class AdminController {
     const user = await this.userService.updateApplicationDecision(
       param.id,
       updateApplicationDecisionRequest.applicationDecision,
+      updateApplicationDecisionRequest.reviewerComments
     );
     return { error: null, user: user.getHiddenProfile() };
   }

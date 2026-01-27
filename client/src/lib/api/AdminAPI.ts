@@ -109,12 +109,13 @@ export const getApplicationDecision = async (token: string, id: string): Promise
 export const updateApplicationDecision = async (
   token: string,
   id: string,
-  applicationDecision: ApplicationDecision
+  applicationDecision: ApplicationDecision,
+  reviewerComments?: string,
 ): Promise<FullProfile> => {
   const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.application}/${id}/decision`;
   const response = await axios.post<UpdateApplicationDecisionResponse>(
     requestUrl,
-    { applicationDecision },
+    { applicationDecision, reviewerComments },
     {
       headers: {
         Authorization: `Bearer ${token}`,

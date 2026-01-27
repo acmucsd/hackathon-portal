@@ -7,4 +7,6 @@ export class UpdateApplicationDecisionRequest implements IUpdateApplicationDecis
   @IsDefined()
   @IsValidApplicationDecision()
   applicationDecision: ApplicationDecision;
+
+  reviewerComments?: string;
 }
