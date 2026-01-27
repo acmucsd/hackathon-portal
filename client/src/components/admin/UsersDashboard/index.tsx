@@ -11,23 +11,21 @@ import UserRow from '../UserRow';
 import UserItem from '../UserItem';
 import Pagination from '@/components/Pagination';
 import { FullProfile } from '@/lib/types/apiResponses';
-import { ApplicationStatus } from '@/lib/types/enums';
+import { ApplicationDecision, ApplicationStatus } from '@/lib/types/enums';
 import { useWindowSize } from '@/lib/hooks/useWindowSize';
 import { formatTitleCase } from '@/lib/utils';
 import styles from './style.module.scss';
+import UsersTable from '../UsersTable';
 
 interface UsersDashboardProps {
   users: FullProfile[];
+  assignedUsers: FullProfile[];
 }
 
-const UsersDashboard = ({ users }: UsersDashboardProps) => {
+const UsersDashboard = ({ users, assignedUsers }: UsersDashboardProps) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [filterStatus, setFilterStatus] = useState('CONFIRMED');
   const [searchQuery, setSearchQuery] = useState('');
-
-  const headers = ['Applicant Name', 'Status', 'Creation Date', 'Action'];
-  const size = useWindowSize();
-  const isSmall = (size.width ?? 0) <= 1024;
 
   const filteredUsers = users
     .filter(user => {
@@ -37,6 +35,25 @@ const UsersDashboard = ({ users }: UsersDashboardProps) => {
     .filter(user =>
       `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase())
     );
+
+  const assignedFilteredUsers = {
+    "To Review": assignedUsers
+      .filter(user => user.applicationDecision === ApplicationDecision.NO_DECISION)
+      .filter(user =>
+        `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase())
+      ),
+    "My Acceptances": assignedUsers
+      .filter(user => user.applicationDecision === ApplicationDecision.ACCEPT)
+      .filter(user =>
+        `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase())
+      ),
+    "My Rejections": assignedUsers
+      .filter(user => user.applicationDecision === ApplicationDecision.REJECT)
+      .filter(user =>
+        `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase())
+      ),
+  }
+
 
   const itemsPerPage = 10;
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
@@ -50,7 +67,7 @@ const UsersDashboard = ({ users }: UsersDashboardProps) => {
     <div className={styles.container}>
       <div className={styles.filterContainer}>
         <div className={styles.filterButtons}>
-          {['All', ...Object.values(ApplicationStatus)].map(status => (
+          {['My Assignments', 'All', ...Object.values(ApplicationStatus)].map(status => (
             <Button
               key={status}
               onClick={() => {
@@ -67,40 +84,28 @@ const UsersDashboard = ({ users }: UsersDashboardProps) => {
         <Search query={searchQuery} setQuery={setSearchQuery} />
       </div>
       <hr className={styles.divider} />
-      <Typography variant="label/large">
-        {formatTitleCase(filterStatus)} Participants ({filteredUsers.length})
-      </Typography>
-      {isSmall ? (
-        <TableList>
-          {currentUsers.map(user => (
-            <UserItem key={user.id} user={user} />
-          ))}
-        </TableList>
-      ) : (
-        <Table>
-          <thead>
-            <TableHeader>
-              {headers.map(header => (
-                <TableCell key={header} type="th">
-                  {header}
-                </TableCell>
-              ))}
-            </TableHeader>
-          </thead>
-          <tbody>
-            {currentUsers.map(user => (
-              <UserRow key={user.id} user={user} />
+      {
+        filterStatus === 'My Assignments' ?
+        (
+          <>
+            {Object.entries(assignedFilteredUsers).map(([sectionTitle, usersInSection]) => (
+              <>
+                <Typography variant="label/large">
+                  {sectionTitle} Participants ({usersInSection.length})
+                </Typography>
+                <UsersTable filteredUsers={usersInSection} itemsPerPage={itemsPerPage} />
+              </>
             ))}
-          </tbody>
-        </Table>
-      )}
-      <Pagination
-        currentPage={currentPage}
-        itemsPerPage={itemsPerPage}
-        totalItems={filteredUsers.length}
-        onPrevious={handlePrevious}
-        onNext={handleNext}
-      />
+          </>
+        ) : (
+          <>
+            <Typography variant="label/large">
+              {formatTitleCase(filterStatus)} Participants ({filteredUsers.length})
+            </Typography>
+            <UsersTable filteredUsers={filteredUsers} itemsPerPage={itemsPerPage} />
+          </>
+        )
+      }
     </div>
   );
 };
