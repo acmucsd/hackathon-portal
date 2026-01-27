@@ -267,7 +267,7 @@ export class UserService {
   }
 
   public async assignReviews(
-    assignmentsRequest: ReviewAssignmentJob[]
+    assignmentsRequest: ReviewAssignmentJob[],
   ): Promise<ReviewAssignment[]> {
     return this.transactionsManager.readWrite(async (entityManager) => {
       const userRepository = Repositories.user(entityManager);
@@ -276,14 +276,14 @@ export class UserService {
       for (const assignment of assignmentsRequest) {
         // load reviewee
         const reviewee = await userRepository.findByIdWithReviewerRelation(
-          assignment.applicantId
+          assignment.applicantId,
         );
         if (!reviewee) continue;
 
         // load reviewer (if any)
         const reviewer = assignment.reviewerId
           ? await userRepository.findByIdWithReviewerRelation(
-              assignment.reviewerId
+              assignment.reviewerId,
             )
           : undefined;
 
@@ -291,7 +291,7 @@ export class UserService {
         reviewee.reviewer = reviewer ?? null;
 
         // persist reviewee only
-        const res = await userRepository.save(reviewee);
+        await userRepository.save(reviewee);
 
         newAssignments.push({
           applicant: reviewee.getHiddenProfile(),
@@ -314,19 +314,19 @@ export class UserService {
     This list is then sent to postAssignments().
 
     Note 1: the distribution across admins is not equalized so some may have more reviews to complete than others :)
-    Note 2: not the most efficient way since it does 2 user lookups (one here, one in postAssignments), but should be fine
+    Note 2: not the most efficient way since it does 2 user lookups (one here, one in postAssignments), but should be ok
     */
 
     const users = await this.transactionsManager.readOnly(async (entityManager) =>
       Repositories.user(entityManager).findAllWithReviewerRelation(),
-    )
+    );
 
-    const admins = users.filter((user) => user.isAdmin())
+    const admins = users.filter((user) => user.isAdmin());
     const applicantsToAssign = users.filter((user) =>
       !user.isAdmin() && // normal applicant
       user.applicationDecision == ApplicationDecision.NO_DECISION && // not already reviewed
-      user.applicationStatus == ApplicationStatus.SUBMITTED // submitted application
-    )
+      user.applicationStatus == ApplicationStatus.SUBMITTED, // submitted application
+    );
 
     function getRandomIntInclusive(min: number, max: number): number {
       min = Math.ceil(min);
@@ -335,15 +335,15 @@ export class UserService {
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    const arr: ReviewAssignmentJob[] = []
+    const arr: ReviewAssignmentJob[] = [];
     applicantsToAssign.forEach((reviewee) => {
       const R = getRandomIntInclusive(0, admins.length - 1);
       const reviewer = admins[R];
       arr.push({
         applicantId: reviewee.id,
         reviewerId: reviewer.id,
-      })
-    })
+      });
+    });
 
     return this.assignReviews(arr);
   }
