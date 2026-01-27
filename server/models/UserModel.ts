@@ -78,8 +78,8 @@ export class UserModel {
   @OneToMany(() => UserModel, (user) => user.reviewer)
   reviewees?: UserModel[];
 
-  @Column()
-  reviewerComments: string;
+  @Column({ type: 'text', nullable: true })
+  reviewerComments: string | null;
 
   public isRestricted(): boolean {
     return this.accessType === UserAccessType.RESTRICTED;

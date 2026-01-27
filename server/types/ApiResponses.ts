@@ -25,7 +25,7 @@ export interface PrivateProfile extends PublicProfile {
 
 export interface HiddenProfile extends PrivateProfile {
   applicationDecision: ApplicationDecision;
-  reviewerComments: string;
+  reviewerComments: string | null;
 }
 
 export interface CustomErrorBody {

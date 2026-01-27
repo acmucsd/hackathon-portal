@@ -104,6 +104,8 @@ export const getApplicationDecision = async (token: string, id: string): Promise
  * Update user's application decision based on user id
  * @param token
  * @param id
+ * @param applicationDecision
+ * @param reviewerComments Optionally accepts string or null. Or omit this field to leave reviewerComments unchanged.
  * @returns User's profile with decision
  */
 export const updateApplicationDecision = async (

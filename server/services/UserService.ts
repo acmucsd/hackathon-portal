@@ -149,17 +149,17 @@ export class UserService {
   public async updateApplicationDecision(
     userId: string,
     applicationDecision: ApplicationDecision,
-    reviewerComments?: string,
+    reviewerComments?: string | null,
   ): Promise<UserModel> {
     return this.transactionsManager.readWrite(async (entityManager) => {
       const userRepository = Repositories.user(entityManager);
       const user = await userRepository.findById(userId);
       if (!user) throw new NotFoundError('User not found');
       user.applicationDecision = applicationDecision;
-
-      if (reviewerComments) {
+      if (reviewerComments !== undefined) {
         user.reviewerComments = reviewerComments;
       }
+
       const updatedUser = userRepository.save(user);
       return updatedUser;
     });
