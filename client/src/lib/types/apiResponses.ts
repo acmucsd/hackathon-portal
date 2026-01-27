@@ -35,6 +35,7 @@ export interface PrivateProfile extends PublicProfile {
 
 export interface FullProfile extends PrivateProfile {
   applicationDecision: ApplicationDecision;
+  reviewerComments: string | null;
 }
 
 export interface ValidatorError {
@@ -205,4 +206,19 @@ export interface AttendEventResponse extends ApiResponse {
 
 export interface GetEmailVerificationLinkResponse extends ApiResponse {
   emailVerificationLink: string;
+}
+
+// Assignment Responses
+
+export interface ReviewAssignment {
+  applicant: FullProfile;
+  reviewer: FullProfile | undefined;
+}
+
+export interface PostAssignmentsResponse extends ApiResponse {
+  newAssignments: ReviewAssignment[];
+}
+
+export interface GetAssignmentsResponse extends ApiResponse {
+  assignments: ReviewAssignment[];
 }

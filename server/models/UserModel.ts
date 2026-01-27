@@ -67,17 +67,19 @@ export class UserModel {
   @OneToMany((type) => AttendanceModel, (attendance) => attendance.user, { cascade: true })
   attendances: AttendanceModel[];
 
-   //reviewers
+  //reviewers
   @ManyToOne(() => UserModel, (user) => user.reviewees, {
     nullable: true,
     onDelete: 'SET NULL',
   })
-  reviewer?: UserModel;
+  reviewer?: UserModel | null;
 
   // list of whos being reviewed
   @OneToMany(() => UserModel, (user) => user.reviewer)
   reviewees?: UserModel[];
 
+  @Column({ type: 'text', nullable: true })
+  reviewerComments: string | null;
 
   public isRestricted(): boolean {
     return this.accessType === UserAccessType.RESTRICTED;
@@ -116,6 +118,7 @@ export class UserModel {
     return {
       ...this.getPrivateProfile(),
       applicationDecision: this.applicationDecision,
+      reviewerComments: this.reviewerComments,
     };
   }
 }
