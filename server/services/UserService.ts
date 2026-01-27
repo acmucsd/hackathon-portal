@@ -36,6 +36,31 @@ export class UserService {
     return user;
   }
 
+  public async updateApplicationStatusBasedOnDecision(id: string): Promise<UserModel> {
+    return this.transactionsManager.readWrite(async (entityManager) => {
+      const userRepository = Repositories.user(entityManager);
+
+      const user = await userRepository.findById(id);
+      if (!user) throw new NotFoundError('User not found');
+
+      const decisionToStatusMap: Record<ApplicationDecision, ApplicationStatus | null> = {
+        [ApplicationDecision.ACCEPT]: ApplicationStatus.ACCEPTED,
+        [ApplicationDecision.REJECT]: ApplicationStatus.REJECTED,
+        [ApplicationDecision.WAITLIST]: ApplicationStatus.WAITLISTED,
+        [ApplicationDecision.NO_DECISION]: null,
+      };
+
+      const nextStatus = decisionToStatusMap[user.applicationDecision];
+      if (!nextStatus) {
+        throw new BadRequestError('User has no releasable application decision');
+      }
+
+      user.applicationStatus = nextStatus;
+
+      return await userRepository.save(user);
+    });
+  }
+
   public async createUser(createUser: CreateUser): Promise<UserModel> {
     const email = createUser.email.toLowerCase();
 
