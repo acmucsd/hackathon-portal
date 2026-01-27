@@ -71,7 +71,7 @@ export class UserModel {
     nullable: true,
     onDelete: 'SET NULL',
   })
-  reviewer?: UserModel;
+  reviewer?: UserModel | null;
 
   // list of whos being reviewed
   @OneToMany(() => UserModel, (user) => user.reviewer)

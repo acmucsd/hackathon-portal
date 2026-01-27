@@ -212,7 +212,6 @@ export const postAssigments = async (token: string, newAssignments: PostAssignme
       },
     }
   );
-  console.log(requestUrl, response.data)
   return response.data.newAssignments;
 };
 
@@ -231,7 +230,6 @@ export const randomizeAssigments = async (token: string): Promise<ReviewAssignme
       },
     }
   );
-  console.log(requestUrl, response.data)
   return response.data.newAssignments;
 };
 

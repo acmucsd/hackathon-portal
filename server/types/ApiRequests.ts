@@ -80,9 +80,11 @@ export interface ForgotPasswordRequest {
   email: string;
 }
 
+export interface ReviewAssignmentJob {
+  applicantId: string;
+  reviewerId: string | undefined;
+}
+
 export interface PostAssignmentsRequest {
-  assignments: {
-    applicantId: string;
-    reviewerId: string | undefined;
-  }[];
+  assignments: ReviewAssignmentJob[];
 }
