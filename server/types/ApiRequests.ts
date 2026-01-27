@@ -79,3 +79,12 @@ export interface UpdateApplicationDecisionRequest {
 export interface ForgotPasswordRequest {
   email: string;
 }
+
+export interface ReviewAssignmentJob {
+  applicantId: string;
+  reviewerId: string | undefined;
+}
+
+export interface PostAssignmentsRequest {
+  assignments: ReviewAssignmentJob[];
+}

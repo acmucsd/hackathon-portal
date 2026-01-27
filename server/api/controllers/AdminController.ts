@@ -14,8 +14,11 @@ import { UserModel } from '../../models/UserModel';
 import {
   AttendEventResponse,
   GetApplicationDecisionResponse,
+  GetAssignmentsResponse,
   GetFormResponse,
   GetFormsResponse,
+  PostAssignmentsResponse,
+  ReviewAssignment,
   UpdateApplicationDecisionResponse,
 } from '../../types/ApiResponses';
 import { UpdateApplicationDecisionRequest } from '../validators/AdminControllerRequests';
@@ -29,8 +32,9 @@ import {
   UuidParam,
 } from '../validators/GenericRequests';
 import PermissionsService from '../../services/PermissionsService';
-import { ApplicationStatus } from '../../types/Enums';
+import { ApplicationDecision, ApplicationStatus } from '../../types/Enums';
 import { AttendanceService } from '../../services/AttendanceService';
+import { PostAssignmentsRequest } from '../../types/ApiRequests';
 
 @JsonController('/admin')
 @Service()
@@ -208,5 +212,72 @@ export class AdminController {
     );
     const { event } = attendance.getPublicAttendance();
     return { error: null, event };
+  }
+
+  @UseBefore(UserAuthentication)
+  @Post('/assignments/random')
+  async postAssignmentsRandom(
+    @AuthenticatedUser() currentUser: UserModel,
+  ): Promise<PostAssignmentsResponse> {
+    if (!PermissionsService.canViewAllApplications(currentUser))
+      throw new ForbiddenError();
+
+    const newAssignments = await this.userService.randomlyAssignReviews();
+    return { error: null, newAssignments };
+  }
+
+  @UseBefore(UserAuthentication)
+  @Post('/assignments')
+  async postAssignments(
+    @Body() postAssignmentsRequest: PostAssignmentsRequest,
+    @AuthenticatedUser() currentUser: UserModel,
+  ): Promise<PostAssignmentsResponse> {
+    if (!PermissionsService.canViewAllApplications(currentUser))
+      throw new ForbiddenError();
+
+    const newAssignments = await this.userService.assignReviews(postAssignmentsRequest.assignments);
+    return { error: null, newAssignments };
+  }
+
+  @UseBefore(UserAuthentication)
+  @Get('/assignments')
+  async getAssignments(
+    @AuthenticatedUser() currentUser: UserModel,
+  ): Promise<GetAssignmentsResponse> {
+    if (!PermissionsService.canViewAllApplications(currentUser))
+      throw new ForbiddenError();
+
+    const users = await this.userService.getAllUsersWithReviewerRelation();
+
+    const applicants = users.filter((user) => !user.isAdmin());
+    const assignments = applicants.map((user) => {
+      return {
+        applicant: user.getHiddenProfile(),
+        reviewer: user.reviewer?.getHiddenProfile(),
+      } as ReviewAssignment;
+    })
+
+    return { error: null, assignments };
+  }
+
+  @UseBefore(UserAuthentication)
+  @Get('/assignments/:id')
+  async getMyAssignments(
+    @AuthenticatedUser() currentUser: UserModel,
+    @Params() params: IdParam,
+  ): Promise<GetAssignmentsResponse> {
+    if (!PermissionsService.canViewAllApplications(currentUser))
+      throw new ForbiddenError();
+
+    const admin = await this.userService.findByIdWithReviewerRelation(params.id);
+    const reviewees = admin.reviewees ?? [];
+    const assignments = reviewees.map((reviewee) => {
+      return {
+        applicant: reviewee.getHiddenProfile(),
+        reviewer: admin.getHiddenProfile(),
+      } as ReviewAssignment;
+    });
+
+    return { error: null, assignments };
   }
 }
