@@ -56,7 +56,8 @@ export class InterestFormResponseController {
       if (!PermissionsService.canEditInterestEmails(user))
         throw new ForbiddenError();
 
-      const interestEmail = await this.interestFormResponseService.addListOfInterestedEmails(addListOfInterestedEmailRequest.emails);
+      const interestEmail = await this.interestFormResponseService
+      .addListOfInterestedEmails(addListOfInterestedEmailRequest.emails);
       return { error: null, interested: interestEmail };
     }
 
