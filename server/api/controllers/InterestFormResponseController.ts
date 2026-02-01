@@ -4,10 +4,11 @@ import { InterestFormResponseService } from '../../services/InterestFormResponse
 import { UserAuthentication } from '../middleware/UserAuthentication';
 import { AuthenticatedUser } from '../decorators/AuthenticatedUser';
 import { UserModel } from '../../models/UserModel';
-import { AddInterestedEmailResponse, CheckInterestByEmailResponse,
+import { AddInterestedEmailResponse, AddListOfInterestedEmailResponse, CheckInterestByEmailResponse,
   GetAllInterestedUserEmailsResponse, RemoveInterestedEmailResponse } from '../../types/ApiResponses';
 import PermissionsService from '../../services/PermissionsService';
 import { AddInterestedEmailRequest,
+         AddListOfInterestedEmailRequest,
          RemoveInterestedEmailRequest }
 from '../validators/InterestFormResponseControllerRequests';
 
@@ -43,6 +44,20 @@ export class InterestFormResponseController {
 
       const interestEmail = await this.interestFormResponseService.addInterestedEmail(addInterestedEmailRequest.email);
       return { error: null, interest: interestEmail };
+    }
+
+    @UseBefore(UserAuthentication)
+    @Post('/addMany')
+    async addInterestedListOfUserEmails(
+      @Body() addListOfInterestedEmailRequest: AddListOfInterestedEmailRequest,
+      @AuthenticatedUser() user: UserModel,
+    ): Promise<AddListOfInterestedEmailResponse> {
+
+      if (!PermissionsService.canEditInterestEmails(user))
+        throw new ForbiddenError();
+
+      const interestEmail = await this.interestFormResponseService.addListOfInterestedEmails(addListOfInterestedEmailRequest.emails);
+      return { error: null, interested: interestEmail };
     }
 
     @UseBefore(UserAuthentication)

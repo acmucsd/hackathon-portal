@@ -87,3 +87,6 @@ export interface AddInterestedEmailRequest {
 export interface RemoveInterestedEmailRequest {
   email: string;
 }
+export interface AddListOfInterestedEmailRequest{
+  emails: string[];
+}

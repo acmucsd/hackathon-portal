@@ -46,6 +46,48 @@ export class InterestFormResponseService {
     return interest;
   }
 
+  public async addListOfInterestedEmails(
+  emails: string[],
+): Promise<InterestFormResponseModel[]> {
+
+  const existingInterests: InterestFormResponseModel[] = [];
+
+  // 1️⃣ check which emails already exist
+  for (const email of emails) {
+    const existingInterest = await this.transactionsManager.readOnly(
+      async (entityManager) =>
+        Repositories
+          .interestFormResponse(entityManager)
+          .findInterestByEmail(email),
+    );
+
+    if (existingInterest !== null) {
+      existingInterests.push(existingInterest);
+    }
+  }
+
+
+  const existingEmailsSet = new Set(existingInterests.map(i => i.email));
+  const emailsToCreate = emails.filter(email => !existingEmailsSet.has(email));
+
+
+  const newInterests = await this.transactionsManager.readWrite(
+    async (entityManager) => {
+      const interestFormResponseRepository =
+        Repositories.interestFormResponse(entityManager);
+
+      return interestFormResponseRepository.save(
+        emailsToCreate.map(email =>
+          interestFormResponseRepository.create({ email }),
+        ),
+      );
+    },
+  );
+
+
+  return [...existingInterests, ...newInterests];
+}
+
   public async removeInterestedEmail(email: string): Promise<void> {
     const normalizedEmail = email.toLowerCase();
 

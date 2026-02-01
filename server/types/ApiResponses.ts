@@ -149,6 +149,10 @@ export interface AddInterestedEmailResponse extends ApiResponse {
   interest: InterestFormResponseModel;
 }
 
+export interface AddListOfInterestedEmailResponse extends ApiResponse {
+  interested: InterestFormResponseModel[];
+}
+
 export interface GetAllInterestedUserEmailsResponse extends ApiResponse {
   interested: InterestFormResponseModel[]
 }
