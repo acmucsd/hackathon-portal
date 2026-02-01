@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryColumn,
   UpdateDateColumn,
@@ -62,8 +63,21 @@ export class UserModel {
   })
   responses: ResponseModel;
 
+
   @OneToMany((type) => AttendanceModel, (attendance) => attendance.user, { cascade: true })
   attendances: AttendanceModel[];
+
+   //reviewers
+  @ManyToOne(() => UserModel, (user) => user.reviewees, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
+  reviewer?: UserModel;
+
+  // list of whos being reviewed
+  @OneToMany(() => UserModel, (user) => user.reviewer)
+  reviewees?: UserModel[];
+
 
   public isRestricted(): boolean {
     return this.accessType === UserAccessType.RESTRICTED;
