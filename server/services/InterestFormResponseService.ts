@@ -2,7 +2,6 @@ import { Service } from 'typedi';
 import { Repositories, TransactionsManager } from '../repositories';
 import { NotFoundError } from 'routing-controllers';
 import { InterestFormResponseModel } from '../models/InterestFormResponseModel';
-import { In } from 'typeorm';
 
 @Service()
 export class InterestFormResponseService {
@@ -51,28 +50,26 @@ export class InterestFormResponseService {
   emails: string[],
 ): Promise<InterestFormResponseModel[]> {
 
-  await this.transactionsManager.readWrite(
+  const newInterests = await this.transactionsManager.readWrite(
     async (entityManager) => {
       const interestFormResponseRepository =
         Repositories.interestFormResponse(entityManager);
 
-        await interestFormResponseRepository
+        const addedEmails = await interestFormResponseRepository
         .createQueryBuilder()
         .insert()
         .into(InterestFormResponseModel)
         .values(emails.map((email)=>({ email })))
         .orIgnore()
+        .returning('*')
         .execute();
+
+        return addedEmails.raw as InterestFormResponseModel[];
  
     },
   );
 
-  return this.transactionsManager.readOnly(async (entityManager) =>
-    Repositories
-      .interestFormResponse(entityManager)
-      .find({ where: { email: In(emails) } }),
-
-  );
+  return newInterests;
 
 }
 
