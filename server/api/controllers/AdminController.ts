@@ -5,6 +5,7 @@ import {
   JsonController,
   Params,
   Post,
+  Put,
   QueryParams,
   UseBefore,
 } from 'routing-controllers';
@@ -31,6 +32,8 @@ import {
 import PermissionsService from '../../services/PermissionsService';
 import { ApplicationStatus } from '../../types/Enums';
 import { AttendanceService } from '../../services/AttendanceService';
+import { ApplicationConfigService } from '../../services/ApplicationConfigService';
+import { UpdateApplicationOpeningStatusRequest } from '../validators/AdminControllerRequests';
 
 @JsonController('/admin')
 @Service()
@@ -41,14 +44,14 @@ export class AdminController {
 
   private attendanceService: AttendanceService;
 
-  constructor(
-    userService: UserService,
-    responseService: ResponseService,
-    attendanceService: AttendanceService,
-  ) {
+  private applicationConfigService: ApplicationConfigService;
+
+  constructor(userService: UserService, responseService: ResponseService,
+    attendanceService: AttendanceService, applicationConfigService: ApplicationConfigService) {
     this.userService = userService;
     this.responseService = responseService;
     this.attendanceService = attendanceService;
+    this.applicationConfigService = applicationConfigService;
   }
 
   @UseBefore(UserAuthentication)
@@ -209,4 +212,32 @@ export class AdminController {
     const { event } = attendance.getPublicAttendance();
     return { error: null, event };
   }
+
+  @UseBefore(UserAuthentication)
+  @Put('/applications/setOpeningStatus')
+  async setApplicationsOpen(
+    @AuthenticatedUser() currentUser: UserModel,
+    @Body() body: UpdateApplicationOpeningStatusRequest,
+  ) {
+
+    if (!PermissionsService.canSetApplicationOpeningStatus(currentUser)) {
+      throw new ForbiddenError('You do not have permission to set the application' +
+        ' opening status. Only admins can perform this action.');
+    }
+
+    const updatedBy = currentUser.id;
+
+    const config = await this.applicationConfigService.setApplicationSingleton(
+      body.applicationsOpen,
+      updatedBy,
+    );
+
+    return {
+      error: null,
+      applicationsOpen: config.applicationsOpen,
+      updatedBy: config.updatedBy,
+      updatedAt: config.updatedAt,
+    };
+  }
+
 }
