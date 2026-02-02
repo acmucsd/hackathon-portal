@@ -24,6 +24,7 @@ const config = {
         waivers: '/admin/waivers',
         confirmUser: '/admin/user/confirm',
         attendance: '/admin/attendance',
+        emailVerificationLink: '/admin/email-verification-link',
       },
       event: {
         createEvent: '/event',

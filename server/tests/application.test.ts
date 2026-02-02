@@ -54,6 +54,7 @@ const INVALID_APPLICATION = {
   educationLevel: 'Undergraduate University (3+ year)',
   tshirtSize: 'M',
   address1Shipping: '1234 Sample St',
+  address2Shipping: 'Apt 567',
   cityShipping: 'San Diego',
   stateShipping: 'CA',
   countryShipping: 'United States',
@@ -61,12 +62,11 @@ const INVALID_APPLICATION = {
   major: 'Computer science, computer engineering, or software engineering',
   interests: ['AI', 'Web Development', 'Hackathons'],
   referrer: ['Friend', 'ACM UCSD'],
-  motivation: '__INTEGRATION_TEST__',
   resumeLink: 'https://example.com/resume.pdf',
   willAttend: 'YES',
   additionalComments: 'No special requests. Excited to join!',
 };
-// missing address2Shipping field
+// missing motivation field
 
 describe('Application Validation', () => {
   it('should validate a correct application', async () => {

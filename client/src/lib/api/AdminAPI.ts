@@ -12,6 +12,7 @@ import type {
   ConfirmUserStatusResponse,
   AttendEventResponse,
   PublicEvent,
+  GetEmailVerificationLinkResponse,
 } from '@/lib/types/apiResponses';
 import { ApplicationDecision } from '@/lib/types/enums';
 import axios from 'axios';
@@ -173,4 +174,20 @@ export const attendEvent = async (
     }
   );
   return response.data.event;
+};
+
+/**
+ * Get email verification link for a user
+ * @param token
+ * @param email User's email address
+ * @returns Email verification link
+ */
+export const getEmailVerificationLink = async (token: string, email: string): Promise<string> => {
+  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.emailVerificationLink}?email=${encodeURIComponent(email)}`;
+  const response = await axios.get<GetEmailVerificationLinkResponse>(requestUrl, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data.emailVerificationLink;
 };

@@ -86,6 +86,7 @@ export default function RegisterPage() {
                 isEduDomain: value =>
                   value?.endsWith('.edu') ||
                   value?.endsWith('.ca') ||
+                  value?.endsWith('.mx') ||
                   'Please enter a university email address.',
               },
             })}

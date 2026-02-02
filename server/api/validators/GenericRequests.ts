@@ -1,4 +1,4 @@
-import { IsString, IsUUID } from 'class-validator';
+import { IsDefined, IsEmail, IsString, IsUUID } from 'class-validator';
 
 export class IdParam {
   @IsString()
@@ -16,4 +16,10 @@ export class UuidAndIdParam {
 
   @IsString()
   id: string;
+}
+
+export class EmailParam {
+  @IsDefined()
+  @IsEmail()
+  email: string;
 }

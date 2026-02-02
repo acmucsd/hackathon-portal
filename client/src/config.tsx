@@ -95,8 +95,25 @@ export const appQuestions: Step[] = [
       },
       {
         type: 'select-one',
+        id: 'educationLevel',
+        question: <>What is the highest level of formal education that you have completed?</>,
+        choices: [
+          'Less than Secondary / High School',
+          'Secondary / High School',
+          'Undergraduate University (2 year - community college or similar)',
+          'Undergraduate University (3+ year)',
+          'Graduate University (Masters, Professional, Doctoral, etc)',
+          'Code School / Bootcamp',
+          'Other Vocational / Trade Program or Apprenticeship',
+          'Other',
+          'I’m not currently a student',
+          'Prefer not to answer',
+        ],
+      },
+      {
+        type: 'select-one',
         id: 'levelOfStudy',
-        question: <>Level of Study</>,
+        question: <>What is your current level of study?</>,
         choices: [
           'Less than Secondary / High School',
           'Secondary / High School',
@@ -184,6 +201,27 @@ export const appQuestions: Step[] = [
         ],
         other: true,
       },
+      {
+        type: 'select-one',
+        id: 'underrepresented',
+        question: <>Do you identify as part of an underrepresented group in tech?</>,
+        choices: ['Yes', 'No', 'Unsure'],
+      },
+      {
+        // TODO: check this one
+        type: 'select-multiple',
+        id: 'dietary',
+        question: <>Do you have any dietary restrictions?</>,
+        choices: ['Vegetarian', 'Vegan', 'Celiac Disease', 'Allergies', 'Kosher', 'Halal'],
+        other: true,
+        optional: true,
+      },
+      {
+        type: 'select-one',
+        id: 'tshirtSize',
+        question: <>T-shirt Size</>,
+        choices: ['XS', 'S', 'M', 'L', 'XL', 'XXL+'],
+      },
     ],
   },
   {
@@ -191,7 +229,7 @@ export const appQuestions: Step[] = [
     title: 'Additional Questions',
     questions: [
       {
-        type: 'text',
+        type: 'long-text',
         id: 'motivation',
         question: <>Why do you want to participate in the DiamondHacks Hackathon?</>,
       },
@@ -242,11 +280,11 @@ export const appQuestions: Step[] = [
         id: 'willAttend',
         question: (
           <>
-            If accepted, I am attending DiamondHacks on April 5-6 at UC San Diego.
+            If accepted, I am attending DiamondHacks on April 4-5 at UC San Diego.
             <br />
             <br />
-            Please note that we are unfortunately unable to provide travel reimbursements or
-            accommodations at this time!
+            Limited travel reimbursement and or accommodations may be available, but are not
+            guaranteed at this time
           </>
         ),
         choices: ['Yes', 'No'],
@@ -312,7 +350,7 @@ export const appQuestions: Step[] = [
         choices: ['Yes', 'No'],
       },
       {
-        type: 'text',
+        type: 'long-text',
         id: 'additionalComments',
         question: 'Anything else we should know?',
         optional: true,
@@ -322,8 +360,8 @@ export const appQuestions: Step[] = [
 ];
 
 export const TIMELINE: Deadlines = {
-  application: new Date('2025-03-09T00:00-08:00'),
-  decisions: new Date('2025-03-21T00:00-08:00'),
-  acceptance: new Date('2025-03-28T00:00-07:00'),
-  hackathon: new Date('2025-04-05T00:00-07:00'),
+  application: new Date('2026-02-27T00:00-08:00'),
+  decisions: new Date('2026-03-06T00:00-08:00'),
+  acceptance: new Date('2026-03-20T00:00-07:00'),
+  hackathon: new Date('2026-04-04T00:00-07:00'),
 };
