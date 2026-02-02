@@ -60,9 +60,9 @@ export class InterestFormResponseService {
         .createQueryBuilder()
         .insert()
         .into(InterestFormResponseModel)
-        .values(emails.map((email)=>({email})))
+        .values(emails.map((email)=>({ email })))
         .orIgnore()
-        .execute()
+        .execute();
  
     },
   );
