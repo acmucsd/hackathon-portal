@@ -2,6 +2,7 @@ import { Service } from 'typedi';
 import { Repositories, TransactionsManager } from '../repositories';
 import { NotFoundError } from 'routing-controllers';
 import { InterestFormResponseModel } from '../models/InterestFormResponseModel';
+import { In } from 'typeorm';
 
 @Service()
 export class InterestFormResponseService {
@@ -50,42 +51,29 @@ export class InterestFormResponseService {
   emails: string[],
 ): Promise<InterestFormResponseModel[]> {
 
-  const existingInterests: InterestFormResponseModel[] = [];
-
-  // 1️⃣ check which emails already exist
-  for (const email of emails) {
-    const existingInterest = await this.transactionsManager.readOnly(
-      async (entityManager) =>
-        Repositories
-          .interestFormResponse(entityManager)
-          .findInterestByEmail(email),
-    );
-
-    if (existingInterest !== null) {
-      existingInterests.push(existingInterest);
-    }
-  }
-
-
-  const existingEmailsSet = new Set(existingInterests.map(i => i.email));
-  const emailsToCreate = emails.filter(email => !existingEmailsSet.has(email));
-
-
-  const newInterests = await this.transactionsManager.readWrite(
+  await this.transactionsManager.readWrite(
     async (entityManager) => {
       const interestFormResponseRepository =
         Repositories.interestFormResponse(entityManager);
 
-      return interestFormResponseRepository.save(
-        emailsToCreate.map(email =>
-          interestFormResponseRepository.create({ email }),
-        ),
-      );
+        await interestFormResponseRepository
+        .createQueryBuilder()
+        .insert()
+        .into(InterestFormResponseModel)
+        .values(emails.map((email)=>({email})))
+        .orIgnore()
+        .execute()
+ 
     },
   );
 
+  return this.transactionsManager.readOnly(async (entityManager) =>
+    Repositories
+      .interestFormResponse(entityManager)
+      .find({ where: { email: In(emails) } }),
 
-  return [...existingInterests, ...newInterests];
+  );
+
 }
 
   public async removeInterestedEmail(email: string): Promise<void> {

@@ -47,7 +47,7 @@ export class InterestFormResponseController {
     }
 
     @UseBefore(UserAuthentication)
-    @Post('/addMany')
+    @Post('/add-many')
     async addInterestedListOfUserEmails(
       @Body() addListOfInterestedEmailRequest: AddListOfInterestedEmailRequest,
       @AuthenticatedUser() user: UserModel,
