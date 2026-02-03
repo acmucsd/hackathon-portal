@@ -112,7 +112,7 @@ export const updateApplicationDecision = async (
   token: string,
   id: string,
   applicationDecision: ApplicationDecision,
-  reviewerComments?: string,
+  reviewerComments?: string
 ): Promise<FullProfile> => {
   const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.application}/${id}/decision`;
   const response = await axios.post<UpdateApplicationDecisionResponse>(
@@ -199,12 +199,14 @@ export const getEmailVerificationLink = async (token: string, email: string): Pr
   return response.data.emailVerificationLink;
 };
 
-
 /**
  * Assign applications to reviewers randomly
  * @param token
  */
-export const postAssigments = async (token: string, newAssignments: PostAssignmentsRequest): Promise<ReviewAssignment[]> => {
+export const postAssigments = async (
+  token: string,
+  newAssignments: PostAssignmentsRequest
+): Promise<ReviewAssignment[]> => {
   const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.assignments}`;
   const response = await axios.post<PostAssignmentsResponse>(
     requestUrl,
@@ -242,14 +244,11 @@ export const randomizeAssigments = async (token: string): Promise<ReviewAssignme
  */
 export const getAllAssignments = async (token: string): Promise<ReviewAssignment[]> => {
   const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.assignments}`;
-  const response = await axios.get<GetAssignmentsResponse>(
-    requestUrl,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  const response = await axios.get<GetAssignmentsResponse>(requestUrl, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return response.data.assignments;
 };
 
@@ -258,15 +257,15 @@ export const getAllAssignments = async (token: string): Promise<ReviewAssignment
  * @param token
  * @param reviewerId
  */
-export const getAssignmentsByReviewer = async (token: string, reviewerId: string): Promise<ReviewAssignment[]> => {
+export const getAssignmentsByReviewer = async (
+  token: string,
+  reviewerId: string
+): Promise<ReviewAssignment[]> => {
   const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.assignments}/${reviewerId}`;
-  const response = await axios.get<GetAssignmentsResponse>(
-    requestUrl,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  const response = await axios.get<GetAssignmentsResponse>(requestUrl, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return response.data.assignments;
 };
