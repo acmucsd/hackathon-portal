@@ -88,3 +88,14 @@ export interface ReviewAssignmentJob {
 export interface PostAssignmentsRequest {
   assignments: ReviewAssignmentJob[];
 }
+
+//InterestForm request
+export interface AddInterestedEmailRequest {
+  email: string;
+}
+export interface RemoveInterestedEmailRequest {
+  email: string;
+}
+export interface AddListOfInterestedEmailRequest {
+  emails: string[];
+}

@@ -1,3 +1,4 @@
+import { InterestFormResponseModel } from '../models/InterestFormResponseModel';
 import { ResponseModel } from '../models/ResponseModel';
 import {
   ApplicationStatus,
@@ -152,3 +153,21 @@ export interface PostAssignmentsResponse extends ApiResponse {
 export interface GetAssignmentsResponse extends ApiResponse {
   assignments: ReviewAssignment[];
 }
+
+//InterestForm responses
+export interface CheckInterestByEmailResponse extends ApiResponse {
+  interest: Boolean;
+}
+export interface AddInterestedEmailResponse extends ApiResponse {
+  interest: InterestFormResponseModel;
+}
+
+export interface AddListOfInterestedEmailResponse extends ApiResponse {
+  interested: InterestFormResponseModel[];
+}
+
+export interface GetAllInterestedUserEmailsResponse extends ApiResponse {
+  interested: InterestFormResponseModel[]
+}
+
+export interface RemoveInterestedEmailResponse extends ApiResponse {}
