@@ -32,7 +32,7 @@ import {
   UuidParam,
 } from '../validators/GenericRequests';
 import PermissionsService from '../../services/PermissionsService';
-import { ApplicationDecision, ApplicationStatus } from '../../types/Enums';
+import { ApplicationStatus } from '../../types/Enums';
 import { AttendanceService } from '../../services/AttendanceService';
 import { PostAssignmentsRequest } from '../../types/ApiRequests';
 
@@ -255,7 +255,7 @@ export class AdminController {
         applicant: user.getHiddenProfile(),
         reviewer: user.reviewer?.getHiddenProfile(),
       } as ReviewAssignment;
-    })
+    });
 
     return { error: null, assignments };
   }

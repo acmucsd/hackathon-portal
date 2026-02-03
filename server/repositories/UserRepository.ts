@@ -10,7 +10,7 @@ export const UserRepository = Container.get(DataSource)
     },
 
     async findAllWithReviewerRelation(): Promise<UserModel[]> {
-      return this.find({relations: ['reviewer', 'reviewees']});
+      return this.find({ relations: ['reviewer', 'reviewees'] });
     },
 
     async findById(id: string): Promise<UserModel | null> {
@@ -20,7 +20,7 @@ export const UserRepository = Container.get(DataSource)
     async findByIdWithReviewerRelation(id: string): Promise<UserModel | null> {
       return this.findOne({
         where: { id },
-        relations: ['reviewer', 'reviewees']
+        relations: ['reviewer', 'reviewees'],
       });
     },
 
