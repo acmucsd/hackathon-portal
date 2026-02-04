@@ -37,6 +37,10 @@ export interface FullProfile extends PrivateProfile {
   applicationDecision: ApplicationDecision;
 }
 
+export interface RevieweeProfile extends FullProfile {
+  didInterestForm: boolean;
+}
+
 export interface ValidatorError {
   children: ValidatorError[];
   constraints: object;
@@ -210,7 +214,7 @@ export interface GetEmailVerificationLinkResponse extends ApiResponse {
 // Assignment Responses
 
 export interface ReviewAssignment {
-  applicant: FullProfile;
+  applicant: RevieweeProfile;
   reviewer: FullProfile | undefined;
 }
 
