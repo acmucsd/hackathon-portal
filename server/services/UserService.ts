@@ -276,13 +276,13 @@ export class UserService {
       ].filter((userId): userId is string => userId != null));
       const users = await userRepository.findByIdsWithReviewerRelation([...userIds]);
 
-      const userMap: Record<string, UserModel> = {}
+      const userMap: Record<string, UserModel> = {};
       users.forEach(user => {
         if (user) userMap[user.id] = user;
-      })
+      });
 
       const interestByEmail = await interestFormResponseRepository.findInterestByEmails(
-        assignmentsRequest.map(job => userMap[job.applicantId].email)
+        assignmentsRequest.map(job => userMap[job.applicantId].email),
       );
 
       const editedUsers: UserModel[] = [];
@@ -304,7 +304,7 @@ export class UserService {
           },
           reviewer: reviewer?.getHiddenProfile(),
         });
-      })
+      });
 
       await Repositories.user(entityManager).save(editedUsers);
 

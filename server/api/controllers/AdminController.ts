@@ -18,7 +18,6 @@ import {
   GetFormResponse,
   GetFormsResponse,
   PostAssignmentsResponse,
-  ReviewAssignment,
   UpdateApplicationDecisionResponse,
 } from '../../types/ApiResponses';
 import { UpdateApplicationDecisionRequest } from '../validators/AdminControllerRequests';
@@ -256,7 +255,7 @@ export class AdminController {
 
     const applicants = users.filter((user) => !user.isAdmin());
     const interestByEmail = await this.interestFormResponseService.checkEmailsForInterest(
-      applicants.map(applicant => applicant.email)
+      applicants.map(applicant => applicant.email),
     );
 
     const assignments = applicants.map((user) => {
@@ -285,7 +284,7 @@ export class AdminController {
     const reviewees = admin.reviewees ?? [];
 
     const interestByEmail = await this.interestFormResponseService.checkEmailsForInterest(
-      reviewees.map(reviewee => reviewee.email)
+      reviewees.map(reviewee => reviewee.email),
     );
 
     const assignments = await Promise.all(reviewees.map(async (reviewee) => {

@@ -29,7 +29,7 @@ export const InterestFormResponseRepository = Container.get(DataSource)
 
       // returns a map that holds true/false for each email
       return new Map(
-        emails.map(email => [email, foundEmailSet.has(email)])
+        emails.map(email => [email, foundEmailSet.has(email)]),
       );
-    }
+    },
   });
