@@ -65,7 +65,6 @@ export class InterestFormResponseService {
         .execute();
 
         return addedEmails.raw as InterestFormResponseModel[];
-
     },
   );
 
@@ -124,6 +123,5 @@ export class InterestFormResponseService {
       return interestedEmailList;
 
   }
-
 }
 
