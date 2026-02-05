@@ -18,7 +18,6 @@ import {
   GetFormResponse,
   GetFormsResponse,
   PostAssignmentsResponse,
-  ReviewAssignment,
   UpdateApplicationDecisionResponse,
 } from '../../types/ApiResponses';
 import { UpdateApplicationDecisionRequest } from '../validators/AdminControllerRequests';
@@ -35,6 +34,7 @@ import PermissionsService from '../../services/PermissionsService';
 import { ApplicationStatus } from '../../types/Enums';
 import { AttendanceService } from '../../services/AttendanceService';
 import { PostAssignmentsRequest } from '../../types/ApiRequests';
+import { InterestFormResponseService } from '../../services/InterestFormResponseService';
 
 @JsonController('/admin')
 @Service()
@@ -45,14 +45,18 @@ export class AdminController {
 
   private attendanceService: AttendanceService;
 
+  private interestFormResponseService: InterestFormResponseService;
+
   constructor(
     userService: UserService,
     responseService: ResponseService,
     attendanceService: AttendanceService,
+    interestFormResponseService: InterestFormResponseService,
   ) {
     this.userService = userService;
     this.responseService = responseService;
     this.attendanceService = attendanceService;
+    this.interestFormResponseService = interestFormResponseService;
   }
 
   @UseBefore(UserAuthentication)
@@ -251,11 +255,18 @@ export class AdminController {
     const users = await this.userService.getAllUsersWithReviewerRelation();
 
     const applicants = users.filter((user) => !user.isAdmin());
+    const interestByEmail = await this.interestFormResponseService.checkEmailsForInterest(
+      applicants.map(applicant => applicant.email),
+    );
+
     const assignments = applicants.map((user) => {
       return {
-        applicant: user.getHiddenProfile(),
+        applicant: {
+          ...user.getHiddenProfile(),
+          didInterestForm: interestByEmail.get(user.email) ?? false,
+        },
         reviewer: user.reviewer?.getHiddenProfile(),
-      } as ReviewAssignment;
+      };
     });
 
     return { error: null, assignments };
@@ -272,12 +283,20 @@ export class AdminController {
 
     const admin = await this.userService.findByIdWithReviewerRelation(params.id);
     const reviewees = admin.reviewees ?? [];
-    const assignments = reviewees.map((reviewee) => {
+
+    const interestByEmail = await this.interestFormResponseService.checkEmailsForInterest(
+      reviewees.map(reviewee => reviewee.email),
+    );
+
+    const assignments = await Promise.all(reviewees.map(async (reviewee) => {
       return {
-        applicant: reviewee.getHiddenProfile(),
+        applicant: {
+          ...reviewee.getHiddenProfile(),
+          didInterestForm: interestByEmail.get(reviewee.email) ?? false,
+        },
         reviewer: admin.getHiddenProfile(),
-      } as ReviewAssignment;
-    });
+      };
+    }));
 
     return { error: null, assignments };
   }
