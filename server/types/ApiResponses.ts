@@ -28,6 +28,10 @@ export interface HiddenProfile extends PrivateProfile {
   applicationDecision: ApplicationDecision;
 }
 
+export interface RevieweeProfile extends HiddenProfile {
+  didInterestForm: boolean;
+}
+
 export interface CustomErrorBody {
   name: string;
   message: string;
@@ -141,6 +145,19 @@ export interface AttendEventResponse extends ApiResponse {
   event: PublicEvent;
 }
 
+export interface ReviewAssignment {
+  applicant: RevieweeProfile;
+  reviewer: HiddenProfile | undefined;
+}
+
+export interface PostAssignmentsResponse extends ApiResponse {
+  newAssignments: ReviewAssignment[];
+}
+
+export interface GetAssignmentsResponse extends ApiResponse {
+  assignments: ReviewAssignment[];
+}
+
 //InterestForm responses
 export interface CheckInterestByEmailResponse extends ApiResponse {
   interest: Boolean;
@@ -158,6 +175,3 @@ export interface GetAllInterestedUserEmailsResponse extends ApiResponse {
 }
 
 export interface RemoveInterestedEmailResponse extends ApiResponse {}
-
-
-

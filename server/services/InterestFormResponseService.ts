@@ -65,7 +65,7 @@ export class InterestFormResponseService {
         .execute();
 
         return addedEmails.raw as InterestFormResponseModel[];
- 
+
     },
   );
 
@@ -106,6 +106,14 @@ export class InterestFormResponseService {
 
   }
 
+  public async checkEmailsForInterest(emails: string[]): Promise<Map<string, boolean>> {
+    const interestByEmail = await this.transactionsManager.readOnly(
+      async (entityManager) =>
+        Repositories.interestFormResponse(entityManager).findInterestByEmails(emails),
+      );
+    return interestByEmail;
+  }
+
     public async findAllInterestedEmail(): Promise<InterestFormResponseModel[]> {
 
     const interestedEmailList = await this.transactionsManager.readOnly(
@@ -116,5 +124,6 @@ export class InterestFormResponseService {
       return interestedEmailList;
 
   }
+
 }
 
