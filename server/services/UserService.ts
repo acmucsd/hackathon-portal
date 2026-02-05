@@ -314,7 +314,7 @@ export class UserService {
     This list is then sent to postAssignments().
 
     Note 1: the distribution across admins is not equalized so some may have more reviews to complete than others :)
-    Note 2: not the most efficient way since it does 2 user lookups (one here, one in postAssignments), but should be ok
+    Note 2: not the most efficient way since it does 2 user lookups (one here, one in postAssignments), but its ok
     */
 
     const users = await this.transactionsManager.readOnly(async (entityManager) =>
