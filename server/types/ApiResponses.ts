@@ -29,6 +29,10 @@ export interface HiddenProfile extends PrivateProfile {
   reviewerComments: string | null;
 }
 
+export interface RevieweeProfile extends HiddenProfile {
+  didInterestForm: boolean;
+}
+
 export interface CustomErrorBody {
   name: string;
   message: string;
@@ -143,7 +147,7 @@ export interface AttendEventResponse extends ApiResponse {
 }
 
 export interface ReviewAssignment {
-  applicant: HiddenProfile;
+  applicant: RevieweeProfile;
   reviewer: HiddenProfile | undefined;
 }
 

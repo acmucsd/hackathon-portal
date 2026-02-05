@@ -271,38 +271,51 @@ export class UserService {
   ): Promise<ReviewAssignment[]> {
     return this.transactionsManager.readWrite(async (entityManager) => {
       const userRepository = Repositories.user(entityManager);
+      const interestFormResponseRepository = Repositories.interestFormResponse(entityManager);
+
       const newAssignments: ReviewAssignment[] = [];
 
-      for (const assignment of assignmentsRequest) {
-        // load reviewee
-        const reviewee = await userRepository.findByIdWithReviewerRelation(
-          assignment.applicantId,
-        );
-        if (!reviewee) continue;
+      const userIds = new Set([
+        ...assignmentsRequest.map(job => job.applicantId),
+        ...assignmentsRequest.map(job => job.reviewerId),
+      ].filter((userId): userId is string => userId != null));
+      const users = await userRepository.findByIdsWithReviewerRelation([...userIds]);
 
-        // load reviewer (if any)
-        const reviewer = assignment.reviewerId
-          ? await userRepository.findByIdWithReviewerRelation(
-              assignment.reviewerId,
-            )
-          : undefined;
+      const userMap: Record<string, UserModel> = {};
+      users.forEach(user => {
+        if (user) userMap[user.id] = user;
+      });
+
+      const interestByEmail = await interestFormResponseRepository.findInterestByEmails(
+        assignmentsRequest.map(job => userMap[job.applicantId].email),
+      );
+
+      const editedUsers: UserModel[] = [];
+      assignmentsRequest.forEach((assignment) => {
+        const reviewee = userMap[assignment.applicantId];
+        const reviewer = assignment.reviewerId ? userMap[assignment.reviewerId] : null;
+        if (!reviewee) return;
 
         // ONLY mutate the owning side
-        reviewee.reviewer = reviewer ?? null;
+        reviewee.reviewer = reviewer;
 
         // persist reviewee only
-        await userRepository.save(reviewee);
+        editedUsers.push(reviewee);
 
         newAssignments.push({
-          applicant: reviewee.getHiddenProfile(),
+          applicant: {
+            ...reviewee.getHiddenProfile(),
+            didInterestForm: interestByEmail.get(reviewee.email) ?? false,
+          },
           reviewer: reviewer?.getHiddenProfile(),
         });
-      }
+      });
+
+      await Repositories.user(entityManager).save(editedUsers);
 
       return newAssignments;
     });
   }
-
 
   public async randomlyAssignReviews(): Promise<ReviewAssignment[]> {
     /*
@@ -347,5 +360,4 @@ export class UserService {
 
     return this.assignReviews(arr);
   }
-
 }

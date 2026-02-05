@@ -17,9 +17,20 @@ export const UserRepository = Container.get(DataSource)
       return this.findOneBy({ id });
     },
 
+    async findByIds(ids: string[]): Promise<UserModel[]> {
+      return this.findBy({ id: In(ids) });
+    },
+
     async findByIdWithReviewerRelation(id: string): Promise<UserModel | null> {
       return this.findOne({
         where: { id },
+        relations: ['reviewer', 'reviewees'],
+      });
+    },
+
+    async findByIdsWithReviewerRelation(ids: string[]): Promise<(UserModel | null)[]> {
+      return this.find({
+        where: { id: In(ids) },
         relations: ['reviewer', 'reviewees'],
       });
     },
