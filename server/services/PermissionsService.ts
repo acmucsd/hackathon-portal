@@ -30,4 +30,8 @@ export default class PermissionsService {
   public static canEditInterestEmails(user: UserModel): boolean {
     return user.isAdmin();
   }
+
+  public static canGetReviewerOverview(user: UserModel): boolean {
+    return user.isAdmin();
+  }
 }

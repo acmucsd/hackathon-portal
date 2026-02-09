@@ -176,3 +176,25 @@ export interface GetAllInterestedUserEmailsResponse extends ApiResponse {
 }
 
 export interface RemoveInterestedEmailResponse extends ApiResponse {}
+
+export interface ReviewerOverviewApplicant {
+  userId: string;
+  firstName: string;
+  lastName: string;
+  applicationDecision: ApplicationDecision | null;
+}
+
+export interface ReviewerOverviewReviewer {
+  reviewerId: string;
+  reviewerFirstName: string;
+  reviewerLastName: string;
+  applicants: ReviewerOverviewApplicant[];
+}
+
+export interface ReviewerOverviewResponse {
+  reviewers: ReviewerOverviewReviewer[];
+}
+
+export interface GetReviewerOverviewResponse extends ApiResponse {
+  dataToReturn: ReviewerOverviewResponse;
+}
