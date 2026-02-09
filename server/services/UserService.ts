@@ -21,7 +21,7 @@ import {
   ReviewAssignment, 
   ReviewerOverviewResponse, 
   ReviewerOverviewReviewer, 
-  UserAndToken 
+  UserAndToken,
 } from '../types/ApiResponses';
 import { ApplicationDecision, ApplicationStatus } from '../types/Enums';
 
