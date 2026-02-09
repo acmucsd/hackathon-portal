@@ -57,7 +57,7 @@ export class UserService {
 
       user.applicationStatus = nextStatus;
 
-      return await userRepository.save(user);
+      return userRepository.save(user);
     });
   }
 

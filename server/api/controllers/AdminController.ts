@@ -212,7 +212,7 @@ export class AdminController {
 
   @UseBefore(UserAuthentication)
   @Post('/release-decisions')
-  async releaseDecisions(@AuthenticatedUser() currentUser: UserModel , @Body() body: { userId: string },) {
+  async releaseDecisions(@AuthenticatedUser() currentUser: UserModel, @Body() body: { userId: string }) {
     if (!PermissionsService.canUpdateApplicationStatusBasedOnDecision(currentUser))
       throw new ForbiddenError();
     const users = await this.userService.updateApplicationStatusBasedOnDecision(body.userId);
