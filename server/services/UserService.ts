@@ -17,7 +17,7 @@ import {
 } from 'routing-controllers';
 import { UpdateUser } from '../api/validators/UserControllerRequests';
 import { auth, adminAuth } from '../FirebaseAuth';
-import { ReviewAssignment, UserAndToken } from '../types/ApiResponses';
+import { ReviewAssignment, ReviewerOverviewResponse, ReviewerOverviewReviewer, UserAndToken } from '../types/ApiResponses';
 import { ApplicationDecision, ApplicationStatus } from '../types/Enums';
 
 @Service()
@@ -359,5 +359,55 @@ export class UserService {
     });
 
     return this.assignReviews(arr);
+  }
+
+  // admin are reviewers
+  //1, Find all reviewers 2, Find the users (applicants) each reviewer is responsible for 3, Return the ApplicationDecision status of the users each reviewer reviews
+  public async getReviewerOverview(): Promise<ReviewerOverviewResponse> {
+    const rows = await this.transactionsManager.readOnly(async (entityManager) =>
+    entityManager.query(`
+      SELECT
+        r.id          AS reviewer_id,
+        r."firstName" AS reviewer_first_name,
+        r."lastName"  AS reviewer_last_name,
+        a.id          AS applicant_id,
+        a."firstName" AS applicant_first_name,
+        a."lastName"  AS applicant_last_name,
+        a."applicationDecision"
+      FROM "User" r
+      LEFT JOIN "User" a
+        ON a."reviewerId" = r.id
+      WHERE r."accessType" = 'ADMIN'
+      ORDER BY r.id
+    `)
+  );
+
+  const map = new Map<string, ReviewerOverviewReviewer>();
+
+  for (const row of rows) {
+    const reviewerId = row.reviewer_id;
+
+    if (!map.has(reviewerId)) {
+      map.set(reviewerId, {
+        reviewerId,
+        reviewerFirstName: row.reviewer_first_name,
+        reviewerLastName: row.reviewer_last_name,
+        applicants: [],
+      });
+    }
+
+    if (row.applicant_id) {
+      map.get(reviewerId)!.applicants.push({
+        userId: row.applicant_id,
+        firstName: row.applicant_first_name,
+        lastName: row.applicant_last_name,
+        applicationDecision: row.applicationDecision,
+      });
+    }
+  }
+
+  return {
+    reviewers: Array.from(map.values()),
+  };
   }
 }
