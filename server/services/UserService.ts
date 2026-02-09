@@ -17,7 +17,12 @@ import {
 } from 'routing-controllers';
 import { UpdateUser } from '../api/validators/UserControllerRequests';
 import { auth, adminAuth } from '../FirebaseAuth';
-import { ReviewAssignment, ReviewerOverviewResponse, ReviewerOverviewReviewer, UserAndToken } from '../types/ApiResponses';
+import { 
+  ReviewAssignment, 
+  ReviewerOverviewResponse, 
+  ReviewerOverviewReviewer, 
+  UserAndToken 
+} from '../types/ApiResponses';
 import { ApplicationDecision, ApplicationStatus } from '../types/Enums';
 
 @Service()
@@ -362,7 +367,10 @@ export class UserService {
   }
 
   // admin are reviewers
-  //1, Find all reviewers 2, Find the users (applicants) each reviewer is responsible for 3, Return the ApplicationDecision status of the users each reviewer reviews
+  // 1, Find all reviewers 
+  // 2, Find the users (applicants) each reviewer is responsible for 
+  // 3, Return the ApplicationDecision status of the users each reviewer reviews
+
   public async getReviewerOverview(): Promise<ReviewerOverviewResponse> {
     const rows = await this.transactionsManager.readOnly(async (entityManager) =>
     entityManager.query(`
@@ -379,7 +387,7 @@ export class UserService {
         ON a."reviewerId" = r.id
       WHERE r."accessType" = 'ADMIN'
       ORDER BY r.id
-    `)
+    `),
   );
 
   const map = new Map<string, ReviewerOverviewReviewer>();

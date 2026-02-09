@@ -304,8 +304,8 @@ export class AdminController {
 
   @UseBefore(UserAuthentication)
   @Get('/reviewer-overview')
-  async getReviewerOverview(@AuthenticatedUser() currentUser: UserModel,): Promise<GetReviewerOverviewResponse> {
-    if (!PermissionsService.canGetReviewerOverview(currentUser)){
+  async getReviewerOverview(@AuthenticatedUser() currentUser: UserModel): Promise<GetReviewerOverviewResponse> {
+    if (!PermissionsService.canGetReviewerOverview(currentUser)) {
       throw new ForbiddenError();
     }
     const dataToReturn = await this.userService.getReviewerOverview();
