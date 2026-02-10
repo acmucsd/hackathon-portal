@@ -12,6 +12,7 @@ import { reportError } from '@/lib/utils';
 import showToast from '@/lib/showToast';
 import { useState } from 'react';
 import styles from './style.module.scss';
+import Link from 'next/link';
 
 interface ApplicationViewProps {
   application: ResponseModel;
@@ -27,9 +28,9 @@ const ApplicationView = ({ application, token, decision, waivers }: ApplicationV
   const liabilitySubmitted = !!waivers.find(
     response => response.formType === FormType.LIABILITY_WAIVER
   );
-  const photoReleaseSubmitted = !!waivers.find(
-    response => response.formType === FormType.PHOTO_RELEASE
-  );
+  // const photoReleaseSubmitted = !!waivers.find(
+  //   response => response.formType === FormType.PHOTO_RELEASE
+  // );
   const [currentStatus, setCurrentStatus] = useState(user.applicationStatus);
 
   const handleDecision = async (decision: ApplicationDecision) => {
@@ -64,18 +65,30 @@ const ApplicationView = ({ application, token, decision, waivers }: ApplicationV
     }
   };
 
+  const NO_RESPONSE = "No response.";
+
   return (
     <div className={styles.container}>
+      <div className={styles.topRow}>
+        <Link href="/" className={styles.backLink}>
+          {"< "}
+          <span className={styles.backText}>Back to Dashboard</span>
+        </Link>
+      </div>
+
+      {/* <hr className={styles.divider} /> */}
       <Card gap={2}>
-        <Heading>User Information</Heading>
+        <h1 className={styles.heading}>Summary of Important Fields</h1>
         <dl className={styles.responseList}>
-          <dt className={styles.question}>First Name</dt>
-          <dd className={styles.response}>{user.firstName}</dd>
-          <dt className={styles.question}>Last Name</dt>
-          <dd className={styles.response}>{user.lastName}</dd>
-          <dt className={styles.question}>Email Address</dt>
-          <dd className={styles.response}>{user.email}</dd>
-          <dt className={styles.question}>Liability Waiver</dt>
+          <dt className={styles.question}>Name </dt>
+          <dd className={styles.response}>{user.firstName} {user.lastName}</dd>
+          <dt className={styles.question}>University</dt>
+          <dd className={styles.response}>{application.data.university ?? NO_RESPONSE}</dd>
+          <dt className={styles.question}>Age</dt>
+          <dd className={styles.response}>{application.data.age ?? NO_RESPONSE}</dd>
+          <dt className={styles.question}>Race/Ethnicity</dt>
+          <dd className={styles.response}>{application.data.ethnicity ?? NO_RESPONSE}</dd>
+          <dt className={styles.question}>Filled out interest form: </dt>
           <dd className={styles.response}>
             <StatusTag
               status={
@@ -83,22 +96,11 @@ const ApplicationView = ({ application, token, decision, waivers }: ApplicationV
               }
             ></StatusTag>
           </dd>
-          <dt className={styles.question}>Photo Release</dt>
-          <dd className={styles.response}>
-            <StatusTag
-              status={
-                photoReleaseSubmitted
-                  ? ApplicationStatus.SUBMITTED
-                  : ApplicationStatus.NOT_SUBMITTED
-              }
-            ></StatusTag>
-          </dd>
         </dl>
       </Card>
       <Card gap={2}>
         <div className={styles.submissionHeader}>
-          <Heading>Application Submission</Heading>
-          <StatusTag status={currentDecision} />
+          <h1 className={styles.heading}>Application Submission</h1>
         </div>
         <dl className={styles.responseList}>
           {appQuestions
@@ -118,14 +120,13 @@ const ApplicationView = ({ application, token, decision, waivers }: ApplicationV
                   ) : Array.isArray(responses[id]) ? (
                     responses[id].join(', ')
                   ) : (
-                    <em>No response.</em>
+                    <em>{NO_RESPONSE}</em>
                   )}
                 </dd>
               </Fragment>
             ))}
         </dl>
       </Card>
-      <hr className={styles.divider} />
       <div className={styles.decisionButtons}>
         <Button
           className={styles.reject}

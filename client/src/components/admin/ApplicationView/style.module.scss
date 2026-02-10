@@ -6,6 +6,31 @@
   gap: 2rem;
 }
 
+.topRow {
+  display: flex;
+}
+
+.backLink {
+  font-size: 18px;
+  color: vars.$white;
+  font-weight: 700;
+  line-height: 24px;
+  letter-spacing: 0.5px;
+}
+
+.backText {
+  transition: ease-in-out 0.2s;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.heading {
+  font-size: 23px;
+  font-weight: 700;
+  color: white;
+}
+
 .responseList {
   display: flex;
   flex-direction: column;
