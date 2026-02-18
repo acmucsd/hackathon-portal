@@ -16,7 +16,7 @@ export default async function Admin() {
   try {
     const fetchedUser = await UserAPI.getCurrentUser(accessToken);
     const accessType = fetchedUser.accessType;
-    const applications = accessType === 'ADMIN' ? await AdminAPI.getUsers(accessToken) : [];
+    const applications = accessType === 'ADMIN' || accessType === 'SUPER_ADMIN' ? await AdminAPI.getUsers(accessToken) : [];
 
     return (
       <main className={styles.main}>
