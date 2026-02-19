@@ -90,7 +90,11 @@ export class UserModel {
   }
 
   public isAdmin(): boolean {
-    return this.accessType === UserAccessType.ADMIN;
+    return this.accessType === UserAccessType.ADMIN || this.accessType === UserAccessType.SUPER_ADMIN;
+  }
+
+  public isSuperAdmin(): boolean {
+    return this.accessType === UserAccessType.SUPER_ADMIN;
   }
 
   public getPublicProfile(): PublicProfile {

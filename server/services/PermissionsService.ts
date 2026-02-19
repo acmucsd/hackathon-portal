@@ -30,4 +30,16 @@ export default class PermissionsService {
   public static canEditInterestEmails(user: UserModel): boolean {
     return user.isAdmin();
   }
+
+  public static canOpenCloseApplications(user: UserModel): boolean {
+    return user.isSuperAdmin();
+  }
+
+  public static canAssignReviewers(user: UserModel): boolean {
+    return user.isSuperAdmin();
+  }
+
+  public static canReleaseApplicationDecisions(user: UserModel): boolean {
+    return user.isSuperAdmin();
+  }
 }
