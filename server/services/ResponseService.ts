@@ -41,6 +41,14 @@ export class ResponseService {
     return responses;
   }
 
+  private async getAllResponsesWithUserRelation(): Promise<ResponseModel[]> {
+    const responses = await this.transactionsManager.readOnly(
+      async (entityManager) =>
+        Repositories.response(entityManager).findAllWithUserRelation(),
+    );
+    return responses;
+  }
+
   public async getUserResponseByUuid(
     user: UserModel,
     uuid: string,
@@ -79,6 +87,14 @@ export class ResponseService {
 
   public async getAllApplications(): Promise<ResponseModel[]> {
     const responses = await this.getAllResponses();
+    const applications = responses.filter(
+      (response) => response.formType === FormType.APPLICATION,
+    );
+    return applications;
+  }
+
+  public async getAllApplicationsWithUserRelation(): Promise<ResponseModel[]> {
+    const responses = await this.getAllResponsesWithUserRelation();
     const applications = responses.filter(
       (response) => response.formType === FormType.APPLICATION,
     );
