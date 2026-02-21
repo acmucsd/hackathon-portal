@@ -89,12 +89,12 @@ const UsersDashboard = ({ users, assignedUsers }: UsersDashboardProps) => {
         (
           <>
             {Object.entries(assignedFilteredUsers).map(([sectionTitle, usersInSection]) => (
-              <>
+              <div key={sectionTitle}>
                 <Typography variant="label/large">
-                  {sectionTitle} Participants ({usersInSection.length})
+                  {sectionTitle} ({usersInSection.length})
                 </Typography>
                 <UsersTable filteredUsers={usersInSection} itemsPerPage={itemsPerPage} />
-              </>
+              </div>
             ))}
           </>
         ) : (
