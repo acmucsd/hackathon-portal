@@ -263,7 +263,7 @@ export class AdminController {
     // gets ALL applications, not too efficient but shouldn't be too bad
     const applications = await this.responseService.getAllApplicationsWithUserRelation();
     const applicationByUserId = new Map(
-      applications.map((application) => [application.user.id, application])
+      applications.map((application) => [application.user.id, application]),
     );
 
     const assignments = applicants.map((user) => {
@@ -300,7 +300,7 @@ export class AdminController {
     // gets ALL applications, not too efficient but shouldn't be too bad
     const applications = await this.responseService.getAllApplicationsWithUserRelation();
     const applicationByUserId = new Map(
-      applications.map((application) => [application.user.id, application])
+      applications.map((application) => [application.user.id, application]),
     );
 
     const assignments = await Promise.all(reviewees.map(async (reviewee) => {
