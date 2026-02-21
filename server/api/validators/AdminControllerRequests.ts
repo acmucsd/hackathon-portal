@@ -1,4 +1,4 @@
-import { IsDefined } from 'class-validator';
+import { IsDefined, IsOptional, IsString } from 'class-validator';
 import { UpdateApplicationDecisionRequest as IUpdateApplicationDecisionRequest } from '../../types/ApiRequests';
 import { ApplicationDecision } from '../../types/Enums';
 import { IsValidApplicationDecision } from '../decorators/Validators';
@@ -7,4 +7,8 @@ export class UpdateApplicationDecisionRequest implements IUpdateApplicationDecis
   @IsDefined()
   @IsValidApplicationDecision()
   applicationDecision: ApplicationDecision;
+
+  @IsOptional()
+  @IsString()
+  reviewerComments?: string | null;
 }

@@ -10,17 +10,28 @@ export const UserRepository = Container.get(DataSource)
     },
 
     async findAllWithReviewerRelation(): Promise<UserModel[]> {
-      return this.find({relations: ['reviewer', 'reviewees']});
+      return this.find({ relations: ['reviewer', 'reviewees'] });
     },
 
     async findById(id: string): Promise<UserModel | null> {
       return this.findOneBy({ id });
     },
 
+    async findByIds(ids: string[]): Promise<UserModel[]> {
+      return this.findBy({ id: In(ids) });
+    },
+
     async findByIdWithReviewerRelation(id: string): Promise<UserModel | null> {
       return this.findOne({
         where: { id },
-        relations: ['reviewer', 'reviewees']
+        relations: ['reviewer', 'reviewees'],
+      });
+    },
+
+    async findByIdsWithReviewerRelation(ids: string[]): Promise<(UserModel | null)[]> {
+      return this.find({
+        where: { id: In(ids) },
+        relations: ['reviewer', 'reviewees'],
       });
     },
 

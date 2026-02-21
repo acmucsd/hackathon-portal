@@ -63,6 +63,7 @@ export class UserModel {
   })
   responses: ResponseModel;
 
+
   @OneToMany((type) => AttendanceModel, (attendance) => attendance.user, { cascade: true })
   attendances: AttendanceModel[];
 
@@ -71,11 +72,14 @@ export class UserModel {
     nullable: true,
     onDelete: 'SET NULL',
   })
-  reviewer?: UserModel;
+  reviewer?: UserModel | null;
 
   // list of whos being reviewed
   @OneToMany(() => UserModel, (user) => user.reviewer)
   reviewees?: UserModel[];
+
+  @Column({ type: 'text', nullable: true })
+  reviewerComments: string | null;
 
   public isRestricted(): boolean {
     return this.accessType === UserAccessType.RESTRICTED;
@@ -86,7 +90,11 @@ export class UserModel {
   }
 
   public isAdmin(): boolean {
-    return this.accessType === UserAccessType.ADMIN;
+    return this.accessType === UserAccessType.ADMIN || this.accessType === UserAccessType.SUPER_ADMIN;
+  }
+
+  public isSuperAdmin(): boolean {
+    return this.accessType === UserAccessType.SUPER_ADMIN;
   }
 
   public getPublicProfile(): PublicProfile {
@@ -114,6 +122,7 @@ export class UserModel {
     return {
       ...this.getPrivateProfile(),
       applicationDecision: this.applicationDecision,
+      reviewerComments: this.reviewerComments,
     };
   }
 }

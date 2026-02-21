@@ -15,7 +15,7 @@ export default async function VerifyEmail() {
   try {
     const fetchedUser = await UserAPI.getCurrentUser(accessToken);
 
-    if (fetchedUser.accessType !== 'ADMIN') {
+    if (fetchedUser.accessType !== 'ADMIN' && fetchedUser.accessType !== 'SUPER_ADMIN') {
       redirect('/');
     }
 

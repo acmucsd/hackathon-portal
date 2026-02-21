@@ -74,15 +74,29 @@ export interface UpdateEventRequest {
 // Admin requests
 export interface UpdateApplicationDecisionRequest {
   applicationDecision: ApplicationDecision;
+  reviewerComments?: string | null;
 }
 
 export interface ForgotPasswordRequest {
   email: string;
 }
 
+export interface ReviewAssignmentJob {
+  applicantId: string;
+  reviewerId: string | undefined;
+}
+
 export interface PostAssignmentsRequest {
-  assignments: {
-    applicantId: string;
-    reviewerId: string | undefined;
-  }[];
+  assignments: ReviewAssignmentJob[];
+}
+
+//InterestForm request
+export interface AddInterestedEmailRequest {
+  email: string;
+}
+export interface RemoveInterestedEmailRequest {
+  email: string;
+}
+export interface AddListOfInterestedEmailRequest {
+  emails: string[];
 }

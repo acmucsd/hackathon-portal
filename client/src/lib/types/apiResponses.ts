@@ -35,6 +35,11 @@ export interface PrivateProfile extends PublicProfile {
 
 export interface FullProfile extends PrivateProfile {
   applicationDecision: ApplicationDecision;
+  reviewerComments: string | null;
+}
+
+export interface RevieweeProfile extends FullProfile {
+  didInterestForm: boolean;
 }
 
 export interface ValidatorError {
@@ -210,7 +215,11 @@ export interface GetEmailVerificationLinkResponse extends ApiResponse {
 // Assignment Responses
 
 export interface ReviewAssignment {
+<<<<<<< HEAD
   applicant: FullProfile;
+=======
+  applicant: RevieweeProfile;
+>>>>>>> main
   reviewer: FullProfile | undefined;
 }
 
