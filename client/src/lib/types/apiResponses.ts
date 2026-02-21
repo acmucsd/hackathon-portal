@@ -215,11 +215,7 @@ export interface GetEmailVerificationLinkResponse extends ApiResponse {
 // Assignment Responses
 
 export interface ReviewAssignment {
-<<<<<<< HEAD
-  applicant: FullProfile;
-=======
   applicant: RevieweeProfile;
->>>>>>> main
   reviewer: FullProfile | undefined;
 }
 
