@@ -18,10 +18,6 @@ import {
   GetFormResponse,
   GetFormsResponse,
   PostAssignmentsResponse,
-<<<<<<< HEAD
-  ReviewAssignment,
-=======
->>>>>>> main
   UpdateApplicationDecisionResponse,
 } from '../../types/ApiResponses';
 import { UpdateApplicationDecisionRequest } from '../validators/AdminControllerRequests';
@@ -38,10 +34,7 @@ import PermissionsService from '../../services/PermissionsService';
 import { ApplicationDecision, ApplicationStatus } from '../../types/Enums';
 import { AttendanceService } from '../../services/AttendanceService';
 import { PostAssignmentsRequest } from '../../types/ApiRequests';
-<<<<<<< HEAD
-=======
 import { InterestFormResponseService } from '../../services/InterestFormResponseService';
->>>>>>> main
 
 @JsonController('/admin')
 @Service()
