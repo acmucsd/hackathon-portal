@@ -189,6 +189,12 @@ export interface ReviewerOverviewReviewer {
   reviewerFirstName: string;
   reviewerLastName: string;
   applicants: ReviewerOverviewApplicant[];
+
+  total: number;
+  accept: number;
+  reject: number;
+  waitlist: number;
+  noDecision: number;
 }
 
 export interface ReviewerOverviewResponse {

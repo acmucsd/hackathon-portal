@@ -17,10 +17,10 @@ import {
 } from 'routing-controllers';
 import { UpdateUser } from '../api/validators/UserControllerRequests';
 import { auth, adminAuth } from '../FirebaseAuth';
-import { 
-  ReviewAssignment, 
-  ReviewerOverviewResponse, 
-  ReviewerOverviewReviewer, 
+import {
+  ReviewAssignment,
+  ReviewerOverviewResponse,
+  ReviewerOverviewReviewer,
   UserAndToken,
 } from '../types/ApiResponses';
 import { ApplicationDecision, ApplicationStatus } from '../types/Enums';
@@ -367,8 +367,8 @@ export class UserService {
   }
 
   // admin are reviewers
-  // 1, Find all reviewers 
-  // 2, Find the users (applicants) each reviewer is responsible for 
+  // 1, Find all reviewers
+  // 2, Find the users (applicants) each reviewer is responsible for
   // 3, Return the ApplicationDecision status of the users each reviewer reviews
 
   public async getReviewerOverview(): Promise<ReviewerOverviewResponse> {
@@ -401,16 +401,41 @@ export class UserService {
         reviewerFirstName: row.reviewer_first_name,
         reviewerLastName: row.reviewer_last_name,
         applicants: [],
+        total: 0,
+        accept: 0,
+        reject: 0,
+        waitlist: 0,
+        noDecision: 0,
       });
     }
 
     if (row.applicant_id) {
-      map.get(reviewerId)!.applicants.push({
+      const reviewer = map.get(reviewerId)!;
+
+      reviewer.applicants.push({
         userId: row.applicant_id,
         firstName: row.applicant_first_name,
         lastName: row.applicant_last_name,
         applicationDecision: row.applicationDecision,
       });
+
+      reviewer.total++;
+
+      switch (row.applicationDecision) {
+        case 'ACCEPT':
+          reviewer.accept++;
+          break;
+        case 'REJECT':
+          reviewer.reject++;
+          break;
+        case 'WAITLIST':
+          reviewer.waitlist++;
+          break;
+        case 'NO_DECISION':
+        default:
+          reviewer.noDecision++;
+          break;
+      }
     }
   }
 
