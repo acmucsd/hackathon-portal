@@ -91,13 +91,15 @@ const ProgressBar = ({ count, total, color }: ProgressBarProps) => {
   const percentage = getPercentage(count, total);
   return (
     <div className={styles.progressContainer}>
+      <div className={styles.percentageRow}>
+        <span className={styles.percentage}>{percentage}%</span>
+      </div>
       <div className={styles.progressBarWrapper}>
         <div
           className={styles.progressBar}
           style={{ width: `${percentage}%`, backgroundColor: color }}
         />
       </div>
-      <span className={styles.percentage}>{percentage}%</span>
       <span className={styles.count}>
         {count} of {total}
       </span>

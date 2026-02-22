@@ -5,6 +5,31 @@
   flex-direction: column;
   gap: 1.5rem;
   width: 100%;
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  thead tr {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  thead th {
+    padding: 1rem 1.25rem;
+    text-align: left;
+    border-left: none !important;
+    border-right: none !important;
+  }
+
+  tbody tr {
+    border: none;
+  }
+
+  tbody td {
+    padding: 1rem 1.25rem;
+    border: none;
+  }
 }
 
 .topBar {
@@ -40,6 +65,9 @@
 .sortable {
   cursor: pointer;
   user-select: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
 }
 
 .progressContainer {
@@ -49,6 +77,16 @@
   min-width: 120px;
 }
 
+.percentageRow {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.percentage {
+  color: vars.$white;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
 .progressBarWrapper {
   width: 100%;
   height: 8px;
@@ -63,12 +101,6 @@
   transition: width 0.3s ease;
 }
 
-.percentage {
-  color: vars.$white;
-  font-size: 0.875rem;
-  font-weight: 600;
-  text-align: right;
-}
 
 .count {
   color: rgba(255, 255, 255, 0.5);
