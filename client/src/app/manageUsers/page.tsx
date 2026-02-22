@@ -1,6 +1,7 @@
 import Typography from '@/components/Typography';
 import UsersDashboard from '@/components/admin/UsersDashboard';
-import { AdminAPI } from '@/lib/api';
+import { AdminAPI, UserAPI } from '@/lib/api';
+
 import { redirect } from 'next/navigation';
 import { getCookie } from '@/lib/services/CookieService';
 import { CookieType } from '@/lib/types/enums';
@@ -15,11 +16,13 @@ export default async function ManageUsers() {
 
   try {
     const users = await AdminAPI.getUsers(accessToken);
+    const fetchedUser = await UserAPI.getCurrentUser(accessToken);
+    const accessType = fetchedUser.accessType;
 
     return (
       <main className={styles.main}>
         <Typography variant="headline/heavy/small">Manage Users</Typography>
-        <UsersDashboard users={users} />
+        <UsersDashboard users={users} superAdmin={accessType === 'SUPER_ADMIN'} />
       </main>
     );
   } catch (error) {

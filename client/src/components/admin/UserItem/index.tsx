@@ -8,9 +8,10 @@ import styles from './style.module.scss';
 
 interface UserItemProps {
   user: FullProfile;
+  superAdmin: boolean;
 }
 
-const UserItem = ({ user }: UserItemProps) => {
+const UserItem = ({ user, superAdmin }: UserItemProps) => {
   const date = new Date(user.createdAt);
   const formattedDate = `${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()}`;
   const displayStatus =
@@ -25,6 +26,9 @@ const UserItem = ({ user }: UserItemProps) => {
       </Typography>
       <StatusTag status={displayStatus} />
       <Typography variant="body/medium">Account Creation Date: {formattedDate}</Typography>
+      {superAdmin && (
+        <Typography variant="body/medium">Assigned Reviewer: {"Assigned Reviewer Placeholder"}</Typography>
+      )}
       {user.applicationStatus !== ApplicationStatus.NOT_SUBMITTED && (
         <Button
           className={styles.viewButton}
