@@ -36,19 +36,6 @@ const SuperAdminDashboard = ({ timeline, user, applications }: AdminDashboardPro
 
   return (
     <div className={styles.container}>
-      {/* <Card gap={1.5} className={`${styles.card} ${styles.actions}`}>
-        <Heading>Admin Actions</Heading>
-        <Button href="/manageUsers">Manage Users</Button>
-        <Button href="/manageEvents">Manage Events</Button>
-        <Button href="/createEvent">Create Events</Button>
-        <Button href="/admin/scan">QR Code Check-In</Button>
-        <Button href="/admin/verify-email">Send Email Verification</Button>
-      </Card>
-      <Card gap={1.5} className={`${styles.card} ${styles.checkin}`}>
-        <Heading>QR Code Check-In</Heading>
-        <p>Tap below to scan participants’ uniquely generated QR Codes. </p>
-        <Button href="/admin/scan">Scan QR Codes</Button>
-      </Card> */}
       <h1>Welcome, {user.firstName}!</h1>
       <div className={styles.buttons}>
         <Button
@@ -58,7 +45,7 @@ const SuperAdminDashboard = ({ timeline, user, applications }: AdminDashboardPro
         <Button onClick={() => setActiveTab('reviewers')} className={activeTab === 'reviewers' ? styles.activeButton : styles.nonActiveButton}>Reviewers List</Button>
         <Button onClick={() => setActiveTab('tools')} className={activeTab === 'tools' ? styles.activeButton : styles.nonActiveButton}>Super Admin Tools</Button>
       </div>
-      {activeTab === 'applications' && <UsersDashboard users={applications} />}
+      {activeTab === 'applications' && <UsersDashboard users={applications} superAdmin={true} />}
       {activeTab === 'reviewers' && <ReviewersTable />}
       {activeTab === 'tools' && <SuperAdminTools user = {user}/>}
     </div>

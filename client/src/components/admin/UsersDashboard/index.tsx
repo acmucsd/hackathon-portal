@@ -18,14 +18,15 @@ import styles from './style.module.scss';
 
 interface UsersDashboardProps {
   users: FullProfile[];
+  superAdmin: boolean;
 }
 
-const UsersDashboard = ({ users }: UsersDashboardProps) => {
+const UsersDashboard = ({ users, superAdmin }: UsersDashboardProps) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [filterStatus, setFilterStatus] = useState('CONFIRMED');
   const [searchQuery, setSearchQuery] = useState('');
 
-  const headers = ['Applicant Name', 'Status', 'Creation Date', 'Action'];
+  const headers = ['Applicant Name', 'Status', 'Creation Date', ...(superAdmin ? ['Assigned Reviewer'] : []), 'Action', ];
   const size = useWindowSize();
   const isSmall = (size.width ?? 0) <= 1024;
 
@@ -73,7 +74,7 @@ const UsersDashboard = ({ users }: UsersDashboardProps) => {
       {isSmall ? (
         <TableList>
           {currentUsers.map(user => (
-            <UserItem key={user.id} user={user} />
+            <UserItem key={user.id} user={user} superAdmin={superAdmin} />
           ))}
         </TableList>
       ) : (
@@ -89,7 +90,7 @@ const UsersDashboard = ({ users }: UsersDashboardProps) => {
           </thead>
           <tbody>
             {currentUsers.map(user => (
-              <UserRow key={user.id} user={user} />
+              <UserRow key={user.id} user={user} superAdmin={superAdmin}/>
             ))}
           </tbody>
         </Table>

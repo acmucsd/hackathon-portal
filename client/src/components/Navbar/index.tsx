@@ -36,10 +36,16 @@ export default function Navbar({ user }: NavbarProps) {
     setMobileMenuOpen(false);
   };
 
-  const links =
-    user?.accessType == 'ADMIN' || user?.accessType == 'SUPER_ADMIN'
-      ? [...baseLinks, { name: 'Admin', href: '/admin' }]
-      : baseLinks;
+  const links = (() => {
+    const result = [...baseLinks];
+    if (user?.accessType === 'ADMIN' || user?.accessType === 'SUPER_ADMIN') {
+      result.push({ name: 'Admin', href: '/admin' });
+    }
+    if (user?.accessType === 'SUPER_ADMIN') {
+      result.push({ name: 'Super Admin', href: '/superAdmin' });
+    }
+    return result;
+  })();
 
   useEffect(() => {
     // Close mobile menu when screen gets larger than mobile breakpoint
