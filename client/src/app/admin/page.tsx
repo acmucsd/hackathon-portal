@@ -1,5 +1,6 @@
 import { TIMELINE } from '@/config';
 import AdminDashboard from '@/components/admin/AdminDashboard';
+import SuperAdminDashboard from '@/components/admin/SuperAdminDashboard';
 import { UserAPI, AdminAPI } from '@/lib/api';
 import { redirect } from 'next/navigation';
 import { getCookie } from '@/lib/services/CookieService';
@@ -23,7 +24,11 @@ export default async function Admin() {
 
     return (
       <main className={styles.main}>
-        <AdminDashboard timeline={TIMELINE} user={fetchedUser} applications={applications} />
+        {accessType === 'SUPER_ADMIN' ? (
+          <SuperAdminDashboard timeline={TIMELINE} user={fetchedUser} applications={applications} />
+        ) : accessType === 'ADMIN' ? (
+          <AdminDashboard timeline={TIMELINE} user={fetchedUser} applications={applications} />
+        ) : null}
       </main>
     );
   } catch (error) {
