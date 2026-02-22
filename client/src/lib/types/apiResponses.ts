@@ -40,6 +40,7 @@ export interface FullProfile extends PrivateProfile {
 
 export interface RevieweeProfile extends FullProfile {
   didInterestForm: boolean;
+  university?: string;
 }
 
 export interface ValidatorError {

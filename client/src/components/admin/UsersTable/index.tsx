@@ -18,7 +18,7 @@ interface UsersTableProps {
 const UsersTable = ({ filteredUsers, itemsPerPage = 10 }: UsersTableProps) => {
   const [currentPage, setCurrentPage] = useState(0);
 
-  const headers = ['Applicant Name', 'Status', 'Creation Date', 'Action'];
+  const headers = ['Applicant Name', 'Status', 'School', 'Interest Form?', 'Submission', 'Action'];
   const size = useWindowSize();
   const isSmall = (size.width ?? 0) <= 1024;
 

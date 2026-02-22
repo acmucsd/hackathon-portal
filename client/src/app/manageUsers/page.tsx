@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 import { getCookie } from '@/lib/services/CookieService';
 import { CookieType } from '@/lib/types/enums';
 import styles from './page.module.scss';
-import { FullProfile, ReviewAssignment } from '@/lib/types/apiResponses';
+import { FullProfile, ReviewAssignment, RevieweeProfile } from '@/lib/types/apiResponses';
 
 export default async function ManageUsers() {
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
@@ -16,7 +16,7 @@ export default async function ManageUsers() {
   }
 
   try {
-    const users = await AdminAPI.getUsers(accessToken);
+    const users: RevieweeProfile[] = (await AdminAPI.getAllAssignments(accessToken)).map(assignment => assignment.applicant);
     const user = JSON.parse(userCookie);
 
     const reviewAssignments = await AdminAPI.getAssignmentsByReviewer(
@@ -24,7 +24,7 @@ export default async function ManageUsers() {
       user.id
     );
 
-    const assignedUsers: FullProfile[] = reviewAssignments.map(assignment => assignment.applicant);
+    const assignedUsers: RevieweeProfile[] = reviewAssignments.map(assignment => assignment.applicant);
 
 
     return (
