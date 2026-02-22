@@ -3,7 +3,8 @@ import styles from './style.module.scss';
 import Heading from '@/components/Heading';
 import Button from '@/components/Button';
 import { useState } from 'react';
-import { FaUserFriends, FaPaperPlane } from 'react-icons/fa';
+import GroupIcon from '@mui/icons-material/Group';
+import SendIcon from '@mui/icons-material/Send';
 
 interface SuperAdminToolsProps {
   user?: { firstName: string };
@@ -39,7 +40,7 @@ const SuperAdminTools = ({ user }: SuperAdminToolsProps) => {
           onClick={() => setReviewersAssigned(true)}
           disabled={reviewersAssigned}
         >
-          <FaUserFriends style={{ marginRight: 8 }} />
+          <GroupIcon style={{ marginRight: 8 }} />
           {reviewersAssigned
             ? `Reviewers assigned (great job ${user?.firstName || 'bonga'}!)`
             : 'Assign Reviewers'}
@@ -54,7 +55,7 @@ const SuperAdminTools = ({ user }: SuperAdminToolsProps) => {
           }}
           disabled={releaseStep >= 3}
         >
-          <FaPaperPlane style={{ marginRight: 8 }} />
+          <SendIcon style={{ marginRight: 8 }} />
           {getReleaseButtonText()}
         </Button>
     </div>
