@@ -36,6 +36,7 @@ import { ApplicationStatus } from '../../types/Enums';
 import { AttendanceService } from '../../services/AttendanceService';
 import { PostAssignmentsRequest } from '../../types/ApiRequests';
 import { InterestFormResponseService } from '../../services/InterestFormResponseService';
+import { Application } from '../../types/Application';
 
 @JsonController('/admin')
 @Service()
@@ -256,15 +257,23 @@ export class AdminController {
     const users = await this.userService.getAllUsersWithReviewerRelation();
 
     const applicants = users.filter((user) => !user.isAdmin());
-    const interestByEmail = await this.interestFormResponseService.checkEmailsForInterest(
+    const interestByEmail = await this.interestFormResponseService.checkEmailsForInterest( // maps email to interest
       applicants.map(applicant => applicant.email),
     );
 
+    // gets ALL applications, not too efficient but shouldn't be too bad
+    const applications = await this.responseService.getAllApplicationsWithUserRelation();
+    const applicationByUserId = new Map(
+      applications.map((application) => [application.user.id, application]),
+    );
+
     const assignments = applicants.map((user) => {
+      const application = applicationByUserId.get(user.id);
       return {
         applicant: {
           ...user.getHiddenProfile(),
           didInterestForm: interestByEmail.get(user.email) ?? false,
+          university: (application?.data as Application)?.university ?? null,
         },
         reviewer: user.reviewer?.getHiddenProfile(),
       };
@@ -289,11 +298,19 @@ export class AdminController {
       reviewees.map(reviewee => reviewee.email),
     );
 
+    // gets ALL applications, not too efficient but shouldn't be too bad
+    const applications = await this.responseService.getAllApplicationsWithUserRelation();
+    const applicationByUserId = new Map(
+      applications.map((application) => [application.user.id, application]),
+    );
+
     const assignments = await Promise.all(reviewees.map(async (reviewee) => {
+      const application = applicationByUserId.get(reviewee.id);
       return {
         applicant: {
           ...reviewee.getHiddenProfile(),
           didInterestForm: interestByEmail.get(reviewee.email) ?? false,
+          university: (application?.data as Application)?.university ?? null,
         },
         reviewer: admin.getHiddenProfile(),
       };
