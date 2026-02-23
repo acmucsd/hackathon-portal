@@ -195,6 +195,12 @@ export interface ReviewerOverviewReviewer {
   reject: number;
   waitlist: number;
   noDecision: number;
+  /** Number of accepted applicants with university in their application. */
+  acceptedWithUniversity: number;
+  /** Number of accepted applicants who are non-UCSD. */
+  acceptedNonUcsd: number;
+  /** Percentage of accepted applicants who are non-UCSD (null if no accepted with university). */
+  acceptedNonUcsdPercentage: number | null;
 }
 
 export interface ReviewerOverviewResponse {

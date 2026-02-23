@@ -367,6 +367,8 @@ export class UserService {
   }
 
   // admin are reviewers
+  private static readonly UCSD_UNIVERSITY = 'University of California, San Diego';
+
   // 1, Find all reviewers
   // 2, Find the users (applicants) each reviewer is responsible for
   // 3, Return the ApplicationDecision status of the users each reviewer reviews
@@ -374,19 +376,22 @@ export class UserService {
   public async getReviewerOverview(): Promise<ReviewerOverviewResponse> {
     const rows = await this.transactionsManager.readOnly(async (entityManager) =>
     entityManager.query(`
-      SELECT
+      SELECT DISTINCT ON (r.id, a.id)
         r.id          AS reviewer_id,
         r."firstName" AS reviewer_first_name,
         r."lastName"  AS reviewer_last_name,
         a.id          AS applicant_id,
         a."firstName" AS applicant_first_name,
         a."lastName"  AS applicant_last_name,
-        a."applicationDecision"
+        a."applicationDecision",
+        res.data->>'university' AS university
       FROM "User" r
       LEFT JOIN "User" a
         ON a."reviewerId" = r.id
+      LEFT JOIN "Response" res
+        ON res."user" = a.id AND res."formType" = 'APPLICATION'
       WHERE r."accessType" = 'ADMIN'
-      ORDER BY r.id
+      ORDER BY r.id, a.id, res."updatedAt" DESC NULLS LAST
     `),
   );
 
@@ -406,6 +411,9 @@ export class UserService {
         reject: 0,
         waitlist: 0,
         noDecision: 0,
+        acceptedNonUcsdPercentage: null,
+        acceptedWithUniversity: 0,
+        acceptedNonUcsd: 0,
       });
     }
 
@@ -424,6 +432,12 @@ export class UserService {
       switch (row.applicationDecision) {
         case 'ACCEPT':
           reviewer.accept++;
+          if (row.university != null && String(row.university).trim() !== '') {
+            reviewer.acceptedWithUniversity++;
+            if (row.university !== UserService.UCSD_UNIVERSITY) {
+              reviewer.acceptedNonUcsd++;
+            }
+          }
           break;
         case 'REJECT':
           reviewer.reject++;
@@ -439,8 +453,23 @@ export class UserService {
     }
   }
 
+  const reviewers: ReviewerOverviewReviewer[] = Array.from(map.values()).map((r) => {
+    const acceptedNonUcsdPercentage =
+      r.acceptedWithUniversity > 0
+        ? Math.round((r.acceptedNonUcsd / r.acceptedWithUniversity) * 1000) / 10
+        : null;
+    return {
+      ...r,
+      acceptedNonUcsdPercentage,
+    };
+  });
+
   return {
-    reviewers: Array.from(map.values()),
+    reviewers,
   };
   }
 }
+
+
+
+

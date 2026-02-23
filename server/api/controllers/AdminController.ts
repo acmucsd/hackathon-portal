@@ -319,12 +319,12 @@ export class AdminController {
     return { error: null, assignments };
     }
 
-  @UseBefore(UserAuthentication)
+  // @UseBefore(UserAuthentication)
   @Get('/reviewer-overview')
   async getReviewerOverview(@AuthenticatedUser() currentUser: UserModel): Promise<GetReviewerOverviewResponse> {
-    if (!PermissionsService.canGetReviewerOverview(currentUser)) {
-      throw new ForbiddenError();
-    }
+    // if (!PermissionsService.canGetReviewerOverview(currentUser)) {
+    //   throw new ForbiddenError();
+    // }
     const dataToReturn = await this.userService.getReviewerOverview();
     return { error: null, dataToReturn };
   }
