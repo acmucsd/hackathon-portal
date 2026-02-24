@@ -463,8 +463,19 @@ export class UserService {
       r.acceptedWithNotNullUniversity > 0
         ? Math.round((r.acceptedNonUcsd / r.acceptedWithNotNullUniversity) * 1000) / 10
         : null;
-    const { acceptedWithNotNullUniversity: _omit, ...rest } = r;
-    return { ...rest, acceptedNonUcsdPercentage };
+    return {
+      reviewerId: r.reviewerId,
+      reviewerFirstName: r.reviewerFirstName,
+      reviewerLastName: r.reviewerLastName,
+      applicants: r.applicants,
+      total: r.total,
+      accept: r.accept,
+      reject: r.reject,
+      waitlist: r.waitlist,
+      noDecision: r.noDecision,
+      acceptedNonUcsd: r.acceptedNonUcsd,
+      acceptedNonUcsdPercentage,
+    };
   });
 
   return {
