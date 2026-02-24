@@ -20,7 +20,7 @@ export default async function CreateEvent() {
   }
 
   // Only allow admins to access page
-  if (fetchedUser.accessType !== 'ADMIN') {
+  if (fetchedUser.accessType !== 'ADMIN' && fetchedUser.accessType !== 'SUPER_ADMIN') {
     redirect('/');
   }
 

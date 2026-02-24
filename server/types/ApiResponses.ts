@@ -1,3 +1,4 @@
+import { InterestFormResponseModel } from '../models/InterestFormResponseModel';
 import { ResponseModel } from '../models/ResponseModel';
 import {
   ApplicationStatus,
@@ -25,6 +26,11 @@ export interface PrivateProfile extends PublicProfile {
 
 export interface HiddenProfile extends PrivateProfile {
   applicationDecision: ApplicationDecision;
+  reviewerComments: string | null;
+}
+
+export interface RevieweeProfile extends HiddenProfile {
+  didInterestForm: boolean;
 }
 
 export interface CustomErrorBody {
@@ -139,3 +145,34 @@ export interface PublicAttendance {
 export interface AttendEventResponse extends ApiResponse {
   event: PublicEvent;
 }
+
+export interface ReviewAssignment {
+  applicant: RevieweeProfile;
+  reviewer: HiddenProfile | undefined;
+}
+
+export interface PostAssignmentsResponse extends ApiResponse {
+  newAssignments: ReviewAssignment[];
+}
+
+export interface GetAssignmentsResponse extends ApiResponse {
+  assignments: ReviewAssignment[];
+}
+
+//InterestForm responses
+export interface CheckInterestByEmailResponse extends ApiResponse {
+  interest: Boolean;
+}
+export interface AddInterestedEmailResponse extends ApiResponse {
+  interest: InterestFormResponseModel;
+}
+
+export interface AddListOfInterestedEmailResponse extends ApiResponse {
+  interested: InterestFormResponseModel[];
+}
+
+export interface GetAllInterestedUserEmailsResponse extends ApiResponse {
+  interested: InterestFormResponseModel[]
+}
+
+export interface RemoveInterestedEmailResponse extends ApiResponse {}
