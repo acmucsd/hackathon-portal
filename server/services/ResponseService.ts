@@ -183,6 +183,13 @@ export class ResponseService {
     updateApplication: Application,
     resume?: File,
   ): Promise<ResponseModel> {
+
+    const isOpen = await this.applicationConfigService.isOpen();
+
+    if (!isOpen) {
+      throw new ForbiddenError('The application submission is not open yet');
+    }
+
     const application = await this.getUserApplication(user);
 
     if (resume) {
