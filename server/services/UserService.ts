@@ -412,7 +412,7 @@ export class UserService {
         waitlist: 0,
         noDecision: 0,
         acceptedNonUcsdPercentage: null,
-        acceptedWithUniversity: 0,
+        acceptedWithNotNullUniversity: 0,
         acceptedNonUcsd: 0,
       });
     }
@@ -433,7 +433,7 @@ export class UserService {
         case 'ACCEPT':
           reviewer.accept++;
           if (row.university != null && String(row.university).trim() !== '') {
-            reviewer.acceptedWithUniversity++;
+            reviewer.acceptedWithNotNullUniversity++;
             if (row.university !== UserService.UCSD_UNIVERSITY) {
               reviewer.acceptedNonUcsd++;
             }
@@ -455,8 +455,8 @@ export class UserService {
 
   const reviewers: ReviewerOverviewReviewer[] = Array.from(map.values()).map((r) => {
     const acceptedNonUcsdPercentage =
-      r.acceptedWithUniversity > 0
-        ? Math.round((r.acceptedNonUcsd / r.acceptedWithUniversity) * 1000) / 10
+      r.acceptedWithNotNullUniversity > 0
+        ? Math.round((r.acceptedNonUcsd / r.acceptedWithNotNullUniversity) * 1000) / 10
         : null;
     return {
       ...r,
