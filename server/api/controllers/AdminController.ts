@@ -50,6 +50,7 @@ export class AdminController {
   private attendanceService: AttendanceService;
 
   private applicationConfigService: ApplicationConfigService;
+
   private interestFormResponseService: InterestFormResponseService;
 
   constructor(

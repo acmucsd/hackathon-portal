@@ -7,5 +7,12 @@ import { ApplicationConfigModel } from './ApplicationConfigModel';
 
 import { InterestFormResponseModel } from './InterestFormResponseModel';
 
-export const models = [UserModel, ResponseModel, EventModel, AttendanceModel,ApplicationConfigModel, InterestFormResponseModel];
+export const models = [
+  UserModel,
+  ResponseModel,
+  EventModel,
+  AttendanceModel,
+  ApplicationConfigModel,
+  InterestFormResponseModel,
+];
 
