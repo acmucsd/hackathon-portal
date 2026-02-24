@@ -6,12 +6,12 @@ import styles from './style.module.scss';
 import StatusDropdown from '@/components/StatusDropdown';
 import showToast from '@/lib/showToast';
 
-import { Application } from '@/lib/types/application';
-import { PublicProfile } from '@/lib/types/apiResponses';
-import { ApplicationDecision } from '@/lib/types/enums';
+import type { Application } from '@/lib/types/application';
+import type { PublicProfile } from '@/lib/types/apiResponses';
+import type { ApplicationDecision } from '@/lib/types/enums';
 
 export interface ApplicationReviewPanelProps {
-  applicant: Application;
+  applicant: PublicProfile;
   reviewer: PublicProfile;
 
   currentIndex: number;
@@ -69,7 +69,6 @@ const ApplicationReviewPanel = ({
     <div className={styles.container}>
       {/* which applicant */}
       <div className={styles.top}>
-        {/* TODO: gray out a button when beginning/end reached */}
         <button
           className={`${styles.btn} ${isAtStart ? styles.btnDisabled : ''}`}
           onClick={onPrev}

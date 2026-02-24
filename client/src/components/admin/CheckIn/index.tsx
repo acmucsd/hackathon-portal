@@ -54,15 +54,6 @@ const CheckIn = ({ token, events, users }: CheckInProps) => {
     [users]
   );
 
-  const handleNameCheckin = useCallback(async () => {
-    if (searchedUser === null) {
-      showToast('Please select a user first.');
-      setSuccess(false);
-      return;
-    }
-    handleScan(searchedUser.id);
-  }, [token, event, searchedUser]);
-
   const handleScan = useCallback(
     async (data: string) => {
       setSuccess(null);
@@ -104,6 +95,15 @@ const CheckIn = ({ token, events, users }: CheckInProps) => {
     },
     [token, event]
   );
+
+  const handleNameCheckin = useCallback(async () => {
+    if (searchedUser === null) {
+      showToast('Please select a user first.');
+      setSuccess(false);
+      return;
+    }
+    handleScan(searchedUser.id);
+  }, [searchedUser, handleScan]);
 
   return (
     <Card gap={1.5}>

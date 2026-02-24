@@ -9,9 +9,11 @@ type ApplicationReviewPageProps = {
 };
 
 export default async function ApplicationReviewPage({ params }: ApplicationReviewPageProps) {
-  const userId = (await params).id;
+  const { id: userId } = await params;
 
-  const accessToken = cookies().get(CookieType.ACCESS_TOKEN)?.value;
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get(CookieType.ACCESS_TOKEN)?.value;
+
   if (!accessToken) redirect('/api/logout');
 
   try {

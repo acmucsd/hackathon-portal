@@ -11,8 +11,10 @@ import type { PublicProfile, ResponseModel } from '@/lib/types/apiResponses';
 
 type Props = {
   accessToken: string;
-  fetchedApplications: ResponseModel[];
-  fetchedWaiversByUserId: Record<string, ResponseModel[]>;
+  userId: string;
+  fetchedApplication: ResponseModel;
+  fetchedDecision: ApplicationDecision;
+  fetchedWaivers: ResponseModel[];
   reviewer?: PublicProfile;
 };
 
@@ -22,18 +24,15 @@ const dummyReviewer = {
   firstName: 'Avery',
   lastName: 'Reviewer',
 } as PublicProfile;
-const dummyApplicants = [
-  { firstName: 'Mina', lastName: 'Patel' } as any,
-  { firstName: 'Jordan', lastName: 'Kim' } as any,
-] as Application[];
 
 export default function ApplicationReviewClient({
   accessToken,
+  userId,
   fetchedApplication,
   fetchedDecision,
   fetchedWaivers,
 }: Props) {
-  const applicants = useMemo(() => dummyApplicants, []);
+  const applicants = useMemo(() => [fetchedApplication.user], [fetchedApplication]);
   const reviewer = useMemo(() => dummyReviewer, []);
 
   const [currentIndex, setCurrentIndex] = useState(0);
