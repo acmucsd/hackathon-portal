@@ -1,5 +1,11 @@
 @use '@/styles/vars.scss' as vars;
 
+.applicationContainer {
+  gap: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
 .container {
   display: flex;
   flex-direction: column;

@@ -74,83 +74,64 @@ const ApplicationView = ({
         </Link>
       </div>
       {/* summary of fields */}
-      <Card gap={2}>
-        <h1 className={styles.heading}>Summary of Important Fields</h1>
-        <dl className={styles.responseList}>
-          <dt className={styles.question}>Name </dt>
-          <dd className={styles.response}>
-            {user.firstName} {user.lastName}
-          </dd>
-          <dt className={styles.question}>University</dt>
-          <dd className={styles.response}>{application.data.university ?? NO_RESPONSE}</dd>
-          <dt className={styles.question}>Age</dt>
-          <dd className={styles.response}>{application.data.age ?? NO_RESPONSE}</dd>
-          <dt className={styles.question}>Race/Ethnicity</dt>
-          <dd className={styles.response}>{application.data.ethnicity ?? NO_RESPONSE}</dd>
-          <span className={styles.interestQuestion}>
-            <dt className={styles.question}>Filled out interest form: </dt>
+      <div className={styles.applicationContainer}>
+        <Card gap={2}>
+          <h1 className={styles.heading}>Summary of Important Fields</h1>
+          <dl className={styles.responseList}>
+            <dt className={styles.question}>Name </dt>
             <dd className={styles.response}>
-              <StatusTag
-                status={
-                  liabilitySubmitted ? ApplicationStatus.SUBMITTED : ApplicationStatus.NOT_SUBMITTED
-                }
-              ></StatusTag>
+              {user.firstName} {user.lastName}
             </dd>
-          </span>
-        </dl>
-      </Card>
-      <Card gap={2}>
-        <div className={styles.submissionHeader}>
-          <h1 className={styles.heading}>Application Submission</h1>
-        </div>
-        <dl className={styles.responseList}>
-          {appQuestions
-            .flatMap(step => step.questions)
-            .map(({ id, question }) => (
-              <Fragment key={id}>
-                <dt className={styles.question}>{question}</dt>
-                <dd className={styles.response}>
-                  {typeof responses[id] === 'string' ? (
-                    id === 'resumeLink' ? (
-                      <Button variant="secondary" href={responses[id]}>
-                        View Resume
-                      </Button>
+            <dt className={styles.question}>University</dt>
+            <dd className={styles.response}>{application.data.university ?? NO_RESPONSE}</dd>
+            <dt className={styles.question}>Age</dt>
+            <dd className={styles.response}>{application.data.age ?? NO_RESPONSE}</dd>
+            <dt className={styles.question}>Race/Ethnicity</dt>
+            <dd className={styles.response}>{application.data.ethnicity ?? NO_RESPONSE}</dd>
+            <span className={styles.interestQuestion}>
+              <dt className={styles.question}>Filled out interest form: </dt>
+              <dd className={styles.response}>
+                <StatusTag
+                  status={
+                    liabilitySubmitted
+                      ? ApplicationStatus.SUBMITTED
+                      : ApplicationStatus.NOT_SUBMITTED
+                  }
+                ></StatusTag>
+              </dd>
+            </span>
+          </dl>
+        </Card>
+        <Card gap={2}>
+          <div className={styles.submissionHeader}>
+            <h1 className={styles.heading}>Application Submission</h1>
+          </div>
+          <dl className={styles.responseList}>
+            {appQuestions
+              .flatMap(step => step.questions)
+              .map(({ id, question }) => (
+                <Fragment key={id}>
+                  <dt className={styles.question}>{question}</dt>
+                  <dd className={styles.response}>
+                    {typeof responses[id] === 'string' ? (
+                      id === 'resumeLink' ? (
+                        <Button variant="secondary" href={responses[id]}>
+                          View Resume
+                        </Button>
+                      ) : (
+                        responses[id]
+                      )
+                    ) : Array.isArray(responses[id]) ? (
+                      responses[id].join(', ')
                     ) : (
-                      responses[id]
-                    )
-                  ) : Array.isArray(responses[id]) ? (
-                    responses[id].join(', ')
-                  ) : (
-                    <em>{NO_RESPONSE}</em>
-                  )}
-                </dd>
-              </Fragment>
-            ))}
-        </dl>
-      </Card>
-      {/* <div className={styles.decisionButtons}>
-        <Button
-          className={styles.reject}
-          onClick={() => handleDecision(ApplicationDecision.REJECT)}
-        >
-          Reject
-        </Button>
-        <Button
-          className={styles.waitlist}
-          onClick={() => handleDecision(ApplicationDecision.WAITLIST)}
-        >
-          Waitlist
-        </Button>
-        <Button
-          className={styles.accept}
-          onClick={() => handleDecision(ApplicationDecision.ACCEPT)}
-        >
-          Accept
-        </Button>
-        <Button className={styles.accept} onClick={handleConfirmUser}>
-          Confirm
-        </Button>
-      </div> */}
+                      <em>{NO_RESPONSE}</em>
+                    )}
+                  </dd>
+                </Fragment>
+              ))}
+          </dl>
+        </Card>
+      </div>
     </div>
   );
 };

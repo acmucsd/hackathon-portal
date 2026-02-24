@@ -61,7 +61,6 @@ const ApplicationReviewPanel = ({
       await onSave();
       showToast('Saved successfully!', 'Your responses have been saved!');
     } catch (e) {
-      // keep it simple; you can replace with reportError if you want
       showToast('Save failed', 'Could not save your response.');
     }
   }

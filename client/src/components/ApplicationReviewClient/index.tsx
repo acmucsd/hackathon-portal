@@ -5,16 +5,15 @@ import styles from './style.module.scss';
 
 import ApplicationView from '@/components/admin/ApplicationView';
 import ApplicationReviewPanel from '@/components/ApplicationReviewPanel';
-import { ApplicationDecision } from '@/lib/types/enums';
+import { ApplicationDecision, ApplicationStatus } from '@/lib/types/enums';
 import type { Application } from '@/lib/types/application';
 import type { PublicProfile, ResponseModel } from '@/lib/types/apiResponses';
 
 type Props = {
   accessToken: string;
-  userId: string;
-  fetchedApplication: ResponseModel;
-  fetchedDecision: ApplicationDecision;
-  fetchedWaivers: ResponseModel[];
+  fetchedApplications: ResponseModel[];
+  fetchedWaiversByUserId: Record<string, ResponseModel[]>;
+  reviewer?: PublicProfile;
 };
 
 // TEMP dummy (keep for now)
@@ -39,11 +38,17 @@ export default function ApplicationReviewClient({
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
+
+  // single source of truth for what ApplicationView displays
+  const [currentDecision, setCurrentDecision] = useState<ApplicationDecision>(fetchedDecision);
+  const [currentStatus, setCurrentStatus] = useState<ApplicationStatus>(
+    fetchedApplication.user.applicationStatus
+  );
+  const [notes, setNotes] = useState<string>('');
+
+  // keep these for later when you expand to multiple applicants
   const [decisions, setDecisions] = useState<Record<number, ApplicationDecision>>({});
   const [notesByIndex, setNotesByIndex] = useState<Record<number, string>>({});
-
-  const decision = decisions[currentIndex] ?? ApplicationDecision.NO_DECISION;
-  const notes = notesByIndex[currentIndex] ?? '';
 
   const onPrev = () => setCurrentIndex(i => Math.max(0, i - 1));
   const onNext = () => setCurrentIndex(i => Math.min(applicants.length - 1, i + 1));
@@ -86,6 +91,11 @@ export default function ApplicationReviewClient({
   // };
 
   const onReset = () => {
+    // sync reset
+    setCurrentDecision(ApplicationDecision.NO_DECISION);
+    setNotes('');
+
+    // keep these for later when you expand to multiple applicants
     setDecisions(prev => ({ ...prev, [currentIndex]: ApplicationDecision.NO_DECISION }));
     setNotesByIndex(prev => ({ ...prev, [currentIndex]: '' }));
   };
@@ -95,6 +105,10 @@ export default function ApplicationReviewClient({
     try {
       await new Promise(r => setTimeout(r, 300));
       // TODO: add API calls
+
+      // keep these for later when you expand to multiple applicants
+      setDecisions(prev => ({ ...prev, [currentIndex]: currentDecision }));
+      setNotesByIndex(prev => ({ ...prev, [currentIndex]: notes }));
     } finally {
       setIsSaving(false);
     }
@@ -106,8 +120,8 @@ export default function ApplicationReviewClient({
         <ApplicationView
           application={fetchedApplication}
           token={accessToken}
-          decision={fetchedDecision}
-          status={fetchedApplication.user.applicationStatus}
+          decision={currentDecision}
+          status={currentStatus}
           waivers={fetchedWaivers}
         />
       </div>
@@ -118,10 +132,10 @@ export default function ApplicationReviewClient({
           reviewer={reviewer}
           currentIndex={currentIndex}
           totalApplicants={applicants.length}
-          decision={decision}
-          onDecisionChange={d => setDecisions(prev => ({ ...prev, [currentIndex]: d }))}
+          decision={currentDecision}
+          onDecisionChange={setCurrentDecision}
           notes={notes}
-          onNotesChange={n => setNotesByIndex(prev => ({ ...prev, [currentIndex]: n }))}
+          onNotesChange={setNotes}
           onPrev={onPrev}
           onNext={onNext}
           onReset={onReset}
