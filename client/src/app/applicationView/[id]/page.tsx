@@ -1,44 +1,34 @@
-import ApplicationView from '@/components/admin/ApplicationView';
-import ApplicationReviewPanel from '@/components/ApplicationReviewPanel';
+import ApplicationReviewClient from '@/components/ApplicationReviewClient';
 import { AdminAPI } from '@/lib/api';
-import { getCookie } from '@/lib/services/CookieService';
+import { cookies } from 'next/headers';
 import { CookieType } from '@/lib/types/enums';
 import { redirect } from 'next/navigation';
-import styles from './page.module.scss';
 
 interface ApplicationReviewPageProps {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 }
 
 export default async function ApplicationReviewPage({ params }: ApplicationReviewPageProps) {
-  const user = (await params).id;
-  const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
+  const userId = params.id;
 
-  if (!accessToken) {
-    redirect('/api/logout');
-  }
+  const accessToken = cookies().get(CookieType.ACCESS_TOKEN)?.value;
+  if (!accessToken) redirect('/api/logout');
 
   try {
-    const fetchedApplication = await AdminAPI.getUserWithApplication(accessToken, user);
-    const fetchedApplicationDecision = await AdminAPI.getApplicationDecision(accessToken, user);
-    const fetchedWaivers = await AdminAPI.getWaiversById(accessToken, user).catch(() => []);
+    const fetchedApplication = await AdminAPI.getUserWithApplication(accessToken, userId);
+    const fetchedDecision = await AdminAPI.getApplicationDecision(accessToken, userId);
+    const fetchedWaivers = await AdminAPI.getWaiversById(accessToken, userId).catch(() => []);
 
     return (
-      <main className={styles.main}>
-        <div className={styles.appView}>
-          <ApplicationView
-            application={fetchedApplication}
-            token={accessToken}
-            decision={fetchedApplicationDecision.applicationDecision}
-            waivers={fetchedWaivers}
-          />
-        </div>
-        <div className={styles.appReviewPanel}>
-          <ApplicationReviewPanel />
-        </div>
-      </main>
+      <ApplicationReviewClient
+        accessToken={accessToken}
+        userId={userId}
+        fetchedApplication={fetchedApplication}
+        fetchedDecision={fetchedDecision.applicationDecision}
+        fetchedWaivers={fetchedWaivers}
+      />
     );
-  } catch (error) {
+  } catch {
     redirect('/api/logout');
   }
 }

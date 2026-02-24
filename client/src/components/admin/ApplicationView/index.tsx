@@ -3,7 +3,6 @@ import Card from '@/components/Card';
 import Button from '@/components/Button';
 import { appQuestions } from '@/config';
 import { Fragment } from 'react';
-import Heading from '@/components/Heading';
 import StatusTag from '@/components/StatusTag';
 import { AdminAPI } from '@/lib/api';
 import { ResponseModel } from '@/lib/types/apiResponses';
@@ -18,65 +17,56 @@ interface ApplicationViewProps {
   application: ResponseModel;
   token: string;
   decision: ApplicationDecision;
+  status: ApplicationStatus;
   waivers: ResponseModel[];
+  onConfirm?: () => Promise<void> | void;
 }
 
-const ApplicationView = ({ application, token, decision, waivers }: ApplicationViewProps) => {
+const ApplicationView = ({ application, token, decision, status, waivers, onConfirm }: ApplicationViewProps) => {
   const responses: Record<string, string | string[] | File | any> = application.data;
   const user = application.user;
-  const [currentDecision, setCurrentDecision] = useState(decision);
+  // const [currentDecision, setCurrentDecision] = useState(decision);
   const liabilitySubmitted = !!waivers.find(
     response => response.formType === FormType.LIABILITY_WAIVER
   );
   // const photoReleaseSubmitted = !!waivers.find(
   //   response => response.formType === FormType.PHOTO_RELEASE
   // );
-  const [currentStatus, setCurrentStatus] = useState(user.applicationStatus);
-
-  const handleDecision = async (decision: ApplicationDecision) => {
-    if (currentStatus === ApplicationStatus.CONFIRMED) {
-      showToast(
-        "Couldn't update application decision",
-        'User has already been confirmed for the hackathon.'
-      );
-      return;
-    }
-    try {
-      const updatedUser = await AdminAPI.updateApplicationDecision(token, user.id, decision);
-      const updatedDecision = updatedUser.applicationDecision;
-      setCurrentDecision(updatedDecision);
-      showToast(`${updatedDecision}ED`, `You marked the application as "${updatedDecision}ED".`);
-    } catch (error) {
-      reportError("Couldn't update application decision", error);
-    }
-  };
-
-  const handleConfirmUser = async () => {
-    if (currentDecision !== ApplicationDecision.ACCEPT) {
-      showToast("Couldn't confirm user", "User hasn't been accepted to the hackathon.");
-      return;
-    }
-    try {
-      const updatedUser = await AdminAPI.confirmUserStatus(token, user.id);
-      setCurrentStatus(updatedUser.applicationStatus);
-      showToast('CONFIRMED', 'Successfully marked the user as CONFIRMED');
-    } catch (error) {
-      reportError("Couldn't confirm user", error);
-    }
-  };
+  // const [currentStatus, setCurrentStatus] = useState(user.applicationStatus);
 
   const NO_RESPONSE = "No response.";
 
   return (
+    // back to dashboard link + search bar
     <div className={styles.container}>
-      <div className={styles.topRow}>
-        <Link href="/" className={styles.backLink}>
+      {/* stats */}
+      <div className={styles.stats}>
+        <p className={styles.statsLeft}>
+          {10}
+          <span className={styles.accepted}> Accepted </span>
+          <span className={styles.gray}> | </span>
+          {10}
+          <span className={styles.rejected}> Rejected </span>
+          <span className={styles.gray}> | </span>
+          {10}
+          <span className={styles.waitlisted}> Waitlisted</span>
+        </p>
+        <p className={styles.statsRight}>
+          <span className={styles.gray}> Remaining: </span>
+          {"6 out of 20"}
+          <span className={styles.gray}> | Total % of accepted: </span>
+          {" " + 70 + "%"}
+        </p>
+      </div>
+      <hr className={styles.divider} />
+      {/* back to dashboard */}
+      <div className={styles.backBtnContainer}>
+        <Link href="/manageUsers" className={styles.backLink}>
           {"< "}
           <span className={styles.backText}>Back to Dashboard</span>
         </Link>
       </div>
-
-      {/* <hr className={styles.divider} /> */}
+      {/* summary of fields */}
       <Card gap={2}>
         <h1 className={styles.heading}>Summary of Important Fields</h1>
         <dl className={styles.responseList}>
@@ -88,14 +78,16 @@ const ApplicationView = ({ application, token, decision, waivers }: ApplicationV
           <dd className={styles.response}>{application.data.age ?? NO_RESPONSE}</dd>
           <dt className={styles.question}>Race/Ethnicity</dt>
           <dd className={styles.response}>{application.data.ethnicity ?? NO_RESPONSE}</dd>
-          <dt className={styles.question}>Filled out interest form: </dt>
-          <dd className={styles.response}>
-            <StatusTag
-              status={
-                liabilitySubmitted ? ApplicationStatus.SUBMITTED : ApplicationStatus.NOT_SUBMITTED
-              }
-            ></StatusTag>
-          </dd>
+          <span className={styles.interestQuestion}>
+            <dt className={styles.question}>Filled out interest form: </dt>
+            <dd className={styles.response}>
+              <StatusTag
+                status={
+                  liabilitySubmitted ? ApplicationStatus.SUBMITTED : ApplicationStatus.NOT_SUBMITTED
+                }
+              ></StatusTag>
+            </dd>
+          </span>
         </dl>
       </Card>
       <Card gap={2}>
@@ -127,7 +119,7 @@ const ApplicationView = ({ application, token, decision, waivers }: ApplicationV
             ))}
         </dl>
       </Card>
-      <div className={styles.decisionButtons}>
+      {/* <div className={styles.decisionButtons}>
         <Button
           className={styles.reject}
           onClick={() => handleDecision(ApplicationDecision.REJECT)}
@@ -149,7 +141,7 @@ const ApplicationView = ({ application, token, decision, waivers }: ApplicationV
         <Button className={styles.accept} onClick={handleConfirmUser}>
           Confirm
         </Button>
-      </div>
+      </div> */}
     </div>
   );
 };

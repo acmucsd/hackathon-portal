@@ -14,7 +14,7 @@ type StatusDropdownProps = {
 export default function StatusDropdown({
   value,
   onChange,
-  options = ['ACCEPTED', 'WAITLISTED', 'REJECTED'],
+  options = ['ACCEPTED', 'WAITLISTED', 'REJECTED', 'NO_DECISION'],
   placeholder = 'Select Decision',
   disabled = false,
   className = '',
@@ -161,13 +161,12 @@ export default function StatusDropdown({
         aria-haspopup="listbox"
       >
         <span className={styles.value}>
-          {value ? (
+          {value && value !== 'NO_DECISION' ? (
             <StatusTag status={value} />
           ) : (
             <span className={styles.placeholder}>{placeholder}</span>
           )}
         </span>
-        {/* TODO: replace this SVG */}
         <span className={`${styles.chevron} ${open ? styles.chevronOpen : ''}`} aria-hidden="true">
           <svg width="18" height="18" viewBox="0 0 24 24" focusable="false">
             <path

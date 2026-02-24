@@ -5,25 +5,19 @@
   flex-direction: column;
   background: vars.$card-bg;
   border-left: 2px solid vars.$card-stroke;
+  border-bottom: 2px solid vars.$card-stroke;
+  border-radius: 0px 0px 0px 8px;
   height: 100vh;
   width: 100%;
-}
-
-.top {
-  padding: 1rem;
-  border-bottom: 2px solid vars.$card-stroke;
-  text-align: center;
-  color: #c3c6cf;
-  font-size: 16px;
 }
 
 .number {
   color: white;
 }
 
-.middleTop {
-  padding: 1rem;
-  margin: 0px;
+.nameSection {
+  padding: 0rem;
+  margin-top: 16px;
   font-size: 14px;
 }
 
@@ -38,10 +32,6 @@
   margin-bottom: 10px;
 }
 
-.lastLabel {
-  margin-top: 20px;
-}
-
 .decision {
   margin: 10px;
 }
@@ -50,7 +40,7 @@
   font-weight: 400;
 }
 
-.middleBottom {
+.decisionSection {
   padding: 1rem;
   margin: 0px;
   font-size: 14px;
@@ -64,10 +54,6 @@
   margin-bottom: 10px;
   font-weight: 500;
   font-size: 18px;
-}
-
-.addNotes {
-  margin-left: 2rem;
 }
 
 .textarea {
@@ -101,6 +87,15 @@
   color: white;
   padding: 8px 12px;
   border-radius: 8px;
+  transition: opacity 150ms ease-in-out;
+}
+
+.resetBtn:hover {
+  opacity: 90%;
+}
+
+.resetBtn:active {
+  opacity: 80%;
 }
 
 .saveBtn {
@@ -108,21 +103,62 @@
   color: black;
   padding: 8px 12px;
   border-radius: 8px;
+  transition: opacity 150ms ease-in-out;
 }
 
-.bottom {
-  bottom: 10px;
-  position: absolute;
+.saveBtn:hover {
+  opacity: 90%;
+}
+
+.saveBtn:active {
+  opacity: 80%;
+}
+
+.top {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
   gap: 10px;
   width: 100%;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .btn {
   background: vars.$btn-primary;
   color: black;
-  padding: 8px 12px;
+  padding: 9px;
   border-radius: 8px;
+  display: flex;
+  align-items: center;
+  transition: opacity 150ms ease-in-out;
+}
+
+.btn:hover {
+  opacity: 90%;
+}
+
+.btn:active {
+  opacity: 80%;
+}
+
+.btnDisabled {
+  background: #979797;
+}
+
+.btnDisabled:hover {
+  opacity: 100%;
+}
+
+// TODO: figure out hover state for buttons??
+// .btn:hover {
+//   // TODO: add to vars.scss
+//   background: #57ABFF;
+//   // background: vars.$btn-primary-hover;
+// }
+
+.numApplicants {
+  font-size: 14px;
+  font-weight: 400;
+  font-family: 'DM Sans', sans-serif;
 }

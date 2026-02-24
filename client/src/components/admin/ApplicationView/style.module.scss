@@ -3,11 +3,11 @@
 .container {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  margin-top: 32px;
 }
 
-.topRow {
-  display: flex;
+.backBtnContainer {
+  margin-bottom: 1.5rem;
 }
 
 .backLink {
@@ -56,6 +56,12 @@
   }
 }
 
+.interestQuestion {
+  display: flex;
+  align-items: center;
+  margin-top: -16px;
+}
+
 .buttonRow {
   display: flex;
   justify-content: flex-end;
@@ -63,10 +69,33 @@
   gap: 0.5rem;
 }
 
+.stats {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.accepted {
+  color: #90E4A2;  // TODO: check if in vars
+}
+
+.rejected {
+  color: #F3AAB1;
+}
+
+.waitlisted {
+  color: #FFCF75;
+}
+
+.gray {
+  color: #C3C6CF;
+}
+
 .divider {
-  background-color: vars.$neutral;
+  background-color: vars.$card-stroke;
   height: 2px;
   border: 0;
+  margin-bottom: 2rem;
 }
 
 .submissionHeader {
