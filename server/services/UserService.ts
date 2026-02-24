@@ -25,6 +25,11 @@ import {
 } from '../types/ApiResponses';
 import { ApplicationDecision, ApplicationStatus } from '../types/Enums';
 
+/** Internal: includes acceptedWithNotNullUniversity for computation; omitted from final output. */
+interface ReviewerOverviewReviewerInternal extends ReviewerOverviewReviewer {
+  acceptedWithNotNullUniversity: number;
+}
+
 @Service()
 export class UserService {
   private transactionsManager: TransactionsManager;
@@ -395,7 +400,7 @@ export class UserService {
     `),
   );
 
-  const map = new Map<string, ReviewerOverviewReviewer>();
+  const map = new Map<string, ReviewerOverviewReviewerInternal>();
 
   for (const row of rows) {
     const reviewerId = row.reviewer_id;
@@ -458,10 +463,8 @@ export class UserService {
       r.acceptedWithNotNullUniversity > 0
         ? Math.round((r.acceptedNonUcsd / r.acceptedWithNotNullUniversity) * 1000) / 10
         : null;
-    return {
-      ...r,
-      acceptedNonUcsdPercentage,
-    };
+    const { acceptedWithNotNullUniversity: _omit, ...rest } = r;
+    return { ...rest, acceptedNonUcsdPercentage };
   });
 
   return {
