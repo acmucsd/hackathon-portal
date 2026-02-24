@@ -180,3 +180,35 @@ export interface GetAllInterestedUserEmailsResponse extends ApiResponse {
 }
 
 export interface RemoveInterestedEmailResponse extends ApiResponse {}
+
+export interface ReviewerOverviewApplicant {
+  userId: string;
+  firstName: string;
+  lastName: string;
+  applicationDecision: ApplicationDecision | null;
+}
+
+export interface ReviewerOverviewReviewer {
+  reviewerId: string;
+  reviewerFirstName: string;
+  reviewerLastName: string;
+  applicants: ReviewerOverviewApplicant[];
+
+  total: number;
+  accept: number;
+  reject: number;
+  waitlist: number;
+  noDecision: number;
+  /** Number of accepted applicants who are non-UCSD. */
+  acceptedNonUcsd: number;
+  /** Percentage of accepted applicants who are non-UCSD (null if no accepted with non-null university). */
+  acceptedNonUcsdPercentage: number | null;
+}
+
+export interface ReviewerOverviewResponse {
+  reviewers: ReviewerOverviewReviewer[];
+}
+
+export interface GetReviewerOverviewResponse extends ApiResponse {
+  dataToReturn: ReviewerOverviewResponse;
+}
