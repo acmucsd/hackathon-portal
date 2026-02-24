@@ -4,12 +4,12 @@ import { cookies } from 'next/headers';
 import { CookieType } from '@/lib/types/enums';
 import { redirect } from 'next/navigation';
 
-interface ApplicationReviewPageProps {
-  params: { id: string };
-}
+type ApplicationReviewPageProps = {
+  params: Promise<{ id: string }>;
+};
 
 export default async function ApplicationReviewPage({ params }: ApplicationReviewPageProps) {
-  const userId = params.id;
+  const userId = (await params).id;
 
   const accessToken = cookies().get(CookieType.ACCESS_TOKEN)?.value;
   if (!accessToken) redirect('/api/logout');
