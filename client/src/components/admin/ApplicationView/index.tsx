@@ -22,7 +22,14 @@ interface ApplicationViewProps {
   onConfirm?: () => Promise<void> | void;
 }
 
-const ApplicationView = ({ application, token, decision, status, waivers, onConfirm }: ApplicationViewProps) => {
+const ApplicationView = ({
+  application,
+  token,
+  decision,
+  status,
+  waivers,
+  onConfirm,
+}: ApplicationViewProps) => {
   const responses: Record<string, string | string[] | File | any> = application.data;
   const user = application.user;
   // const [currentDecision, setCurrentDecision] = useState(decision);
@@ -34,7 +41,7 @@ const ApplicationView = ({ application, token, decision, status, waivers, onConf
   // );
   // const [currentStatus, setCurrentStatus] = useState(user.applicationStatus);
 
-  const NO_RESPONSE = "No response.";
+  const NO_RESPONSE = 'No response.';
 
   return (
     // back to dashboard link + search bar
@@ -53,16 +60,16 @@ const ApplicationView = ({ application, token, decision, status, waivers, onConf
         </p>
         <p className={styles.statsRight}>
           <span className={styles.gray}> Remaining: </span>
-          {"6 out of 20"}
+          {'6 out of 20'}
           <span className={styles.gray}> | Total % of accepted: </span>
-          {" " + 70 + "%"}
+          {' ' + 70 + '%'}
         </p>
       </div>
       <hr className={styles.divider} />
       {/* back to dashboard */}
       <div className={styles.backBtnContainer}>
         <Link href="/manageUsers" className={styles.backLink}>
-          {"< "}
+          {'< '}
           <span className={styles.backText}>Back to Dashboard</span>
         </Link>
       </div>
@@ -71,7 +78,9 @@ const ApplicationView = ({ application, token, decision, status, waivers, onConf
         <h1 className={styles.heading}>Summary of Important Fields</h1>
         <dl className={styles.responseList}>
           <dt className={styles.question}>Name </dt>
-          <dd className={styles.response}>{user.firstName} {user.lastName}</dd>
+          <dd className={styles.response}>
+            {user.firstName} {user.lastName}
+          </dd>
           <dt className={styles.question}>University</dt>
           <dd className={styles.response}>{application.data.university ?? NO_RESPONSE}</dd>
           <dt className={styles.question}>Age</dt>

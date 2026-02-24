@@ -71,13 +71,21 @@ const ApplicationReviewPanel = ({
       {/* which applicant */}
       <div className={styles.top}>
         {/* TODO: gray out a button when beginning/end reached */}
-        <button className={`${styles.btn} ${isAtStart ? styles.btnDisabled : ''}`} onClick={onPrev} disabled={isAtStart}>
+        <button
+          className={`${styles.btn} ${isAtStart ? styles.btnDisabled : ''}`}
+          onClick={onPrev}
+          disabled={isAtStart}
+        >
           <Image width={21} height={21} src="/assets/arrow-left.svg" alt="←" />
         </button>
         <p className={styles.numApplicants}>
           {applicantNumber}/{totalApplicants}
         </p>
-        <button className={`${styles.btn} ${isAtEnd ? styles.btnDisabled : ''}`} onClick={onNext} disabled={isAtEnd}>
+        <button
+          className={`${styles.btn} ${isAtEnd ? styles.btnDisabled : ''}`}
+          onClick={onNext}
+          disabled={isAtEnd}
+        >
           <Image width={21} height={21} src="/assets/arrow-right.svg" alt="→" />
         </button>
       </div>
@@ -113,7 +121,7 @@ const ApplicationReviewPanel = ({
             placeholder="List any reasonings for the decision, opinions, etc."
             className={styles.textarea}
             value={notes}
-            onChange={(e) => onNotesChange(e.target.value)}
+            onChange={e => onNotesChange(e.target.value)}
           ></textarea>
         </div>
         <div className={styles.buttonGroup}>

@@ -18,7 +18,11 @@ type Props = {
 };
 
 // TEMP dummy (keep for now)
-const dummyReviewer = { id: 'reviewer-1', firstName: 'Avery', lastName: 'Reviewer' } as PublicProfile;
+const dummyReviewer = {
+  id: 'reviewer-1',
+  firstName: 'Avery',
+  lastName: 'Reviewer',
+} as PublicProfile;
 const dummyApplicants = [
   { firstName: 'Mina', lastName: 'Patel' } as any,
   { firstName: 'Jordan', lastName: 'Kim' } as any,
@@ -41,8 +45,8 @@ export default function ApplicationReviewClient({
   const decision = decisions[currentIndex] ?? ApplicationDecision.NO_DECISION;
   const notes = notesByIndex[currentIndex] ?? '';
 
-  const onPrev = () => setCurrentIndex((i) => Math.max(0, i - 1));
-  const onNext = () => setCurrentIndex((i) => Math.min(applicants.length - 1, i + 1));
+  const onPrev = () => setCurrentIndex(i => Math.max(0, i - 1));
+  const onNext = () => setCurrentIndex(i => Math.min(applicants.length - 1, i + 1));
 
   // might be useful later?
   // const handleDecision = async (decision: ApplicationDecision) => {
@@ -82,14 +86,14 @@ export default function ApplicationReviewClient({
   // };
 
   const onReset = () => {
-    setDecisions((prev) => ({ ...prev, [currentIndex]: ApplicationDecision.NO_DECISION }));
-    setNotesByIndex((prev) => ({ ...prev, [currentIndex]: '' }));
+    setDecisions(prev => ({ ...prev, [currentIndex]: ApplicationDecision.NO_DECISION }));
+    setNotesByIndex(prev => ({ ...prev, [currentIndex]: '' }));
   };
 
   const onSave = async () => {
     setIsSaving(true);
     try {
-      await new Promise((r) => setTimeout(r, 300));
+      await new Promise(r => setTimeout(r, 300));
       // TODO: add API calls
     } finally {
       setIsSaving(false);
@@ -115,9 +119,9 @@ export default function ApplicationReviewClient({
           currentIndex={currentIndex}
           totalApplicants={applicants.length}
           decision={decision}
-          onDecisionChange={(d) => setDecisions((prev) => ({ ...prev, [currentIndex]: d }))}
+          onDecisionChange={d => setDecisions(prev => ({ ...prev, [currentIndex]: d }))}
           notes={notes}
-          onNotesChange={(n) => setNotesByIndex((prev) => ({ ...prev, [currentIndex]: n }))}
+          onNotesChange={n => setNotesByIndex(prev => ({ ...prev, [currentIndex]: n }))}
           onPrev={onPrev}
           onNext={onNext}
           onReset={onReset}
