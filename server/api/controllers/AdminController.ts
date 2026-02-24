@@ -5,6 +5,7 @@ import {
   JsonController,
   Params,
   Post,
+  Put,
   QueryParams,
   UseBefore,
 } from 'routing-controllers';
@@ -19,8 +20,9 @@ import {
   GetFormsResponse,
   PostAssignmentsResponse,
   UpdateApplicationDecisionResponse,
+  UpdateUserAccessResponse,
 } from '../../types/ApiResponses';
-import { UpdateApplicationDecisionRequest } from '../validators/AdminControllerRequests';
+import { UpdateApplicationDecisionRequest, UpdateUserAccessRequest } from '../validators/AdminControllerRequests';
 import { UserAuthentication } from '../middleware/UserAuthentication';
 import { UserService } from '../../services/UserService';
 import { ResponseService } from '../../services/ResponseService';
@@ -316,5 +318,26 @@ export class AdminController {
     }));
 
     return { error: null, assignments };
+  }
+
+  @UseBefore(UserAuthentication)
+  @Put('/update-user-access')
+  async updateUserAccess(
+    @AuthenticatedUser() currentUser: UserModel,
+    @Body() updateUserAccessRequest : UpdateUserAccessRequest,
+  ) : Promise<UpdateUserAccessResponse> {
+
+    if (!PermissionsService.canUpdateUserAccess(currentUser))
+      throw new ForbiddenError();
+
+
+    const updatedAccess = await this.userService.updateUserAccess(
+      updateUserAccessRequest.email, updateUserAccessRequest.access,
+
+    );
+    return { error: null, updates: updatedAccess.getPrivateProfile() };
+
+
+
   }
 }

@@ -18,7 +18,7 @@ import {
 import { UpdateUser } from '../api/validators/UserControllerRequests';
 import { auth, adminAuth } from '../FirebaseAuth';
 import { ReviewAssignment, UserAndToken } from '../types/ApiResponses';
-import { ApplicationDecision, ApplicationStatus } from '../types/Enums';
+import { ApplicationDecision, ApplicationStatus, UserAccessType } from '../types/Enums';
 
 @Service()
 export class UserService {
@@ -359,5 +359,16 @@ export class UserService {
     });
 
     return this.assignReviews(arr);
+  }
+
+  public async updateUserAccess(email: string, access: UserAccessType) {
+    return this.transactionsManager.readWrite(async (entityManager) => {
+      const userRepository = Repositories.user(entityManager);
+      const user = await userRepository.findByEmail(email);
+      if (!user) throw new NotFoundError('User not found');
+      user.accessType = access;
+      const updatedUser = userRepository.save(user);
+      return updatedUser;
+    });
   }
 }
