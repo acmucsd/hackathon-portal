@@ -360,7 +360,7 @@ export const appQuestions: Step[] = [
 ];
 
 export const TIMELINE: Deadlines = {
-  application: new Date('2026-02-27T00:00-08:00'),
+  application: new Date('2026-03-01T00:00-08:00'),
   decisions: new Date('2026-03-06T00:00-08:00'),
   acceptance: new Date('2026-03-20T00:00-07:00'),
   hackathon: new Date('2026-04-04T00:00-07:00'),
