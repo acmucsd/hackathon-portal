@@ -185,6 +185,20 @@ export class AdminController {
   }
 
   @UseBefore(UserAuthentication)
+  @Get('/rsvp/:id')
+  async getRSVPById(
+    @AuthenticatedUser() currentUser: UserModel,
+    @Params() params: IdParam,
+  ): Promise<GetFormResponse> {
+    if (!PermissionsService.canViewAllApplications(currentUser))
+      throw new ForbiddenError();
+
+    const user = await this.userService.findById(params.id);
+    const response = await this.responseService.getUserRSVP(user);
+    return { error: null, response: response };
+  }
+
+  @UseBefore(UserAuthentication)
   @Get('/attendance/:uuid')
   async getAttendanceForEvent(
     @AuthenticatedUser() currentUser: UserModel,
@@ -317,7 +331,7 @@ export class AdminController {
     }));
 
     return { error: null, assignments };
-    }
+  }
 
   @UseBefore(UserAuthentication)
   @Get('/reviewer-overview')

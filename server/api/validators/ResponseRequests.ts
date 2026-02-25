@@ -15,6 +15,7 @@ import {
   CreateApplicationRequest as ICreateApplicationRequest,
   UpdateApplicationRequest as IUpdateApplicationRequest,
   Waiver as IWaiver,
+  RSVP as IRSVP,
 } from '../../types/Application';
 import { IsLinkedinURL } from '../decorators/Validators';
 import { Yes, YesOrNo } from '../../types/Enums';
@@ -178,4 +179,15 @@ export class Waiver implements IWaiver {
 
   @IsNotEmpty()
   date: string;
+}
+
+export class RSVP implements IRSVP {
+  @IsNotEmpty()
+  willAttend: string;
+
+  @IsNotEmpty()
+  joinedDiscord: string;
+
+  @Allow()
+  additionalComments: string;
 }
