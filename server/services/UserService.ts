@@ -247,6 +247,21 @@ export class UserService {
     await sendEmailVerification(userCredential.user);
   }
 
+  public async getPasswordResetLink(email: string): Promise<string> {
+    try {
+      return await adminAuth.generatePasswordResetLink(email);
+    } catch (error) {
+      if (error instanceof FirebaseAuthError) {
+        if (error.code === 'auth/user-not-found') {
+          throw new NotFoundError(
+            'No user found with the provided email address.',
+          );
+        }
+      }
+      throw error;
+    }
+  }
+
   public async sendPasswordResetEmail(email: string): Promise<void> {
     try {
       const firebaseRecord = await adminAuth.getUserByEmail(email);

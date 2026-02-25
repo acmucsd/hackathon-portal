@@ -171,6 +171,19 @@ export class AdminController {
   }
 
   @UseBefore(UserAuthentication)
+  @Get('/password-reset-link')
+  async getPasswordResetLink(
+    @AuthenticatedUser() currentUser: UserModel, // superadmin only
+    @QueryParams() queryParams: EmailParam,
+  ) {
+    if (!PermissionsService.canGetPasswordResetLinks(currentUser))
+      throw new ForbiddenError();
+    const passwordResetLink =
+      await this.userService.getPasswordResetLink(queryParams.email);
+    return { error: null, passwordResetLink };
+  }
+
+  @UseBefore(UserAuthentication)
   @Get('/waivers/:id')
   async getWaiversById(
     @AuthenticatedUser() currentUser: UserModel,

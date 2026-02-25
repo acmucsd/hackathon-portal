@@ -212,6 +212,10 @@ export interface GetEmailVerificationLinkResponse extends ApiResponse {
   emailVerificationLink: string;
 }
 
+export interface GetPasswordResetLinkResponse extends ApiResponse {
+  passwordResetLink: string;
+}
+
 // Assignment Responses
 
 export interface ReviewAssignment {
