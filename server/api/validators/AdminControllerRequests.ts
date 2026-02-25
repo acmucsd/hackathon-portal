@@ -1,4 +1,4 @@
-import { IsDefined, IsEmail, IsIn, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsDefined, IsEmail, IsIn, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { UpdateApplicationDecisionRequest as IUpdateApplicationDecisionRequest } from '../../types/ApiRequests';
 import { UpdateUserAccessRequest as  IUpdateUserAccessRequest } from '../../types/ApiRequests';
 import { ApplicationDecision, UserAccessType } from '../../types/Enums';
