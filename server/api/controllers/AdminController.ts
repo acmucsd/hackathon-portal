@@ -160,7 +160,7 @@ export class AdminController {
   @UseBefore(UserAuthentication)
   @Get('/email-verification-link')
   async getEmailVerificationLink(
-    @AuthenticatedUser() currentUser: UserModel,
+    @AuthenticatedUser() currentUser: UserModel, // superadmin only
     @QueryParams() queryParams: EmailParam,
   ) {
     if (!PermissionsService.canGetEmailVerificationLinks(currentUser))
@@ -168,6 +168,19 @@ export class AdminController {
     const emailVerificationLink =
       await this.userService.getEmailVerificationLink(queryParams.email);
     return { error: null, emailVerificationLink };
+  }
+
+  @UseBefore(UserAuthentication)
+  @Get('/password-reset-link')
+  async getPasswordResetLink(
+    @AuthenticatedUser() currentUser: UserModel, // superadmin only
+    @QueryParams() queryParams: EmailParam,
+  ) {
+    if (!PermissionsService.canGetPasswordResetLinks(currentUser))
+      throw new ForbiddenError();
+    const passwordResetLink =
+      await this.userService.getPasswordResetLink(queryParams.email);
+    return { error: null, passwordResetLink };
   }
 
   @UseBefore(UserAuthentication)
