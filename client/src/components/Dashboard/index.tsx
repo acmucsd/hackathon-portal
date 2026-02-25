@@ -17,7 +17,7 @@ import Modal from '../Modal';
 import { useEffect, useState } from 'react';
 import { addToGoogleWallet } from './wallet';
 import showToast from '@/lib/showToast';
-import DashboardOccuringNow from '../DashboardOccuringNow';
+import DashboardOccurringNow from '../DashboardOccurringNow';
 import { EventAPI } from '@/lib/api';
 
 type Status = 'NOT_SUBMITTED' | 'SUBMITTED' | 'WITHDRAWN' | 'ACCEPTED' | 'REJECTED' | 'CONFIRMED';
@@ -116,9 +116,9 @@ const Dashboard = ({ token, faq, timeline, user }: DashboardProps) => {
         currentEvent ? (
           <Card gap={1.5} className={`${styles.card} ${styles.timeline}`}>
             <Typography variant="label/medium" component="h2">
-              Occuring Now
+              Occurring Now
             </Typography>
-            <DashboardOccuringNow event={currentEvent}/>
+            <DashboardOccurringNow event={currentEvent}/>
           </Card>
         ) : (
           <Card gap={1.5} className={`${styles.card} ${styles.timeline}`}>

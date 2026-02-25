@@ -5,11 +5,11 @@ import { PublicEvent } from "@/lib/types/apiResponses";
 import styles from "./style.module.scss"
 import Button from "../Button";
 
-interface DashboardOccuringNowProps {
+interface DashboardOccurringNowProps {
   event: PublicEvent
 }
 
-const DashboardOccuringNow = ({event}: DashboardOccuringNowProps) => {
+const DashboardOccurringNow = ({event}: DashboardOccurringNowProps) => {
   return (
     <>
       <Typography variant="headline/heavy/small" component="h2">
@@ -28,4 +28,4 @@ const DashboardOccuringNow = ({event}: DashboardOccuringNowProps) => {
   )
 }
 
-export default DashboardOccuringNow;
+export default DashboardOccurringNow;
