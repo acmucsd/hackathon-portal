@@ -40,24 +40,27 @@ interface DashboardProps {
 const Dashboard = ({ token, faq, timeline, user }: DashboardProps) => {
   const [showBigQr, setShowBigQr] = useState(false);
 
-  const [currentEvent, setCurrentEvent] = useState<PublicEvent|null>(null);
+  const [currentEvent, setCurrentEvent] = useState<PublicEvent | null>(null);
   useEffect(() => {
     const fetchEvents = async () => {
       const events = await EventAPI.getPublishedEvents(token);
 
       const now = new Date();
-      const current = events.find((event) => {
-        const hackathonStart = new Date(timeline.hackathon); // new Date();
+      const current =
+        events.find(event => {
+          const hackathonStart = new Date(timeline.hackathon); // new Date();
 
-        const eventDate = new Date(hackathonStart);
-        eventDate.setDate(eventDate.getDate() + (event.day === 'SATURDAY' ? 0 : 1));
+          const eventDate = new Date(hackathonStart);
+          eventDate.setDate(eventDate.getDate() + (event.day === 'SATURDAY' ? 0 : 1));
 
-        const dateStr = eventDate.toLocaleDateString('en-CA', { timeZone: 'America/Los_Angeles' }).split('T')[0];
-        const start = new Date(`${dateStr}T${event.startTime}`);
-        const end = new Date(`${dateStr}T${event.endTime}`);
+          const dateStr = eventDate
+            .toLocaleDateString('en-CA', { timeZone: 'America/Los_Angeles' })
+            .split('T')[0];
+          const start = new Date(`${dateStr}T${event.startTime}`);
+          const end = new Date(`${dateStr}T${event.endTime}`);
 
-        return now >= start && now <= end;
-      }) ?? null;
+          return now >= start && now <= end;
+        }) ?? null;
 
       setCurrentEvent(current);
     };
@@ -118,7 +121,7 @@ const Dashboard = ({ token, faq, timeline, user }: DashboardProps) => {
             <Typography variant="label/medium" component="h2">
               Occurring Now
             </Typography>
-            <DashboardOccurringNow event={currentEvent}/>
+            <DashboardOccurringNow event={currentEvent} />
           </Card>
         ) : (
           <Card gap={1.5} className={`${styles.card} ${styles.timeline}`}>
