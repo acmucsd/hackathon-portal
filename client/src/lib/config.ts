@@ -25,7 +25,7 @@ const config = {
         confirmUser: '/admin/user/confirm',
         attendance: '/admin/attendance',
         emailVerificationLink: '/admin/email-verification-link',
-        passwordResetLink: '/admin/password-reset-link', // superadmin only
+        passwordResetLink: '/admin/password-reset-link',
         assignments: '/admin/assignments',
         randomizeAssignments: '/admin/assignments/random',
       },

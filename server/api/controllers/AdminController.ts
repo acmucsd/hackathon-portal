@@ -160,7 +160,7 @@ export class AdminController {
   @UseBefore(UserAuthentication)
   @Get('/email-verification-link')
   async getEmailVerificationLink(
-    @AuthenticatedUser() currentUser: UserModel,
+    @AuthenticatedUser() currentUser: UserModel, // superadmin only
     @QueryParams() queryParams: EmailParam,
   ) {
     if (!PermissionsService.canGetEmailVerificationLinks(currentUser))
