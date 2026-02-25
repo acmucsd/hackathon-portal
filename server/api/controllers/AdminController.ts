@@ -1,4 +1,5 @@
 import {
+  BadRequestError,
   Body,
   ForbiddenError,
   Get,
@@ -341,10 +342,12 @@ export class AdminController {
     if (!PermissionsService.canUpdateUserAccess(currentUser))
       throw new ForbiddenError();
 
+      if (currentUser.email == updateUserAccessRequest.email) {
+        throw new BadRequestError('You cannot change your own access!');
+      }
 
     const updatedAccess = await this.userService.updateUserAccess(
       updateUserAccessRequest.email, updateUserAccessRequest.access,
-
     );
     return { error: null, updates: updatedAccess.getPrivateProfile() };
 
