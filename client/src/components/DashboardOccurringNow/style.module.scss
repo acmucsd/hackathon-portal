@@ -1,0 +1,22 @@
+.badge {
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  align-self: start;
+  text-transform: capitalize;
+
+  &.LIVE {
+    background-color: #fad5dc;
+    color: #8d0d25;
+  }
+  &.INFO {
+    background-color: #d6e5f8;
+    color: #142e52;
+  }
+}
+
+.badges {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  gap: 16px;
+}

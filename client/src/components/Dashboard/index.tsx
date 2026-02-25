@@ -12,11 +12,13 @@ import TimelineItem from '../TimelineItem';
 import { PrivateProfile, PublicEvent } from '@/lib/types/apiResponses';
 import QrCode from '../QrCode';
 import Button from '../Button';
-import { ApplicationStatus, Day } from '@/lib/types/enums';
+import { ApplicationStatus, CookieType, Day } from '@/lib/types/enums';
 import Modal from '../Modal';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { addToGoogleWallet } from './wallet';
 import showToast from '@/lib/showToast';
+import DashboardOccurringNow from '../DashboardOccurringNow';
+import { EventAPI } from '@/lib/api';
 
 type Status = 'NOT_SUBMITTED' | 'SUBMITTED' | 'WITHDRAWN' | 'ACCEPTED' | 'REJECTED' | 'CONFIRMED';
 
@@ -29,13 +31,42 @@ export interface Deadlines {
 }
 
 interface DashboardProps {
+  token: string;
   faq: FAQQuestion[];
   timeline: Deadlines;
   user: PrivateProfile;
 }
 
-const Dashboard = ({ faq, timeline, user }: DashboardProps) => {
+const Dashboard = ({ token, faq, timeline, user }: DashboardProps) => {
   const [showBigQr, setShowBigQr] = useState(false);
+
+  const [currentEvent, setCurrentEvent] = useState<PublicEvent | null>(null);
+  useEffect(() => {
+    const fetchEvents = async () => {
+      const events = await EventAPI.getPublishedEvents(token);
+
+      const now = new Date();
+      const current =
+        events.find(event => {
+          const hackathonStart = new Date(timeline.hackathon); // new Date();
+
+          const eventDate = new Date(hackathonStart);
+          eventDate.setDate(eventDate.getDate() + (event.day === 'SATURDAY' ? 0 : 1));
+
+          const dateStr = eventDate
+            .toLocaleDateString('en-CA', { timeZone: 'America/Los_Angeles' })
+            .split('T')[0];
+          const start = new Date(`${dateStr}T${event.startTime}`);
+          const end = new Date(`${dateStr}T${event.endTime}`);
+
+          return now >= start && now <= end;
+        }) ?? null;
+
+      setCurrentEvent(current);
+    };
+
+    fetchEvents();
+  }, []);
 
   return (
     <div className={styles.container}>
@@ -85,65 +116,74 @@ const Dashboard = ({ faq, timeline, user }: DashboardProps) => {
         </Card>
       )}
       {user.applicationStatus === ApplicationStatus.CONFIRMED ? (
-        <Card gap={1.5} className={`${styles.card} ${styles.timeline}`}>
-          <Typography variant="headline/heavy/small" component="h2">
-            Onboarding Checklist
-          </Typography>
-          <ul className={styles.onboardingChecklist}>
-            <li>
-              <Typography variant="body/large">
-                Fill out the{' '}
-                <Link href="/photoRelease" className={styles.link}>
-                  photo release waiver
-                </Link>
-              </Typography>
-            </li>
-            <li>
-              <Typography variant="body/large">
-                Fill out the{' '}
-                <Link href="/liability" className={styles.link}>
-                  liability waiver
-                </Link>
-              </Typography>
-            </li>
-            <li>
-              <Typography variant="body/large">
-                Join the{' '}
-                <Link
-                  href="http://acmurl.com/diamondhacks25-discord"
-                  className={styles.link}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  ACM DiamondHacks Discord
-                </Link>{' '}
-                for real-time, up-to-date announcements
-              </Typography>
-            </li>
-            <li>
-              <Typography variant="body/large">
-                Check out the{' '}
-                <Link
-                  href="http://acmurl.com/diamondhacks25-guide"
-                  className={styles.link}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  ACM DiamondHacks Hacker Guide
-                </Link>
-              </Typography>
-            </li>
-            <li>
-              <Typography variant="body/large">
-                Check out the{' '}
-                <Link href="/schedule" className={styles.link}>
-                  schedule
-                </Link>{' '}
-                of events and workshops
-              </Typography>
-            </li>
-          </ul>
-        </Card>
+        currentEvent ? (
+          <Card gap={1.5} className={`${styles.card} ${styles.timeline}`}>
+            <Typography variant="label/medium" component="h2">
+              Occurring Now
+            </Typography>
+            <DashboardOccurringNow event={currentEvent} />
+          </Card>
+        ) : (
+          <Card gap={1.5} className={`${styles.card} ${styles.timeline}`}>
+            <Typography variant="headline/heavy/small" component="h2">
+              Onboarding Checklist
+            </Typography>
+            <ul className={styles.onboardingChecklist}>
+              <li>
+                <Typography variant="body/large">
+                  Fill out the{' '}
+                  <Link href="/photoRelease" className={styles.link}>
+                    photo release waiver
+                  </Link>
+                </Typography>
+              </li>
+              <li>
+                <Typography variant="body/large">
+                  Fill out the{' '}
+                  <Link href="/liability" className={styles.link}>
+                    liability waiver
+                  </Link>
+                </Typography>
+              </li>
+              <li>
+                <Typography variant="body/large">
+                  Join the{' '}
+                  <Link
+                    href="http://acmurl.com/diamondhacks25-discord"
+                    className={styles.link}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    ACM DiamondHacks Discord
+                  </Link>{' '}
+                  for real-time, up-to-date announcements
+                </Typography>
+              </li>
+              <li>
+                <Typography variant="body/large">
+                  Check out the{' '}
+                  <Link
+                    href="http://acmurl.com/diamondhacks25-guide"
+                    className={styles.link}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    ACM DiamondHacks Hacker Guide
+                  </Link>
+                </Typography>
+              </li>
+              <li>
+                <Typography variant="body/large">
+                  Check out the{' '}
+                  <Link href="/schedule" className={styles.link}>
+                    schedule
+                  </Link>{' '}
+                  of events and workshops
+                </Typography>
+              </li>
+            </ul>
+          </Card>
+        )
       ) : (
         <Card gap={1.5} className={`${styles.card} ${styles.timeline}`}>
           <Typography variant="headline/heavy/small" component="h2">
