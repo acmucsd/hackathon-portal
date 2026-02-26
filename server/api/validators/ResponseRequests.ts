@@ -168,26 +168,35 @@ export class UpdateApplicationRequest implements IUpdateApplicationRequest {
 }
 
 export class Waiver implements IWaiver {
+  @IsDefined()
   @IsNotEmpty()
   participantName: string;
 
+  @IsDefined()
   @IsNotEmpty()
   dateOfBirth: string;
 
+  @IsDefined()
   @IsNotEmpty()
   signature: string;
 
+  @IsDefined()
   @IsNotEmpty()
   date: string;
 }
 
 export class RSVP implements IRSVP {
+  @IsDefined()
   @IsNotEmpty()
-  willAttend: string;
+  @IsEnum(Yes)
+  willAttend: Yes;
 
+  @IsDefined()
   @IsNotEmpty()
-  joinedDiscord: string;
+  @IsEnum(Yes)
+  joinedDiscord: Yes;
 
+  @IsDefined()
   @Allow()
   additionalComments: string;
 }

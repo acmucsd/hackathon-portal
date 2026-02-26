@@ -1,3 +1,5 @@
+import { Yes } from './Enums';
+
 export interface Application {
   //link to Hackathon Organizers Guide:
   //https://guide.mlh.io/general-information/managing-registrations/registrations#important-registration-fields
@@ -62,7 +64,7 @@ export interface Waiver {
 }
 
 export interface RSVP {
-  willAttend: string;
-  joinedDiscord: string;
+  willAttend: Yes;
+  joinedDiscord: Yes;
   additionalComments: string;
 }

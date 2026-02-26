@@ -285,12 +285,10 @@ export class ResponseService {
     user: UserModel,
     formData: RSVP,
   ): Promise<ResponseModel> {
-    if (
-      user.applicationStatus !== ApplicationStatus.ACCEPTED &&
-      user.applicationStatus !== ApplicationStatus.CONFIRMED
-    ) {
+    if (user.applicationStatus !== ApplicationStatus.ACCEPTED) {
       throw new BadRequestError(
-        'User must have an accepted application to submit this form.');
+        'User must have an accepted application to submit this form.',
+      );
     }
 
     const existingForms = await this.transactionsManager.readOnly(
