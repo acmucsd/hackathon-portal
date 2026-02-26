@@ -160,7 +160,7 @@ export class AdminController {
   @UseBefore(UserAuthentication)
   @Get('/email-verification-link')
   async getEmailVerificationLink(
-    @AuthenticatedUser() currentUser: UserModel, // superadmin only
+    @AuthenticatedUser() currentUser: UserModel,
     @QueryParams() queryParams: EmailParam,
   ) {
     if (!PermissionsService.canGetEmailVerificationLinks(currentUser))
@@ -173,7 +173,7 @@ export class AdminController {
   @UseBefore(UserAuthentication)
   @Get('/password-reset-link')
   async getPasswordResetLink(
-    @AuthenticatedUser() currentUser: UserModel, // superadmin only
+    @AuthenticatedUser() currentUser: UserModel,
     @QueryParams() queryParams: EmailParam,
   ) {
     if (!PermissionsService.canGetPasswordResetLinks(currentUser))

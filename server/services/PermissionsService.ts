@@ -16,11 +16,11 @@ export default class PermissionsService {
   }
 
   public static canGetEmailVerificationLinks(user: UserModel): boolean {
-    return user.isSuperAdmin();
+    return user.isAdmin();
   }
 
   public static canGetPasswordResetLinks(user: UserModel): boolean {
-    return user.isSuperAdmin();
+    return user.isAdmin();
   }
 
   public static canEditEvents(user: UserModel): boolean {
