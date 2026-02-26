@@ -17,13 +17,15 @@ import {
 } from 'routing-controllers';
 import { UpdateUser } from '../api/validators/UserControllerRequests';
 import { auth, adminAuth } from '../FirebaseAuth';
+
+import { ApplicationDecision, ApplicationStatus, UserAccessType } from '../types/Enums';
 import {
   ReviewAssignment,
   ReviewerOverviewResponse,
   ReviewerOverviewReviewer,
   UserAndToken,
 } from '../types/ApiResponses';
-import { ApplicationDecision, ApplicationStatus } from '../types/Enums';
+
 
 /** Internal: includes acceptedWithNotNullUniversity for computation; omitted from final output. */
 interface ReviewerOverviewReviewerInternal extends ReviewerOverviewReviewer {
@@ -386,6 +388,7 @@ export class UserService {
     return this.assignReviews(arr);
   }
 
+
   // admin are reviewers
   private static readonly UCSD_UNIVERSITY = 'University of California, San Diego';
 
@@ -496,6 +499,17 @@ export class UserService {
   return {
     reviewers,
   };
+  }
+
+    public async updateUserAccess(email: string, access: UserAccessType) {
+    return this.transactionsManager.readWrite(async (entityManager) => {
+      const userRepository = Repositories.user(entityManager);
+      const user = await userRepository.findByEmail(email);
+      if (!user) throw new NotFoundError('User not found');
+      user.accessType = access;
+      const updatedUser = userRepository.save(user);
+      return updatedUser;
+    });
   }
 }
 

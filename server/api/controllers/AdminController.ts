@@ -1,10 +1,12 @@
 import {
+  BadRequestError,
   Body,
   ForbiddenError,
   Get,
   JsonController,
   Params,
   Post,
+  Put,
   QueryParams,
   UseBefore,
 } from 'routing-controllers';
@@ -20,8 +22,9 @@ import {
   GetReviewerOverviewResponse,
   PostAssignmentsResponse,
   UpdateApplicationDecisionResponse,
+  UpdateUserAccessResponse,
 } from '../../types/ApiResponses';
-import { UpdateApplicationDecisionRequest } from '../validators/AdminControllerRequests';
+import { UpdateApplicationDecisionRequest, UpdateUserAccessRequest } from '../validators/AdminControllerRequests';
 import { UserAuthentication } from '../middleware/UserAuthentication';
 import { UserService } from '../../services/UserService';
 import { ResponseService } from '../../services/ResponseService';
@@ -340,5 +343,28 @@ export class AdminController {
     }
     const dataToReturn = await this.userService.getReviewerOverview();
     return { error: null, dataToReturn };
+  }
+
+  @UseBefore(UserAuthentication)
+  @Put('/update-user-access')
+  async updateUserAccess(
+    @AuthenticatedUser() currentUser: UserModel,
+    @Body() updateUserAccessRequest : UpdateUserAccessRequest,
+  ) : Promise<UpdateUserAccessResponse> {
+
+    if (!PermissionsService.canUpdateUserAccess(currentUser))
+      throw new ForbiddenError();
+
+      if (currentUser.email == updateUserAccessRequest.email) {
+        throw new BadRequestError('You cannot change your own access!');
+      }
+
+    const updatedAccess = await this.userService.updateUserAccess(
+      updateUserAccessRequest.email, updateUserAccessRequest.access,
+    );
+    return { error: null, updates: updatedAccess.getPrivateProfile() };
+
+
+
   }
 }
