@@ -6,8 +6,19 @@ import styles from './style.module.scss';
 import ApplicationView from '@/components/admin/ApplicationView';
 import ApplicationReviewPanel from '@/components/ApplicationReviewPanel';
 import { ApplicationDecision, ApplicationStatus } from '@/lib/types/enums';
+import showToast from '@/lib/showToast';
+import { AdminAPI } from '@/lib/api';
+import { reportError } from '@/lib/utils';
 import type { Application } from '@/lib/types/application';
 import type { PublicProfile, ResponseModel } from '@/lib/types/apiResponses';
+
+type ApplicationStats = {
+  total: number;
+  accepted: number;
+  rejected: number;
+  waitlisted: number;
+  acceptedPct: number;
+};
 
 type Props = {
   accessToken: string;
@@ -15,15 +26,9 @@ type Props = {
   fetchedApplication: ResponseModel;
   fetchedDecision: ApplicationDecision;
   fetchedWaivers: ResponseModel[];
+  stats: ApplicationStats;
   reviewer?: PublicProfile;
 };
-
-// TEMP dummy (keep for now)
-const dummyReviewer = {
-  id: 'reviewer-1',
-  firstName: 'Avery',
-  lastName: 'Reviewer',
-} as PublicProfile;
 
 export default function ApplicationReviewClient({
   accessToken,
@@ -31,10 +36,12 @@ export default function ApplicationReviewClient({
   fetchedApplication,
   fetchedDecision,
   fetchedWaivers,
+  stats,
+  reviewer,
 }: Props) {
   const applicants = useMemo(() => [fetchedApplication.user], [fetchedApplication]);
-  const reviewer = useMemo(() => dummyReviewer, []);
 
+  const reviewerToUse = useMemo(() => reviewer, [reviewer]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -52,43 +59,6 @@ export default function ApplicationReviewClient({
   const onPrev = () => setCurrentIndex(i => Math.max(0, i - 1));
   const onNext = () => setCurrentIndex(i => Math.min(applicants.length - 1, i + 1));
 
-  // might be useful later?
-  // const handleDecision = async (decision: ApplicationDecision) => {
-  //   if (currentStatus === ApplicationStatus.CONFIRMED) {
-  //     showToast(
-  //       "Couldn't update application decision",
-  //       'User has already been confirmed for the hackathon.'
-  //     );
-  //     return;
-  //   }
-  //   try {
-  //     const updatedUser = await AdminAPI.updateApplicationDecision(token, user.id, decision);
-  //     const updatedDecision = updatedUser.applicationDecision;
-  //     // setCurrentDecision(updatedDecision);
-  //     showToast(`${updatedDecision}ED`, `You marked the application as "${updatedDecision}ED".`);
-  //   } catch (error) {
-  //     reportError("Couldn't update application decision", error);
-  //   }
-  // };
-
-  // const handleConfirmUser = async () => {
-  //   if (currentDecision !== ApplicationDecision.ACCEPT) {
-  //     showToast("Couldn't confirm user", "User hasn't been accepted to the hackathon.");
-  //     return;
-  //   }
-  //   try {
-  //     if (onConfirm) {
-  //       await onConfirm();
-  //       return;
-  //     }
-  //     const updatedUser = await AdminAPI.confirmUserStatus(token, user.id);
-  //     // setCurrentStatus(updatedUser.applicationStatus);
-  //     showToast('CONFIRMED', 'Successfully marked the user as CONFIRMED');
-  //   } catch (error) {
-  //     reportError("Couldn't confirm user", error);
-  //   }
-  // };
-
   const onReset = () => {
     // sync reset
     setCurrentDecision(ApplicationDecision.NO_DECISION);
@@ -102,12 +72,24 @@ export default function ApplicationReviewClient({
   const onSave = async () => {
     setIsSaving(true);
     try {
-      await new Promise(r => setTimeout(r, 300));
-      // TODO: add API calls
+      if (currentStatus === ApplicationStatus.CONFIRMED) {
+        showToast(
+          "Couldn't update application decision",
+          'User has already been confirmed for the hackathon.'
+        );
+        return;
+      }
+
+      await AdminAPI.updateApplicationDecision(accessToken, userId, currentDecision, notes);
+      showToast('Saved', `Application marked as ${currentDecision}`);
 
       // keep these for later when you expand to multiple applicants
       setDecisions(prev => ({ ...prev, [currentIndex]: currentDecision }));
       setNotesByIndex(prev => ({ ...prev, [currentIndex]: notes }));
+      // if we want to clear notes after saving, do so here
+      setNotes('');
+    } catch (error) {
+      reportError("Couldn't update application decision", error);
     } finally {
       setIsSaving(false);
     }
@@ -122,13 +104,14 @@ export default function ApplicationReviewClient({
           decision={currentDecision}
           status={currentStatus}
           waivers={fetchedWaivers}
+          stats={stats}
         />
       </div>
 
       <div className={styles.appReviewPanel}>
         <ApplicationReviewPanel
           applicant={applicants[currentIndex]}
-          reviewer={reviewer}
+          reviewer={reviewerToUse}
           currentIndex={currentIndex}
           totalApplicants={applicants.length}
           decision={currentDecision}

@@ -14,7 +14,7 @@ type StatusDropdownProps = {
 export default function StatusDropdown({
   value,
   onChange,
-  options = ['ACCEPTED', 'WAITLISTED', 'REJECTED', 'NO_DECISION'],
+  options = ['ACCEPT', 'WAITLIST', 'REJECT', 'NO_DECISION'],
   placeholder = 'Select Decision',
   disabled = false,
   className = '',

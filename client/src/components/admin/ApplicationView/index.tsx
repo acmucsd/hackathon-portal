@@ -13,12 +13,21 @@ import { useState } from 'react';
 import styles from './style.module.scss';
 import Link from 'next/link';
 
+interface ApplicationStats {
+  total: number;
+  accepted: number;
+  rejected: number;
+  waitlisted: number;
+  acceptedPct: number;
+}
+
 interface ApplicationViewProps {
   application: ResponseModel;
   token: string;
   decision: ApplicationDecision;
   status: ApplicationStatus;
   waivers: ResponseModel[];
+  stats: ApplicationStats;
   onConfirm?: () => Promise<void> | void;
 }
 
@@ -28,6 +37,7 @@ const ApplicationView = ({
   decision,
   status,
   waivers,
+  stats,
   onConfirm,
 }: ApplicationViewProps) => {
   const responses: Record<string, string | string[] | File | any> = application.data;
@@ -49,20 +59,20 @@ const ApplicationView = ({
       {/* stats */}
       <div className={styles.stats}>
         <p className={styles.statsLeft}>
-          {10}
+          {stats.accepted}
           <span className={styles.accepted}> Accepted </span>
           <span className={styles.gray}> | </span>
-          {10}
+          {stats.rejected}
           <span className={styles.rejected}> Rejected </span>
           <span className={styles.gray}> | </span>
-          {10}
+          {stats.waitlisted}
           <span className={styles.waitlisted}> Waitlisted</span>
         </p>
         <p className={styles.statsRight}>
-          <span className={styles.gray}> Remaining: </span>
-          {'6 out of 20'}
-          <span className={styles.gray}> | Total % of accepted: </span>
-          {' ' + 70 + '%'}
+          <span className={styles.gray}> Total applications: </span>
+          {stats.total}
+          <span className={styles.gray}> | Accepted: </span>
+          {' ' + stats.acceptedPct + '%'}
         </p>
       </div>
       <hr className={styles.divider} />
