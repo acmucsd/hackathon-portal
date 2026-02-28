@@ -52,7 +52,8 @@ const DashboardStatus = ({ status, timeline }: DashboardStatusProps) => {
       </Typography>
       {new Date() < timeline.application ? (
         <Typography variant="body/large" component="p">
-          Please note that applications are due on <span className={styles.urgentDate}> {dateFormat.format(timeline.application)} </span>.
+          Please note that applications are due on{' '}
+          <span className={styles.urgentDate}> {dateFormat.format(timeline.application)} </span>.
           Reference the hackathon timeline for more information.
         </Typography>
       ) : null}
