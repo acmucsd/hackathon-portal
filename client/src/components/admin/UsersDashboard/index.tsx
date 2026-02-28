@@ -30,7 +30,7 @@ const UsersDashboard = ({ users, assignedUsers }: UsersDashboardProps) => {
   const filteredUsers = users
     .filter(user => {
       if (filterStatus === 'All') return true;
-      return user.applicationStatus === filterStatus;
+      return (user.applicationStatus === filterStatus || user.applicationDecision === filterStatus);
     })
     .filter(user =>
       `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase())
