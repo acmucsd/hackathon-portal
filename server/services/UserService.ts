@@ -1,7 +1,7 @@
 import { Service } from 'typedi';
 import { Repositories, TransactionsManager } from '../repositories';
 import { UserModel } from '../models/UserModel';
-import { CreateUser } from '../types/ApiRequests';
+import { ReviewAssignmentJob, CreateUser } from '../types/ApiRequests';
 import {
   sendEmailVerification,
   signInWithCustomToken,
@@ -17,7 +17,7 @@ import {
 } from 'routing-controllers';
 import { UpdateUser } from '../api/validators/UserControllerRequests';
 import { auth, adminAuth } from '../FirebaseAuth';
-import { UserAndToken } from '../types/ApiResponses';
+import { ReviewAssignment, UserAndToken } from '../types/ApiResponses';
 import { ApplicationDecision, ApplicationStatus } from '../types/Enums';
 
 @Service()
@@ -31,6 +31,15 @@ export class UserService {
   public async findById(id: string): Promise<UserModel> {
     const user = await this.transactionsManager.readOnly(
       async (entityManager) => Repositories.user(entityManager).findById(id),
+    );
+    if (!user) throw new NotFoundError('User not found');
+    return user;
+  }
+
+  public async findByIdWithReviewerRelation(id: string): Promise<UserModel> {
+    // same as findById() but includes reviewer / reviewee links
+    const user = await this.transactionsManager.readOnly(
+      async (entityManager) => Repositories.user(entityManager).findByIdWithReviewerRelation(id),
     );
     if (!user) throw new NotFoundError('User not found');
     return user;
@@ -140,12 +149,17 @@ export class UserService {
   public async updateApplicationDecision(
     userId: string,
     applicationDecision: ApplicationDecision,
+    reviewerComments?: string | null,
   ): Promise<UserModel> {
     return this.transactionsManager.readWrite(async (entityManager) => {
       const userRepository = Repositories.user(entityManager);
       const user = await userRepository.findById(userId);
       if (!user) throw new NotFoundError('User not found');
       user.applicationDecision = applicationDecision;
+      if (reviewerComments !== undefined) {
+        user.reviewerComments = reviewerComments;
+      }
+
       const updatedUser = userRepository.save(user);
       return updatedUser;
     });
@@ -243,5 +257,107 @@ export class UserService {
     return this.transactionsManager.readOnly(async (entityManager) =>
       Repositories.user(entityManager).findAll(),
     );
+  }
+
+  public async getAllUsersWithReviewerRelation(): Promise<UserModel[]> {
+    // same as getAllUsers() but includes reviewer / reviewee links
+    return this.transactionsManager.readOnly(async (entityManager) =>
+      Repositories.user(entityManager).findAllWithReviewerRelation(),
+    );
+  }
+
+  public async assignReviews(
+    assignmentsRequest: ReviewAssignmentJob[],
+  ): Promise<ReviewAssignment[]> {
+    return this.transactionsManager.readWrite(async (entityManager) => {
+      const userRepository = Repositories.user(entityManager);
+      const interestFormResponseRepository = Repositories.interestFormResponse(entityManager);
+
+      const newAssignments: ReviewAssignment[] = [];
+
+      const userIds = new Set([
+        ...assignmentsRequest.map(job => job.applicantId),
+        ...assignmentsRequest.map(job => job.reviewerId),
+      ].filter((userId): userId is string => userId != null));
+      const users = await userRepository.findByIdsWithReviewerRelation([...userIds]);
+
+      const userMap: Record<string, UserModel> = {};
+      users.forEach(user => {
+        if (user) userMap[user.id] = user;
+      });
+
+      const interestByEmail = await interestFormResponseRepository.findInterestByEmails(
+        assignmentsRequest.map(job => userMap[job.applicantId].email),
+      );
+
+      const editedUsers: UserModel[] = [];
+      assignmentsRequest.forEach((assignment) => {
+        const reviewee = userMap[assignment.applicantId];
+        const reviewer = assignment.reviewerId ? userMap[assignment.reviewerId] : null;
+        if (!reviewee) return;
+
+        // ONLY mutate the owning side
+        reviewee.reviewer = reviewer;
+
+        // persist reviewee only
+        editedUsers.push(reviewee);
+
+        newAssignments.push({
+          applicant: {
+            ...reviewee.getHiddenProfile(),
+            didInterestForm: interestByEmail.get(reviewee.email) ?? false,
+          },
+          reviewer: reviewer?.getHiddenProfile(),
+        });
+      });
+
+      await Repositories.user(entityManager).save(editedUsers);
+
+      return newAssignments;
+    });
+  }
+
+  public async randomlyAssignReviews(): Promise<ReviewAssignment[]> {
+    /*
+    RANDOM ASSIGNMENT PROCESS:
+
+    This method only handles the random assignment, the database dirty work is handled in postAssignments()
+    All users are fetched, then split into admins and applicants, before pairing each applicant to a random admin.
+    {applicantId, reviewerId} pairs are generated for each pairing
+    This list is then sent to postAssignments().
+
+    Note 1: the distribution across admins is not equalized so some may have more reviews to complete than others :)
+    Note 2: not the most efficient way since it does 2 user lookups (one here, one in postAssignments), but its ok
+    */
+
+    const users = await this.transactionsManager.readOnly(async (entityManager) =>
+      Repositories.user(entityManager).findAllWithReviewerRelation(),
+    );
+
+    const admins = users.filter((user) => user.isAdmin());
+    const applicantsToAssign = users.filter((user) =>
+      !user.isAdmin() && // normal applicant
+      user.applicationDecision == ApplicationDecision.NO_DECISION && // not already reviewed
+      user.applicationStatus == ApplicationStatus.SUBMITTED, // submitted application
+    );
+
+    function getRandomIntInclusive(min: number, max: number): number {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      // generates a random number in the range [min, max]
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    const arr: ReviewAssignmentJob[] = [];
+    applicantsToAssign.forEach((reviewee) => {
+      const R = getRandomIntInclusive(0, admins.length - 1);
+      const reviewer = admins[R];
+      arr.push({
+        applicantId: reviewee.id,
+        reviewerId: reviewer.id,
+      });
+    });
+
+    return this.assignReviews(arr);
   }
 }
