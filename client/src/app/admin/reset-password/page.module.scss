@@ -1,0 +1,9 @@
+@use '@/styles/vars.scss' as vars;
+
+.main {
+  flex: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: var(--top-padding) var(--side-padding);
+}

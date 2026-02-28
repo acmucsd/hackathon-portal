@@ -11,6 +11,10 @@ export const ResponseRepository = Container.get(DataSource)
       return this.find();
     },
 
+    async findAllWithUserRelation(): Promise<ResponseModel[]> {
+      return this.find({ relations: { user: true } });
+    },
+
     async findByUuid(uuid: string): Promise<ResponseModel | null> {
       return this.findOneBy({ uuid });
     },

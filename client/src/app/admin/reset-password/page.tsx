@@ -1,11 +1,11 @@
-import VerifyEmailDashboard from '@/components/admin/VerifyEmailDashboard';
+import ResetPasswordDashboard from '@/components/admin/ResetPasswordDashboard';
 import { getCookie } from '@/lib/services/CookieService';
 import { CookieType } from '@/lib/types/enums';
 import { redirect } from 'next/navigation';
 import { UserAPI } from '@/lib/api';
 import styles from './page.module.scss';
 
-export default async function VerifyEmail() {
+export default async function ResetPassword() {
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
 
   if (!accessToken) {
@@ -21,7 +21,7 @@ export default async function VerifyEmail() {
 
     return (
       <div className={styles.main}>
-        <VerifyEmailDashboard accessToken={accessToken} />
+        <ResetPasswordDashboard accessToken={accessToken} />
       </div>
     );
   } catch (error) {

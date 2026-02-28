@@ -16,6 +16,7 @@ import type {
   PostAssignmentsResponse,
   GetAssignmentsResponse,
   ReviewAssignment,
+  GetPasswordResetLinkResponse,
 } from '@/lib/types/apiResponses';
 import { ApplicationDecision } from '@/lib/types/enums';
 import axios from 'axios';
@@ -197,6 +198,22 @@ export const getEmailVerificationLink = async (token: string, email: string): Pr
     },
   });
   return response.data.emailVerificationLink;
+};
+
+/**
+ * Get email verification link for a user
+ * @param token
+ * @param email User's email address
+ * @returns Email verification link
+ */
+export const getPasswordResetLink = async (token: string, email: string): Promise<string> => {
+  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.passwordResetLink}?email=${encodeURIComponent(email)}`;
+  const response = await axios.get<GetPasswordResetLinkResponse>(requestUrl, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data.passwordResetLink;
 };
 
 /**

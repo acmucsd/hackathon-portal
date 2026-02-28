@@ -19,6 +19,10 @@ export default class PermissionsService {
     return user.isAdmin();
   }
 
+  public static canGetPasswordResetLinks(user: UserModel): boolean {
+    return user.isAdmin();
+  }
+
   public static canEditEvents(user: UserModel): boolean {
     return user.isAdmin();
   }
@@ -29,5 +33,25 @@ export default class PermissionsService {
 
   public static canEditInterestEmails(user: UserModel): boolean {
     return user.isAdmin();
+  }
+
+  public static canGetReviewerOverview(user: UserModel): boolean {
+    return user.isSuperAdmin();
+  }
+
+  public static canOpenCloseApplications(user: UserModel): boolean {
+    return user.isSuperAdmin();
+  }
+
+  public static canAssignReviewers(user: UserModel): boolean {
+    return user.isSuperAdmin();
+  }
+
+  public static canReleaseApplicationDecisions(user: UserModel): boolean {
+    return user.isSuperAdmin();
+  }
+
+  public static canUpdateUserAccess(user: UserModel): boolean {
+    return user.isSuperAdmin();
   }
 }
