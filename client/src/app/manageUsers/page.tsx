@@ -19,7 +19,7 @@ export default async function ManageUsers() {
     return (
       <main className={styles.main}>
         <Typography variant="headline/heavy/small">Manage Users</Typography>
-        <UsersDashboard users={users} />
+        <UsersDashboard users={users} accessToken={accessToken} />
       </main>
     );
   } catch (error) {

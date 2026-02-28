@@ -21,6 +21,7 @@ export default async function ApplicationReviewPage({ params }: ApplicationRevie
   }
 
   try {
+
     const fetchedApplication = await AdminAPI.getUserWithApplication(accessToken, userId);
     const fetchedDecision = await AdminAPI.getApplicationDecision(accessToken, userId).catch(
       () => null as any
@@ -74,15 +75,12 @@ export default async function ApplicationReviewPage({ params }: ApplicationRevie
       />
     );
   } catch (err: any) {
-    // if the exception is an authentication failure, clear cookies and send
-    // back to login. 403 means the token was valid but the user is not allowed
-    // to view this page – in that case just send them to the admin dashboard.
     const status = err?.response?.status;
+
     if (status === 401) {
       redirect('/api/logout');
     }
     if (status === 403) {
-      // keep the user logged in but away from restricted pages
       redirect('/manageUsers');
     }
     throw err;

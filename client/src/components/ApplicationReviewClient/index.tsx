@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import styles from './style.module.scss';
 
 import ApplicationView from '@/components/admin/ApplicationView';
@@ -9,9 +9,9 @@ import { ApplicationDecision, ApplicationStatus } from '@/lib/types/enums';
 import showToast from '@/lib/showToast';
 import { AdminAPI } from '@/lib/api';
 import { reportError } from '@/lib/utils';
-import type { Application } from '@/lib/types/application';
 import type { PublicProfile, ResponseModel } from '@/lib/types/apiResponses';
 
+// keep your existing ApplicationStats type
 type ApplicationStats = {
   total: number;
   accepted: number;
@@ -19,6 +19,9 @@ type ApplicationStats = {
   waitlisted: number;
   acceptedPct: number;
 };
+
+// TEMP typing, I presume it is elsewhere
+type ReviewerOverview = any;
 
 type Props = {
   accessToken: string;
@@ -40,8 +43,8 @@ export default function ApplicationReviewClient({
   reviewer,
 }: Props) {
   const applicants = useMemo(() => [fetchedApplication.user], [fetchedApplication]);
-
   const reviewerToUse = useMemo(() => reviewer, [reviewer]);
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -52,19 +55,46 @@ export default function ApplicationReviewClient({
   );
   const [notes, setNotes] = useState<string>('');
 
-  // keep these for later when you expand to multiple applicants
   const [decisions, setDecisions] = useState<Record<number, ApplicationDecision>>({});
   const [notesByIndex, setNotesByIndex] = useState<Record<number, string>>({});
+
+  //reviewer overview fetched from /reviewer-overview
+  const [reviewerOverview, setReviewerOverview] = useState<ReviewerOverview | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const load = async () => {
+      try {
+        const res = await AdminAPI.getReviewerOverview(accessToken);
+        console.log('res', res);
+        if (cancelled) return;
+
+        if (res.error) {
+          showToast("Couldn't load reviewer overview", res.error);
+          return;
+        }
+        console.log('res.dataToReturn', res.dataToReturn);
+        setReviewerOverview(res.dataToReturn);
+      } catch (error) {
+        if (cancelled) return;
+        reportError("Couldn't load reviewer overview", error);
+      }
+    };
+
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, [accessToken]);
 
   const onPrev = () => setCurrentIndex(i => Math.max(0, i - 1));
   const onNext = () => setCurrentIndex(i => Math.min(applicants.length - 1, i + 1));
 
   const onReset = () => {
-    // sync reset
     setCurrentDecision(ApplicationDecision.NO_DECISION);
     setNotes('');
 
-    // keep these for later when you expand to multiple applicants
     setDecisions(prev => ({ ...prev, [currentIndex]: ApplicationDecision.NO_DECISION }));
     setNotesByIndex(prev => ({ ...prev, [currentIndex]: '' }));
   };
@@ -83,10 +113,8 @@ export default function ApplicationReviewClient({
       await AdminAPI.updateApplicationDecision(accessToken, userId, currentDecision, notes);
       showToast('Saved', `Application marked as ${currentDecision}`);
 
-      // keep these for later when you expand to multiple applicants
       setDecisions(prev => ({ ...prev, [currentIndex]: currentDecision }));
       setNotesByIndex(prev => ({ ...prev, [currentIndex]: notes }));
-      // if we want to clear notes after saving, do so here
       setNotes('');
     } catch (error) {
       reportError("Couldn't update application decision", error);
@@ -105,6 +133,8 @@ export default function ApplicationReviewClient({
           status={currentStatus}
           waivers={fetchedWaivers}
           stats={stats}
+          reviewer={reviewerToUse}
+          reviewerOverview={reviewerOverview}
         />
       </div>
 

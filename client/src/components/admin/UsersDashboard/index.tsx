@@ -13,17 +13,21 @@ import Pagination from '@/components/Pagination';
 import { FullProfile } from '@/lib/types/apiResponses';
 import { ApplicationStatus } from '@/lib/types/enums';
 import { useWindowSize } from '@/lib/hooks/useWindowSize';
-import { formatTitleCase } from '@/lib/utils';
+import { formatTitleCase, getErrorMessage } from '@/lib/utils';
+import { AdminAPI } from '@/lib/api';
+import showToast from '@/lib/showToast';
 import styles from './style.module.scss';
 
 interface UsersDashboardProps {
   users: FullProfile[];
+  accessToken: string;
 }
 
-const UsersDashboard = ({ users }: UsersDashboardProps) => {
+const UsersDashboard = ({ users, accessToken }: UsersDashboardProps) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [filterStatus, setFilterStatus] = useState('CONFIRMED');
   const [searchQuery, setSearchQuery] = useState('');
+  const [isAssigningReviewers, setIsAssigningReviewers] = useState(false);
 
   const headers = ['Applicant Name', 'Status', 'Creation Date', 'Action'];
   const size = useWindowSize();
@@ -45,10 +49,30 @@ const UsersDashboard = ({ users }: UsersDashboardProps) => {
 
   const handlePrevious = () => setCurrentPage(prevPage => Math.max(prevPage - 1, 0));
   const handleNext = () => setCurrentPage(prevPage => Math.min(prevPage + 1, totalPages - 1));
+  const handleAssignReviewers = async () => {
+    setIsAssigningReviewers(true);
+
+    try {
+      const assignments = await AdminAPI.randomizeAssignments(accessToken);
+      showToast(
+        'Reviewers assigned',
+        `${assignments.length} assignment${assignments.length === 1 ? '' : 's'} created.`
+      );
+    } catch (error: unknown) {
+      showToast('Failed to assign reviewers', getErrorMessage(error));
+    } finally {
+      setIsAssigningReviewers(false);
+    }
+  };
 
   return (
     <div className={styles.container}>
       <div className={styles.filterContainer}>
+        <div className={styles.reviewerActions}>
+          <Button onClick={handleAssignReviewers} disabled={isAssigningReviewers}>
+            {isAssigningReviewers ? 'Assigning Reviewers...' : 'Assign Reviewers'}
+          </Button>
+        </div>
         <div className={styles.filterButtons}>
           {['All', ...Object.values(ApplicationStatus)].map(status => (
             <Button

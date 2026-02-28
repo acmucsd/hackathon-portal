@@ -8,7 +8,6 @@ import { AdminAPI } from '@/lib/api';
 import { ResponseModel } from '@/lib/types/apiResponses';
 import { ApplicationDecision, ApplicationStatus, FormType } from '@/lib/types/enums';
 import { reportError } from '@/lib/utils';
-import showToast from '@/lib/showToast';
 import { useState } from 'react';
 import styles from './style.module.scss';
 import Link from 'next/link';
@@ -28,6 +27,8 @@ interface ApplicationViewProps {
   status: ApplicationStatus;
   waivers: ResponseModel[];
   stats: ApplicationStats;
+  reviewer: any; // TODO
+  reviewerOverview: any; // TODO
   onConfirm?: () => Promise<void> | void;
 }
 
@@ -38,6 +39,8 @@ const ApplicationView = ({
   status,
   waivers,
   stats,
+  reviewer,
+  reviewerOverview,
   onConfirm,
 }: ApplicationViewProps) => {
   const responses: Record<string, string | string[] | File | any> = application.data;
@@ -53,26 +56,93 @@ const ApplicationView = ({
 
   const NO_RESPONSE = 'No response.';
 
+  const safeNum = (v: unknown, fallback = 0) =>
+    typeof v === 'number' && Number.isFinite(v) ? v : fallback;
+
+  const computedStats = (() => {
+    // reviewerId: r.reviewerId,
+    // reviewerFirstName: r.reviewerFirstName,
+    // reviewerLastName: r.reviewerLastName,
+    // applicants: r.applicants,
+    // total: r.total,
+    // accept: r.accept,
+    // reject: r.reject,
+    // waitlist: r.waitlist,
+    // noDecision: r.noDecision,
+    // acceptedNonUcsd: r.acceptedNonUcsd,
+    // acceptedNonUcsdPercentage,
+    if (reviewerOverview == null) {
+      return { total: 0, accepted: 0, rejected: 0, waitlisted: 0, acceptedPct: 0 };
+    }
+    const ro = reviewerOverview.reviewers;
+
+    console.log('ro:', ro);
+
+    let total = 0;
+    let accepted = 0;
+    let rejected = 0;
+    let waitlisted = 0;
+
+    //     export interface ReviewerOverviewReviewer {
+    //   reviewerId: string;
+    //   reviewerFirstName: string;
+    //   reviewerLastName: string;
+    //   applicants: ReviewerOverviewApplicant[];
+
+    //   total: number;
+    //   accept: number;
+    //   reject: number;
+    //   waitlist: number;
+    //   noDecision: number;
+    //   /** Number of accepted applicants who are non-UCSD. */
+    //   acceptedNonUcsd: number;
+    //   /** Percentage of accepted applicants who are non-UCSD (null if no accepted with non-null university). */
+    //   acceptedNonUcsdPercentage: number | null;
+    // }
+    const reviewerToUse = reviewer;
+    for (const reviewer of ro) {
+      if (reviewer.reviewerId !== reviewerToUse.id) continue;
+
+      total += reviewer.total;
+      accepted += reviewer.accept;
+      rejected += reviewer.reject;
+      waitlisted += reviewer.waitlist;
+    }
+
+    // const total = safeNum(ro?.total ?? ro?.stats?.total, stats.total);
+    // const accepted = safeNum(ro?.accepted ?? ro?.stats?.accepted, stats.accepted);
+    // const rejected = safeNum(ro?.rejected ?? ro?.stats?.rejected, stats.rejected);
+    // const waitlisted = safeNum(ro?.waitlisted ?? ro?.stats?.waitlisted, stats.waitlisted);
+
+    const acceptedPct =
+      total > 0
+        ? Math.round((accepted / total) * 100)
+        : safeNum(ro?.acceptedPct ?? ro?.stats?.acceptedPct, stats.acceptedPct);
+
+    return { total, accepted, rejected, waitlisted, acceptedPct };
+  })();
+
   return (
     // back to dashboard link + search bar
     <div className={styles.container}>
+
       {/* stats */}
       <div className={styles.stats}>
         <p className={styles.statsLeft}>
-          {stats.accepted}
+          {computedStats.accepted}
           <span className={styles.accepted}> Accepted </span>
           <span className={styles.gray}> | </span>
-          {stats.rejected}
+          {computedStats.rejected}
           <span className={styles.rejected}> Rejected </span>
           <span className={styles.gray}> | </span>
-          {stats.waitlisted}
+          {computedStats.waitlisted}
           <span className={styles.waitlisted}> Waitlisted</span>
         </p>
         <p className={styles.statsRight}>
           <span className={styles.gray}> Total applications: </span>
-          {stats.total}
+          {computedStats.total}
           <span className={styles.gray}> | Accepted: </span>
-          {' ' + stats.acceptedPct + '%'}
+          {' ' + computedStats.acceptedPct + '%'}
         </p>
       </div>
       <hr className={styles.divider} />
@@ -97,7 +167,11 @@ const ApplicationView = ({
             <dt className={styles.question}>Age</dt>
             <dd className={styles.response}>{application.data.age ?? NO_RESPONSE}</dd>
             <dt className={styles.question}>Race/Ethnicity</dt>
-            <dd className={styles.response}>{application.data.ethnicity ?? NO_RESPONSE}</dd>
+            <dd className={styles.response}>
+              {application.data.ethnicity?.length > 0
+                ? application.data.ethnicity.join(', ')
+                : NO_RESPONSE}
+            </dd>
             <span className={styles.interestQuestion}>
               <dt className={styles.question}>Filled out interest form: </dt>
               <dd className={styles.response}>

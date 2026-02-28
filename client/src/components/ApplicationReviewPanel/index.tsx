@@ -12,7 +12,7 @@ import type { ApplicationDecision } from '@/lib/types/enums';
 
 export interface ApplicationReviewPanelProps {
   applicant: PublicProfile;
-  reviewer: PublicProfile;
+  reviewer?: PublicProfile;
 
   currentIndex: number;
   totalApplicants: number;

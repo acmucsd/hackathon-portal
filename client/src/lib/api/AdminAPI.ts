@@ -54,6 +54,16 @@ export const getApplication = async (token: string, uuid: string): Promise<Respo
   return response.data.response;
 };
 
+export const getReviewerOverview = async (token: string): Promise<any> => {
+  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.reviewerOverview}`;
+  const response = await axios.get(requestUrl, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+}
+
 /**
  * Get all users
  * @param token
@@ -220,7 +230,7 @@ export const getPasswordResetLink = async (token: string, email: string): Promis
  * Assign applications to reviewers randomly
  * @param token
  */
-export const postAssigments = async (
+export const postAssignments = async (
   token: string,
   newAssignments: PostAssignmentsRequest
 ): Promise<ReviewAssignment[]> => {
@@ -241,7 +251,7 @@ export const postAssigments = async (
  * Randomly assign all unassigned applications to reviewers
  * @param token
  */
-export const randomizeAssigments = async (token: string): Promise<ReviewAssignment[]> => {
+export const randomizeAssignments = async (token: string): Promise<ReviewAssignment[]> => {
   const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.randomizeAssignments}`;
   const response = await axios.post<PostAssignmentsResponse>(
     requestUrl,
