@@ -28,6 +28,7 @@ type Props = {
   userId: string;
   fetchedApplication: ResponseModel;
   fetchedDecision: ApplicationDecision;
+  fetchedReviewerComments: string | null;
   fetchedWaivers: ResponseModel[];
   stats: ApplicationStats;
   reviewer?: PublicProfile;
@@ -38,6 +39,7 @@ export default function ApplicationReviewClient({
   userId,
   fetchedApplication,
   fetchedDecision,
+  fetchedReviewerComments,
   fetchedWaivers,
   stats,
   reviewer,
@@ -101,9 +103,13 @@ export default function ApplicationReviewClient({
   const [currentStatus, setCurrentStatus] = useState<ApplicationStatus>(
     fetchedApplication.user.applicationStatus
   );
-  const [notes, setNotes] = useState<string>('');
+  const [notes, setNotes] = useState<string>(fetchedReviewerComments ?? '');
   const [liveStats, setLiveStats] = useState<ApplicationStats>(stats);
   const [savedDecision, setSavedDecision] = useState<ApplicationDecision>(fetchedDecision);
+
+  useEffect(() => {
+    setNotes(fetchedReviewerComments ?? '');
+  }, [fetchedReviewerComments, userId]);
 
   useEffect(() => {
     const loadAssignments = async () => {
@@ -179,12 +185,17 @@ export default function ApplicationReviewClient({
         return;
       }
 
-      await AdminAPI.updateApplicationDecision(accessToken, userId, currentDecision, notes);
-      showToast('Saved', `Application marked as ${currentDecision}`);
+      const updatedUser = await AdminAPI.updateApplicationDecision(
+        accessToken,
+        userId,
+        currentDecision,
+        notes
+      );
+      showToast('Saved successfully!', `Application marked as ${currentDecision}`);
 
       setLiveStats(prev => recalculateStats(prev, savedDecision, currentDecision));
       setSavedDecision(currentDecision);
-      setNotes('');
+      setNotes(updatedUser.reviewerComments ?? '');
     } catch (error) {
       reportError("Couldn't update application decision", error);
     } finally {

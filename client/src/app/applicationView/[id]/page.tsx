@@ -53,6 +53,7 @@ export default async function ApplicationReviewPage({ params }: ApplicationRevie
         userId={userId}
         fetchedApplication={fetchedApplication}
         fetchedDecision={fetchedDecision?.applicationDecision ?? ApplicationDecision.NO_DECISION}
+        fetchedReviewerComments={fetchedDecision?.reviewerComments ?? ''}
         fetchedWaivers={fetchedWaivers}
         stats={stats}
         reviewer={
