@@ -15,6 +15,7 @@ import {
   CreateApplicationRequest as ICreateApplicationRequest,
   UpdateApplicationRequest as IUpdateApplicationRequest,
   Waiver as IWaiver,
+  RSVP as IRSVP,
 } from '../../types/Application';
 import { IsLinkedinURL } from '../decorators/Validators';
 import { Yes, YesOrNo } from '../../types/Enums';
@@ -167,15 +168,35 @@ export class UpdateApplicationRequest implements IUpdateApplicationRequest {
 }
 
 export class Waiver implements IWaiver {
+  @IsDefined()
   @IsNotEmpty()
   participantName: string;
 
+  @IsDefined()
   @IsNotEmpty()
   dateOfBirth: string;
 
+  @IsDefined()
   @IsNotEmpty()
   signature: string;
 
+  @IsDefined()
   @IsNotEmpty()
   date: string;
+}
+
+export class RSVP implements IRSVP {
+  @IsDefined()
+  @IsNotEmpty()
+  @IsEnum(Yes)
+  willAttend: Yes;
+
+  @IsDefined()
+  @IsNotEmpty()
+  @IsEnum(Yes)
+  joinedDiscord: Yes;
+
+  @IsDefined()
+  @Allow()
+  additionalComments: string;
 }
