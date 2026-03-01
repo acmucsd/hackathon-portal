@@ -57,11 +57,11 @@ const ApplicationReviewPanel = ({
   const setStatus = (value: any) => onDecisionChange(value as ApplicationDecision);
   return (
     <div className={styles.container}>
-      {/* which applicant - only show when there are multiple applicants */}
-      {totalApplicants > 1 && (
+      {/* which applicant */}
+      {
         <div className={styles.top}>
           <button
-            className={`${styles.btn} ${isAtStart ? styles.btnDisabled : ''}`}
+            className={`${styles.btn} ${styles.btnLeft} ${isAtStart ? styles.btnDisabled : ''}`}
             onClick={onPrev}
             disabled={isAtStart}
           >
@@ -71,14 +71,14 @@ const ApplicationReviewPanel = ({
             {applicantNumber}/{totalApplicants}
           </p>
           <button
-            className={`${styles.btn} ${isAtEnd ? styles.btnDisabled : ''}`}
+            className={`${styles.btn} ${styles.btnRight} ${isAtEnd ? styles.btnDisabled : ''}`}
             onClick={onNext}
             disabled={isAtEnd}
           >
             <Image width={21} height={21} src="/assets/arrow-right.svg" alt="→" />
           </button>
         </div>
-      )}
+      }
       {/* decision */}
       <div className={styles.decisionSection}>
         <h1 className={styles.sectionTitle}>Application Decision</h1>

@@ -1,6 +1,7 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import styles from './style.module.scss';
 
 import ApplicationView from '@/components/admin/ApplicationView';
@@ -41,6 +42,8 @@ export default function ApplicationReviewClient({
   stats,
   reviewer,
 }: Props) {
+  const router = useRouter();
+
   const getStatsKey = (decision: ApplicationDecision): DecisionStatsKey | null => {
     switch (decision) {
       case ApplicationDecision.ACCEPT:
@@ -89,10 +92,8 @@ export default function ApplicationReviewClient({
     };
   };
 
-  const applicants = useMemo(() => [fetchedApplication.user], [fetchedApplication]);
-  const reviewerToUse = useMemo(() => reviewer, [reviewer]);
-
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [assignedApplicants, setAssignedApplicants] = useState<PublicProfile[]>([]);
+  const [assignedReviewer, setAssignedReviewer] = useState<PublicProfile | undefined>(reviewer);
   const [isSaving, setIsSaving] = useState(false);
 
   // single source of truth for what ApplicationView displays
@@ -104,18 +105,67 @@ export default function ApplicationReviewClient({
   const [liveStats, setLiveStats] = useState<ApplicationStats>(stats);
   const [savedDecision, setSavedDecision] = useState<ApplicationDecision>(fetchedDecision);
 
-  const [decisions, setDecisions] = useState<Record<number, ApplicationDecision>>({});
-  const [notesByIndex, setNotesByIndex] = useState<Record<number, string>>({});
+  useEffect(() => {
+    const loadAssignments = async () => {
+      if (!reviewer?.id) return;
 
-  const onPrev = () => setCurrentIndex(i => Math.max(0, i - 1));
-  const onNext = () => setCurrentIndex(i => Math.min(applicants.length - 1, i + 1));
+      try {
+        const assignments = await AdminAPI.getAssignmentsByReviewer(accessToken, reviewer.id);
+
+        if (assignments.length > 0) {
+          setAssignedApplicants(
+            assignments.map(({ applicant }) => ({
+              id: applicant.id,
+              firstName: applicant.firstName,
+              lastName: applicant.lastName,
+            }))
+          );
+
+          const reviewerProfile = assignments[0].reviewer;
+          if (reviewerProfile) {
+            setAssignedReviewer({
+              id: reviewerProfile.id,
+              firstName: reviewerProfile.firstName,
+              lastName: reviewerProfile.lastName,
+            });
+          }
+        }
+      } catch (error) {
+        reportError("Couldn't load reviewer assignments", error);
+      }
+    };
+
+    loadAssignments();
+  }, [accessToken, reviewer?.id]);
+
+  const applicants = useMemo(() => {
+    if (assignedApplicants.length > 0) return assignedApplicants;
+    return [fetchedApplication.user];
+  }, [assignedApplicants, fetchedApplication.user]);
+
+  const currentIndex = useMemo(() => {
+    const idx = applicants.findIndex(applicant => applicant.id === userId);
+    return idx >= 0 ? idx : 0;
+  }, [applicants, userId]);
+
+  const activeApplicant = applicants[currentIndex] ?? fetchedApplication.user;
+  const reviewerToUse = assignedReviewer ?? reviewer;
+
+  const goToApplicant = useCallback(
+    (index: number) => {
+      const applicant = applicants[index];
+      if (!applicant) return;
+      router.push(`/applicationView/${applicant.id}`);
+    },
+    [applicants, router]
+  );
+
+  const onPrev = () => goToApplicant(Math.max(0, currentIndex - 1));
+  const onNext = () => goToApplicant(Math.min(applicants.length - 1, currentIndex + 1));
 
   const onReset = () => {
     setCurrentDecision(ApplicationDecision.NO_DECISION);
     setNotes('');
-
-    setDecisions(prev => ({ ...prev, [currentIndex]: ApplicationDecision.NO_DECISION }));
-    setNotesByIndex(prev => ({ ...prev, [currentIndex]: '' }));
   };
 
   const onSave = async () => {
@@ -132,8 +182,6 @@ export default function ApplicationReviewClient({
       await AdminAPI.updateApplicationDecision(accessToken, userId, currentDecision, notes);
       showToast('Saved', `Application marked as ${currentDecision}`);
 
-      setDecisions(prev => ({ ...prev, [currentIndex]: currentDecision }));
-      setNotesByIndex(prev => ({ ...prev, [currentIndex]: notes }));
       setLiveStats(prev => recalculateStats(prev, savedDecision, currentDecision));
       setSavedDecision(currentDecision);
       setNotes('');
@@ -159,7 +207,7 @@ export default function ApplicationReviewClient({
 
       <div className={styles.appReviewPanel}>
         <ApplicationReviewPanel
-          applicant={applicants[currentIndex]}
+          applicant={activeApplicant}
           reviewer={reviewerToUse}
           currentIndex={currentIndex}
           totalApplicants={applicants.length}

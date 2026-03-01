@@ -115,16 +115,18 @@
 }
 
 .top {
+  position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-evenly;
-  gap: 10px;
+  justify-content: center;
   width: 100%;
+  min-height: 39px;
   margin-top: 20px;
   margin-bottom: 20px;
 }
 
 .btn {
+  position: absolute;
   background: vars.$btn-primary;
   color: black;
   padding: 9px;
@@ -150,6 +152,14 @@
   opacity: 100%;
 }
 
+.btnLeft {
+  left: 22%;
+}
+
+.btnRight {
+  right: 22%;
+}
+
 // TODO: figure out hover state for buttons??
 // .btn:hover {
 //   // TODO: add to vars.scss
@@ -161,4 +171,5 @@
   font-size: 14px;
   font-weight: 400;
   font-family: 'DM Sans', sans-serif;
+  text-align: center;
 }
