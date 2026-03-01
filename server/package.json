@@ -1,6 +1,6 @@
 {
   "name": "hackathon-portal",
-  "version": "1.2.5",
+  "version": "1.2.7",
   "description": "REST API for ACM at UCSD's hackathon portal.",
   "main": "index.js",
   "scripts": {

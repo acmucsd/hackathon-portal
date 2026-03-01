@@ -17,8 +17,20 @@ import {
 } from 'routing-controllers';
 import { UpdateUser } from '../api/validators/UserControllerRequests';
 import { auth, adminAuth } from '../FirebaseAuth';
-import { ReviewAssignment, UserAndToken } from '../types/ApiResponses';
-import { ApplicationDecision, ApplicationStatus } from '../types/Enums';
+
+import { ApplicationDecision, ApplicationStatus, UserAccessType } from '../types/Enums';
+import {
+  ReviewAssignment,
+  ReviewerOverviewResponse,
+  ReviewerOverviewReviewer,
+  UserAndToken,
+} from '../types/ApiResponses';
+
+
+/** Internal: includes acceptedWithNotNullUniversity for computation; omitted from final output. */
+interface ReviewerOverviewReviewerInternal extends ReviewerOverviewReviewer {
+  acceptedWithNotNullUniversity: number;
+}
 
 @Service()
 export class UserService {
@@ -237,6 +249,21 @@ export class UserService {
     await sendEmailVerification(userCredential.user);
   }
 
+  public async getPasswordResetLink(email: string): Promise<string> {
+    try {
+      return await adminAuth.generatePasswordResetLink(email);
+    } catch (error) {
+      if (error instanceof FirebaseAuthError) {
+        if (error.code === 'auth/user-not-found') {
+          throw new NotFoundError(
+            'No user found with the provided email address.',
+          );
+        }
+      }
+      throw error;
+    }
+  }
+
   public async sendPasswordResetEmail(email: string): Promise<void> {
     try {
       const firebaseRecord = await adminAuth.getUserByEmail(email);
@@ -360,4 +387,132 @@ export class UserService {
 
     return this.assignReviews(arr);
   }
+
+
+  // admin are reviewers
+  private static readonly UCSD_UNIVERSITY = 'University of California, San Diego';
+
+  // 1, Find all reviewers
+  // 2, Find the users (applicants) each reviewer is responsible for
+  // 3, Return the ApplicationDecision status of the users each reviewer reviews
+
+  public async getReviewerOverview(): Promise<ReviewerOverviewResponse> {
+    const rows = await this.transactionsManager.readOnly(async (entityManager) =>
+    entityManager.query(`
+      SELECT DISTINCT ON (r.id, a.id)
+        r.id          AS reviewer_id,
+        r."firstName" AS reviewer_first_name,
+        r."lastName"  AS reviewer_last_name,
+        a.id          AS applicant_id,
+        a."firstName" AS applicant_first_name,
+        a."lastName"  AS applicant_last_name,
+        a."applicationDecision",
+        res.data->>'university' AS university
+      FROM "User" r
+      LEFT JOIN "User" a
+        ON a."reviewerId" = r.id
+      LEFT JOIN "Response" res
+        ON res."user" = a.id AND res."formType" = 'APPLICATION'
+      WHERE r."accessType" = 'ADMIN'
+      ORDER BY r.id, a.id, res."updatedAt" DESC NULLS LAST
+    `),
+  );
+
+  const map = new Map<string, ReviewerOverviewReviewerInternal>();
+
+  for (const row of rows) {
+    const reviewerId = row.reviewer_id;
+
+    if (!map.has(reviewerId)) {
+      map.set(reviewerId, {
+        reviewerId,
+        reviewerFirstName: row.reviewer_first_name,
+        reviewerLastName: row.reviewer_last_name,
+        applicants: [],
+        total: 0,
+        accept: 0,
+        reject: 0,
+        waitlist: 0,
+        noDecision: 0,
+        acceptedNonUcsdPercentage: null,
+        acceptedWithNotNullUniversity: 0,
+        acceptedNonUcsd: 0,
+      });
+    }
+
+    if (row.applicant_id) {
+      const reviewer = map.get(reviewerId)!;
+
+      reviewer.applicants.push({
+        userId: row.applicant_id,
+        firstName: row.applicant_first_name,
+        lastName: row.applicant_last_name,
+        applicationDecision: row.applicationDecision,
+      });
+
+      reviewer.total++;
+
+      switch (row.applicationDecision) {
+        case 'ACCEPT':
+          reviewer.accept++;
+          if (row.university != null && String(row.university).trim() !== '') {
+            reviewer.acceptedWithNotNullUniversity++;
+            if (row.university !== UserService.UCSD_UNIVERSITY) {
+              reviewer.acceptedNonUcsd++;
+            }
+          }
+          break;
+        case 'REJECT':
+          reviewer.reject++;
+          break;
+        case 'WAITLIST':
+          reviewer.waitlist++;
+          break;
+        case 'NO_DECISION':
+        default:
+          reviewer.noDecision++;
+          break;
+      }
+    }
+  }
+
+  const reviewers: ReviewerOverviewReviewer[] = Array.from(map.values()).map((r) => {
+    const acceptedNonUcsdPercentage =
+      r.acceptedWithNotNullUniversity > 0
+        ? Math.round((r.acceptedNonUcsd / r.acceptedWithNotNullUniversity) * 1000) / 10
+        : null;
+    return {
+      reviewerId: r.reviewerId,
+      reviewerFirstName: r.reviewerFirstName,
+      reviewerLastName: r.reviewerLastName,
+      applicants: r.applicants,
+      total: r.total,
+      accept: r.accept,
+      reject: r.reject,
+      waitlist: r.waitlist,
+      noDecision: r.noDecision,
+      acceptedNonUcsd: r.acceptedNonUcsd,
+      acceptedNonUcsdPercentage,
+    };
+  });
+
+  return {
+    reviewers,
+  };
+  }
+
+    public async updateUserAccess(email: string, access: UserAccessType) {
+    return this.transactionsManager.readWrite(async (entityManager) => {
+      const userRepository = Repositories.user(entityManager);
+      const user = await userRepository.findByEmail(email);
+      if (!user) throw new NotFoundError('User not found');
+      user.accessType = access;
+      const updatedUser = userRepository.save(user);
+      return updatedUser;
+    });
+  }
 }
+
+
+
+
