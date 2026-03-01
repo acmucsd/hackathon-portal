@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import styles from './style.module.scss';
 
 import ApplicationView from '@/components/admin/ApplicationView';
@@ -19,9 +19,6 @@ type ApplicationStats = {
   waitlisted: number;
   acceptedPct: number;
 };
-
-// TEMP typing, I presume it is elsewhere
-type ReviewerOverview = any;
 
 type Props = {
   accessToken: string;
@@ -57,36 +54,6 @@ export default function ApplicationReviewClient({
 
   const [decisions, setDecisions] = useState<Record<number, ApplicationDecision>>({});
   const [notesByIndex, setNotesByIndex] = useState<Record<number, string>>({});
-
-  //reviewer overview fetched from /reviewer-overview
-  const [reviewerOverview, setReviewerOverview] = useState<ReviewerOverview | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    const load = async () => {
-      try {
-        const res = await AdminAPI.getReviewerOverview(accessToken);
-        console.log('res', res);
-        if (cancelled) return;
-
-        if (res.error) {
-          showToast("Couldn't load reviewer overview", res.error);
-          return;
-        }
-        console.log('res.dataToReturn', res.dataToReturn);
-        setReviewerOverview(res.dataToReturn);
-      } catch (error) {
-        if (cancelled) return;
-        reportError("Couldn't load reviewer overview", error);
-      }
-    };
-
-    load();
-    return () => {
-      cancelled = true;
-    };
-  }, [accessToken]);
 
   const onPrev = () => setCurrentIndex(i => Math.max(0, i - 1));
   const onNext = () => setCurrentIndex(i => Math.min(applicants.length - 1, i + 1));
@@ -133,8 +100,6 @@ export default function ApplicationReviewClient({
           status={currentStatus}
           waivers={fetchedWaivers}
           stats={stats}
-          reviewer={reviewerToUse}
-          reviewerOverview={reviewerOverview}
         />
       </div>
 

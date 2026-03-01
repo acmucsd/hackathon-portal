@@ -68,11 +68,6 @@ const UsersDashboard = ({ users, accessToken }: UsersDashboardProps) => {
   return (
     <div className={styles.container}>
       <div className={styles.filterContainer}>
-        <div className={styles.reviewerActions}>
-          <Button onClick={handleAssignReviewers} disabled={isAssigningReviewers}>
-            {isAssigningReviewers ? 'Assigning Reviewers...' : 'Assign Reviewers'}
-          </Button>
-        </div>
         <div className={styles.filterButtons}>
           {['All', ...Object.values(ApplicationStatus)].map(status => (
             <Button

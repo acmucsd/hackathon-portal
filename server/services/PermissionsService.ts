@@ -36,7 +36,7 @@ export default class PermissionsService {
   }
 
   public static canGetReviewerOverview(user: UserModel): boolean {
-    return user.isSuperAdmin();
+    return user.isAdmin();
   }
 
   public static canOpenCloseApplications(user: UserModel): boolean {

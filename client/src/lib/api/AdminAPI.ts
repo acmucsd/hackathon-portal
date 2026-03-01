@@ -17,6 +17,8 @@ import type {
   GetAssignmentsResponse,
   ReviewAssignment,
   GetPasswordResetLinkResponse,
+  GetReviewerOverviewResponse,
+  ReviewerOverviewResponse,
 } from '@/lib/types/apiResponses';
 import { ApplicationDecision } from '@/lib/types/enums';
 import axios from 'axios';
@@ -54,15 +56,15 @@ export const getApplication = async (token: string, uuid: string): Promise<Respo
   return response.data.response;
 };
 
-export const getReviewerOverview = async (token: string): Promise<any> => {
+export const getReviewerOverview = async (token: string): Promise<ReviewerOverviewResponse> => {
   const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.reviewerOverview}`;
-  const response = await axios.get(requestUrl, {
+  const response = await axios.get<GetReviewerOverviewResponse>(requestUrl, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
-  return response.data;
-}
+  return response.data.dataToReturn;
+};
 
 /**
  * Get all users
