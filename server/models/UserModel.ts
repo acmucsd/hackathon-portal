@@ -97,6 +97,10 @@ export class UserModel {
     return this.accessType === UserAccessType.SUPER_ADMIN;
   }
 
+  public isRegularAdmin(): boolean {
+    return this.accessType === UserAccessType.ADMIN;
+  }
+
   public getPublicProfile(): PublicProfile {
     return {
       id: this.id,
