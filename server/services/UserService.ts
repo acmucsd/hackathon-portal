@@ -353,7 +353,7 @@ export class UserService {
     {applicantId, reviewerId} pairs are generated for each pairing
     This list is then sent to postAssignments().
 
-    Note 1: the distribution across admins is not equalized so some may have more reviews to complete than others :)
+    Note 1: idempotent since it just uses applicant index mod # of reviewers so its
     Note 2: not the most efficient way since it does 2 user lookups (one here, one in postAssignments), but its ok
     */
 
@@ -361,23 +361,16 @@ export class UserService {
       Repositories.user(entityManager).findAllWithReviewerRelation(),
     );
 
-    const admins = users.filter((user) => user.isAdmin());
+    const admins = users.filter((user) => user.isRegularAdmin());
     const applicantsToAssign = users.filter((user) =>
       !user.isAdmin() && // normal applicant
       user.applicationDecision == ApplicationDecision.NO_DECISION && // not already reviewed
       user.applicationStatus == ApplicationStatus.SUBMITTED, // submitted application
     );
 
-    function getRandomIntInclusive(min: number, max: number): number {
-      min = Math.ceil(min);
-      max = Math.floor(max);
-      // generates a random number in the range [min, max]
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
     const arr: ReviewAssignmentJob[] = [];
-    applicantsToAssign.forEach((reviewee) => {
-      const R = getRandomIntInclusive(0, admins.length - 1);
+    applicantsToAssign.forEach((reviewee, index) => {
+      const R = index % admins.length;
       const reviewer = admins[R];
       arr.push({
         applicantId: reviewee.id,
