@@ -4,15 +4,15 @@ import { UserModel } from '../models/UserModel';
 @Service()
 export default class PermissionsService {
   public static canViewAllApplications(user: UserModel): boolean {
-    return user.isManager() || user.isAdmin();
+    return user.isAdmin();
   }
 
   public static canViewApplicationDecisions(user: UserModel): boolean {
-    return user.isManager() || user.isAdmin();
+    return user.isAdmin();
   }
 
   public static canEditApplicationDecisions(user: UserModel): boolean {
-    return user.isManager() || user.isAdmin();
+    return user.isAdmin();
   }
 
   public static canGetEmailVerificationLinks(user: UserModel): boolean {
@@ -36,7 +36,7 @@ export default class PermissionsService {
   }
 
   public static canGetReviewerOverview(user: UserModel): boolean {
-    return user.isManager();
+    return user.isSuperAdmin();
   }
 
   public static canOpenCloseApplications(user: UserModel): boolean {
