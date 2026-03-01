@@ -129,8 +129,7 @@ const ApplicationReviewPanel = ({
         </div>
         {formattedLastSaved && savedBy && (
           <p className={styles.lastSavedText}>
-            Last saved ({formattedLastSaved}) by{' '}
-            {`${savedBy.firstName} ${savedBy.lastName}`}
+            Last saved ({formattedLastSaved}) by {`${savedBy.firstName} ${savedBy.lastName}`}
           </p>
         )}
       </div>
