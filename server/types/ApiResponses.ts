@@ -27,6 +27,7 @@ export interface PrivateProfile extends PublicProfile {
 export interface HiddenProfile extends PrivateProfile {
   applicationDecision: ApplicationDecision;
   reviewerComments: string | null;
+  lastDecisionUpdatedBy?: PublicProfile;
 }
 
 export interface RevieweeProfile extends HiddenProfile {

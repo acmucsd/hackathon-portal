@@ -36,6 +36,7 @@ export interface PrivateProfile extends PublicProfile {
 export interface FullProfile extends PrivateProfile {
   applicationDecision: ApplicationDecision;
   reviewerComments: string | null;
+  lastDecisionUpdatedBy?: PublicProfile;
 }
 
 export interface RevieweeProfile extends FullProfile {

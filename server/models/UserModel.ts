@@ -78,6 +78,12 @@ export class UserModel {
   @OneToMany(() => UserModel, (user) => user.reviewer)
   reviewees?: UserModel[];
 
+  @ManyToOne(() => UserModel, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
+  lastDecisionUpdatedBy?: UserModel | null;
+
   @Column({ type: 'text', nullable: true })
   reviewerComments: string | null;
 
@@ -123,6 +129,7 @@ export class UserModel {
       ...this.getPrivateProfile(),
       applicationDecision: this.applicationDecision,
       reviewerComments: this.reviewerComments,
+      lastDecisionUpdatedBy: this.lastDecisionUpdatedBy?.getPublicProfile(),
     };
   }
 }

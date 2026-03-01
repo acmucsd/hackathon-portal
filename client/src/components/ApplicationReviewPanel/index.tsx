@@ -4,15 +4,15 @@ import Image from 'next/image';
 import styles from './style.module.scss';
 
 import StatusDropdown from '@/components/StatusDropdown';
-import showToast from '@/lib/showToast';
+import { formatPacificDateTime } from '@/lib/utils';
 
-import type { Application } from '@/lib/types/application';
 import type { PublicProfile } from '@/lib/types/apiResponses';
 import type { ApplicationDecision } from '@/lib/types/enums';
 
 export interface ApplicationReviewPanelProps {
   applicant: PublicProfile;
   reviewer?: PublicProfile;
+  savedBy?: PublicProfile;
 
   currentIndex: number;
   totalApplicants: number;
@@ -30,12 +30,14 @@ export interface ApplicationReviewPanelProps {
   onSave: () => Promise<void> | void;
 
   isSaving?: boolean;
+  lastSavedAt?: string | Date | null;
 }
 
 // const ApplicationReviewPanel = ({ application, applicationStatus }: ApplicationCardProps) => {
 const ApplicationReviewPanel = ({
   applicant,
   reviewer,
+  savedBy,
   currentIndex,
   totalApplicants,
   decision,
@@ -47,14 +49,15 @@ const ApplicationReviewPanel = ({
   onReset,
   onSave,
   isSaving,
+  lastSavedAt,
 }: ApplicationReviewPanelProps) => {
   const applicantNumber = currentIndex + 1;
   const isAtStart = currentIndex <= 0;
   const isAtEnd = currentIndex >= totalApplicants - 1;
 
-  // keep StatusDropdown usage the same; only fix setStatus
   const status = decision;
   const setStatus = (value: any) => onDecisionChange(value as ApplicationDecision);
+  const formattedLastSaved = lastSavedAt ? formatPacificDateTime(lastSavedAt) : null;
   return (
     <div className={styles.container}>
       {/* which applicant */}
@@ -124,6 +127,12 @@ const ApplicationReviewPanel = ({
             Save Response{' '}
           </button>
         </div>
+        {formattedLastSaved && savedBy && (
+          <p className={styles.lastSavedText}>
+            Last saved ({formattedLastSaved}) by{' '}
+            {`${savedBy.firstName} ${savedBy.lastName}`}
+          </p>
+        )}
       </div>
     </div>
   );

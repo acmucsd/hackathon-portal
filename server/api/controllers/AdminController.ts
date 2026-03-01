@@ -98,7 +98,7 @@ export class AdminController {
     if (!PermissionsService.canViewApplicationDecisions(currentUser))
       throw new ForbiddenError();
 
-    const user = await this.userService.findById(params.id);
+    const user = await this.userService.findByIdWithLastDecisionUpdatedByRelation(params.id);
     return { error: null, user: user.getHiddenProfile() };
   }
 
@@ -116,6 +116,7 @@ export class AdminController {
       param.id,
       updateApplicationDecisionRequest.applicationDecision,
       updateApplicationDecisionRequest.reviewerComments,
+      currentUser,
     );
     return { error: null, user: user.getHiddenProfile() };
   }

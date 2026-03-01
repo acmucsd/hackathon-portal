@@ -12,7 +12,6 @@ import { AdminAPI } from '@/lib/api';
 import { reportError } from '@/lib/utils';
 import type { PublicProfile, ResponseModel } from '@/lib/types/apiResponses';
 
-// keep your existing ApplicationStats type
 type ApplicationStats = {
   total: number;
   accepted: number;
@@ -22,6 +21,9 @@ type ApplicationStats = {
 };
 
 type DecisionStatsKey = 'accepted' | 'rejected' | 'waitlisted';
+type ApplicantListItem = PublicProfile & {
+  createdAt?: string | Date;
+};
 
 type Props = {
   accessToken: string;
@@ -29,9 +31,12 @@ type Props = {
   fetchedApplication: ResponseModel;
   fetchedDecision: ApplicationDecision;
   fetchedReviewerComments: string | null;
+  fetchedDecisionUpdatedAt?: string | Date | null;
+  fetchedDecisionUpdatedBy?: PublicProfile;
   fetchedWaivers: ResponseModel[];
   stats: ApplicationStats;
   reviewer?: PublicProfile;
+  currentUser?: PublicProfile;
 };
 
 export default function ApplicationReviewClient({
@@ -40,9 +45,12 @@ export default function ApplicationReviewClient({
   fetchedApplication,
   fetchedDecision,
   fetchedReviewerComments,
+  fetchedDecisionUpdatedAt,
+  fetchedDecisionUpdatedBy,
   fetchedWaivers,
   stats,
   reviewer,
+  currentUser,
 }: Props) {
   const router = useRouter();
 
@@ -94,7 +102,7 @@ export default function ApplicationReviewClient({
     };
   };
 
-  const [assignedApplicants, setAssignedApplicants] = useState<PublicProfile[]>([]);
+  const [assignedApplicants, setAssignedApplicants] = useState<ApplicantListItem[]>([]);
   const [assignedReviewer, setAssignedReviewer] = useState<PublicProfile | undefined>(reviewer);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -106,10 +114,24 @@ export default function ApplicationReviewClient({
   const [notes, setNotes] = useState<string>(fetchedReviewerComments ?? '');
   const [liveStats, setLiveStats] = useState<ApplicationStats>(stats);
   const [savedDecision, setSavedDecision] = useState<ApplicationDecision>(fetchedDecision);
+  const [lastSavedAt, setLastSavedAt] = useState<string | Date | null>(
+    fetchedDecisionUpdatedAt ?? null
+  );
+  const [lastSavedBy, setLastSavedBy] = useState<PublicProfile | undefined>(
+    fetchedDecisionUpdatedBy
+  );
 
   useEffect(() => {
     setNotes(fetchedReviewerComments ?? '');
   }, [fetchedReviewerComments, userId]);
+
+  useEffect(() => {
+    setLastSavedAt(fetchedDecisionUpdatedAt ?? null);
+  }, [fetchedDecisionUpdatedAt, userId]);
+
+  useEffect(() => {
+    setLastSavedBy(fetchedDecisionUpdatedBy);
+  }, [fetchedDecisionUpdatedBy, userId]);
 
   useEffect(() => {
     const loadAssignments = async () => {
@@ -124,6 +146,7 @@ export default function ApplicationReviewClient({
               id: applicant.id,
               firstName: applicant.firstName,
               lastName: applicant.lastName,
+              createdAt: applicant.createdAt,
             }))
           );
 
@@ -145,8 +168,31 @@ export default function ApplicationReviewClient({
   }, [accessToken, reviewer?.id]);
 
   const applicants = useMemo(() => {
-    if (assignedApplicants.length > 0) return assignedApplicants;
-    return [fetchedApplication.user];
+    const applicantsToSort =
+      assignedApplicants.length > 0 ? assignedApplicants : [fetchedApplication.user];
+
+    const parseCreatedAt = (value?: string | Date) => {
+      if (!value) return Number.POSITIVE_INFINITY;
+      const time = new Date(value).getTime();
+      return Number.isNaN(time) ? Number.POSITIVE_INFINITY : time;
+    };
+
+    return [...applicantsToSort].sort((a, b) => {
+      const createdAtDiff = parseCreatedAt(a.createdAt) - parseCreatedAt(b.createdAt);
+      if (createdAtDiff !== 0) return createdAtDiff;
+
+      const lastNameDiff = a.lastName.localeCompare(b.lastName, undefined, {
+        sensitivity: 'base',
+      });
+      if (lastNameDiff !== 0) return lastNameDiff;
+
+      const firstNameDiff = a.firstName.localeCompare(b.firstName, undefined, {
+        sensitivity: 'base',
+      });
+      if (firstNameDiff !== 0) return firstNameDiff;
+
+      return a.id.localeCompare(b.id);
+    });
   }, [assignedApplicants, fetchedApplication.user]);
 
   const currentIndex = useMemo(() => {
@@ -196,6 +242,8 @@ export default function ApplicationReviewClient({
       setLiveStats(prev => recalculateStats(prev, savedDecision, currentDecision));
       setSavedDecision(currentDecision);
       setNotes(updatedUser.reviewerComments ?? '');
+      setLastSavedAt(updatedUser.updatedAt ?? new Date().toISOString());
+      setLastSavedBy(updatedUser.lastDecisionUpdatedBy ?? currentUser);
     } catch (error) {
       reportError("Couldn't update application decision", error);
     } finally {
@@ -220,6 +268,7 @@ export default function ApplicationReviewClient({
         <ApplicationReviewPanel
           applicant={activeApplicant}
           reviewer={reviewerToUse}
+          savedBy={lastSavedBy}
           currentIndex={currentIndex}
           totalApplicants={applicants.length}
           decision={currentDecision}
@@ -231,6 +280,7 @@ export default function ApplicationReviewClient({
           onReset={onReset}
           onSave={onSave}
           isSaving={isSaving}
+          lastSavedAt={lastSavedAt}
         />
       </div>
     </main>

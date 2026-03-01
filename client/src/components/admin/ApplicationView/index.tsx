@@ -65,9 +65,11 @@ const ApplicationView = ({
           <span className={styles.waitlisted}> Waitlisted</span>
         </p>
         <p className={styles.statsRight}>
-          <span className={styles.gray}> Total applications: </span>
+          <span className={styles.gray}> Remaining: </span>
+          {stats.total - (stats.accepted + stats.rejected + stats.waitlisted)}
+          {' out of '}
           {stats.total}
-          <span className={styles.gray}> | Accepted: </span>
+          <span className={styles.gray}>{' | Total % of accepted: '}</span>
           {' ' + stats.acceptedPct + '%'}
         </p>
       </div>

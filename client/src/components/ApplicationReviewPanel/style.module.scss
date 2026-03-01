@@ -82,6 +82,13 @@
   font-size: 18px;
 }
 
+.lastSavedText {
+  margin-top: 10px;
+  font-size: 14px;
+  line-height: 18px;
+  text-align: right;
+}
+
 .resetBtn {
   border: 1px solid vars.$card-stroke;
   color: white;

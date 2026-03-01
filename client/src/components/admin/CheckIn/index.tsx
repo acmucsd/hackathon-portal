@@ -13,7 +13,7 @@ import Typography from '@/components/Typography';
 import Image from 'next/image';
 import Dropdown from '@/components/Dropdown';
 import { attendEvent } from '@/lib/api/AdminAPI';
-import { reportError } from '@/lib/utils';
+import { formatPacificDateTime, reportError } from '@/lib/utils';
 import { Autocomplete, TextField } from '@mui/material';
 import { ApplicationStatus } from '@/lib/types/enums';
 
@@ -179,7 +179,7 @@ const CheckIn = ({ token, events, users }: CheckInProps) => {
           </Typography>
           <Typography variant="body/medium">{event?.name}</Typography>
           <Typography variant="body/medium">
-            {scanTime?.toLocaleTimeString('en-US', { timeStyle: 'long' })}
+            {scanTime ? formatPacificDateTime(scanTime, false) : null}
           </Typography>
         </div>
       ) : null}

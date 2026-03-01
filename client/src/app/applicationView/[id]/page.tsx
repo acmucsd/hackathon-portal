@@ -1,5 +1,5 @@
 import ApplicationReviewClient from '@/components/ApplicationReviewClient';
-import { AdminAPI } from '@/lib/api';
+import { AdminAPI, UserAPI } from '@/lib/api';
 import type { ReviewAssignment } from '@/lib/types/apiResponses';
 import { cookies } from 'next/headers';
 import { CookieType, ApplicationDecision } from '@/lib/types/enums';
@@ -22,12 +22,14 @@ export default async function ApplicationReviewPage({ params }: ApplicationRevie
 
   try {
     const fetchedApplication = await AdminAPI.getUserWithApplication(accessToken, userId);
-    const [fetchedDecision, fetchedWaivers, allAssignments, reviewerOverview] = await Promise.all([
-      AdminAPI.getApplicationDecision(accessToken, userId).catch(() => null as any),
-      AdminAPI.getWaiversById(accessToken, userId).catch(() => []),
-      AdminAPI.getAllAssignments(accessToken).catch(() => [] as ReviewAssignment[]),
-      AdminAPI.getReviewerOverview(accessToken).catch(() => ({ reviewers: [] })),
-    ]);
+    const [fetchedDecision, fetchedWaivers, allAssignments, reviewerOverview, currentUser] =
+      await Promise.all([
+        AdminAPI.getApplicationDecision(accessToken, userId).catch(() => null as any),
+        AdminAPI.getWaiversById(accessToken, userId).catch(() => []),
+        AdminAPI.getAllAssignments(accessToken).catch(() => [] as ReviewAssignment[]),
+        AdminAPI.getReviewerOverview(accessToken).catch(() => ({ reviewers: [] })),
+        UserAPI.getCurrentUser(accessToken).catch(() => null as any),
+      ]);
 
     // determine which reviewer (if any) is assigned to this applicant
     const assigned = allAssignments.find(a => a.applicant.id === userId);
@@ -54,8 +56,19 @@ export default async function ApplicationReviewPage({ params }: ApplicationRevie
         fetchedApplication={fetchedApplication}
         fetchedDecision={fetchedDecision?.applicationDecision ?? ApplicationDecision.NO_DECISION}
         fetchedReviewerComments={fetchedDecision?.reviewerComments ?? ''}
+        fetchedDecisionUpdatedAt={fetchedDecision?.updatedAt ?? null}
+        fetchedDecisionUpdatedBy={fetchedDecision?.lastDecisionUpdatedBy}
         fetchedWaivers={fetchedWaivers}
         stats={stats}
+        currentUser={
+          currentUser
+            ? {
+                id: currentUser.id,
+                firstName: currentUser.firstName,
+                lastName: currentUser.lastName,
+              }
+            : undefined
+        }
         reviewer={
           reviewerProfile
             ? {
