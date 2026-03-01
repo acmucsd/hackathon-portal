@@ -20,6 +20,8 @@ type ApplicationStats = {
   acceptedPct: number;
 };
 
+type DecisionStatsKey = 'accepted' | 'rejected' | 'waitlisted';
+
 type Props = {
   accessToken: string;
   userId: string;
@@ -39,6 +41,54 @@ export default function ApplicationReviewClient({
   stats,
   reviewer,
 }: Props) {
+  const getStatsKey = (decision: ApplicationDecision): DecisionStatsKey | null => {
+    switch (decision) {
+      case ApplicationDecision.ACCEPT:
+        return 'accepted';
+      case ApplicationDecision.REJECT:
+        return 'rejected';
+      case ApplicationDecision.WAITLIST:
+        return 'waitlisted';
+      default:
+        return null;
+    }
+  };
+
+  const recalculateStats = (
+    previousStats: ApplicationStats,
+    fromDecision: ApplicationDecision,
+    toDecision: ApplicationDecision
+  ): ApplicationStats => {
+    if (fromDecision === toDecision) return previousStats;
+
+    let accepted = previousStats.accepted;
+    let rejected = previousStats.rejected;
+    let waitlisted = previousStats.waitlisted;
+
+    const fromKey = getStatsKey(fromDecision);
+    const toKey = getStatsKey(toDecision);
+
+    if (fromKey === 'accepted') accepted = Math.max(0, accepted - 1);
+    if (fromKey === 'rejected') rejected = Math.max(0, rejected - 1);
+    if (fromKey === 'waitlisted') waitlisted = Math.max(0, waitlisted - 1);
+
+    if (toKey === 'accepted') accepted += 1;
+    if (toKey === 'rejected') rejected += 1;
+    if (toKey === 'waitlisted') waitlisted += 1;
+
+    const acceptedPct = previousStats.total
+      ? Math.round((accepted / previousStats.total) * 100)
+      : 0;
+
+    return {
+      ...previousStats,
+      accepted,
+      rejected,
+      waitlisted,
+      acceptedPct,
+    };
+  };
+
   const applicants = useMemo(() => [fetchedApplication.user], [fetchedApplication]);
   const reviewerToUse = useMemo(() => reviewer, [reviewer]);
 
@@ -51,6 +101,8 @@ export default function ApplicationReviewClient({
     fetchedApplication.user.applicationStatus
   );
   const [notes, setNotes] = useState<string>('');
+  const [liveStats, setLiveStats] = useState<ApplicationStats>(stats);
+  const [savedDecision, setSavedDecision] = useState<ApplicationDecision>(fetchedDecision);
 
   const [decisions, setDecisions] = useState<Record<number, ApplicationDecision>>({});
   const [notesByIndex, setNotesByIndex] = useState<Record<number, string>>({});
@@ -82,6 +134,8 @@ export default function ApplicationReviewClient({
 
       setDecisions(prev => ({ ...prev, [currentIndex]: currentDecision }));
       setNotesByIndex(prev => ({ ...prev, [currentIndex]: notes }));
+      setLiveStats(prev => recalculateStats(prev, savedDecision, currentDecision));
+      setSavedDecision(currentDecision);
       setNotes('');
     } catch (error) {
       reportError("Couldn't update application decision", error);
@@ -99,7 +153,7 @@ export default function ApplicationReviewClient({
           decision={currentDecision}
           status={currentStatus}
           waivers={fetchedWaivers}
-          stats={stats}
+          stats={liveStats}
         />
       </div>
 
