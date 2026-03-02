@@ -34,13 +34,15 @@ export default async function ApplicationReviewPage({ params }: ApplicationRevie
       AdminAPI.getReviewerOverview(accessToken).catch(() => ({ reviewers: [] })),
     ]);
 
-    // build the applicant list for sidebar navigation
-    const assignedApplicants = allAssignments.map(({ applicant }) => applicant);
+    // build the applicant list for sidebar navigation (only users with a reviewer assigned)
+    const assignedApplicants = allAssignments
+      .filter(a => a.reviewer != null)
+      .map(({ applicant }) => applicant);
 
     // determine which reviewer (if any) is assigned to this applicant
-    const isAssigned = allAssignments.some(a => a.applicant.id === userId);
+    const isAssigned = allAssignments.some(a => a.applicant.id === userId && a.reviewer != null);
     const reviewerProfile = isSuperAdmin
-      ? allAssignments.find(a => a.applicant.id === userId)?.reviewer
+      ? allAssignments.find(a => a.applicant.id === userId && a.reviewer != null)?.reviewer
       : isAssigned
         ? currentUser
         : undefined;
