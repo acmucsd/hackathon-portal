@@ -61,7 +61,6 @@ const ProgressBar = ({ count, total, color }: ProgressBarProps) => {
 };
 
 const ReviewersTable = ({ assignments }: ReviewersTableProps) => {
-  console.log('Assignments:', assignments);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortAsc, setSortAsc] = useState(false);
   const reviewers = useMemo<Reviewer[]>(() => {
@@ -125,30 +124,18 @@ const ReviewersTable = ({ assignments }: ReviewersTableProps) => {
     );
   }, [assignments]);
 
-  const filteredReviewers = reviewers
-    .filter(reviewer => reviewer.name.toLowerCase().includes(searchQuery.toLowerCase()))
-    .sort((a, b) => {
-      if (sortAsc) {
-        return a.name.localeCompare(b.name);
-      } else {
-        return b.name.localeCompare(a.name);
-      }
-    });
+
 
   const headers = ['Reviewer Name', 'Completed', 'Accepted', 'Rejected', 'Waitlisted'];
   return (
     <div className={styles.container}>
       <div className={styles.topBar}>
         <Typography variant="label/large">
-          Total Number of Reviewers: {filteredReviewers.length}
+          Total Number of Reviewers: {reviewers.length}
         </Typography>
-        <Search query={searchQuery} setQuery={setSearchQuery} />
       </div>
       <div className={styles.titleRow}>
         <Typography variant="headline/heavy/small">Reviewers List</Typography>
-        <Button variant="secondary" className={styles.downloadButton}>
-          ⬇ Download .CSV
-        </Button>
       </div>
       <Table>
         <thead>
@@ -167,7 +154,7 @@ const ReviewersTable = ({ assignments }: ReviewersTableProps) => {
           </tr>
         </thead>
         <tbody>
-          {filteredReviewers.map(reviewer => (
+          {reviewers.map(reviewer => (
             <tr key={reviewer.id}>
               <td>{reviewer.name}</td>
               <td>

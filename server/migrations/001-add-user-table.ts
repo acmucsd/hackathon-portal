@@ -6,7 +6,7 @@ export class AddUserTable1736321009503 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      "CREATE TYPE \"public\".\"User_accesstype_enum\" AS ENUM('RESTRICTED', 'STANDARD', 'MANAGER', 'ADMIN', 'SUPER_ADMIN')",
+      "CREATE TYPE \"public\".\"User_accesstype_enum\" AS ENUM('RESTRICTED', 'STANDARD', 'MANAGER', 'ADMIN')",
     );
     await queryRunner.query(
       "CREATE TYPE \"public\".\"User_applicationstatus_enum\" AS ENUM('NOT_SUBMITTED', 'SUBMITTED', 'WITHDRAWN', 'ACCEPTED', 'REJECTED', 'CONFIRMED')",
