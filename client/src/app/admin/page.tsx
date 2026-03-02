@@ -18,7 +18,6 @@ export default async function Admin() {
     redirect('/');
   }
 
-
   try {
     const accessType = fetchedUser.accessType;
     const applications =
