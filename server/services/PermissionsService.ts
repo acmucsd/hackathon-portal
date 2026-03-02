@@ -15,6 +15,10 @@ export default class PermissionsService {
     return user.isAdmin();
   }
 
+  public static canSetApplicationOpeningStatus(user: UserModel): boolean {
+    return user.isSuperAdmin();
+  }
+
   public static canGetEmailVerificationLinks(user: UserModel): boolean {
     return user.isAdmin();
   }

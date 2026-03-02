@@ -37,6 +37,8 @@ import {
 import PermissionsService from '../../services/PermissionsService';
 import { ApplicationStatus } from '../../types/Enums';
 import { AttendanceService } from '../../services/AttendanceService';
+import { ApplicationConfigService } from '../../services/ApplicationConfigService';
+import { UpdateApplicationOpeningStatusRequest } from '../validators/AdminControllerRequests';
 import { PostAssignmentsRequest } from '../../types/ApiRequests';
 import { InterestFormResponseService } from '../../services/InterestFormResponseService';
 import { Application } from '../../types/Application';
@@ -50,6 +52,8 @@ export class AdminController {
 
   private attendanceService: AttendanceService;
 
+  private applicationConfigService: ApplicationConfigService;
+
   private interestFormResponseService: InterestFormResponseService;
 
   constructor(
@@ -57,10 +61,12 @@ export class AdminController {
     responseService: ResponseService,
     attendanceService: AttendanceService,
     interestFormResponseService: InterestFormResponseService,
+    applicationConfigService: ApplicationConfigService,
   ) {
     this.userService = userService;
     this.responseService = responseService;
     this.attendanceService = attendanceService;
+    this.applicationConfigService = applicationConfigService;
     this.interestFormResponseService = interestFormResponseService;
   }
 
@@ -235,6 +241,33 @@ export class AdminController {
     );
     const { event } = attendance.getPublicAttendance();
     return { error: null, event };
+  }
+
+  @UseBefore(UserAuthentication)
+  @Put('/applications/set-open-status')
+  async setApplicationsOpen(
+    @AuthenticatedUser() currentUser: UserModel,
+    @Body() body: UpdateApplicationOpeningStatusRequest,
+  ) {
+
+    if (!PermissionsService.canSetApplicationOpeningStatus(currentUser)) {
+      throw new ForbiddenError('You do not have permission to set the application' +
+        ' opening status. Only admins can perform this action.');
+    }
+
+    const updatedBy = currentUser.id;
+
+    const config = await this.applicationConfigService.setApplicationSingleton(
+      body.applicationsOpen,
+      updatedBy,
+    );
+
+    return {
+      error: null,
+      applicationsOpen: config.applicationsOpen,
+      updatedBy: config.updatedBy,
+      updatedAt: config.updatedAt,
+    };
   }
 
   @UseBefore(UserAuthentication)

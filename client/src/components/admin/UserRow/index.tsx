@@ -2,12 +2,13 @@ import TableRow from '@/components/TableRow';
 import TableCell from '@/components/TableCell';
 import Button from '@/components/Button';
 import StatusTag from '@/components/StatusTag';
-import { FullProfile } from '@/lib/types/apiResponses';
+import InterestFormTag from '@/components/InterestFormTag';
+import { RevieweeProfile } from '@/lib/types/apiResponses';
 import { ApplicationStatus } from '@/lib/types/enums';
 import styles from './style.module.scss';
 
 interface UserRowProps {
-  user: FullProfile;
+  user: RevieweeProfile;
   superAdmin: boolean;
 }
 
@@ -25,6 +26,10 @@ const UserRow = ({ user, superAdmin }: UserRowProps) => {
       </TableCell>
       <TableCell>
         <StatusTag status={displayStatus} />
+      </TableCell>
+      <TableCell>{user.university || 'N/A'}</TableCell>
+      <TableCell>
+        <InterestFormTag status={user.didInterestForm ? 'YES' : 'NO'} />
       </TableCell>
       <TableCell className={styles.dateField}>{formattedDate}</TableCell>
       {superAdmin && <TableCell>{'Assigned Reviewer Placeholder'}</TableCell>}
