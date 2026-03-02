@@ -89,7 +89,7 @@ const UsersDashboard = ({ users, assignedUsers, superAdmin }: UsersDashboardProp
       {filterStatus === 'My Assignments' ? (
         <>
           {Object.entries(assignedFilteredUsers).map(([sectionTitle, usersInSection]) => (
-            <div key={sectionTitle}>
+            <div className={styles.sectionContainer} key={sectionTitle}>
               <Typography variant="label/large">
                 {sectionTitle} ({usersInSection.length})
               </Typography>

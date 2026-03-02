@@ -28,6 +28,7 @@ const config = {
         passwordResetLink: '/admin/password-reset-link',
         assignments: '/admin/assignments',
         randomizeAssignments: '/admin/assignments/random',
+        reviewerOverview: '/admin/reviewer-overview',
       },
       event: {
         createEvent: '/event',

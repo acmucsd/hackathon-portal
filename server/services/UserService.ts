@@ -57,6 +57,14 @@ export class UserService {
     return user;
   }
 
+  public async findByIdWithLastDecisionUpdatedByRelation(id: string): Promise<UserModel> {
+    const user = await this.transactionsManager.readOnly(
+      async (entityManager) => Repositories.user(entityManager).findByIdWithLastDecisionUpdatedByRelation(id),
+    );
+    if (!user) throw new NotFoundError('User not found');
+    return user;
+  }
+
   public async createUser(createUser: CreateUser): Promise<UserModel> {
     const email = createUser.email.toLowerCase();
 
@@ -162,6 +170,7 @@ export class UserService {
     userId: string,
     applicationDecision: ApplicationDecision,
     reviewerComments?: string | null,
+    updatedBy?: UserModel,
   ): Promise<UserModel> {
     return this.transactionsManager.readWrite(async (entityManager) => {
       const userRepository = Repositories.user(entityManager);
@@ -170,6 +179,9 @@ export class UserService {
       user.applicationDecision = applicationDecision;
       if (reviewerComments !== undefined) {
         user.reviewerComments = reviewerComments;
+      }
+      if (updatedBy) {
+        user.lastDecisionUpdatedBy = updatedBy;
       }
 
       const updatedUser = userRepository.save(user);
@@ -505,7 +517,6 @@ export class UserService {
     });
   }
 }
-
 
 
 

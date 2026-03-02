@@ -36,6 +36,7 @@ export interface PrivateProfile extends PublicProfile {
 export interface FullProfile extends PrivateProfile {
   applicationDecision: ApplicationDecision;
   reviewerComments: string | null;
+  lastDecisionUpdatedBy?: PublicProfile;
 }
 
 export interface RevieweeProfile extends FullProfile {
@@ -216,6 +217,35 @@ export interface GetEmailVerificationLinkResponse extends ApiResponse {
 
 export interface GetPasswordResetLinkResponse extends ApiResponse {
   passwordResetLink: string;
+}
+
+export interface ReviewerOverviewApplicant {
+  userId: string;
+  firstName: string;
+  lastName: string;
+  applicationDecision: ApplicationDecision | null;
+}
+
+export interface ReviewerOverviewReviewer {
+  reviewerId: string;
+  reviewerFirstName: string;
+  reviewerLastName: string;
+  applicants: ReviewerOverviewApplicant[];
+  total: number;
+  accept: number;
+  reject: number;
+  waitlist: number;
+  noDecision: number;
+  acceptedNonUcsd: number;
+  acceptedNonUcsdPercentage: number | null;
+}
+
+export interface ReviewerOverviewResponse {
+  reviewers: ReviewerOverviewReviewer[];
+}
+
+export interface GetReviewerOverviewResponse extends ApiResponse {
+  dataToReturn: ReviewerOverviewResponse;
 }
 
 // Assignment Responses
