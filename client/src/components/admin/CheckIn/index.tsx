@@ -13,7 +13,7 @@ import Typography from '@/components/Typography';
 import Image from 'next/image';
 import Dropdown from '@/components/Dropdown';
 import { attendEvent } from '@/lib/api/AdminAPI';
-import { formatPacificDateTime, reportError } from '@/lib/utils';
+import { reportError } from '@/lib/utils';
 import { Autocomplete, TextField } from '@mui/material';
 import { ApplicationStatus } from '@/lib/types/enums';
 
@@ -53,6 +53,15 @@ const CheckIn = ({ token, events, users }: CheckInProps) => {
         })),
     [users]
   );
+
+  const handleNameCheckin = useCallback(async () => {
+    if (searchedUser === null) {
+      showToast('Please select a user first.');
+      setSuccess(false);
+      return;
+    }
+    handleScan(searchedUser.id);
+  }, [token, event, searchedUser]);
 
   const handleScan = useCallback(
     async (data: string) => {
@@ -95,15 +104,6 @@ const CheckIn = ({ token, events, users }: CheckInProps) => {
     },
     [token, event]
   );
-
-  const handleNameCheckin = useCallback(async () => {
-    if (searchedUser === null) {
-      showToast('Please select a user first.');
-      setSuccess(false);
-      return;
-    }
-    handleScan(searchedUser.id);
-  }, [searchedUser, handleScan]);
 
   return (
     <Card gap={1.5}>
@@ -179,7 +179,7 @@ const CheckIn = ({ token, events, users }: CheckInProps) => {
           </Typography>
           <Typography variant="body/medium">{event?.name}</Typography>
           <Typography variant="body/medium">
-            {scanTime ? formatPacificDateTime(scanTime, false) : null}
+            {scanTime?.toLocaleTimeString('en-US', { timeStyle: 'long' })}
           </Typography>
         </div>
       ) : null}
