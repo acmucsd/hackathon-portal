@@ -304,26 +304,18 @@ export class AdminController {
     if (!PermissionsService.canViewAllApplications(currentUser))
       throw new ForbiddenError();
 
-    const users = await this.userService.getAllUsersWithReviewerRelation();
-
-    const applicants = users.filter((user) => !user.isAdmin());
-    const interestByEmail = await this.interestFormResponseService.checkEmailsForInterest( // maps email to interest
-      applicants.map(applicant => applicant.email),
+    const allInterests = new Set(
+      (await this.interestFormResponseService.findAllInterestedEmail()).map(res => res.email),
     );
+    const applications = await this.responseService.getAllApplicationsWithReviewerRelation();
 
-    // gets ALL applications, not too efficient but shouldn't be too bad
-    const applications = await this.responseService.getAllApplicationsWithUserRelation();
-    const applicationByUserId = new Map(
-      applications.map((application) => [application.user.id, application]),
-    );
-
-    const assignments = applicants.map((user) => {
-      const application = applicationByUserId.get(user.id);
+    const assignments = applications.map((app) => {
+      const user = app.user;
       return {
         applicant: {
           ...user.getHiddenProfile(),
-          didInterestForm: interestByEmail.get(user.email) ?? false,
-          university: (application?.data as Application)?.university ?? null,
+          didInterestForm: allInterests.has(user.email),
+          university: (app?.data as Application)?.university ?? null,
         },
         reviewer: user.reviewer?.getHiddenProfile(),
       };
@@ -341,30 +333,23 @@ export class AdminController {
     if (!PermissionsService.canViewAllApplications(currentUser))
       throw new ForbiddenError();
 
-    const admin = await this.userService.findByIdWithReviewerRelation(params.id);
-    const reviewees = admin.reviewees ?? [];
-
-    const interestByEmail = await this.interestFormResponseService.checkEmailsForInterest(
-      reviewees.map(reviewee => reviewee.email),
+    const allInterests = new Set(
+      (await this.interestFormResponseService.findAllInterestedEmail()).map(res => res.email),
     );
+    const applications = await this.responseService.getAllApplicationsWithReviewerRelation();
+    const filteredApplications = (applications).filter(app => app.user.reviewer?.id == params.id);
 
-    // gets ALL applications, not too efficient but shouldn't be too bad
-    const applications = await this.responseService.getAllApplicationsWithUserRelation();
-    const applicationByUserId = new Map(
-      applications.map((application) => [application.user.id, application]),
-    );
-
-    const assignments = await Promise.all(reviewees.map(async (reviewee) => {
-      const application = applicationByUserId.get(reviewee.id);
+    const assignments = filteredApplications.map((app) => {
+      const user = app.user;
       return {
         applicant: {
-          ...reviewee.getHiddenProfile(),
-          didInterestForm: interestByEmail.get(reviewee.email) ?? false,
-          university: (application?.data as Application)?.university ?? null,
+          ...user.getHiddenProfile(),
+          didInterestForm: allInterests.has(user.email),
+          university: (app.data as Application)?.university ?? null,
         },
-        reviewer: admin.getHiddenProfile(),
+        reviewer: user.reviewer?.getHiddenProfile(),
       };
-    }));
+    });
 
     return { error: null, assignments };
     }
@@ -397,8 +382,5 @@ export class AdminController {
       updateUserAccessRequest.email, updateUserAccessRequest.access,
     );
     return { error: null, updates: updatedAccess.getPrivateProfile() };
-
-
-
   }
 }
