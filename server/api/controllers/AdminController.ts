@@ -35,7 +35,7 @@ import {
   UuidParam,
 } from '../validators/GenericRequests';
 import PermissionsService from '../../services/PermissionsService';
-import { ApplicationDecision, ApplicationStatus } from '../../types/Enums';
+import { ApplicationStatus } from '../../types/Enums';
 import { AttendanceService } from '../../services/AttendanceService';
 import { PostAssignmentsRequest } from '../../types/ApiRequests';
 import { InterestFormResponseService } from '../../services/InterestFormResponseService';
