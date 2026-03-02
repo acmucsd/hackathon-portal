@@ -1,5 +1,4 @@
 import { TIMELINE } from '@/config';
-import AdminDashboard from '@/components/admin/AdminDashboard';
 import SuperAdminDashboard from '@/components/admin/SuperAdminDashboard';
 import { UserAPI, AdminAPI } from '@/lib/api';
 import { redirect } from 'next/navigation';
@@ -16,9 +15,8 @@ export default async function superAdmin() {
 
   try {
     const fetchedUser = await UserAPI.getCurrentUser(accessToken);
-    const accessType = fetchedUser.accessType;
-    const applications = accessType === 'SUPER_ADMIN' ? await AdminAPI.getUsers(accessToken) : [];
     const assignments = await AdminAPI.getAllAssignments(accessToken);
+    const applications = assignments.map(a => ({ ...a.applicant, reviewer: a.reviewer }));
 
     return (
       <main className={styles.main}>

@@ -13,12 +13,21 @@ import { useWindowSize } from '@/lib/hooks/useWindowSize';
 interface UsersTableProps {
   filteredUsers: RevieweeProfile[];
   itemsPerPage?: number;
+  superAdmin?: boolean;
 }
 
-const UsersTable = ({ filteredUsers, itemsPerPage = 10 }: UsersTableProps) => {
+const UsersTable = ({ filteredUsers, itemsPerPage = 10, superAdmin }: UsersTableProps) => {
   const [currentPage, setCurrentPage] = useState(0);
 
-  const headers = ['Applicant Name', 'Status', 'School', 'Interest Form?', 'Submission', 'Action'];
+  const headers = [
+    'Applicant Name',
+    'Status',
+    'School',
+    'Interest Form?',
+    'Submission',
+    ...(superAdmin ? ['Assigned Reviewer'] : []),
+    'Action',
+  ];
   const size = useWindowSize();
   const isSmall = (size.width ?? 0) <= 1024;
 
@@ -34,7 +43,7 @@ const UsersTable = ({ filteredUsers, itemsPerPage = 10 }: UsersTableProps) => {
       {isSmall ? (
         <TableList>
           {currentUsers.map(user => (
-            <UserItem key={user.id} user={user} />
+            <UserItem key={user.id} user={user} superAdmin={superAdmin} />
           ))}
         </TableList>
       ) : (
@@ -50,7 +59,7 @@ const UsersTable = ({ filteredUsers, itemsPerPage = 10 }: UsersTableProps) => {
           </thead>
           <tbody>
             {currentUsers.map(user => (
-              <UserRow key={user.id} user={user} />
+              <UserRow key={user.id} user={user} superAdmin={superAdmin} />
             ))}
           </tbody>
         </Table>

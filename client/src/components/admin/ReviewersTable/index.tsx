@@ -124,15 +124,11 @@ const ReviewersTable = ({ assignments }: ReviewersTableProps) => {
     );
   }, [assignments]);
 
-
-
   const headers = ['Reviewer Name', 'Completed', 'Accepted', 'Rejected', 'Waitlisted'];
   return (
     <div className={styles.container}>
       <div className={styles.topBar}>
-        <Typography variant="label/large">
-          Total Number of Reviewers: {reviewers.length}
-        </Typography>
+        <Typography variant="label/large">Total Number of Reviewers: {reviewers.length}</Typography>
       </div>
       <div className={styles.titleRow}>
         <Typography variant="headline/heavy/small">Reviewers List</Typography>

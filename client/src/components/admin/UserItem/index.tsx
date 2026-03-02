@@ -1,14 +1,15 @@
 import Card from '@/components/Card';
 import Typography from '@/components/Typography';
 import StatusTag from '@/components/StatusTag';
+import InterestFormTag from '@/components/InterestFormTag';
 import Button from '@/components/Button';
-import { FullProfile } from '@/lib/types/apiResponses';
+import { RevieweeProfile } from '@/lib/types/apiResponses';
 import { ApplicationStatus } from '@/lib/types/enums';
 import styles from './style.module.scss';
 
 interface UserItemProps {
-  user: FullProfile;
-  superAdmin: boolean;
+  user: RevieweeProfile;
+  superAdmin?: boolean;
 }
 
 const UserItem = ({ user, superAdmin }: UserItemProps) => {
@@ -25,10 +26,15 @@ const UserItem = ({ user, superAdmin }: UserItemProps) => {
         {user.firstName} {user.lastName}
       </Typography>
       <StatusTag status={displayStatus} />
-      <Typography variant="body/medium">Account Creation Date: {formattedDate}</Typography>
+      <Typography variant="body/medium">School: {user.university || 'N/A'}</Typography>
+      <Typography variant="body/medium">
+        Interest Form: <InterestFormTag status={user.didInterestForm ? 'YES' : 'NO'} />
+      </Typography>
+      <Typography variant="body/medium">Submission Date: {formattedDate}</Typography>
       {superAdmin && (
         <Typography variant="body/medium">
-          Assigned Reviewer: {'Assigned Reviewer Placeholder'}
+          Assigned Reviewer:{' '}
+          {user.reviewer ? `${user.reviewer.firstName} ${user.reviewer.lastName}` : 'Unassigned'}
         </Typography>
       )}
       {user.applicationStatus !== ApplicationStatus.NOT_SUBMITTED && (
@@ -36,6 +42,7 @@ const UserItem = ({ user, superAdmin }: UserItemProps) => {
           className={styles.viewButton}
           href={`/applicationView/${user.id}`}
           variant="tertiary"
+          openNewTab
         >
           View Application
         </Button>

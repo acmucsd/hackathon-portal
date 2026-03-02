@@ -9,7 +9,7 @@ import styles from './style.module.scss';
 
 interface UserRowProps {
   user: RevieweeProfile;
-  superAdmin: boolean;
+  superAdmin?: boolean;
 }
 
 const UserRow = ({ user, superAdmin }: UserRowProps) => {
@@ -32,7 +32,11 @@ const UserRow = ({ user, superAdmin }: UserRowProps) => {
         <InterestFormTag status={user.didInterestForm ? 'YES' : 'NO'} />
       </TableCell>
       <TableCell className={styles.dateField}>{formattedDate}</TableCell>
-      {superAdmin && <TableCell>{'Assigned Reviewer Placeholder'}</TableCell>}
+      {superAdmin && (
+        <TableCell>
+          {user.reviewer ? `${user.reviewer.firstName} ${user.reviewer.lastName}` : 'Unassigned'}
+        </TableCell>
+      )}
       <TableCell>
         {user.applicationStatus !== ApplicationStatus.NOT_SUBMITTED && (
           <Button

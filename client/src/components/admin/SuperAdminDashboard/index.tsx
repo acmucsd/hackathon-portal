@@ -1,26 +1,23 @@
 'use client';
-import Image from 'next/image';
-import Card from '@/components/Card';
 import styles from './style.module.scss';
-import Banner from '@/../public/assets/banner.png';
-import Typography from '@/components/Typography';
 import Button from '@/components/Button';
-import TimelineItem from '@/components/TimelineItem';
-import ApplicationCount from '../ApplicationCount';
-import { PrivateProfile, FullProfile, ReviewAssignment } from '@/lib/types/apiResponses';
+import {
+  PrivateProfile,
+  FullProfile,
+  RevieweeProfile,
+  ReviewAssignment,
+} from '@/lib/types/apiResponses';
 import { ApplicationDecision, ApplicationStatus } from '@/lib/types/enums';
 import { Deadlines } from '@/components/Dashboard';
-import Heading from '@/components/Heading';
-import QrCode from '@/components/QrCode';
-import AdminDashboard from '../AdminDashboard';
-import { act, useState } from 'react';
+import { useState } from 'react';
 import UsersDashboard from '@/components/admin/UsersDashboard';
 import SuperAdminTools from '@/components/admin/SuperAdminTools';
 import ReviewersTable from '@/components/admin/ReviewersTable';
+
 interface AdminDashboardProps {
   timeline: Deadlines;
   user: PrivateProfile;
-  applications: FullProfile[];
+  applications: RevieweeProfile[];
   assignments: ReviewAssignment[];
   token: string;
 }
@@ -65,7 +62,9 @@ const SuperAdminDashboard = ({
           Super Admin Tools
         </Button>
       </div>
-      {activeTab === 'applications' && <UsersDashboard users={applications} superAdmin={true} />}
+      {activeTab === 'applications' && (
+        <UsersDashboard users={applications} assignedUsers={applications} superAdmin={true} />
+      )}
       {activeTab === 'reviewers' && <ReviewersTable assignments={assignments} />}
       {activeTab === 'tools' && <SuperAdminTools token={token} user={user} />}
     </div>
