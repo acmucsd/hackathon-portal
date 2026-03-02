@@ -3,9 +3,9 @@ import Card from '@/components/Card';
 import Button from '@/components/Button';
 import { appQuestions } from '@/config';
 import { Fragment } from 'react';
-import StatusTag from '@/components/StatusTag';
-import { ResponseModel } from '@/lib/types/apiResponses';
-import { ApplicationDecision, ApplicationStatus, FormType } from '@/lib/types/enums';
+import InterestFormTag from '@/components/InterestFormTag';
+import { ResponseModel, RevieweeProfile } from '@/lib/types/apiResponses';
+import { ApplicationDecision, ApplicationStatus } from '@/lib/types/enums';
 import styles from './style.module.scss';
 import Link from 'next/link';
 
@@ -31,15 +31,8 @@ interface ApplicationViewProps {
 
 const ApplicationView = ({ application, waivers, stats }: ApplicationViewProps) => {
   const responses: Record<string, string | string[] | File | any> = application.data;
-  const user = application.user;
-  // const [currentDecision, setCurrentDecision] = useState(decision);
-  const liabilitySubmitted = !!waivers.find(
-    response => response.formType === FormType.LIABILITY_WAIVER
-  );
-  // const photoReleaseSubmitted = !!waivers.find(
-  //   response => response.formType === FormType.PHOTO_RELEASE
-  // );
-  // const [currentStatus, setCurrentStatus] = useState(user.applicationStatus);
+  const user = application.user as RevieweeProfile;
+  const didInterestForm = user.didInterestForm ?? false;
 
   const NO_RESPONSE = 'No response.';
 
@@ -102,13 +95,7 @@ const ApplicationView = ({ application, waivers, stats }: ApplicationViewProps) 
             <span className={styles.interestQuestion}>
               <dt className={styles.question}>Filled out interest form: </dt>
               <dd className={styles.response}>
-                <StatusTag
-                  status={
-                    liabilitySubmitted
-                      ? ApplicationStatus.SUBMITTED
-                      : ApplicationStatus.NOT_SUBMITTED
-                  }
-                ></StatusTag>
+                <InterestFormTag status={didInterestForm ? 'YES' : 'NO'} />
               </dd>
             </span>
           </dl>

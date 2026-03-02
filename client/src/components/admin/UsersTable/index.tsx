@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Table from '@/components/Table';
 import TableHeader from '@/components/TableHeader';
 import TableCell from '@/components/TableCell';
@@ -18,6 +18,10 @@ interface UsersTableProps {
 
 const UsersTable = ({ filteredUsers, itemsPerPage = 10, superAdmin }: UsersTableProps) => {
   const [currentPage, setCurrentPage] = useState(0);
+
+  useEffect(() => {
+    setCurrentPage(0);
+  }, [filteredUsers]);
 
   const headers = [
     'Applicant Name',
