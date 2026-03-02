@@ -305,7 +305,7 @@ export class AdminController {
       throw new ForbiddenError();
 
     const allInterests = new Set(
-      (await this.interestFormResponseService.findAllInterestedEmail()).map(res => res.email)
+      (await this.interestFormResponseService.findAllInterestedEmail()).map(res => res.email),
     );
     const applications = await this.responseService.getAllApplicationsWithReviewerRelation();
 
@@ -334,7 +334,7 @@ export class AdminController {
       throw new ForbiddenError();
 
     const allInterests = new Set(
-      (await this.interestFormResponseService.findAllInterestedEmail()).map(res => res.email)
+      (await this.interestFormResponseService.findAllInterestedEmail()).map(res => res.email),
     );
     const applications = await this.responseService.getAllApplicationsWithReviewerRelation();
     const filteredApplications = (applications).filter(app => app.user.reviewer?.id == params.id);

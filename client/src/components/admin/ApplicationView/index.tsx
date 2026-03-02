@@ -30,7 +30,12 @@ interface ApplicationViewProps {
   onConfirm?: () => Promise<void> | void;
 }
 
-const ApplicationView = ({ application, waivers, stats, revieweeProfile }: ApplicationViewProps) => {
+const ApplicationView = ({
+  application,
+  waivers,
+  stats,
+  revieweeProfile,
+}: ApplicationViewProps) => {
   const responses: Record<string, string | string[] | File | any> = application.data;
   const user = application.user;
   // const [currentDecision, setCurrentDecision] = useState(decision);

@@ -14,9 +14,9 @@ export const ResponseRepository = Container.get(DataSource)
     async findAllWithReviewerRelation(): Promise<ResponseModel[]> {
       return this.find({ relations: {
         user: {
-          reviewer: true
-        }
-      }});
+          reviewer: true,
+        },
+      } });
     },
 
     async findByUuid(uuid: string): Promise<ResponseModel | null> {
