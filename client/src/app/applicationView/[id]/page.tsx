@@ -1,6 +1,6 @@
 import ApplicationReviewClient from '@/components/ApplicationReviewClient';
 import { AdminAPI, UserAPI } from '@/lib/api';
-import type { ReviewAssignment } from '@/lib/types/apiResponses';
+import type { ResponseModelWithRevieweeProfile, ReviewAssignment } from '@/lib/types/apiResponses';
 import { getCookie } from '@/lib/services/CookieService';
 import { CookieType, ApplicationDecision } from '@/lib/types/enums';
 import { redirect } from 'next/navigation';
@@ -47,6 +47,13 @@ export default async function ApplicationReviewPage({ params }: ApplicationRevie
         ? currentUser
         : undefined;
 
+    // this applicant
+    const revieweeProfile = allAssignments.find(a => a.applicant.id === userId)!.applicant;
+    const fetchedApplicationWithRevieweeProfile: ResponseModelWithRevieweeProfile = {
+      ...fetchedApplication,
+      user: revieweeProfile,
+    }
+
     let stats;
     if (isSuperAdmin) {
       // global stats across all reviewers
@@ -92,7 +99,7 @@ export default async function ApplicationReviewPage({ params }: ApplicationRevie
       <ApplicationReviewClient
         accessToken={accessToken}
         userId={userId}
-        fetchedApplication={fetchedApplication}
+        fetchedApplication={fetchedApplicationWithRevieweeProfile}
         fetchedDecision={fetchedDecision?.applicationDecision ?? ApplicationDecision.NO_DECISION}
         fetchedReviewerComments={fetchedDecision?.reviewerComments ?? ''}
         fetchedDecisionUpdatedAt={fetchedDecision?.updatedAt ?? null}

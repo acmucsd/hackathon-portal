@@ -17,6 +17,15 @@ export interface ResponseModel {
   data: Application;
 }
 
+export interface ResponseModelWithRevieweeProfile {
+  uuid: string;
+  user: RevieweeProfile;
+  createdAt: string;
+  updatedAt: string;
+  formType: FormType;
+  data: Application;
+}
+
 // User responses
 export interface PublicProfile {
   id: string;

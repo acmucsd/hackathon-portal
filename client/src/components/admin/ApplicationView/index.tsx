@@ -4,7 +4,7 @@ import Button from '@/components/Button';
 import { appQuestions } from '@/config';
 import { Fragment } from 'react';
 import InterestFormTag from '@/components/InterestFormTag';
-import { ResponseModel, RevieweeProfile } from '@/lib/types/apiResponses';
+import { ResponseModel, ResponseModelWithRevieweeProfile, RevieweeProfile } from '@/lib/types/apiResponses';
 import { ApplicationDecision, ApplicationStatus } from '@/lib/types/enums';
 import styles from './style.module.scss';
 import Link from 'next/link';
@@ -20,7 +20,7 @@ interface ApplicationStats {
 }
 
 interface ApplicationViewProps {
-  application: ResponseModel;
+  application: ResponseModelWithRevieweeProfile;
   token: string;
   decision: ApplicationDecision;
   status: ApplicationStatus;
@@ -31,7 +31,7 @@ interface ApplicationViewProps {
 
 const ApplicationView = ({ application, waivers, stats }: ApplicationViewProps) => {
   const responses: Record<string, string | string[] | File | any> = application.data;
-  const user = application.user as RevieweeProfile;
+  const user = application.user;
   const didInterestForm = user.didInterestForm ?? false;
 
   const NO_RESPONSE = 'No response.';
