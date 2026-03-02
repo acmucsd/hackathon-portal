@@ -10,7 +10,12 @@ import { ApplicationDecision, ApplicationStatus } from '@/lib/types/enums';
 import showToast from '@/lib/showToast';
 import { AdminAPI } from '@/lib/api';
 import { reportError } from '@/lib/utils';
-import type { PublicProfile, RevieweeProfile, ResponseModel, ResponseModelWithRevieweeProfile } from '@/lib/types/apiResponses';
+import type {
+  PublicProfile,
+  RevieweeProfile,
+  ResponseModel,
+  ResponseModelWithRevieweeProfile,
+} from '@/lib/types/apiResponses';
 import type { Application } from '@/lib/types/application';
 
 type ApplicationStats = {

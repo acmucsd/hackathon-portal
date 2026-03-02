@@ -52,7 +52,7 @@ export default async function ApplicationReviewPage({ params }: ApplicationRevie
     const fetchedApplicationWithRevieweeProfile: ResponseModelWithRevieweeProfile = {
       ...fetchedApplication,
       user: revieweeProfile,
-    }
+    };
 
     let stats;
     if (isSuperAdmin) {

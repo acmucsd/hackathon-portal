@@ -4,7 +4,11 @@ import Button from '@/components/Button';
 import { appQuestions } from '@/config';
 import { Fragment } from 'react';
 import InterestFormTag from '@/components/InterestFormTag';
-import { ResponseModel, ResponseModelWithRevieweeProfile, RevieweeProfile } from '@/lib/types/apiResponses';
+import {
+  ResponseModel,
+  ResponseModelWithRevieweeProfile,
+  RevieweeProfile,
+} from '@/lib/types/apiResponses';
 import { ApplicationDecision, ApplicationStatus } from '@/lib/types/enums';
 import styles from './style.module.scss';
 import Link from 'next/link';
