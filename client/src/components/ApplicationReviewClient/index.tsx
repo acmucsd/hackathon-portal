@@ -11,6 +11,7 @@ import showToast from '@/lib/showToast';
 import { AdminAPI } from '@/lib/api';
 import { reportError } from '@/lib/utils';
 import type { PublicProfile, RevieweeProfile, ResponseModel } from '@/lib/types/apiResponses';
+import type { Application } from '@/lib/types/application';
 
 type ApplicationStats = {
   total: number;
@@ -37,29 +38,42 @@ function getStatsKey(decision: ApplicationDecision): DecisionStatsKey | null {
   }
 }
 
+const UCSD = 'University of California, San Diego';
+
 function recalculateStats(
   previousStats: ApplicationStats,
   fromDecision: ApplicationDecision,
-  toDecision: ApplicationDecision
+  toDecision: ApplicationDecision,
+  isNonUcsd: boolean
 ): ApplicationStats {
   if (fromDecision === toDecision) return previousStats;
 
   let accepted = previousStats.accepted;
   let rejected = previousStats.rejected;
   let waitlisted = previousStats.waitlisted;
+  let acceptedNonUcsd = previousStats.acceptedNonUcsd;
 
   const fromKey = getStatsKey(fromDecision);
   const toKey = getStatsKey(toDecision);
 
-  if (fromKey === 'accepted') accepted = Math.max(0, accepted - 1);
+  if (fromKey === 'accepted') {
+    accepted = Math.max(0, accepted - 1);
+    if (isNonUcsd) acceptedNonUcsd = Math.max(0, acceptedNonUcsd - 1);
+  }
   if (fromKey === 'rejected') rejected = Math.max(0, rejected - 1);
   if (fromKey === 'waitlisted') waitlisted = Math.max(0, waitlisted - 1);
 
-  if (toKey === 'accepted') accepted += 1;
+  if (toKey === 'accepted') {
+    accepted += 1;
+    if (isNonUcsd) acceptedNonUcsd += 1;
+  }
   if (toKey === 'rejected') rejected += 1;
   if (toKey === 'waitlisted') waitlisted += 1;
 
   const acceptedPct = previousStats.total ? Math.round((accepted / previousStats.total) * 100) : 0;
+  const acceptedNonUcsdPercentage = accepted
+    ? Math.round((acceptedNonUcsd / accepted) * 1000) / 10
+    : 0;
 
   return {
     ...previousStats,
@@ -67,6 +81,8 @@ function recalculateStats(
     rejected,
     waitlisted,
     acceptedPct,
+    acceptedNonUcsd,
+    acceptedNonUcsdPercentage,
   };
 }
 
@@ -103,6 +119,7 @@ export default function ApplicationReviewClient({
   currentUser,
 }: Props) {
   const router = useRouter();
+  const isNonUcsd = (fetchedApplication.data as Application)?.university !== UCSD;
 
   const [assignedApplicants, setAssignedApplicants] =
     useState<RevieweeProfile[]>(initialAssignedApplicants);
@@ -203,7 +220,7 @@ export default function ApplicationReviewClient({
       );
       showToast('Saved successfully!', `Application marked as ${currentDecision}`);
 
-      setLiveStats(prev => recalculateStats(prev, savedDecision, currentDecision));
+      setLiveStats(prev => recalculateStats(prev, savedDecision, currentDecision, isNonUcsd));
       setSavedDecision(currentDecision);
       setNotes(updatedUser.reviewerComments ?? '');
       setLastSavedAt(updatedUser.updatedAt ?? new Date().toISOString());

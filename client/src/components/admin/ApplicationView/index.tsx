@@ -3,9 +3,9 @@ import Card from '@/components/Card';
 import Button from '@/components/Button';
 import { appQuestions } from '@/config';
 import { Fragment } from 'react';
-import StatusTag from '@/components/StatusTag';
+import InterestFormTag from '@/components/InterestFormTag';
 import { ResponseModel, RevieweeProfile } from '@/lib/types/apiResponses';
-import { ApplicationDecision, ApplicationStatus, FormType } from '@/lib/types/enums';
+import { ApplicationDecision, ApplicationStatus } from '@/lib/types/enums';
 import styles from './style.module.scss';
 import Link from 'next/link';
 
@@ -38,12 +38,7 @@ const ApplicationView = ({
 }: ApplicationViewProps) => {
   const responses: Record<string, string | string[] | File | any> = application.data;
   const user = application.user;
-  // const [currentDecision, setCurrentDecision] = useState(decision);
-  const interestSubmitted = revieweeProfile.didInterestForm;
-  // const photoReleaseSubmitted = !!waivers.find(
-  //   response => response.formType === FormType.PHOTO_RELEASE
-  // );
-  // const [currentStatus, setCurrentStatus] = useState(user.applicationStatus);
+  const didInterestForm = revieweeProfile.didInterestForm ?? false;
 
   const NO_RESPONSE = 'No response.';
 
@@ -106,13 +101,7 @@ const ApplicationView = ({
             <span className={styles.interestQuestion}>
               <dt className={styles.question}>Filled out interest form: </dt>
               <dd className={styles.response}>
-                <StatusTag
-                  status={
-                    interestSubmitted
-                      ? ApplicationStatus.SUBMITTED
-                      : ApplicationStatus.NOT_SUBMITTED
-                  }
-                ></StatusTag>
+                <InterestFormTag status={didInterestForm ? 'YES' : 'NO'} />
               </dd>
             </span>
           </dl>
