@@ -47,6 +47,8 @@ export default async function ApplicationReviewPage({ params }: ApplicationRevie
       acceptedPct: reviewerStats?.total
         ? Math.round((reviewerStats.accept / reviewerStats.total) * 100)
         : 0,
+      acceptedNonUcsd: reviewerStats?.acceptedNonUcsd ?? 0,
+      acceptedNonUcsdPercentage: reviewerStats?.acceptedNonUcsdPercentage ?? 0,
     };
 
     return (

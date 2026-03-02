@@ -15,6 +15,8 @@ interface ApplicationStats {
   rejected: number;
   waitlisted: number;
   acceptedPct: number;
+  acceptedNonUcsd: number;
+  acceptedNonUcsdPercentage: number;
 }
 
 interface ApplicationViewProps {
@@ -27,15 +29,7 @@ interface ApplicationViewProps {
   onConfirm?: () => Promise<void> | void;
 }
 
-const ApplicationView = ({
-  application,
-  token,
-  decision,
-  status,
-  waivers,
-  stats,
-  onConfirm,
-}: ApplicationViewProps) => {
+const ApplicationView = ({ application, waivers, stats }: ApplicationViewProps) => {
   const responses: Record<string, string | string[] | File | any> = application.data;
   const user = application.user;
   // const [currentDecision, setCurrentDecision] = useState(decision);
@@ -63,6 +57,9 @@ const ApplicationView = ({
           <span className={styles.gray}> | </span>
           {stats.waitlisted}
           <span className={styles.waitlisted}> Waitlisted</span>
+          <span className={styles.gray}> | </span>
+          {stats.acceptedNonUcsd}
+          <span className={styles.gray}> Non-UCSD Accepted</span>
         </p>
         <p className={styles.statsRight}>
           <span className={styles.gray}> Remaining: </span>
@@ -71,6 +68,8 @@ const ApplicationView = ({
           {stats.total}
           <span className={styles.gray}>{' | Total % of accepted: '}</span>
           {' ' + stats.acceptedPct + '%'}
+          <span className={styles.gray}>{' | Non-UCSD % of accepted: '}</span>
+          {stats.acceptedNonUcsdPercentage + '%'}
         </p>
       </div>
       <hr className={styles.divider} />

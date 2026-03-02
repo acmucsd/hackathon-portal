@@ -18,12 +18,60 @@ type ApplicationStats = {
   rejected: number;
   waitlisted: number;
   acceptedPct: number;
+  acceptedNonUcsd: number;
+  acceptedNonUcsdPercentage: number;
 };
 
 type DecisionStatsKey = 'accepted' | 'rejected' | 'waitlisted';
 type ApplicantListItem = PublicProfile & {
   createdAt?: string | Date;
 };
+
+function getStatsKey(decision: ApplicationDecision): DecisionStatsKey | null {
+  switch (decision) {
+    case ApplicationDecision.ACCEPT:
+      return 'accepted';
+    case ApplicationDecision.REJECT:
+      return 'rejected';
+    case ApplicationDecision.WAITLIST:
+      return 'waitlisted';
+    default:
+      return null;
+  }
+}
+
+function recalculateStats(
+  previousStats: ApplicationStats,
+  fromDecision: ApplicationDecision,
+  toDecision: ApplicationDecision
+): ApplicationStats {
+  if (fromDecision === toDecision) return previousStats;
+
+  let accepted = previousStats.accepted;
+  let rejected = previousStats.rejected;
+  let waitlisted = previousStats.waitlisted;
+
+  const fromKey = getStatsKey(fromDecision);
+  const toKey = getStatsKey(toDecision);
+
+  if (fromKey === 'accepted') accepted = Math.max(0, accepted - 1);
+  if (fromKey === 'rejected') rejected = Math.max(0, rejected - 1);
+  if (fromKey === 'waitlisted') waitlisted = Math.max(0, waitlisted - 1);
+
+  if (toKey === 'accepted') accepted += 1;
+  if (toKey === 'rejected') rejected += 1;
+  if (toKey === 'waitlisted') waitlisted += 1;
+
+  const acceptedPct = previousStats.total ? Math.round((accepted / previousStats.total) * 100) : 0;
+
+  return {
+    ...previousStats,
+    accepted,
+    rejected,
+    waitlisted,
+    acceptedPct,
+  };
+}
 
 type Props = {
   accessToken: string;
@@ -54,54 +102,6 @@ export default function ApplicationReviewClient({
 }: Props) {
   const router = useRouter();
 
-  const getStatsKey = (decision: ApplicationDecision): DecisionStatsKey | null => {
-    switch (decision) {
-      case ApplicationDecision.ACCEPT:
-        return 'accepted';
-      case ApplicationDecision.REJECT:
-        return 'rejected';
-      case ApplicationDecision.WAITLIST:
-        return 'waitlisted';
-      default:
-        return null;
-    }
-  };
-
-  const recalculateStats = (
-    previousStats: ApplicationStats,
-    fromDecision: ApplicationDecision,
-    toDecision: ApplicationDecision
-  ): ApplicationStats => {
-    if (fromDecision === toDecision) return previousStats;
-
-    let accepted = previousStats.accepted;
-    let rejected = previousStats.rejected;
-    let waitlisted = previousStats.waitlisted;
-
-    const fromKey = getStatsKey(fromDecision);
-    const toKey = getStatsKey(toDecision);
-
-    if (fromKey === 'accepted') accepted = Math.max(0, accepted - 1);
-    if (fromKey === 'rejected') rejected = Math.max(0, rejected - 1);
-    if (fromKey === 'waitlisted') waitlisted = Math.max(0, waitlisted - 1);
-
-    if (toKey === 'accepted') accepted += 1;
-    if (toKey === 'rejected') rejected += 1;
-    if (toKey === 'waitlisted') waitlisted += 1;
-
-    const acceptedPct = previousStats.total
-      ? Math.round((accepted / previousStats.total) * 100)
-      : 0;
-
-    return {
-      ...previousStats,
-      accepted,
-      rejected,
-      waitlisted,
-      acceptedPct,
-    };
-  };
-
   const [assignedApplicants, setAssignedApplicants] = useState<ApplicantListItem[]>([]);
   const [assignedReviewer, setAssignedReviewer] = useState<PublicProfile | undefined>(reviewer);
   const [isSaving, setIsSaving] = useState(false);
@@ -123,15 +123,9 @@ export default function ApplicationReviewClient({
 
   useEffect(() => {
     setNotes(fetchedReviewerComments ?? '');
-  }, [fetchedReviewerComments, userId]);
-
-  useEffect(() => {
     setLastSavedAt(fetchedDecisionUpdatedAt ?? null);
-  }, [fetchedDecisionUpdatedAt, userId]);
-
-  useEffect(() => {
     setLastSavedBy(fetchedDecisionUpdatedBy);
-  }, [fetchedDecisionUpdatedBy, userId]);
+  }, [fetchedReviewerComments, fetchedDecisionUpdatedAt, fetchedDecisionUpdatedBy, userId]);
 
   useEffect(() => {
     const loadAssignments = async () => {
