@@ -1,14 +1,22 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Typography from '@/components/Typography';
 import Search from '@/components/Search';
 import Table from '@/components/Table';
+import { PrivateProfile, FullProfile, ReviewAssignment } from '@/lib/types/apiResponses';
 import TableHeader from '@/components/TableHeader';
 import TableCell from '@/components/TableCell';
 import TableRow from '@/components/TableRow';
 import Button from '@/components/Button';
 import styles from './style.module.scss';
+import { getAllAssignments } from '@/lib/api/AdminAPI';
+import { getCookie } from '@/lib/services/CookieService';
+import { CookieType } from '@/lib/types/enums';
 
+
+interface ReviewersTableProps {
+  assignments: ReviewAssignment[];
+}
 interface ReviewerStats {
   completed: { count: number; total: number };
   accepted: { count: number; total: number };
@@ -22,59 +30,6 @@ interface Reviewer {
   stats: ReviewerStats;
 }
 
-// HARD CODED FOR NOW
-const hardCodedReviewers: Reviewer[] = [
-  {
-    id: '1',
-    name: 'Sophia Grace',
-    stats: {
-      completed: { count: 35, total: 40 },
-      accepted: { count: 15, total: 40 },
-      rejected: { count: 5, total: 40 },
-      waitlisted: { count: 10, total: 40 },
-    },
-  },
-  {
-    id: '2',
-    name: 'Liam James',
-    stats: {
-      completed: { count: 20, total: 40 },
-      accepted: { count: 10, total: 40 },
-      rejected: { count: 5, total: 40 },
-      waitlisted: { count: 5, total: 40 },
-    },
-  },
-  {
-    id: '3',
-    name: 'Olivia Rose',
-    stats: {
-      completed: { count: 10, total: 40 },
-      accepted: { count: 5, total: 40 },
-      rejected: { count: 3, total: 40 },
-      waitlisted: { count: 2, total: 40 },
-    },
-  },
-  {
-    id: '4',
-    name: 'Noah Alexander',
-    stats: {
-      completed: { count: 15, total: 40 },
-      accepted: { count: 10, total: 40 },
-      rejected: { count: 3, total: 40 },
-      waitlisted: { count: 2, total: 40 },
-    },
-  },
-  {
-    id: '5',
-    name: 'Ava Marie',
-    stats: {
-      completed: { count: 25, total: 40 },
-      accepted: { count: 10, total: 40 },
-      rejected: { count: 5, total: 40 },
-      waitlisted: { count: 10, total: 40 },
-    },
-  },
-];
 
 const getPercentage = (count: number, total: number) => {
   if (total === 0) return 0;
@@ -107,16 +62,78 @@ const ProgressBar = ({ count, total, color }: ProgressBarProps) => {
   );
 };
 
-const ReviewersTable = () => {
+const ReviewersTable = ({ assignments }: ReviewersTableProps) => {
+  console.log('Assignments:', assignments);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortAsc, setSortAsc] = useState(false);
+  const reviewers = useMemo<Reviewer[]>(() => {
+    const reviewerMap = new Map<string, {
+      id: string;
+      name: string;
+      total: number;
+      completed: number;
+      accepted: number;
+      rejected: number;
+      waitlisted: number;
+    }>();
+    assignments.forEach(({reviewer, applicant}) => {
+      if (!reviewer) return;
 
-  const filteredReviewers = hardCodedReviewers
+      const id = reviewer.id;
+      const name = reviewer.firstName + ' ' + reviewer.lastName;
+      if (!reviewerMap.has(id)) {
+        reviewerMap.set(id, {
+          id,
+          name,
+          total: 0,
+          completed: 0,
+          accepted: 0,
+          rejected: 0,
+          waitlisted: 0,
+        });
+      }
+      const row = reviewerMap.get(id)!;
+      if (row) {
+        row.total += 1;
+        const decision = String(applicant.applicationDecision);
+        if (decision && decision !== 'NO_DECISION') {
+          row.completed += 1;
+          if (decision === 'ACCEPT') {
+            row.accepted += 1;
+          }
+          if (decision === 'REJECT') {
+            row.rejected += 1;
+          }
+          if (decision === 'WAITLIST') {
+            row.waitlisted += 1;
+          }
+        }
+      }
+    });
+    return Array.from(reviewerMap.values()).map(({id, name, total, completed, accepted, rejected, waitlisted}) => ({
+      id,
+      name,
+      stats: {
+        completed: { count: completed, total },
+        accepted: { count: accepted, total },
+        rejected: { count: rejected, total },
+        waitlisted: { count: waitlisted, total },
+      }
+    }));
+  }, [assignments]);
+
+
+  const filteredReviewers = reviewers
     .filter(reviewer => reviewer.name.toLowerCase().includes(searchQuery.toLowerCase()))
-    .sort((a, b) => (sortAsc ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)));
+    .sort((a, b) => {
+      if (sortAsc) {
+        return a.name.localeCompare(b.name);
+      } else {
+        return b.name.localeCompare(a.name);
+      }
+    });
 
   const headers = ['Reviewer Name', 'Completed', 'Accepted', 'Rejected', 'Waitlisted'];
-
   return (
     <div className={styles.container}>
       <div className={styles.topBar}>
@@ -162,14 +179,14 @@ const ReviewersTable = () => {
                 <ProgressBar
                   count={reviewer.stats.accepted.count}
                   total={reviewer.stats.accepted.total}
-                  color="#e74c3c"
+                  color="#27ae60"
                 />
               </td>
               <td>
                 <ProgressBar
                   count={reviewer.stats.rejected.count}
                   total={reviewer.stats.rejected.total}
-                  color="#27ae60"
+                  color="#e74c3c"
                 />
               </td>
               <td>

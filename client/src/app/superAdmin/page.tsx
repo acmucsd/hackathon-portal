@@ -21,10 +21,11 @@ export default async function superAdmin() {
       accessType === 'SUPER_ADMIN'
         ? await AdminAPI.getUsers(accessToken)
         : [];
+    const assignments = await AdminAPI.getAllAssignments(accessToken);
 
     return (
       <main className={styles.main}>
-        <SuperAdminDashboard timeline={TIMELINE} user={fetchedUser} applications={applications} />
+        <SuperAdminDashboard timeline={TIMELINE} user={fetchedUser} applications={applications} assignments={assignments} token={accessToken}/>
       </main>
     );
   } catch (error) {

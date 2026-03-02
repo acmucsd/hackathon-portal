@@ -1,3 +1,4 @@
+// TODO: Add API route for releasing applications and integrate here
 'use client';
 import styles from './style.module.scss';
 import Heading from '@/components/Heading';
@@ -5,15 +6,24 @@ import Button from '@/components/Button';
 import { useState } from 'react';
 import GroupIcon from '@mui/icons-material/Group';
 import SendIcon from '@mui/icons-material/Send';
+import { randomizeAssigments } from '@/lib/api/AdminAPI';
 
 interface SuperAdminToolsProps {
   user?: { firstName: string };
+  token: string;
 }
 
-const SuperAdminTools = ({ user }: SuperAdminToolsProps) => {
+const SuperAdminTools = ({ user, token }: SuperAdminToolsProps) => {
   const [reviewersAssigned, setReviewersAssigned] = useState(false);
   const [releaseStep, setReleaseStep] = useState(0);
-
+  const handleAssignReviewers = async () => {
+    try {
+      await randomizeAssigments(token);
+      setReviewersAssigned(true);
+    } catch (error) {
+      console.error('Error assigning reviewers:', error);
+    }
+  }
   const getReleaseButtonText = () => {
     switch (releaseStep) {
       case 0:
@@ -37,7 +47,7 @@ const SuperAdminTools = ({ user }: SuperAdminToolsProps) => {
       <span className={styles.label}>Assign Reviewers</span>
       <Button
           className={reviewersAssigned ? styles.grayButton : styles.greenButton}
-          onClick={() => setReviewersAssigned(true)}
+          onClick={handleAssignReviewers}
           disabled={reviewersAssigned}
         >
           <GroupIcon style={{ marginRight: 8 }} />

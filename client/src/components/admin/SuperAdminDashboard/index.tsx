@@ -7,7 +7,7 @@ import Typography from '@/components/Typography';
 import Button from '@/components/Button';
 import TimelineItem from '@/components/TimelineItem';
 import ApplicationCount from '../ApplicationCount';
-import { PrivateProfile, FullProfile } from '@/lib/types/apiResponses';
+import { PrivateProfile, FullProfile, ReviewAssignment } from '@/lib/types/apiResponses';
 import { ApplicationDecision, ApplicationStatus } from '@/lib/types/enums';
 import { Deadlines } from '@/components/Dashboard';
 import Heading from '@/components/Heading';
@@ -21,9 +21,11 @@ interface AdminDashboardProps {
   timeline: Deadlines;
   user: PrivateProfile;
   applications: FullProfile[];
+  assignments: ReviewAssignment[];
+  token: string;
 }
 
-const SuperAdminDashboard = ({ timeline, user, applications }: AdminDashboardProps) => {
+const SuperAdminDashboard = ({ timeline, user, applications, assignments, token }: AdminDashboardProps) => {
   const [activeTab, setActiveTab] = useState('applications');
   const pendingApplications = applications.filter(
     user =>
@@ -46,8 +48,8 @@ const SuperAdminDashboard = ({ timeline, user, applications }: AdminDashboardPro
         <Button onClick={() => setActiveTab('tools')} className={activeTab === 'tools' ? styles.activeButton : styles.nonActiveButton}>Super Admin Tools</Button>
       </div>
       {activeTab === 'applications' && <UsersDashboard users={applications} superAdmin={true} />}
-      {activeTab === 'reviewers' && <ReviewersTable />}
-      {activeTab === 'tools' && <SuperAdminTools user = {user}/>}
+      {activeTab === 'reviewers' && <ReviewersTable assignments={assignments} />}
+      {activeTab === 'tools' && <SuperAdminTools token={token} user={user}/>}
     </div>
   );
 };
