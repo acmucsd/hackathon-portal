@@ -116,7 +116,7 @@ export class ResponseService {
     const isOpen = await this.applicationConfigService.isOpen();
 
     if (!isOpen) {
-      throw new ForbiddenError('The application submission is not currently open.');
+      throw new ForbiddenError('Applications are currently closed.');
     }
 
     // 1. Error if the user has already applied.
@@ -187,7 +187,7 @@ export class ResponseService {
     const isOpen = await this.applicationConfigService.isOpen();
 
     if (!isOpen) {
-      throw new ForbiddenError('The application submission is not open yet');
+      throw new ForbiddenError('Applications are currently closed.');
     }
 
     const application = await this.getUserApplication(user);
