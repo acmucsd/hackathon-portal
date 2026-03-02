@@ -10,7 +10,7 @@ import TableList from '@/components/TableList';
 import UserRow from '../UserRow';
 import UserItem from '../UserItem';
 import Pagination from '@/components/Pagination';
-import { FullProfile } from '@/lib/types/apiResponses';
+import { RevieweeProfile } from '@/lib/types/apiResponses';
 import { ApplicationDecision, ApplicationStatus } from '@/lib/types/enums';
 import { useWindowSize } from '@/lib/hooks/useWindowSize';
 import { formatTitleCase } from '@/lib/utils';
@@ -18,8 +18,8 @@ import styles from './style.module.scss';
 import UsersTable from '../UsersTable';
 
 interface UsersDashboardProps {
-  users: FullProfile[];
-  assignedUsers: FullProfile[];
+  users: RevieweeProfile[];
+  assignedUsers: RevieweeProfile[];
 }
 
 const UsersDashboard = ({ users, assignedUsers }: UsersDashboardProps) => {
