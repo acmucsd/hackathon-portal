@@ -13,6 +13,11 @@ export default async function Admin() {
   if (!accessToken) {
     redirect('/api/logout');
   }
+  const fetchedUser = await UserAPI.getCurrentUser(accessToken);
+  if (fetchedUser.accessType !== 'ADMIN') {
+    redirect('/');
+  }
+
 
   try {
     const fetchedUser = await UserAPI.getCurrentUser(accessToken);
