@@ -236,13 +236,13 @@ export default function ApplicationReviewClient({
     <main className={styles.main}>
       <div className={styles.appView}>
         <ApplicationView
+          applicant={fetchedRevieweeProfile}
           application={fetchedApplication}
           token={accessToken}
           decision={currentDecision}
           status={currentStatus}
           waivers={fetchedWaivers}
           stats={liveStats}
-          revieweeProfile={fetchedRevieweeProfile}
         />
       </div>
 

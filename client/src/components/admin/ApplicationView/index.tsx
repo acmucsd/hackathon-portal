@@ -20,25 +20,25 @@ interface ApplicationStats {
 }
 
 interface ApplicationViewProps {
+  applicant: RevieweeProfile;
   application: ResponseModel;
   token: string;
   decision: ApplicationDecision;
   status: ApplicationStatus;
   waivers: ResponseModel[];
   stats: ApplicationStats;
-  revieweeProfile: RevieweeProfile;
   onConfirm?: () => Promise<void> | void;
 }
 
 const ApplicationView = ({
+  applicant,
   application,
   waivers,
   stats,
-  revieweeProfile,
 }: ApplicationViewProps) => {
   const responses: Record<string, string | string[] | File | any> = application.data;
-  const user = application.user;
-  const didInterestForm = revieweeProfile.didInterestForm ?? false;
+  const user = application.user; // use applicant instead if you want RevieweeProfile specific fields
+  const didInterestForm = applicant.didInterestForm ?? false;
 
   const NO_RESPONSE = 'No response.';
 
