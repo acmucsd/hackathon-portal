@@ -10,7 +10,7 @@ import { ApplicationDecision, ApplicationStatus } from '@/lib/types/enums';
 import showToast from '@/lib/showToast';
 import { AdminAPI } from '@/lib/api';
 import { reportError } from '@/lib/utils';
-import type { PublicProfile, ResponseModel } from '@/lib/types/apiResponses';
+import type { PublicProfile, RevieweeProfile, ResponseModel } from '@/lib/types/apiResponses';
 
 type ApplicationStats = {
   total: number;
@@ -23,9 +23,6 @@ type ApplicationStats = {
 };
 
 type DecisionStatsKey = 'accepted' | 'rejected' | 'waitlisted';
-type ApplicantListItem = PublicProfile & {
-  createdAt?: string | Date;
-};
 
 function getStatsKey(decision: ApplicationDecision): DecisionStatsKey | null {
   switch (decision) {
@@ -82,6 +79,7 @@ type Props = {
   fetchedDecisionUpdatedAt?: string | Date | null;
   fetchedDecisionUpdatedBy?: PublicProfile;
   fetchedWaivers: ResponseModel[];
+  assignedApplicants?: RevieweeProfile[];
   stats: ApplicationStats;
   reviewer?: PublicProfile;
   currentUser?: PublicProfile;
@@ -97,15 +95,16 @@ export default function ApplicationReviewClient({
   fetchedDecisionUpdatedAt,
   fetchedDecisionUpdatedBy,
   fetchedWaivers,
+  assignedApplicants: initialAssignedApplicants = [],
   stats,
   reviewer,
   currentUser,
-  isSuperAdmin,
 }: Props) {
   const router = useRouter();
 
-  const [assignedApplicants, setAssignedApplicants] = useState<ApplicantListItem[]>([]);
-  const [assignedReviewer, setAssignedReviewer] = useState<PublicProfile | undefined>(reviewer);
+  const [assignedApplicants, setAssignedApplicants] =
+    useState<RevieweeProfile[]>(initialAssignedApplicants);
+  const [assignedReviewer] = useState<PublicProfile | undefined>(reviewer);
   const [isSaving, setIsSaving] = useState(false);
 
   // single source of truth for what ApplicationView displays
@@ -128,44 +127,6 @@ export default function ApplicationReviewClient({
     setLastSavedAt(fetchedDecisionUpdatedAt ?? null);
     setLastSavedBy(fetchedDecisionUpdatedBy);
   }, [fetchedReviewerComments, fetchedDecisionUpdatedAt, fetchedDecisionUpdatedBy, userId]);
-
-  useEffect(() => {
-    const loadAssignments = async () => {
-      try {
-        const assignments = isSuperAdmin
-          ? await AdminAPI.getAllAssignments(accessToken)
-          : reviewer?.id
-            ? await AdminAPI.getAssignmentsByReviewer(accessToken, reviewer.id)
-            : [];
-
-        if (assignments.length > 0) {
-          setAssignedApplicants(
-            assignments.map(({ applicant }) => ({
-              id: applicant.id,
-              firstName: applicant.firstName,
-              lastName: applicant.lastName,
-              createdAt: applicant.createdAt,
-            }))
-          );
-
-          if (!isSuperAdmin) {
-            const reviewerProfile = assignments[0].reviewer;
-            if (reviewerProfile) {
-              setAssignedReviewer({
-                id: reviewerProfile.id,
-                firstName: reviewerProfile.firstName,
-                lastName: reviewerProfile.lastName,
-              });
-            }
-          }
-        }
-      } catch (error) {
-        reportError("Couldn't load reviewer assignments", error);
-      }
-    };
-
-    loadAssignments();
-  }, [accessToken, reviewer?.id, isSuperAdmin]);
 
   const applicants = useMemo(() => {
     const applicantsToSort =

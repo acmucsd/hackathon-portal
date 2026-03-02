@@ -34,6 +34,9 @@ export default async function ApplicationReviewPage({ params }: ApplicationRevie
       AdminAPI.getReviewerOverview(accessToken).catch(() => ({ reviewers: [] })),
     ]);
 
+    // build the applicant list for sidebar navigation
+    const assignedApplicants = allAssignments.map(({ applicant }) => applicant);
+
     // determine which reviewer (if any) is assigned to this applicant
     const isAssigned = allAssignments.some(a => a.applicant.id === userId);
     const reviewerProfile = isSuperAdmin
@@ -93,6 +96,7 @@ export default async function ApplicationReviewPage({ params }: ApplicationRevie
         fetchedDecisionUpdatedAt={fetchedDecision?.updatedAt ?? null}
         fetchedDecisionUpdatedBy={fetchedDecision?.lastDecisionUpdatedBy}
         fetchedWaivers={fetchedWaivers}
+        assignedApplicants={assignedApplicants}
         stats={stats}
         isSuperAdmin={isSuperAdmin}
         currentUser={
