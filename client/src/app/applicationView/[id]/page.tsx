@@ -46,6 +46,7 @@ export default async function ApplicationReviewPage({ params }: ApplicationRevie
       : isAssigned
         ? currentUser
         : undefined;
+    const revieweeProfile = allAssignments.find(a => a.applicant.id === userId)!.applicant;
 
     let stats;
     if (isSuperAdmin) {
@@ -98,6 +99,7 @@ export default async function ApplicationReviewPage({ params }: ApplicationRevie
         fetchedDecisionUpdatedAt={fetchedDecision?.updatedAt ?? null}
         fetchedDecisionUpdatedBy={fetchedDecision?.lastDecisionUpdatedBy}
         fetchedWaivers={fetchedWaivers}
+        fetchedRevieweeProfile={revieweeProfile}
         assignedApplicants={assignedApplicants}
         stats={stats}
         isSuperAdmin={isSuperAdmin}

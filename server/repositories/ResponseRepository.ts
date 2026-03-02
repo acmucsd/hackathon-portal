@@ -11,8 +11,12 @@ export const ResponseRepository = Container.get(DataSource)
       return this.find();
     },
 
-    async findAllWithUserRelation(): Promise<ResponseModel[]> {
-      return this.find({ relations: { user: true } });
+    async findAllWithReviewerRelation(): Promise<ResponseModel[]> {
+      return this.find({ relations: {
+        user: {
+          reviewer: true
+        }
+      }});
     },
 
     async findByUuid(uuid: string): Promise<ResponseModel | null> {

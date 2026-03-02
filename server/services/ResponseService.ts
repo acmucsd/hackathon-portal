@@ -46,10 +46,10 @@ export class ResponseService {
     return responses;
   }
 
-  private async getAllResponsesWithUserRelation(): Promise<ResponseModel[]> {
+  private async getAllResponsesWithReviewerRelation(): Promise<ResponseModel[]> {
     const responses = await this.transactionsManager.readOnly(
       async (entityManager) =>
-        Repositories.response(entityManager).findAllWithUserRelation(),
+        Repositories.response(entityManager).findAllWithReviewerRelation(),
     );
     return responses;
   }
@@ -98,8 +98,8 @@ export class ResponseService {
     return applications;
   }
 
-  public async getAllApplicationsWithUserRelation(): Promise<ResponseModel[]> {
-    const responses = await this.getAllResponsesWithUserRelation();
+  public async getAllApplicationsWithReviewerRelation(): Promise<ResponseModel[]> {
+    const responses = await this.getAllResponsesWithReviewerRelation();
     const applications = responses.filter(
       (response) => response.formType === FormType.APPLICATION,
     );
