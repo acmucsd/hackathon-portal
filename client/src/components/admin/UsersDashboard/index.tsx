@@ -33,7 +33,7 @@ const UsersDashboard = ({ users, assignedUsers }: UsersDashboardProps) => {
     [ApplicationDecision.WAITLIST]: 'WAITLISTED',
     [ApplicationDecision.NO_DECISION]: 'NO_DECISION',
   };
-  const filteredUsers = users
+  const filteredUsers = assignedUsers
     .filter(user => {
       return (
         user.applicationStatus === filterStatus ||
