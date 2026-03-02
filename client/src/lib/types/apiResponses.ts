@@ -41,6 +41,8 @@ export interface FullProfile extends PrivateProfile {
 
 export interface RevieweeProfile extends FullProfile {
   didInterestForm: boolean;
+  university?: string;
+  reviewer?: FullProfile;
 }
 
 export interface ValidatorError {
@@ -128,7 +130,7 @@ export interface GetApplicationResponse extends ApiResponse {
 
 // Admin User Responses
 export interface GetUsersResponse extends ApiResponse {
-  users: FullProfile[];
+  users: RevieweeProfile[];
 }
 
 export interface GetUserApplicationResponse extends ApiResponse {
