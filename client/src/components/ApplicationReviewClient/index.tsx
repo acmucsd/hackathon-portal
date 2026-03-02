@@ -85,6 +85,7 @@ type Props = {
   stats: ApplicationStats;
   reviewer?: PublicProfile;
   currentUser?: PublicProfile;
+  isSuperAdmin?: boolean;
 };
 
 export default function ApplicationReviewClient({
@@ -99,6 +100,7 @@ export default function ApplicationReviewClient({
   stats,
   reviewer,
   currentUser,
+  isSuperAdmin,
 }: Props) {
   const router = useRouter();
 
@@ -129,10 +131,12 @@ export default function ApplicationReviewClient({
 
   useEffect(() => {
     const loadAssignments = async () => {
-      if (!reviewer?.id) return;
-
       try {
-        const assignments = await AdminAPI.getAssignmentsByReviewer(accessToken, reviewer.id);
+        const assignments = isSuperAdmin
+          ? await AdminAPI.getAllAssignments(accessToken)
+          : reviewer?.id
+            ? await AdminAPI.getAssignmentsByReviewer(accessToken, reviewer.id)
+            : [];
 
         if (assignments.length > 0) {
           setAssignedApplicants(
@@ -144,13 +148,15 @@ export default function ApplicationReviewClient({
             }))
           );
 
-          const reviewerProfile = assignments[0].reviewer;
-          if (reviewerProfile) {
-            setAssignedReviewer({
-              id: reviewerProfile.id,
-              firstName: reviewerProfile.firstName,
-              lastName: reviewerProfile.lastName,
-            });
+          if (!isSuperAdmin) {
+            const reviewerProfile = assignments[0].reviewer;
+            if (reviewerProfile) {
+              setAssignedReviewer({
+                id: reviewerProfile.id,
+                firstName: reviewerProfile.firstName,
+                lastName: reviewerProfile.lastName,
+              });
+            }
           }
         }
       } catch (error) {
@@ -159,7 +165,7 @@ export default function ApplicationReviewClient({
     };
 
     loadAssignments();
-  }, [accessToken, reviewer?.id]);
+  }, [accessToken, reviewer?.id, isSuperAdmin]);
 
   const applicants = useMemo(() => {
     const applicantsToSort =

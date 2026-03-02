@@ -1,13 +1,7 @@
 'use client';
 import styles from './style.module.scss';
 import Button from '@/components/Button';
-import {
-  PrivateProfile,
-  FullProfile,
-  RevieweeProfile,
-  ReviewAssignment,
-} from '@/lib/types/apiResponses';
-import { ApplicationDecision, ApplicationStatus } from '@/lib/types/enums';
+import { PrivateProfile, RevieweeProfile, ReviewAssignment } from '@/lib/types/apiResponses';
 import { Deadlines } from '@/components/Dashboard';
 import { useState } from 'react';
 import UsersDashboard from '@/components/admin/UsersDashboard';
@@ -30,14 +24,6 @@ const SuperAdminDashboard = ({
   token,
 }: AdminDashboardProps) => {
   const [activeTab, setActiveTab] = useState('applications');
-  const pendingApplications = applications.filter(
-    user =>
-      user.applicationDecision === ApplicationDecision.NO_DECISION &&
-      user.applicationStatus === ApplicationStatus.SUBMITTED
-  ).length;
-  const totalApplications = applications.filter(
-    user => user.applicationStatus !== ApplicationStatus.NOT_SUBMITTED
-  ).length;
 
   return (
     <div className={styles.container}>
