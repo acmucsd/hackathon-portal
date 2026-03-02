@@ -3,16 +3,8 @@ import { useState } from 'react';
 import Typography from '@/components/Typography';
 import Button from '@/components/Button';
 import Search from '@/components/Search';
-import Table from '@/components/Table';
-import TableHeader from '@/components/TableHeader';
-import TableCell from '@/components/TableCell';
-import TableList from '@/components/TableList';
-import UserRow from '../UserRow';
-import UserItem from '../UserItem';
-import Pagination from '@/components/Pagination';
 import { RevieweeProfile } from '@/lib/types/apiResponses';
 import { ApplicationDecision, ApplicationStatus } from '@/lib/types/enums';
-import { useWindowSize } from '@/lib/hooks/useWindowSize';
 import { formatTitleCase } from '@/lib/utils';
 import styles from './style.module.scss';
 import UsersTable from '../UsersTable';
@@ -20,11 +12,11 @@ import UsersTable from '../UsersTable';
 interface UsersDashboardProps {
   users: RevieweeProfile[];
   assignedUsers: RevieweeProfile[];
+  superAdmin: boolean;
 }
 
-const UsersDashboard = ({ users, assignedUsers }: UsersDashboardProps) => {
-  const [currentPage, setCurrentPage] = useState(0);
-  const [filterStatus, setFilterStatus] = useState('CONFIRMED');
+const UsersDashboard = ({ users, assignedUsers, superAdmin }: UsersDashboardProps) => {
+  const [filterStatus, setFilterStatus] = useState(superAdmin ? 'All' : 'My Assignments');
   const [searchQuery, setSearchQuery] = useState('');
 
   const decisionMap: Record<ApplicationDecision, string> = {
@@ -33,8 +25,12 @@ const UsersDashboard = ({ users, assignedUsers }: UsersDashboardProps) => {
     [ApplicationDecision.WAITLIST]: 'WAITLISTED',
     [ApplicationDecision.NO_DECISION]: 'NO_DECISION',
   };
-  const filteredUsers = assignedUsers
+
+  const sourceUsers = superAdmin ? users : assignedUsers;
+
+  const filteredUsers = sourceUsers
     .filter(user => {
+      if (filterStatus === 'All') return true;
       return (
         user.applicationStatus === filterStatus ||
         decisionMap[user.applicationDecision] === filterStatus
@@ -68,24 +64,18 @@ const UsersDashboard = ({ users, assignedUsers }: UsersDashboardProps) => {
   };
 
   const itemsPerPage = 10;
-  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
-  const startIndex = currentPage * itemsPerPage;
-  const currentUsers = filteredUsers.slice(startIndex, startIndex + itemsPerPage);
-
-  const handlePrevious = () => setCurrentPage(prevPage => Math.max(prevPage - 1, 0));
-  const handleNext = () => setCurrentPage(prevPage => Math.min(prevPage + 1, totalPages - 1));
 
   return (
     <div className={styles.container}>
       <div className={styles.filterContainer}>
         <div className={styles.filterButtons}>
-          {['My Assignments', ...Object.values(ApplicationStatus)].map(status => (
+          {[
+            ...(superAdmin ? ['All'] : ['My Assignments']),
+            ...Object.values(ApplicationStatus),
+          ].map(status => (
             <Button
               key={status}
-              onClick={() => {
-                setFilterStatus(status);
-                setCurrentPage(0);
-              }}
+              onClick={() => setFilterStatus(status)}
               className={filterStatus === status ? styles.activeFilter : ''}
               variant="tertiary"
             >
@@ -103,16 +93,25 @@ const UsersDashboard = ({ users, assignedUsers }: UsersDashboardProps) => {
               <Typography variant="label/large">
                 {sectionTitle} ({usersInSection.length})
               </Typography>
-              <UsersTable filteredUsers={usersInSection} itemsPerPage={itemsPerPage} />
+              <UsersTable
+                filteredUsers={usersInSection}
+                itemsPerPage={itemsPerPage}
+                superAdmin={superAdmin}
+              />
             </div>
           ))}
         </>
       ) : (
         <>
           <Typography variant="label/large">
-            {formatTitleCase(filterStatus)} Participants ({filteredUsers.length})
+            {filterStatus === 'All' ? 'All' : formatTitleCase(filterStatus)} Participants (
+            {filteredUsers.length})
           </Typography>
-          <UsersTable filteredUsers={filteredUsers} itemsPerPage={itemsPerPage} />
+          <UsersTable
+            filteredUsers={filteredUsers}
+            itemsPerPage={itemsPerPage}
+            superAdmin={superAdmin}
+          />
         </>
       )}
     </div>

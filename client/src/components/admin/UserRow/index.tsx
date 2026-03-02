@@ -9,9 +9,10 @@ import styles from './style.module.scss';
 
 interface UserRowProps {
   user: RevieweeProfile;
+  superAdmin?: boolean;
 }
 
-const UserRow = ({ user }: UserRowProps) => {
+const UserRow = ({ user, superAdmin }: UserRowProps) => {
   const date = new Date(user.createdAt);
   const formattedDate = `${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()}`;
   const displayStatus =
@@ -31,6 +32,11 @@ const UserRow = ({ user }: UserRowProps) => {
         <InterestFormTag status={user.didInterestForm ? 'YES' : 'NO'} />
       </TableCell>
       <TableCell className={styles.dateField}>{formattedDate}</TableCell>
+      {superAdmin && (
+        <TableCell>
+          {user.reviewer ? `${user.reviewer.firstName} ${user.reviewer.lastName}` : 'Unassigned'}
+        </TableCell>
+      )}
       <TableCell>
         {user.applicationStatus !== ApplicationStatus.NOT_SUBMITTED && (
           <Button

@@ -1,13 +1,12 @@
 import { TIMELINE } from '@/config';
-import AdminDashboard from '@/components/admin/AdminDashboard';
 import SuperAdminDashboard from '@/components/admin/SuperAdminDashboard';
 import { UserAPI, AdminAPI } from '@/lib/api';
 import { redirect } from 'next/navigation';
 import { getCookie } from '@/lib/services/CookieService';
 import { CookieType } from '@/lib/types/enums';
-import styles from './page.module.scss';
+import styles from './style.module.scss';
 
-export default async function Admin() {
+export default async function superAdmin() {
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
 
   if (!accessToken) {
@@ -16,15 +15,18 @@ export default async function Admin() {
 
   try {
     const fetchedUser = await UserAPI.getCurrentUser(accessToken);
-    const accessType = fetchedUser.accessType;
-    const applications =
-      accessType === 'ADMIN' || accessType === 'SUPER_ADMIN'
-        ? await AdminAPI.getUsers(accessToken)
-        : [];
+    const assignments = await AdminAPI.getAllAssignments(accessToken);
+    const applications = assignments.map(a => ({ ...a.applicant, reviewer: a.reviewer }));
 
     return (
       <main className={styles.main}>
-        <AdminDashboard timeline={TIMELINE} user={fetchedUser} applications={applications} />
+        <SuperAdminDashboard
+          timeline={TIMELINE}
+          user={fetchedUser}
+          applications={applications}
+          assignments={assignments}
+          token={accessToken}
+        />
       </main>
     );
   } catch (error) {
