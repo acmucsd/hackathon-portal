@@ -19,15 +19,6 @@ interface AdminDashboardProps {
 }
 
 const AdminDashboard = ({ timeline, user, applications }: AdminDashboardProps) => {
-  const pendingApplications = applications.filter(
-    user =>
-      user.applicationDecision === ApplicationDecision.NO_DECISION &&
-      user.applicationStatus === ApplicationStatus.SUBMITTED
-  ).length;
-  const totalApplications = applications.filter(
-    user => user.applicationStatus !== ApplicationStatus.NOT_SUBMITTED
-  ).length;
-
   return (
     <div className={styles.container}>
       <Card gap={1.5} className={`${styles.card} ${styles.actions}`}>
