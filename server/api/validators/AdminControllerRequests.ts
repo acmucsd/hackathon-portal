@@ -1,4 +1,4 @@
-import { IsDefined, IsEmail, IsIn, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsDefined, IsEmail, IsIn, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { UpdateApplicationDecisionRequest as IUpdateApplicationDecisionRequest } from '../../types/ApiRequests';
 import { UpdateUserAccessRequest as  IUpdateUserAccessRequest } from '../../types/ApiRequests';
 import { ApplicationDecision, UserAccessType } from '../../types/Enums';
@@ -19,6 +19,11 @@ export class UpdateApplicationDecisionRequest implements IUpdateApplicationDecis
   @IsOptional()
   @IsString()
   reviewerComments?: string | null;
+}
+
+export class UpdateApplicationOpeningStatusRequest {
+  @IsBoolean()
+  applicationsOpen!: boolean;
 }
 
 export class UpdateUserAccessRequest implements IUpdateUserAccessRequest {
