@@ -14,13 +14,12 @@ export default async function Admin() {
     redirect('/api/logout');
   }
   const fetchedUser = await UserAPI.getCurrentUser(accessToken);
-  if (fetchedUser.accessType !== 'ADMIN') {
+  if (fetchedUser.accessType !== 'ADMIN' && fetchedUser.accessType !== 'SUPER_ADMIN') {
     redirect('/');
   }
 
 
   try {
-    const fetchedUser = await UserAPI.getCurrentUser(accessToken);
     const accessType = fetchedUser.accessType;
     const applications =
       accessType === 'ADMIN' || accessType === 'SUPER_ADMIN'
