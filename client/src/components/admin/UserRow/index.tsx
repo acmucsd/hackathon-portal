@@ -27,11 +27,7 @@ const UserRow = ({ user, superAdmin }: UserRowProps) => {
         <StatusTag status={displayStatus} />
       </TableCell>
       <TableCell className={styles.dateField}>{formattedDate}</TableCell>
-      {superAdmin && (
-        <TableCell>
-           {"Assigned Reviewer Placeholder"}
-        </TableCell>
-      )}
+      {superAdmin && <TableCell>{'Assigned Reviewer Placeholder'}</TableCell>}
       <TableCell>
         {user.applicationStatus !== ApplicationStatus.NOT_SUBMITTED && (
           <Button

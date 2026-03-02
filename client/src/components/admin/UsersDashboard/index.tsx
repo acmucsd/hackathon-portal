@@ -26,7 +26,13 @@ const UsersDashboard = ({ users, superAdmin }: UsersDashboardProps) => {
   const [filterStatus, setFilterStatus] = useState('CONFIRMED');
   const [searchQuery, setSearchQuery] = useState('');
 
-  const headers = ['Applicant Name', 'Status', 'Creation Date', ...(superAdmin ? ['Assigned Reviewer'] : []), 'Action', ];
+  const headers = [
+    'Applicant Name',
+    'Status',
+    'Creation Date',
+    ...(superAdmin ? ['Assigned Reviewer'] : []),
+    'Action',
+  ];
   const size = useWindowSize();
   const isSmall = (size.width ?? 0) <= 1024;
 
@@ -90,7 +96,7 @@ const UsersDashboard = ({ users, superAdmin }: UsersDashboardProps) => {
           </thead>
           <tbody>
             {currentUsers.map(user => (
-              <UserRow key={user.id} user={user} superAdmin={superAdmin}/>
+              <UserRow key={user.id} user={user} superAdmin={superAdmin} />
             ))}
           </tbody>
         </Table>

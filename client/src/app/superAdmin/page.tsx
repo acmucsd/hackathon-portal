@@ -17,15 +17,18 @@ export default async function superAdmin() {
   try {
     const fetchedUser = await UserAPI.getCurrentUser(accessToken);
     const accessType = fetchedUser.accessType;
-    const applications =
-      accessType === 'SUPER_ADMIN'
-        ? await AdminAPI.getUsers(accessToken)
-        : [];
+    const applications = accessType === 'SUPER_ADMIN' ? await AdminAPI.getUsers(accessToken) : [];
     const assignments = await AdminAPI.getAllAssignments(accessToken);
 
     return (
       <main className={styles.main}>
-        <SuperAdminDashboard timeline={TIMELINE} user={fetchedUser} applications={applications} assignments={assignments} token={accessToken}/>
+        <SuperAdminDashboard
+          timeline={TIMELINE}
+          user={fetchedUser}
+          applications={applications}
+          assignments={assignments}
+          token={accessToken}
+        />
       </main>
     );
   } catch (error) {

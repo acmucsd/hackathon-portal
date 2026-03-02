@@ -27,7 +27,9 @@ const UserItem = ({ user, superAdmin }: UserItemProps) => {
       <StatusTag status={displayStatus} />
       <Typography variant="body/medium">Account Creation Date: {formattedDate}</Typography>
       {superAdmin && (
-        <Typography variant="body/medium">Assigned Reviewer: {"Assigned Reviewer Placeholder"}</Typography>
+        <Typography variant="body/medium">
+          Assigned Reviewer: {'Assigned Reviewer Placeholder'}
+        </Typography>
       )}
       {user.applicationStatus !== ApplicationStatus.NOT_SUBMITTED && (
         <Button

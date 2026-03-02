@@ -13,7 +13,6 @@ import { getAllAssignments } from '@/lib/api/AdminAPI';
 import { getCookie } from '@/lib/services/CookieService';
 import { CookieType } from '@/lib/types/enums';
 
-
 interface ReviewersTableProps {
   assignments: ReviewAssignment[];
 }
@@ -29,7 +28,6 @@ interface Reviewer {
   name: string;
   stats: ReviewerStats;
 }
-
 
 const getPercentage = (count: number, total: number) => {
   if (total === 0) return 0;
@@ -67,16 +65,19 @@ const ReviewersTable = ({ assignments }: ReviewersTableProps) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortAsc, setSortAsc] = useState(false);
   const reviewers = useMemo<Reviewer[]>(() => {
-    const reviewerMap = new Map<string, {
-      id: string;
-      name: string;
-      total: number;
-      completed: number;
-      accepted: number;
-      rejected: number;
-      waitlisted: number;
-    }>();
-    assignments.forEach(({reviewer, applicant}) => {
+    const reviewerMap = new Map<
+      string,
+      {
+        id: string;
+        name: string;
+        total: number;
+        completed: number;
+        accepted: number;
+        rejected: number;
+        waitlisted: number;
+      }
+    >();
+    assignments.forEach(({ reviewer, applicant }) => {
       if (!reviewer) return;
 
       const id = reviewer.id;
@@ -110,18 +111,19 @@ const ReviewersTable = ({ assignments }: ReviewersTableProps) => {
         }
       }
     });
-    return Array.from(reviewerMap.values()).map(({id, name, total, completed, accepted, rejected, waitlisted}) => ({
-      id,
-      name,
-      stats: {
-        completed: { count: completed, total },
-        accepted: { count: accepted, total },
-        rejected: { count: rejected, total },
-        waitlisted: { count: waitlisted, total },
-      }
-    }));
+    return Array.from(reviewerMap.values()).map(
+      ({ id, name, total, completed, accepted, rejected, waitlisted }) => ({
+        id,
+        name,
+        stats: {
+          completed: { count: completed, total },
+          accepted: { count: accepted, total },
+          rejected: { count: rejected, total },
+          waitlisted: { count: waitlisted, total },
+        },
+      })
+    );
   }, [assignments]);
-
 
   const filteredReviewers = reviewers
     .filter(reviewer => reviewer.name.toLowerCase().includes(searchQuery.toLowerCase()))

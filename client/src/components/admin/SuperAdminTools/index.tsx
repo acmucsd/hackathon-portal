@@ -23,7 +23,7 @@ const SuperAdminTools = ({ user, token }: SuperAdminToolsProps) => {
     } catch (error) {
       console.error('Error assigning reviewers:', error);
     }
-  }
+  };
   const getReleaseButtonText = () => {
     switch (releaseStep) {
       case 0:
@@ -42,10 +42,10 @@ const SuperAdminTools = ({ user, token }: SuperAdminToolsProps) => {
   };
   return (
     <div className={styles.container}>
-    <h1>Super Admin Tools</h1>
-    <div className={styles.toolRow}>
-      <span className={styles.label}>Assign Reviewers</span>
-      <Button
+      <h1>Super Admin Tools</h1>
+      <div className={styles.toolRow}>
+        <span className={styles.label}>Assign Reviewers</span>
+        <Button
           className={reviewersAssigned ? styles.grayButton : styles.greenButton}
           onClick={handleAssignReviewers}
           disabled={reviewersAssigned}
@@ -55,10 +55,10 @@ const SuperAdminTools = ({ user, token }: SuperAdminToolsProps) => {
             ? `Reviewers assigned (great job ${user?.firstName || 'bonga'}!)`
             : 'Assign Reviewers'}
         </Button>
-    </div>
-    <div className={styles.toolRow}>
-      <span className={styles.label}>Release Applications</span>
-      <Button
+      </div>
+      <div className={styles.toolRow}>
+        <span className={styles.label}>Release Applications</span>
+        <Button
           className={getReleaseButtonClass()}
           onClick={() => {
             if (releaseStep < 3) setReleaseStep(prev => prev + 1);
@@ -68,10 +68,9 @@ const SuperAdminTools = ({ user, token }: SuperAdminToolsProps) => {
           <SendIcon style={{ marginRight: 8 }} />
           {getReleaseButtonText()}
         </Button>
+      </div>
     </div>
-  </div>
-  )
-
-}
+  );
+};
 
 export default SuperAdminTools;
