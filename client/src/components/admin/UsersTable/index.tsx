@@ -7,11 +7,11 @@ import TableList from '@/components/TableList';
 import UserRow from '../UserRow';
 import UserItem from '../UserItem';
 import Pagination from '@/components/Pagination';
-import { FullProfile } from '@/lib/types/apiResponses';
+import { RevieweeProfile } from '@/lib/types/apiResponses';
 import { useWindowSize } from '@/lib/hooks/useWindowSize';
 
 interface UsersTableProps {
-  filteredUsers: FullProfile[];
+  filteredUsers: RevieweeProfile[];
   itemsPerPage?: number;
 }
 
