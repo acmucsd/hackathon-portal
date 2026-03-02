@@ -229,7 +229,7 @@ export class AdminController {
   }
 
   @UseBefore(UserAuthentication)
-  @Put('/applications/setOpeningStatus')
+  @Put('/applications/set-open-status')
   async setApplicationsOpen(
     @AuthenticatedUser() currentUser: UserModel,
     @Body() body: UpdateApplicationOpeningStatusRequest,
