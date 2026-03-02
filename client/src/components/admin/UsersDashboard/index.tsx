@@ -31,7 +31,7 @@ const UsersDashboard = ({ users, assignedUsers }: UsersDashboardProps) => {
     [ApplicationDecision.ACCEPT]: 'ACCEPTED',
     [ApplicationDecision.REJECT]: 'REJECTED',
     [ApplicationDecision.WAITLIST]: 'WAITLISTED',
-    [ApplicationDecision.NO_DECISION]: 'SUBMITTED',
+    [ApplicationDecision.NO_DECISION]: 'NO_DECISION',
   };
   const filteredUsers = users
     .filter(user => {
@@ -57,6 +57,11 @@ const UsersDashboard = ({ users, assignedUsers }: UsersDashboardProps) => {
       .filter(user =>
         `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase())
       ),
+    "My Waitlists": assignedUsers
+      .filter(user => user.applicationDecision === ApplicationDecision.WAITLIST)
+      .filter(user =>
+        `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase())
+      ),
   }
 
 
@@ -72,7 +77,7 @@ const UsersDashboard = ({ users, assignedUsers }: UsersDashboardProps) => {
     <div className={styles.container}>
       <div className={styles.filterContainer}>
         <div className={styles.filterButtons}>
-          {['My Assignments', ...Object.values(ApplicationStatus), 'WAITLISTED'].map(status => (
+          {['My Assignments', ...Object.values(ApplicationStatus)].map(status => (
             <Button
               key={status}
               onClick={() => {

@@ -12,7 +12,6 @@ interface UserRowProps {
 }
 
 const UserRow = ({ user }: UserRowProps) => {
-  console.log(user);
   const date = new Date(user.createdAt);
   const formattedDate = `${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()}`;
   const displayStatus =
