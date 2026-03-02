@@ -4,7 +4,7 @@ import Button from '@/components/Button';
 import { appQuestions } from '@/config';
 import { Fragment } from 'react';
 import StatusTag from '@/components/StatusTag';
-import { ResponseModel } from '@/lib/types/apiResponses';
+import { ResponseModel, RevieweeProfile } from '@/lib/types/apiResponses';
 import { ApplicationDecision, ApplicationStatus, FormType } from '@/lib/types/enums';
 import styles from './style.module.scss';
 import Link from 'next/link';
@@ -26,16 +26,15 @@ interface ApplicationViewProps {
   status: ApplicationStatus;
   waivers: ResponseModel[];
   stats: ApplicationStats;
+  revieweeProfile: RevieweeProfile;
   onConfirm?: () => Promise<void> | void;
 }
 
-const ApplicationView = ({ application, waivers, stats }: ApplicationViewProps) => {
+const ApplicationView = ({ application, waivers, stats, revieweeProfile }: ApplicationViewProps) => {
   const responses: Record<string, string | string[] | File | any> = application.data;
   const user = application.user;
   // const [currentDecision, setCurrentDecision] = useState(decision);
-  const liabilitySubmitted = !!waivers.find(
-    response => response.formType === FormType.LIABILITY_WAIVER
-  );
+  const interestSubmitted = revieweeProfile.didInterestForm;
   // const photoReleaseSubmitted = !!waivers.find(
   //   response => response.formType === FormType.PHOTO_RELEASE
   // );
@@ -104,7 +103,7 @@ const ApplicationView = ({ application, waivers, stats }: ApplicationViewProps) 
               <dd className={styles.response}>
                 <StatusTag
                   status={
-                    liabilitySubmitted
+                    interestSubmitted
                       ? ApplicationStatus.SUBMITTED
                       : ApplicationStatus.NOT_SUBMITTED
                   }

@@ -112,6 +112,9 @@ export default function ApplicationReviewClient({
   const [currentStatus, setCurrentStatus] = useState<ApplicationStatus>(
     fetchedApplication.user.applicationStatus
   );
+  const [revieweeProfile, setRevieweeProfile] = useState<RevieweeProfile>(
+    assignedApplicants.find(app => app.id == userId)! // SHOULD be defined
+  )
   const [notes, setNotes] = useState<string>(fetchedReviewerComments ?? '');
   const [liveStats, setLiveStats] = useState<ApplicationStats>(stats);
   const [savedDecision, setSavedDecision] = useState<ApplicationDecision>(fetchedDecision);
@@ -222,6 +225,7 @@ export default function ApplicationReviewClient({
           status={currentStatus}
           waivers={fetchedWaivers}
           stats={liveStats}
+          revieweeProfile={revieweeProfile}
         />
       </div>
 
