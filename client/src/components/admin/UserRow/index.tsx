@@ -26,9 +26,9 @@ const UserRow = ({ user }: UserRowProps) => {
       <TableCell>
         <StatusTag status={displayStatus} />
       </TableCell>
-      <TableCell>{user.university || "N/A"}</TableCell>
+      <TableCell>{user.university || 'N/A'}</TableCell>
       <TableCell>
-        <InterestFormTag status={user.didInterestForm ? "YES" : "NO"} />
+        <InterestFormTag status={user.didInterestForm ? 'YES' : 'NO'} />
       </TableCell>
       <TableCell className={styles.dateField}>{formattedDate}</TableCell>
       <TableCell>

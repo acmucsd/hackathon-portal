@@ -16,16 +16,16 @@ export default async function ManageUsers() {
   }
 
   try {
-    const users: RevieweeProfile[] = (await AdminAPI.getAllAssignments(accessToken)).map(assignment => assignment.applicant);
+    const users: RevieweeProfile[] = (await AdminAPI.getAllAssignments(accessToken)).map(
+      assignment => assignment.applicant
+    );
     const user = JSON.parse(userCookie);
 
-    const reviewAssignments = await AdminAPI.getAssignmentsByReviewer(
-      accessToken,
-      user.id
+    const reviewAssignments = await AdminAPI.getAssignmentsByReviewer(accessToken, user.id);
+
+    const assignedUsers: RevieweeProfile[] = reviewAssignments.map(
+      assignment => assignment.applicant
     );
-
-    const assignedUsers: RevieweeProfile[] = reviewAssignments.map(assignment => assignment.applicant);
-
 
     return (
       <main className={styles.main}>

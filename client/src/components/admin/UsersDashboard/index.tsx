@@ -35,35 +35,37 @@ const UsersDashboard = ({ users, assignedUsers }: UsersDashboardProps) => {
   };
   const filteredUsers = users
     .filter(user => {
-      return (user.applicationStatus === filterStatus || decisionMap[user.applicationDecision] === filterStatus);
+      return (
+        user.applicationStatus === filterStatus ||
+        decisionMap[user.applicationDecision] === filterStatus
+      );
     })
     .filter(user =>
       `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
   const assignedFilteredUsers = {
-    "To Review": assignedUsers
+    'To Review': assignedUsers
       .filter(user => user.applicationDecision === ApplicationDecision.NO_DECISION)
       .filter(user =>
         `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase())
       ),
-    "My Acceptances": assignedUsers
+    'My Acceptances': assignedUsers
       .filter(user => user.applicationDecision === ApplicationDecision.ACCEPT)
       .filter(user =>
         `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase())
       ),
-    "My Rejections": assignedUsers
+    'My Rejections': assignedUsers
       .filter(user => user.applicationDecision === ApplicationDecision.REJECT)
       .filter(user =>
         `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase())
       ),
-    "My Waitlists": assignedUsers
+    'My Waitlists': assignedUsers
       .filter(user => user.applicationDecision === ApplicationDecision.WAITLIST)
       .filter(user =>
         `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase())
       ),
-  }
-
+  };
 
   const itemsPerPage = 10;
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
@@ -94,28 +96,25 @@ const UsersDashboard = ({ users, assignedUsers }: UsersDashboardProps) => {
         <Search query={searchQuery} setQuery={setSearchQuery} />
       </div>
       <hr className={styles.divider} />
-      {
-        filterStatus === 'My Assignments' ?
-        (
-          <>
-            {Object.entries(assignedFilteredUsers).map(([sectionTitle, usersInSection]) => (
-              <div key={sectionTitle}>
-                <Typography variant="label/large">
-                  {sectionTitle} ({usersInSection.length})
-                </Typography>
-                <UsersTable filteredUsers={usersInSection} itemsPerPage={itemsPerPage} />
-              </div>
-            ))}
-          </>
-        ) : (
-          <>
-            <Typography variant="label/large">
-              {formatTitleCase(filterStatus)} Participants ({filteredUsers.length})
-            </Typography>
-            <UsersTable filteredUsers={filteredUsers} itemsPerPage={itemsPerPage} />
-          </>
-        )
-      }
+      {filterStatus === 'My Assignments' ? (
+        <>
+          {Object.entries(assignedFilteredUsers).map(([sectionTitle, usersInSection]) => (
+            <div key={sectionTitle}>
+              <Typography variant="label/large">
+                {sectionTitle} ({usersInSection.length})
+              </Typography>
+              <UsersTable filteredUsers={usersInSection} itemsPerPage={itemsPerPage} />
+            </div>
+          ))}
+        </>
+      ) : (
+        <>
+          <Typography variant="label/large">
+            {formatTitleCase(filterStatus)} Participants ({filteredUsers.length})
+          </Typography>
+          <UsersTable filteredUsers={filteredUsers} itemsPerPage={itemsPerPage} />
+        </>
+      )}
     </div>
   );
 };
