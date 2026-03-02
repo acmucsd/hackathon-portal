@@ -10,7 +10,12 @@ import { ApplicationDecision, ApplicationStatus } from '@/lib/types/enums';
 import showToast from '@/lib/showToast';
 import { AdminAPI } from '@/lib/api';
 import { reportError } from '@/lib/utils';
-import type { PublicProfile, RevieweeProfile, ResponseModel } from '@/lib/types/apiResponses';
+import type {
+  PublicProfile,
+  RevieweeProfile,
+  ResponseModel,
+  ResponseModelWithRevieweeProfile,
+} from '@/lib/types/apiResponses';
 import type { Application } from '@/lib/types/application';
 
 type ApplicationStats = {
@@ -89,7 +94,7 @@ function recalculateStats(
 type Props = {
   accessToken: string;
   userId: string;
-  fetchedApplication: ResponseModel;
+  fetchedApplication: ResponseModelWithRevieweeProfile;
   fetchedDecision: ApplicationDecision;
   fetchedReviewerComments: string | null;
   fetchedDecisionUpdatedAt?: string | Date | null;
