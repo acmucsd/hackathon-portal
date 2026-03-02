@@ -159,6 +159,10 @@ export interface GetAssignmentsResponse extends ApiResponse {
   assignments: ReviewAssignment[];
 }
 
+export interface UpdateUserAccessResponse extends ApiResponse {
+  updates: PrivateProfile;
+}
+
 //InterestForm responses
 export interface CheckInterestByEmailResponse extends ApiResponse {
   interest: Boolean;

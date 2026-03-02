@@ -25,6 +25,7 @@ export interface Deadlines {
   application: Date;
   decisions: Date;
   acceptance: Date;
+  waitlist: Date;
   hackathon: Date;
 }
 
@@ -154,7 +155,8 @@ const Dashboard = ({ faq, timeline, user }: DashboardProps) => {
               Application Deadline
             </TimelineItem>
             <TimelineItem date={timeline.decisions}>Decisions Released</TimelineItem>
-            <TimelineItem date={timeline.acceptance}>Acceptance Deadline</TimelineItem>
+            <TimelineItem date={timeline.acceptance}>RSVP Deadline</TimelineItem>
+            <TimelineItem date={timeline.waitlist}>Rolling Waitlist RSVP</TimelineItem>
             <TimelineItem date={timeline.hackathon}>Hackathon Day!</TimelineItem>
           </div>
         </Card>

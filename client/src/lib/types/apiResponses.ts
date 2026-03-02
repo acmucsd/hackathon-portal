@@ -40,6 +40,7 @@ export interface FullProfile extends PrivateProfile {
 
 export interface RevieweeProfile extends FullProfile {
   didInterestForm: boolean;
+  university?: string;
 }
 
 export interface ValidatorError {
@@ -210,6 +211,10 @@ export interface AttendEventResponse extends ApiResponse {
 
 export interface GetEmailVerificationLinkResponse extends ApiResponse {
   emailVerificationLink: string;
+}
+
+export interface GetPasswordResetLinkResponse extends ApiResponse {
+  passwordResetLink: string;
 }
 
 // Assignment Responses

@@ -1,4 +1,5 @@
 import {
+  BadRequestError,
   Body,
   ForbiddenError,
   Get,
@@ -21,8 +22,9 @@ import {
   GetReviewerOverviewResponse,
   PostAssignmentsResponse,
   UpdateApplicationDecisionResponse,
+  UpdateUserAccessResponse,
 } from '../../types/ApiResponses';
-import { UpdateApplicationDecisionRequest } from '../validators/AdminControllerRequests';
+import { UpdateApplicationDecisionRequest, UpdateUserAccessRequest } from '../validators/AdminControllerRequests';
 import { UserAuthentication } from '../middleware/UserAuthentication';
 import { UserService } from '../../services/UserService';
 import { ResponseService } from '../../services/ResponseService';
@@ -175,6 +177,19 @@ export class AdminController {
     const emailVerificationLink =
       await this.userService.getEmailVerificationLink(queryParams.email);
     return { error: null, emailVerificationLink };
+  }
+
+  @UseBefore(UserAuthentication)
+  @Get('/password-reset-link')
+  async getPasswordResetLink(
+    @AuthenticatedUser() currentUser: UserModel,
+    @QueryParams() queryParams: EmailParam,
+  ) {
+    if (!PermissionsService.canGetPasswordResetLinks(currentUser))
+      throw new ForbiddenError();
+    const passwordResetLink =
+      await this.userService.getPasswordResetLink(queryParams.email);
+    return { error: null, passwordResetLink };
   }
 
   @UseBefore(UserAuthentication)
@@ -361,5 +376,28 @@ export class AdminController {
     }
     const dataToReturn = await this.userService.getReviewerOverview();
     return { error: null, dataToReturn };
+  }
+
+  @UseBefore(UserAuthentication)
+  @Put('/update-user-access')
+  async updateUserAccess(
+    @AuthenticatedUser() currentUser: UserModel,
+    @Body() updateUserAccessRequest : UpdateUserAccessRequest,
+  ) : Promise<UpdateUserAccessResponse> {
+
+    if (!PermissionsService.canUpdateUserAccess(currentUser))
+      throw new ForbiddenError();
+
+      if (currentUser.email == updateUserAccessRequest.email) {
+        throw new BadRequestError('You cannot change your own access!');
+      }
+
+    const updatedAccess = await this.userService.updateUserAccess(
+      updateUserAccessRequest.email, updateUserAccessRequest.access,
+    );
+    return { error: null, updates: updatedAccess.getPrivateProfile() };
+
+
+
   }
 }
