@@ -19,11 +19,7 @@ export default async function Admin() {
   }
 
   try {
-    const accessType = fetchedUser.accessType;
-    const applications =
-      accessType === 'ADMIN' || accessType === 'SUPER_ADMIN'
-        ? await AdminAPI.getUsers(accessToken)
-        : [];
+    const applications = await AdminAPI.getUsers(accessToken);
 
     return (
       <main className={styles.main}>
