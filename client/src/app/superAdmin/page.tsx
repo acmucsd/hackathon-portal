@@ -13,8 +13,15 @@ export default async function superAdmin() {
     redirect('/api/logout');
   }
 
+  const fetchedUser = await UserAPI.getCurrentUser(accessToken);
+  if (fetchedUser.accessType !== 'SUPER_ADMIN') {
+    if (fetchedUser.accessType === 'ADMIN') {
+      redirect('/admin');
+    } else {
+      redirect('/');
+    }
+  }
   try {
-    const fetchedUser = await UserAPI.getCurrentUser(accessToken);
     const assignments = await AdminAPI.getAllAssignments(accessToken);
     const applications = assignments.map(a => ({ ...a.applicant, reviewer: a.reviewer }));
 
