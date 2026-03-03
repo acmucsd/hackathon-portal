@@ -13,7 +13,7 @@ export const ResponseRepository = Container.get(DataSource)
 
     async findAllWithUserRelation(): Promise<ResponseModel[]> {
       return this.find({ relations: {
-        user: true
+        user: true,
       } });
     },
 
@@ -62,6 +62,6 @@ export const ResponseRepository = Container.get(DataSource)
         },
         relations: { user: true },
       });
-    }
+    },
 
   });

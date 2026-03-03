@@ -339,7 +339,7 @@ export class UserService {
       const responseMap: Record<string, ResponseModel> = {};
       responses.forEach(res => {
         if (res) responseMap[res.user.id] = res;
-      })
+      });
 
       const allInterests = await interestFormResponseRepository.findAllInterest();
       const allEmailInterests = new Set(allInterests.map(res => res.email));
