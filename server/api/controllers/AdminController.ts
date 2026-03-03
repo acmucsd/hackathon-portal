@@ -304,8 +304,11 @@ export class AdminController {
     if (!PermissionsService.canViewAllApplications(currentUser))
       throw new ForbiddenError();
 
-    const allInterests = new Set(
-      (await this.interestFormResponseService.findAllInterestedEmail()).map(res => res.email),
+    const allEmailInterests = new Set(
+      (await this.interestFormResponseService.findAllInterestedEmailAndPhone()).map(res => res.email),
+    );
+    const allPhoneInterests = new Set(
+      (await this.interestFormResponseService.findAllInterestedEmailAndPhone()).map(res => res.phone),
     );
     const applications = await this.responseService.getAllApplicationsWithReviewerRelation();
 
@@ -314,7 +317,7 @@ export class AdminController {
       return {
         applicant: {
           ...user.getHiddenProfile(),
-          didInterestForm: allInterests.has(user.email),
+          didInterestForm: (allEmailInterests.has(user.email) || allPhoneInterests.has((app.data as Application)?.phoneNumber)),
           university: (app?.data as Application)?.university ?? null,
         },
         reviewer: user.reviewer?.getHiddenProfile(),
@@ -333,8 +336,11 @@ export class AdminController {
     if (!PermissionsService.canViewAllApplications(currentUser))
       throw new ForbiddenError();
 
-    const allInterests = new Set(
-      (await this.interestFormResponseService.findAllInterestedEmail()).map(res => res.email),
+    const allEmailInterests = new Set(
+      (await this.interestFormResponseService.findAllInterestedEmailAndPhone()).map(res => res.email),
+    );
+    const allPhoneInterests = new Set(
+      (await this.interestFormResponseService.findAllInterestedEmailAndPhone()).map(res => res.phone),
     );
     const applications = await this.responseService.getAllApplicationsWithReviewerRelation();
     const filteredApplications = (applications).filter(app => app.user.reviewer?.id == params.id);
@@ -344,7 +350,7 @@ export class AdminController {
       return {
         applicant: {
           ...user.getHiddenProfile(),
-          didInterestForm: allInterests.has(user.email),
+          didInterestForm: (allEmailInterests.has(user.email) || allPhoneInterests.has((app.data as Application)?.phoneNumber)),
           university: (app.data as Application)?.university ?? null,
         },
         reviewer: user.reviewer?.getHiddenProfile(),
