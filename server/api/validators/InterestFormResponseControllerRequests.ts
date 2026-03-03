@@ -34,7 +34,7 @@ export class AddListOfInterestedPhoneRequest implements IAddListOfInterestedPhon
     @IsDefined()
     @IsArray()
     @ArrayNotEmpty()
-    @IsPhoneNumber(undefined, {each: true})
+    @IsPhoneNumber(undefined, { each: true })
     phones: string[];
 }
 

@@ -317,7 +317,8 @@ export class AdminController {
       return {
         applicant: {
           ...user.getHiddenProfile(),
-          didInterestForm: (allEmailInterests.has(user.email) || allPhoneInterests.has((app.data as Application)?.phoneNumber)),
+          didInterestForm: (allEmailInterests.has(user.email)
+          || allPhoneInterests.has((app.data as Application)?.phoneNumber)),
           university: (app?.data as Application)?.university ?? null,
         },
         reviewer: user.reviewer?.getHiddenProfile(),
@@ -350,7 +351,8 @@ export class AdminController {
       return {
         applicant: {
           ...user.getHiddenProfile(),
-          didInterestForm: (allEmailInterests.has(user.email) || allPhoneInterests.has((app.data as Application)?.phoneNumber)),
+          didInterestForm: (allEmailInterests.has(user.email)
+          || allPhoneInterests.has((app.data as Application)?.phoneNumber)),
           university: (app.data as Application)?.university ?? null,
         },
         reviewer: user.reviewer?.getHiddenProfile(),

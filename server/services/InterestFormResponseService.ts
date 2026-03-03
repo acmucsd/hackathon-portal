@@ -45,6 +45,7 @@ export class InterestFormResponseService {
 
     return interest;
   }
+
 public async addInterestedPhone(
     phone: string,
   ): Promise<InterestFormResponseModel> {
@@ -204,6 +205,7 @@ public async addInterestedPhone(
       );
     return interestByEmail;
   }
+
   public async checkPhonesForInterest(phones: string[]): Promise<Map<string, boolean>> {
     const interestByPhone = await this.transactionsManager.readOnly(
       async (entityManager) =>

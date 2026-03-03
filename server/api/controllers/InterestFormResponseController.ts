@@ -4,9 +4,14 @@ import { InterestFormResponseService } from '../../services/InterestFormResponse
 import { UserAuthentication } from '../middleware/UserAuthentication';
 import { AuthenticatedUser } from '../decorators/AuthenticatedUser';
 import { UserModel } from '../../models/UserModel';
-import { AddInterestedEmailResponse, AddInterestedPhoneResponse, AddListOfInterestedEmailResponse, AddListOfInterestedPhonesResponse, CheckInterestByEmailResponse,
-  GetAllInterestedUserEmailsAndPhonesResponse, RemoveInterestedEmailResponse,
-  RemoveInterestedPhoneResponse} from '../../types/ApiResponses';
+import { AddInterestedEmailResponse,
+  AddInterestedPhoneResponse,
+  AddListOfInterestedEmailResponse,
+  AddListOfInterestedPhonesResponse,
+  CheckInterestByEmailResponse,
+  GetAllInterestedUserEmailsAndPhonesResponse,
+  RemoveInterestedEmailResponse,
+  RemoveInterestedPhoneResponse } from '../../types/ApiResponses';
 import PermissionsService from '../../services/PermissionsService';
 import { AddInterestedEmailRequest,
          AddListOfInterestedEmailRequest,
@@ -110,6 +115,7 @@ export class InterestFormResponseController {
       await this.interestFormResponseService.removeInterestedEmail(removeInterestedEmailRequest.email);
       return { error: null };
     }
+
      @UseBefore(UserAuthentication)
     @Delete('/remove-phone')
     async removeInterestedUserPhone(
