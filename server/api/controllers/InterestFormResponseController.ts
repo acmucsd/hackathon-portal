@@ -139,7 +139,7 @@ export class InterestFormResponseController {
       if (!PermissionsService.canEditInterestEmailsOrPhones(user))
         throw new ForbiddenError();
 
-      const interestEmailsAndPhones = await this.interestFormResponseService.findAllInterestedEmailAndPhone();
+      const interestEmailsAndPhones = await this.interestFormResponseService.findAllInterested();
 
       return { error: null, interested: interestEmailsAndPhones };
     }

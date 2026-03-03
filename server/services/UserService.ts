@@ -18,13 +18,15 @@ import {
 import { UpdateUser } from '../api/validators/UserControllerRequests';
 import { auth, adminAuth } from '../FirebaseAuth';
 
-import { ApplicationDecision, ApplicationStatus, UserAccessType } from '../types/Enums';
+import { ApplicationDecision, ApplicationStatus, FormType, UserAccessType } from '../types/Enums';
 import {
   ReviewAssignment,
   ReviewerOverviewResponse,
   ReviewerOverviewReviewer,
   UserAndToken,
 } from '../types/ApiResponses';
+import { ResponseModel } from '../models/ResponseModel';
+import { Application } from '../types/Application';
 
 
 /** Internal: includes acceptedWithNotNullUniversity for computation; omitted from final output. */
@@ -310,6 +312,7 @@ export class UserService {
   ): Promise<ReviewAssignment[]> {
     return this.transactionsManager.readWrite(async (entityManager) => {
       const userRepository = Repositories.user(entityManager);
+      const responseRepository = Repositories.response(entityManager);
       const interestFormResponseRepository = Repositories.interestFormResponse(entityManager);
 
       const newAssignments: ReviewAssignment[] = [];
@@ -318,22 +321,37 @@ export class UserService {
         ...assignmentsRequest.map(job => job.applicantId),
         ...assignmentsRequest.map(job => job.reviewerId),
       ].filter((userId): userId is string => userId != null));
-      const users = await userRepository.findByIdsWithReviewerRelation([...userIds]);
 
+      // map user ID to UserModel
+      const users = await userRepository.findByIdsWithReviewerRelation([...userIds]);
       const userMap: Record<string, UserModel> = {};
       users.forEach(user => {
         if (user) userMap[user.id] = user;
       });
 
-      const interestByEmail = await interestFormResponseRepository.findInterestByEmails(
-        assignmentsRequest.map(job => userMap[job.applicantId].email),
-      );
+      // note:
+      // if we don't need this api route to return new assignments,
+      // then we do not need to query Response and InterestForm.
+      // we only do this for didInterestForm calculation
+
+      // map user ID to Response
+      const responses = await responseRepository.findResponsesForUsersByType([...userIds], FormType.APPLICATION);
+      const responseMap: Record<string, ResponseModel> = {};
+      responses.forEach(res => {
+        if (res) responseMap[res.user.id] = res;
+      })
+
+      const allInterests = await interestFormResponseRepository.findAllInterest();
+      const allEmailInterests = new Set(allInterests.map(res => res.email));
+      const allPhoneInterests = new Set(allInterests.map(res => res.phone));
 
       const editedUsers: UserModel[] = [];
       assignmentsRequest.forEach((assignment) => {
         const reviewee = userMap[assignment.applicantId];
+        const revieweeResponse = responseMap[assignment.applicantId];
+        if (!reviewee || !revieweeResponse) return;
+
         const reviewer = assignment.reviewerId ? userMap[assignment.reviewerId] : null;
-        if (!reviewee) return;
 
         // ONLY mutate the owning side
         reviewee.reviewer = reviewer;
@@ -341,10 +359,15 @@ export class UserService {
         // persist reviewee only
         editedUsers.push(reviewee);
 
+        const email = reviewee.email;
+        const phone = (revieweeResponse.data as Application).phoneNumber;
+
         newAssignments.push({
           applicant: {
             ...reviewee.getHiddenProfile(),
-            didInterestForm: interestByEmail.get(reviewee.email) ?? false,
+            didInterestForm:
+              (!!email && allEmailInterests.has(email)) ||
+              (!!phone && allPhoneInterests.has(phone)),
           },
           reviewer: reviewer?.getHiddenProfile(),
         });
