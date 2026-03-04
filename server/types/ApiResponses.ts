@@ -168,19 +168,30 @@ export interface UpdateUserAccessResponse extends ApiResponse {
 export interface CheckInterestByEmailResponse extends ApiResponse {
   interest: Boolean;
 }
+export interface CheckInterestByPhoneResponse extends ApiResponse {
+  interest: Boolean;
+}
 export interface AddInterestedEmailResponse extends ApiResponse {
+  interest: InterestFormResponseModel;
+}
+export interface AddInterestedPhoneResponse extends ApiResponse {
   interest: InterestFormResponseModel;
 }
 
 export interface AddListOfInterestedEmailResponse extends ApiResponse {
   interested: InterestFormResponseModel[];
 }
+export interface AddListOfInterestedPhonesResponse extends ApiResponse {
+  interested: InterestFormResponseModel[];
+}
 
-export interface GetAllInterestedUserEmailsResponse extends ApiResponse {
+export interface GetAllInterestedUserEmailsAndPhonesResponse extends ApiResponse {
   interested: InterestFormResponseModel[]
 }
 
 export interface RemoveInterestedEmailResponse extends ApiResponse {}
+export interface RemoveInterestedPhoneResponse extends ApiResponse {}
+
 
 export interface ReviewerOverviewApplicant {
   userId: string;

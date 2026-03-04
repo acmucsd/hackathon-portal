@@ -304,18 +304,25 @@ export class AdminController {
     if (!PermissionsService.canViewAllApplications(currentUser))
       throw new ForbiddenError();
 
-    const allInterests = new Set(
-      (await this.interestFormResponseService.findAllInterestedEmail()).map(res => res.email),
-    );
+    const allInterests = await this.interestFormResponseService.findAllInterested();
+
+    const allEmailInterests = new Set(allInterests.map(res => res.email));
+    const allPhoneInterests = new Set(allInterests.map(res => res.phone));
+
     const applications = await this.responseService.getAllApplicationsWithReviewerRelation();
 
     const assignments = applications.map((app) => {
       const user = app.user;
+      const email = user.email;
+      const phone = (app.data as Application).phoneNumber;
+      const university = (app.data as Application).university ?? null;
       return {
         applicant: {
           ...user.getHiddenProfile(),
-          didInterestForm: allInterests.has(user.email),
-          university: (app?.data as Application)?.university ?? null,
+          didInterestForm:
+            (!!email && allEmailInterests.has(email)) ||
+            (!!phone && allPhoneInterests.has(phone)),
+          university: university,
         },
         reviewer: user.reviewer?.getHiddenProfile(),
       };
@@ -333,19 +340,26 @@ export class AdminController {
     if (!PermissionsService.canViewAllApplications(currentUser))
       throw new ForbiddenError();
 
-    const allInterests = new Set(
-      (await this.interestFormResponseService.findAllInterestedEmail()).map(res => res.email),
-    );
+    const allInterests = await this.interestFormResponseService.findAllInterested();
+
+    const allEmailInterests = new Set(allInterests.map(res => res.email));
+    const allPhoneInterests = new Set(allInterests.map(res => res.phone));
+
     const applications = await this.responseService.getAllApplicationsWithReviewerRelation();
     const filteredApplications = (applications).filter(app => app.user.reviewer?.id == params.id);
 
     const assignments = filteredApplications.map((app) => {
       const user = app.user;
+      const email = user.email;
+      const phone = (app.data as Application).phoneNumber;
+      const university = (app.data as Application).university ?? null;
       return {
         applicant: {
           ...user.getHiddenProfile(),
-          didInterestForm: allInterests.has(user.email),
-          university: (app.data as Application)?.university ?? null,
+          didInterestForm:
+            (!!email && allEmailInterests.has(email)) ||
+            (!!phone && allPhoneInterests.has(phone)),
+          university: university,
         },
         reviewer: user.reviewer?.getHiddenProfile(),
       };

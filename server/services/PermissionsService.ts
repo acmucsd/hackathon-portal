@@ -35,7 +35,7 @@ export default class PermissionsService {
     return user.isAdmin();
   }
 
-  public static canEditInterestEmails(user: UserModel): boolean {
+  public static canEditInterestEmailsOrPhones(user: UserModel): boolean {
     return user.isAdmin();
   }
 

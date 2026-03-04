@@ -99,11 +99,19 @@ export interface UpdateUserAccessRequest {
 export interface AddInterestedEmailRequest {
   email: string;
 }
+export interface AddInterestedPhoneRequest {
+  phone: string;
+}
 export interface RemoveInterestedEmailRequest {
   email: string;
+}
+export interface RemoveInterestedPhoneRequest {
+  phone: string;
 }
 export interface AddListOfInterestedEmailRequest {
   emails: string[];
 }
-
+export interface AddListOfInterestedPhoneRequest {
+  phones: string[];
+}
 
