@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Card from '../Card';
 import styles from './style.module.scss';
-import Banner from '@/../public/assets/banner.png';
+import Banner from '@/../public/assets/banner2.png';
 import Typography from '../Typography';
 import Link from 'next/link';
 import FAQ, { FAQQuestion } from '../FAQAccordion';
@@ -40,16 +40,16 @@ const Dashboard = ({ faq, timeline, user }: DashboardProps) => {
 
   return (
     <div className={styles.container}>
-      <Card gap={1.5} className={`${styles.card} ${styles.banner}`}>
+      <Card gap={1.5} className={`${styles.card} ${styles.banner} ${styles.shelf}`}>
         <Typography variant="headline/heavy/large" component="h1" className={styles.title}>
           Welcome, {user.firstName + ' ' + user.lastName}!
         </Typography>
         <Typography variant="body/medium" component="p" className={styles.subtitle}>
-          View DiamondHacks updates, resources, and check-in to events here.
+          Access the application and view DiamondHacks updates below.
         </Typography>
         <Image
           src={Banner}
-          alt="Two diamond critters find a large jewel in a vault"
+          alt="Books and potions in the shelf"
           quality={100}
           className={styles.bannerImage}
         />
