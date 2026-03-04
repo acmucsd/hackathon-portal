@@ -6,7 +6,8 @@
   grid-template-areas:
     'banner banner banner'
     'onboarding onboarding onboarding'
-    'status faq faq';
+    'status faq faq'
+    'banner2 banner2 banner2';
   grid-template-columns: 1fr 1fr 1fr;
   gap: 1rem;
   align-items: start;
@@ -156,5 +157,12 @@
   .bigQr {
     max-width: unset;
     width: 100%;
+  }
+
+  .banner2 {
+    grid-area: banner2;
+    margin-top: 2rem;
+    width: 100%;
+    height: auto;
   }
 }

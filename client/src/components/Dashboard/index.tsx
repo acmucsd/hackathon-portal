@@ -3,7 +3,8 @@
 import Image from 'next/image';
 import Card from '../Card';
 import styles from './style.module.scss';
-import Banner from '@/../public/assets/banner2.png';
+import TopBanner from '@/../public/assets/banner2.png';
+import BottomBanner from '@/../public/assets/bottombanner.png';
 import Typography from '../Typography';
 import Link from 'next/link';
 import FAQ, { FAQQuestion } from '../FAQAccordion';
@@ -49,7 +50,7 @@ const Dashboard = ({ faq, timeline, user }: DashboardProps) => {
           Access the application and view DiamondHacks updates below.
         </Typography>
         <Image
-          src={Banner}
+          src={TopBanner}
           alt="Books and potions in the shelf"
           quality={100}
           className={styles.bannerImage}
@@ -181,6 +182,12 @@ const Dashboard = ({ faq, timeline, user }: DashboardProps) => {
           to reach DiamondHacks’s organizers!
         </Typography>
       </Card>
+      <Image
+        src={BottomBanner}
+        alt="Banners of the four houses: Raccoon, Sun God, Geisel, and King Triton"
+        quality={100}
+        className={styles.banner2}
+      />
       <Modal
         title={`${user.firstName} ${user.lastName}'s QR Code`}
         open={showBigQr}
