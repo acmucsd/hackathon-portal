@@ -4,12 +4,12 @@
 .container {
   display: grid;
   grid-template-areas:
-    'banner banner'
-    'status timeline'
-    'faq faq';
-  grid-template-columns: 1fr 1fr;
+    'banner banner banner'
+    'onboarding onboarding onboarding'
+    'status faq faq';
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 1rem;
-  align-items: stretch;
+  align-items: start;
 
   @media screen and (max-width: vars.$breakpoint-md) {
     display: flex;
@@ -125,10 +125,10 @@
     grid-area: status;
   }
 
-  .timeline {
-    grid-area: timeline;
+  .onboarding {
+    grid-area: onboarding;
 
-    .timelineItemWrapper {
+    .onboardingItemWrapper {
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
