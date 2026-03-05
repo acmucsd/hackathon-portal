@@ -141,7 +141,6 @@
       text-decoration: underline;
       color: vars.$blue-4;
     }
-
   }
   .timeline {
     grid-area: timeline;
@@ -219,6 +218,6 @@
     'status timeline'
     'faq faq'
     'banner2 banner2';
-    grid-template-columns: 1fr 1fr;
-    align-items: stretch;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
 }
