@@ -18,7 +18,7 @@ import {
 import { UpdateUser } from '../api/validators/UserControllerRequests';
 import { auth, adminAuth } from '../FirebaseAuth';
 
-import { ApplicationDecision, ApplicationStatus, FormType, UserAccessType } from '../types/Enums';
+import { ApplicationDecision, ApplicationStatus, FormType, House, UserAccessType } from '../types/Enums';
 import {
   ReviewAssignment,
   ReviewerOverviewResponse,
@@ -27,6 +27,7 @@ import {
 } from '../types/ApiResponses';
 import { ResponseModel } from '../models/ResponseModel';
 import { Application } from '../types/Application';
+import { HouseService } from './HouseService';
 
 
 /** Internal: includes acceptedWithNotNullUniversity for computation; omitted from final output. */
@@ -36,9 +37,15 @@ interface ReviewerOverviewReviewerInternal extends ReviewerOverviewReviewer {
 
 @Service()
 export class UserService {
+  private houseService: HouseService;
+
   private transactionsManager: TransactionsManager;
 
-  constructor(transactionsManager: TransactionsManager) {
+  constructor(
+    houseService: HouseService,
+    transactionsManager: TransactionsManager,
+  ) {
+    this.houseService = houseService;
     this.transactionsManager = transactionsManager;
   }
 
@@ -426,110 +433,110 @@ export class UserService {
 
   public async getReviewerOverview(): Promise<ReviewerOverviewResponse> {
     const rows = await this.transactionsManager.readOnly(async (entityManager) =>
-    entityManager.query(`
-      SELECT DISTINCT ON (r.id, a.id)
-        r.id          AS reviewer_id,
-        r."firstName" AS reviewer_first_name,
-        r."lastName"  AS reviewer_last_name,
-        a.id          AS applicant_id,
-        a."firstName" AS applicant_first_name,
-        a."lastName"  AS applicant_last_name,
-        a."applicationDecision",
-        res.data->>'university' AS university
-      FROM "User" r
-      LEFT JOIN "User" a
-        ON a."reviewerId" = r.id
-      LEFT JOIN "Response" res
-        ON res."user" = a.id AND res."formType" = 'APPLICATION'
-      WHERE r."accessType" = 'ADMIN'
-      ORDER BY r.id, a.id, res."updatedAt" DESC NULLS LAST
-    `),
-  );
+      entityManager.query(`
+        SELECT DISTINCT ON (r.id, a.id)
+          r.id          AS reviewer_id,
+          r."firstName" AS reviewer_first_name,
+          r."lastName"  AS reviewer_last_name,
+          a.id          AS applicant_id,
+          a."firstName" AS applicant_first_name,
+          a."lastName"  AS applicant_last_name,
+          a."applicationDecision",
+          res.data->>'university' AS university
+        FROM "User" r
+        LEFT JOIN "User" a
+          ON a."reviewerId" = r.id
+        LEFT JOIN "Response" res
+          ON res."user" = a.id AND res."formType" = 'APPLICATION'
+        WHERE r."accessType" = 'ADMIN'
+        ORDER BY r.id, a.id, res."updatedAt" DESC NULLS LAST
+      `),
+    );
 
-  const map = new Map<string, ReviewerOverviewReviewerInternal>();
+    const map = new Map<string, ReviewerOverviewReviewerInternal>();
 
-  for (const row of rows) {
-    const reviewerId = row.reviewer_id;
+    for (const row of rows) {
+      const reviewerId = row.reviewer_id;
 
-    if (!map.has(reviewerId)) {
-      map.set(reviewerId, {
-        reviewerId,
-        reviewerFirstName: row.reviewer_first_name,
-        reviewerLastName: row.reviewer_last_name,
-        applicants: [],
-        total: 0,
-        accept: 0,
-        reject: 0,
-        waitlist: 0,
-        noDecision: 0,
-        acceptedNonUcsdPercentage: null,
-        acceptedWithNotNullUniversity: 0,
-        acceptedNonUcsd: 0,
-      });
-    }
+      if (!map.has(reviewerId)) {
+        map.set(reviewerId, {
+          reviewerId,
+          reviewerFirstName: row.reviewer_first_name,
+          reviewerLastName: row.reviewer_last_name,
+          applicants: [],
+          total: 0,
+          accept: 0,
+          reject: 0,
+          waitlist: 0,
+          noDecision: 0,
+          acceptedNonUcsdPercentage: null,
+          acceptedWithNotNullUniversity: 0,
+          acceptedNonUcsd: 0,
+        });
+      }
 
-    if (row.applicant_id) {
-      const reviewer = map.get(reviewerId)!;
+      if (row.applicant_id) {
+        const reviewer = map.get(reviewerId)!;
 
-      reviewer.applicants.push({
-        userId: row.applicant_id,
-        firstName: row.applicant_first_name,
-        lastName: row.applicant_last_name,
-        applicationDecision: row.applicationDecision,
-      });
+        reviewer.applicants.push({
+          userId: row.applicant_id,
+          firstName: row.applicant_first_name,
+          lastName: row.applicant_last_name,
+          applicationDecision: row.applicationDecision,
+        });
 
-      reviewer.total++;
+        reviewer.total++;
 
-      switch (row.applicationDecision) {
-        case 'ACCEPT':
-          reviewer.accept++;
-          if (row.university != null && String(row.university).trim() !== '') {
-            reviewer.acceptedWithNotNullUniversity++;
-            if (row.university !== UserService.UCSD_UNIVERSITY) {
-              reviewer.acceptedNonUcsd++;
+        switch (row.applicationDecision) {
+          case 'ACCEPT':
+            reviewer.accept++;
+            if (row.university != null && String(row.university).trim() !== '') {
+              reviewer.acceptedWithNotNullUniversity++;
+              if (row.university !== UserService.UCSD_UNIVERSITY) {
+                reviewer.acceptedNonUcsd++;
+              }
             }
-          }
-          break;
-        case 'REJECT':
-          reviewer.reject++;
-          break;
-        case 'WAITLIST':
-          reviewer.waitlist++;
-          break;
-        case 'NO_DECISION':
-        default:
-          reviewer.noDecision++;
-          break;
+            break;
+          case 'REJECT':
+            reviewer.reject++;
+            break;
+          case 'WAITLIST':
+            reviewer.waitlist++;
+            break;
+          case 'NO_DECISION':
+          default:
+            reviewer.noDecision++;
+            break;
+        }
       }
     }
-  }
 
-  const reviewers: ReviewerOverviewReviewer[] = Array.from(map.values()).map((r) => {
-    const acceptedNonUcsdPercentage =
-      r.acceptedWithNotNullUniversity > 0
-        ? Math.round((r.acceptedNonUcsd / r.acceptedWithNotNullUniversity) * 1000) / 10
-        : null;
+    const reviewers: ReviewerOverviewReviewer[] = Array.from(map.values()).map((r) => {
+      const acceptedNonUcsdPercentage =
+        r.acceptedWithNotNullUniversity > 0
+          ? Math.round((r.acceptedNonUcsd / r.acceptedWithNotNullUniversity) * 1000) / 10
+          : null;
+      return {
+        reviewerId: r.reviewerId,
+        reviewerFirstName: r.reviewerFirstName,
+        reviewerLastName: r.reviewerLastName,
+        applicants: r.applicants,
+        total: r.total,
+        accept: r.accept,
+        reject: r.reject,
+        waitlist: r.waitlist,
+        noDecision: r.noDecision,
+        acceptedNonUcsd: r.acceptedNonUcsd,
+        acceptedNonUcsdPercentage,
+      };
+    });
+
     return {
-      reviewerId: r.reviewerId,
-      reviewerFirstName: r.reviewerFirstName,
-      reviewerLastName: r.reviewerLastName,
-      applicants: r.applicants,
-      total: r.total,
-      accept: r.accept,
-      reject: r.reject,
-      waitlist: r.waitlist,
-      noDecision: r.noDecision,
-      acceptedNonUcsd: r.acceptedNonUcsd,
-      acceptedNonUcsdPercentage,
+      reviewers,
     };
-  });
-
-  return {
-    reviewers,
-  };
   }
 
-    public async updateUserAccess(email: string, access: UserAccessType) {
+  public async updateUserAccess(email: string, access: UserAccessType) {
     return this.transactionsManager.readWrite(async (entityManager) => {
       const userRepository = Repositories.user(entityManager);
       const user = await userRepository.findByEmail(email);
@@ -539,7 +546,23 @@ export class UserService {
       return updatedUser;
     });
   }
+
+  public async addHousePointsToUser(id: string, points: number): Promise<UserModel> {
+    return this.transactionsManager.readWrite(async (entityManager) => {
+      const userRepository = Repositories.user(entityManager);
+      const user = await Repositories.user(entityManager).findById(id);
+      if (!user) throw new NotFoundError('User not found');
+
+      user.points += points;
+
+      // assign house only if user still unassigned
+      if (user.house === House.UNASSIGNED) {
+        const leastHouse = await this.houseService.getLeastPopulated();
+        user.house = leastHouse;
+      }
+
+      const updatedUser = await userRepository.save(user);
+      return updatedUser;
+    });
+  }
 }
-
-
-

@@ -3,6 +3,7 @@ import {
   IsDefined,
   IsEnum,
   IsNotEmpty,
+  IsNumber,
   ValidateNested,
 } from 'class-validator';
 import {
@@ -52,6 +53,9 @@ export class CreateEvent implements ICreateEvent {
 
   @IsDefined()
   published: boolean;
+
+  @IsNumber()
+  pointValue: number;
 }
 
 export class UpdateEvent implements IUpdateEvent {
@@ -84,6 +88,9 @@ export class UpdateEvent implements IUpdateEvent {
 
   @Allow()
   published: boolean;
+
+  @IsNumber()
+  pointValue: number;
 }
 
 export class CreateEventRequest implements ICreateEventRequest {

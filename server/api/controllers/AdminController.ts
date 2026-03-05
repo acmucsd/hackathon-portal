@@ -241,7 +241,10 @@ export class AdminController {
       params.uuid,
     );
     const { event } = attendance.getPublicAttendance();
-    return { error: null, event };
+
+    let user = await this.userService.addHousePointsToUser(params.id, event.pointValue);
+
+    return { error: null, event, user };
   }
 
   @UseBefore(UserAuthentication)
@@ -366,7 +369,7 @@ export class AdminController {
     });
 
     return { error: null, assignments };
-    }
+  }
 
   @UseBefore(UserAuthentication)
   @Get('/reviewer-overview')
@@ -388,9 +391,9 @@ export class AdminController {
     if (!PermissionsService.canUpdateUserAccess(currentUser))
       throw new ForbiddenError();
 
-      if (currentUser.email == updateUserAccessRequest.email) {
-        throw new BadRequestError('You cannot change your own access!');
-      }
+    if (currentUser.email == updateUserAccessRequest.email) {
+      throw new BadRequestError('You cannot change your own access!');
+    }
 
     const updatedAccess = await this.userService.updateUserAccess(
       updateUserAccessRequest.email, updateUserAccessRequest.access,
