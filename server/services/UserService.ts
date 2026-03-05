@@ -561,7 +561,7 @@ export class UserService {
         user.house = leastHouse;
       }
 
-      const updatedUser = userRepository.save(user);
+      const updatedUser = await userRepository.save(user);
       return updatedUser;
     });
   }
