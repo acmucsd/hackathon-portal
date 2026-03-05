@@ -229,3 +229,7 @@ export interface ReviewerOverviewResponse {
 export interface GetReviewerOverviewResponse extends ApiResponse {
   dataToReturn: ReviewerOverviewResponse;
 }
+
+// House responses
+export type HouseHeadcountsResponse = Record<House, number>;
+export type HousePointsResponse = Record<House, number>;

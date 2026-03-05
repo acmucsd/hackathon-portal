@@ -58,4 +58,5 @@ export enum House {
   SUN_GOD = 'SUN_GOD',
   RACCOON = 'RACCOON',
   TRITON = 'TRITON',
+  UNASSIGNED = 'UNASSIGNED',
 }

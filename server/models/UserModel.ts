@@ -37,7 +37,7 @@ export class UserModel {
 
   @Column('enum', {
     enum: House,
-    nullable: true,
+    default: House.UNASSIGNED,
   })
   house: House;
 

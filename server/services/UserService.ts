@@ -18,7 +18,7 @@ import {
 import { UpdateUser } from '../api/validators/UserControllerRequests';
 import { auth, adminAuth } from '../FirebaseAuth';
 
-import { ApplicationDecision, ApplicationStatus, FormType, UserAccessType } from '../types/Enums';
+import { ApplicationDecision, ApplicationStatus, FormType, House, UserAccessType } from '../types/Enums';
 import {
   ReviewAssignment,
   ReviewerOverviewResponse,
@@ -27,6 +27,7 @@ import {
 } from '../types/ApiResponses';
 import { ResponseModel } from '../models/ResponseModel';
 import { Application } from '../types/Application';
+import { HouseService } from './HouseService';
 
 
 /** Internal: includes acceptedWithNotNullUniversity for computation; omitted from final output. */
@@ -36,9 +37,15 @@ interface ReviewerOverviewReviewerInternal extends ReviewerOverviewReviewer {
 
 @Service()
 export class UserService {
+  private houseService: HouseService;
+
   private transactionsManager: TransactionsManager;
 
-  constructor(transactionsManager: TransactionsManager) {
+  constructor(
+    houseService: HouseService,
+    transactionsManager: TransactionsManager,
+  ) {
+    this.houseService = houseService;
     this.transactionsManager = transactionsManager;
   }
 
@@ -551,12 +558,19 @@ export class UserService {
     });
   }
 
-  public async addUserPoints(id: string, points: number): Promise<UserModel> {
+  public async addPointsToUserAndAssignHouse(id: string, points: number): Promise<UserModel> {
     return this.transactionsManager.readWrite(async (entityManager) => {
       const userRepository = Repositories.user(entityManager);
       const user = await Repositories.user(entityManager).findById(id);
       if (!user) throw new NotFoundError('User not found');
+
       user.points += points;
+
+      if (user.house == House.UNASSIGNED) {
+        const leastHouse = await this.houseService.getLeastPopulated();
+        user.house = leastHouse;
+      }
+
       const updatedUser = userRepository.save(user);
       return updatedUser;
     });

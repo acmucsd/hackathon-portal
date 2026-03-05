@@ -42,6 +42,7 @@ import { UpdateApplicationOpeningStatusRequest } from '../validators/AdminContro
 import { PostAssignmentsRequest } from '../../types/ApiRequests';
 import { InterestFormResponseService } from '../../services/InterestFormResponseService';
 import { Application } from '../../types/Application';
+import { HouseService } from '../../services/HouseService';
 
 @JsonController('/admin')
 @Service()
@@ -56,18 +57,22 @@ export class AdminController {
 
   private interestFormResponseService: InterestFormResponseService;
 
+  private houseService: HouseService;
+
   constructor(
     userService: UserService,
     responseService: ResponseService,
     attendanceService: AttendanceService,
     interestFormResponseService: InterestFormResponseService,
     applicationConfigService: ApplicationConfigService,
+    houseService: HouseService,
   ) {
     this.userService = userService;
     this.responseService = responseService;
     this.attendanceService = attendanceService;
     this.applicationConfigService = applicationConfigService;
     this.interestFormResponseService = interestFormResponseService;
+    this.houseService = houseService;
   }
 
   @UseBefore(UserAuthentication)
@@ -242,7 +247,7 @@ export class AdminController {
     );
     const { event } = attendance.getPublicAttendance();
 
-    const user = await this.userService.addUserPoints(params.id, event.pointValue);
+    const user = await this.userService.addPointsToUserAndAssignHouse(params.id, event.pointValue);
 
     return { error: null, event, user };
   }
@@ -391,9 +396,9 @@ export class AdminController {
     if (!PermissionsService.canUpdateUserAccess(currentUser))
       throw new ForbiddenError();
 
-      if (currentUser.email == updateUserAccessRequest.email) {
-        throw new BadRequestError('You cannot change your own access!');
-      }
+    if (currentUser.email == updateUserAccessRequest.email) {
+      throw new BadRequestError('You cannot change your own access!');
+    }
 
     const updatedAccess = await this.userService.updateUserAccess(
       updateUserAccessRequest.email, updateUserAccessRequest.access,

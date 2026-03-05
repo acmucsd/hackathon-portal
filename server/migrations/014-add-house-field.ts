@@ -1,15 +1,15 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class AddHouse1772673328579 implements MigrationInterface {
-    name = 'AddHouse1772673328579'
+export class AddHouse1772695003690 implements MigrationInterface {
+    name = 'AddHouse1772695003690'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`ALTER TABLE "User" DROP CONSTRAINT "FK_74d66b28b8d7687c814b2f206c1"`);
         await queryRunner.query(`ALTER TABLE "ApplicationConfig" DROP CONSTRAINT "FK_application_config_updated_by"`);
         await queryRunner.query(`ALTER TABLE "ApplicationConfig" DROP CONSTRAINT "CHK_application_config_singleton"`);
         await queryRunner.query(`ALTER TABLE "Event" ADD "pointValue" integer NOT NULL DEFAULT '0'`);
-        await queryRunner.query(`CREATE TYPE "public"."User_house_enum" AS ENUM('GEISEL', 'SUN_GOD', 'RACCOON', 'TRITON')`);
-        await queryRunner.query(`ALTER TABLE "User" ADD "house" "public"."User_house_enum"`);
+        await queryRunner.query(`CREATE TYPE "public"."User_house_enum" AS ENUM('GEISEL', 'SUN_GOD', 'RACCOON', 'TRITON', 'UNASSIGNED')`);
+        await queryRunner.query(`ALTER TABLE "User" ADD "house" "public"."User_house_enum" NOT NULL DEFAULT 'UNASSIGNED'`);
         await queryRunner.query(`ALTER TABLE "User" ADD "points" integer NOT NULL DEFAULT '0'`);
         await queryRunner.query(`ALTER TABLE "User" ADD CONSTRAINT "FK_bcb9839029a3ca11f5bdff06277" FOREIGN KEY ("lastDecisionUpdatedById") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE NO ACTION`);
     }
