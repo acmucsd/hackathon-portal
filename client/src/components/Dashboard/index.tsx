@@ -41,7 +41,7 @@ const Dashboard = ({ faq, timeline, user }: DashboardProps) => {
   const [showBigQr, setShowBigQr] = useState(false);
 
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${user.applicationStatus !== ApplicationStatus.CONFIRMED ? styles.notConfirmed : ''}`}>
       {/* Welcome */}
       <Card gap={1.5} className={`${styles.card} ${styles.banner} ${styles.shelf}`}>
         <Typography variant="headline/heavy/large" component="h1" className={styles.title}>

@@ -130,7 +130,23 @@
   .onboarding {
     grid-area: onboarding;
 
-    .onboardingItemWrapper {
+    .onboardingChecklist {
+      padding-left: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .link {
+      text-decoration: underline;
+      color: vars.$blue-4;
+    }
+
+  }
+  .timeline {
+    grid-area: timeline;
+
+    .timelineItemWrapper {
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
@@ -138,7 +154,7 @@
       z-index: 0;
     }
 
-    .onboardingChecklist {
+    .timelineChecklist {
       padding-left: 1rem;
       display: flex;
       flex-direction: column;
@@ -195,4 +211,14 @@
     width: 100%;
     height: auto;
   }
+}
+
+.notConfirmed {
+  grid-template-areas:
+    'banner banner'
+    'status timeline'
+    'faq faq'
+    'banner2 banner2';
+    grid-template-columns: 1fr 1fr;
+    align-items: stretch;
 }
