@@ -35,7 +35,7 @@ import {
   UuidParam,
 } from '../validators/GenericRequests';
 import PermissionsService from '../../services/PermissionsService';
-import { ApplicationStatus } from '../../types/Enums';
+import { ApplicationStatus, House } from '../../types/Enums';
 import { AttendanceService } from '../../services/AttendanceService';
 import { ApplicationConfigService } from '../../services/ApplicationConfigService';
 import { UpdateApplicationOpeningStatusRequest } from '../validators/AdminControllerRequests';
@@ -247,7 +247,7 @@ export class AdminController {
     );
     const { event } = attendance.getPublicAttendance();
 
-    const user = await this.userService.addPointsToUserAndAssignHouse(params.id, event.pointValue);
+    let user = await this.userService.addHousePointsToUser(params.id, event.pointValue);
 
     return { error: null, event, user };
   }

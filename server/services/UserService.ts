@@ -547,18 +547,7 @@ export class UserService {
     });
   }
 
-  public async setUserPoints(id: string, points: number): Promise<UserModel> {
-    return this.transactionsManager.readWrite(async (entityManager) => {
-      const userRepository = Repositories.user(entityManager);
-      const user = await Repositories.user(entityManager).findById(id);
-      if (!user) throw new NotFoundError('User not found');
-      user.points = points;
-      const updatedUser = userRepository.save(user);
-      return updatedUser;
-    });
-  }
-
-  public async addPointsToUserAndAssignHouse(id: string, points: number): Promise<UserModel> {
+  public async addHousePointsToUser(id: string, points: number): Promise<UserModel> {
     return this.transactionsManager.readWrite(async (entityManager) => {
       const userRepository = Repositories.user(entityManager);
       const user = await Repositories.user(entityManager).findById(id);
@@ -566,7 +555,8 @@ export class UserService {
 
       user.points += points;
 
-      if (user.house == House.UNASSIGNED) {
+      // assign house only if user still unassigned
+      if (user.house === House.UNASSIGNED) {
         const leastHouse = await this.houseService.getLeastPopulated();
         user.house = leastHouse;
       }
