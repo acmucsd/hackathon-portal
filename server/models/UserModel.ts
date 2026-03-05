@@ -11,6 +11,7 @@ import { ResponseModel } from './ResponseModel';
 import {
   ApplicationDecision,
   ApplicationStatus,
+  House,
   UserAccessType,
 } from '../types/Enums';
 import {
@@ -33,6 +34,15 @@ export class UserModel {
 
   @Column()
   lastName: string;
+
+  @Column('enum', {
+    enum: House,
+    nullable: true,
+  })
+  house: House;
+
+  @Column({ default: 0 })
+  points: number;
 
   @Column('enum', {
     enum: UserAccessType,
@@ -112,6 +122,8 @@ export class UserModel {
       id: this.id,
       firstName: this.firstName,
       lastName: this.lastName,
+      house: this.house,
+      points: this.points,
     };
   }
 

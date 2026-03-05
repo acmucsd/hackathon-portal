@@ -57,3 +57,10 @@ export enum Day {
   SATURDAY = 'SATURDAY',
   SUNDAY = 'SUNDAY',
 }
+
+export enum House {
+  GEISEL = 'GEISEL',
+  SUN_GOD = 'SUN_GOD',
+  RACCOON = 'RACCOON',
+  TRITON = 'TRITON',
+}

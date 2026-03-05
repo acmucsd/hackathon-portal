@@ -6,6 +6,7 @@ import {
   UserAccessType,
   EventType,
   Day,
+  House,
 } from './Enums';
 
 // User responses
@@ -13,6 +14,8 @@ export interface PublicProfile {
   id: string;
   firstName: string;
   lastName: string;
+  house: House;
+  points: number;
 }
 
 export interface PrivateProfile extends PublicProfile {
@@ -102,6 +105,7 @@ export interface PublicEvent {
   startTime: string;
   endTime: string;
   published: boolean;
+  pointValue: number;
 }
 
 export interface CreateEventResponse extends ApiResponse {
