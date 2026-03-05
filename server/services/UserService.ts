@@ -539,4 +539,26 @@ export class UserService {
       return updatedUser;
     });
   }
+
+  public async setUserPoints(id: string, points: number): Promise<UserModel> {
+    return this.transactionsManager.readWrite(async (entityManager) => {
+      const userRepository = Repositories.user(entityManager);
+      const user = await Repositories.user(entityManager).findById(id);
+      if (!user) throw new NotFoundError('User not found');
+      user.points = points;
+      const updatedUser = userRepository.save(user);
+      return updatedUser;
+    });
+  }
+
+  public async addUserPoints(id: string, points: number): Promise<UserModel> {
+    return this.transactionsManager.readWrite(async (entityManager) => {
+      const userRepository = Repositories.user(entityManager);
+      const user = await Repositories.user(entityManager).findById(id);
+      if (!user) throw new NotFoundError('User not found');
+      user.points += points;
+      const updatedUser = userRepository.save(user);
+      return updatedUser;
+    });
+  }
 }

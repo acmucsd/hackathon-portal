@@ -222,6 +222,7 @@ export interface PublicAttendance {
 
 export interface AttendEventResponse extends ApiResponse {
   event: PublicEvent;
+  user: PublicProfile;
 }
 
 export interface GetEmailVerificationLinkResponse extends ApiResponse {

@@ -242,10 +242,9 @@ export class AdminController {
     );
     const { event } = attendance.getPublicAttendance();
 
-    const user = await this.userService.findById(params.id);
+    const user = await this.userService.addUserPoints(params.id, event.pointValue);
 
-
-    return { error: null, event };
+    return { error: null, event, user };
   }
 
   @UseBefore(UserAuthentication)
