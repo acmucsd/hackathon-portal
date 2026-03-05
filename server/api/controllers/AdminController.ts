@@ -241,6 +241,10 @@ export class AdminController {
       params.uuid,
     );
     const { event } = attendance.getPublicAttendance();
+
+    const user = await this.userService.findById(params.id);
+
+
     return { error: null, event };
   }
 
@@ -366,7 +370,7 @@ export class AdminController {
     });
 
     return { error: null, assignments };
-    }
+  }
 
   @UseBefore(UserAuthentication)
   @Get('/reviewer-overview')
