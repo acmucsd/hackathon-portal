@@ -5,6 +5,7 @@ import Card from '../Card';
 import styles from './style.module.scss';
 import TopBanner from '@/../public/assets/banner2.png';
 import BottomBanner from '@/../public/assets/bottombanner.png';
+import SunGod from '@/../public/assets/sungod-with-book.png';
 import Typography from '../Typography';
 import Link from 'next/link';
 import FAQ, { FAQQuestion } from '../FAQAccordion';
@@ -174,17 +175,23 @@ const Dashboard = ({ faq, timeline, user }: DashboardProps) => {
         <div>
           <FAQ data={faq} />
         </div>
-        <Typography variant="body/large" component="p">
+        <Typography variant="body/large" component="p" className={styles.stillHaveQuestions}>
           Still have questions? Email{' '}
           <Link href="mailto:hackathon@acmucsd.org" className="link">
             hackathon@acmucsd.org
           </Link>{' '}
           to reach DiamondHacks’s organizers!
         </Typography>
+        <Image
+          src={SunGod}
+          alt="Sun God holding a book"
+          quality={100}
+          className={styles.sunGodImage}
+        />
       </Card>
       <Image
         src={BottomBanner}
-        alt="Banners of the four houses: Raccoon, Sun God, Geisel, and King Triton"
+        alt="Banners of the four houses: Raccoon, Sun God, Geisel, and Triton"
         quality={100}
         className={styles.banner2}
       />

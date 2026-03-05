@@ -16,12 +16,14 @@
     display: flex;
     flex-direction: column;
     gap: vars.$side-padding-mobile;
+    align-items: stretch;
   }
 
   .card {
     background-color: vars.$card-shelf-bg;
     border: vars.$card-shelf-border-width solid vars.$card-shelf-color;
     border-radius: 28px;
+    padding: 2rem;
 
     animation: card-in 0.5s backwards;
 
@@ -92,7 +94,6 @@
       animation: fade-in 1s 1.5s backwards;
     }
 
-    // for the image, make it smaller for smalelr screen sizes
     .bannerImage {
       z-index: 10;
       position: absolute;
@@ -108,7 +109,7 @@
         left: 50.5%;
         transform: translateX(-50%);
         width: auto;
-        height: 80%;
+        height: 55%;
       }
     }
 
@@ -152,6 +153,35 @@
 
   .faq {
     grid-area: faq;
+    position: relative;
+  }
+
+  .sunGodImage {
+    position: absolute;
+    bottom: -24px;
+    right: -56px;
+    width: 250px;
+    height: auto;
+
+    @media screen and (max-width: vars.$breakpoint-lg) {
+      width: 220px;
+    }
+
+    @media screen and (max-width: vars.$breakpoint-md) {
+      position: relative;
+      left: 53%;
+      transform: translateX(-50%);
+      width: 65%;
+      bottom: -60px;
+    }
+  }
+
+  .stillHaveQuestions {
+    width: calc(100% - 200px);
+
+    @media screen and (max-width: vars.$breakpoint-md) {
+      width: 100%;
+    }
   }
 
   .bigQr {
