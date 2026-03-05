@@ -1,9 +1,7 @@
-import { Service } from "typedi";
-import { Repositories, TransactionsManager } from "../repositories";
-import { HouseHeadcountsResponse, HousePointsResponse } from "../types/ApiResponses";
-import { House } from "../types/Enums";
-import { UserModel } from "../models/UserModel";
-import { NotFoundError } from "routing-controllers";
+import { Service } from 'typedi';
+import { Repositories, TransactionsManager } from '../repositories';
+import { HouseHeadcountsResponse, HousePointsResponse } from '../types/ApiResponses';
+import { House } from '../types/Enums';
 
 @Service()
 export class HouseService {
@@ -23,7 +21,7 @@ export class HouseService {
       ...Object.values(House).reduce((acc, house) => {
         acc[house] = 0;
         return acc;
-      }, {} as Record<House, number>)
+      }, {} as Record<House, number>),
     };
 
     users.forEach(user => {
@@ -59,7 +57,7 @@ export class HouseService {
       ...Object.values(House).reduce((acc, house) => {
         acc[house] = 0;
         return acc;
-      }, {} as Record<House, number>)
+      }, {} as Record<House, number>),
     };
 
     users.forEach(user => {

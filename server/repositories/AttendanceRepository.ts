@@ -16,7 +16,7 @@ export const AttendanceRepository = Container.get(DataSource)
       // reload with relations
       return this.findOne({
         where: { uuid: saved.uuid },
-        relations: ['user', 'event']
+        relations: ['user', 'event'],
       }) as Promise<AttendanceModel>;
     },
 

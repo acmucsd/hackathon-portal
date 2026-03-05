@@ -35,14 +35,13 @@ import {
   UuidParam,
 } from '../validators/GenericRequests';
 import PermissionsService from '../../services/PermissionsService';
-import { ApplicationStatus, House } from '../../types/Enums';
+import { ApplicationStatus } from '../../types/Enums';
 import { AttendanceService } from '../../services/AttendanceService';
 import { ApplicationConfigService } from '../../services/ApplicationConfigService';
 import { UpdateApplicationOpeningStatusRequest } from '../validators/AdminControllerRequests';
 import { PostAssignmentsRequest } from '../../types/ApiRequests';
 import { InterestFormResponseService } from '../../services/InterestFormResponseService';
 import { Application } from '../../types/Application';
-import { HouseService } from '../../services/HouseService';
 
 @JsonController('/admin')
 @Service()
@@ -57,22 +56,18 @@ export class AdminController {
 
   private interestFormResponseService: InterestFormResponseService;
 
-  private houseService: HouseService;
-
   constructor(
     userService: UserService,
     responseService: ResponseService,
     attendanceService: AttendanceService,
     interestFormResponseService: InterestFormResponseService,
     applicationConfigService: ApplicationConfigService,
-    houseService: HouseService,
   ) {
     this.userService = userService;
     this.responseService = responseService;
     this.attendanceService = attendanceService;
     this.applicationConfigService = applicationConfigService;
     this.interestFormResponseService = interestFormResponseService;
-    this.houseService = houseService;
   }
 
   @UseBefore(UserAuthentication)
