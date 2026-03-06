@@ -15,6 +15,7 @@ const config = {
         application: '/response/application',
         liabilityWaiver: '/response/liability-waiver',
         photoRelease: '/response/photo-release',
+        rsvp: '/response/rsvp',
       },
       admin: {
         applications: '/admin/applications',
