@@ -8,6 +8,7 @@ import { Application, RSVP, Waiver } from '../types/Application';
 import { BadRequestError, ForbiddenError, NotFoundError } from 'routing-controllers';
 import { File } from '../types/ApiRequests';
 import { StorageService } from './StorageService';
+import { UserService } from './UserService';
 import { ApplicationConfigService } from './ApplicationConfigService';
 
 const RESUME_ALLOWED_EXTENSIONS = ['.pdf', '.doc', 'docx'];
@@ -16,16 +17,20 @@ const RESUME_ALLOWED_EXTENSIONS = ['.pdf', '.doc', 'docx'];
 export class ResponseService {
   private storageService: StorageService;
 
+  private userService: UserService;
+
   private transactionsManager: TransactionsManager;
 
   private applicationConfigService: ApplicationConfigService;
 
   constructor(
     storageService: StorageService,
+    userService: UserService,
     transactionsManager: TransactionsManager,
     applicationConfigService: ApplicationConfigService,
   ) {
     this.storageService = storageService;
+    this.userService = userService;
     this.transactionsManager = transactionsManager;
     this.applicationConfigService = applicationConfigService;
   }
@@ -333,6 +338,11 @@ export class ResponseService {
         const createdResponse = responseRepository.save(newResponse);
         return createdResponse;
       },
+    );
+
+    await this.userService.updateUserStatus(
+      user.id,
+      ApplicationStatus.CONFIRMED,
     );
 
     return response;
