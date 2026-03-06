@@ -28,6 +28,13 @@ export const UserRepository = Container.get(DataSource)
       });
     },
 
+    async findByIdWithLastDecisionUpdatedByRelation(id: string): Promise<UserModel | null> {
+      return this.findOne({
+        where: { id },
+        relations: ['lastDecisionUpdatedBy'],
+      });
+    },
+
     async findByIdsWithReviewerRelation(ids: string[]): Promise<(UserModel | null)[]> {
       return this.find({
         where: { id: In(ids) },

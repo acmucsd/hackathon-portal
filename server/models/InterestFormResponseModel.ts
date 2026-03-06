@@ -6,8 +6,11 @@ export class InterestFormResponseModel {
   @PrimaryGeneratedColumn('uuid')
   uuid: string;
 
-  @Column({ unique: true })
-  email: string;
+  @Column({ nullable: true, unique: true })
+  email?: string;
+
+  @Column({ nullable: true, unique: true })
+  phone?: string;
 
   @CreateDateColumn()
   createdAt: Date;

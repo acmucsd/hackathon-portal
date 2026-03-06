@@ -4,7 +4,9 @@
   display: flex;
   gap: 1.5rem;
   align-items: center;
-
+  &.first {
+    color: #ff434f;
+  }
   .circle {
     border-radius: 50%;
     width: 2.25rem;

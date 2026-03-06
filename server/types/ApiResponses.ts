@@ -27,6 +27,7 @@ export interface PrivateProfile extends PublicProfile {
 export interface HiddenProfile extends PrivateProfile {
   applicationDecision: ApplicationDecision;
   reviewerComments: string | null;
+  lastDecisionUpdatedBy?: PublicProfile;
 }
 
 export interface RevieweeProfile extends HiddenProfile {
@@ -159,23 +160,38 @@ export interface GetAssignmentsResponse extends ApiResponse {
   assignments: ReviewAssignment[];
 }
 
+export interface UpdateUserAccessResponse extends ApiResponse {
+  updates: PrivateProfile;
+}
+
 //InterestForm responses
 export interface CheckInterestByEmailResponse extends ApiResponse {
   interest: Boolean;
 }
+export interface CheckInterestByPhoneResponse extends ApiResponse {
+  interest: Boolean;
+}
 export interface AddInterestedEmailResponse extends ApiResponse {
+  interest: InterestFormResponseModel;
+}
+export interface AddInterestedPhoneResponse extends ApiResponse {
   interest: InterestFormResponseModel;
 }
 
 export interface AddListOfInterestedEmailResponse extends ApiResponse {
   interested: InterestFormResponseModel[];
 }
+export interface AddListOfInterestedPhonesResponse extends ApiResponse {
+  interested: InterestFormResponseModel[];
+}
 
-export interface GetAllInterestedUserEmailsResponse extends ApiResponse {
+export interface GetAllInterestedUserEmailsAndPhonesResponse extends ApiResponse {
   interested: InterestFormResponseModel[]
 }
 
 export interface RemoveInterestedEmailResponse extends ApiResponse {}
+export interface RemoveInterestedPhoneResponse extends ApiResponse {}
+
 
 export interface ReviewerOverviewApplicant {
   userId: string;

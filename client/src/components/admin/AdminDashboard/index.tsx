@@ -19,15 +19,6 @@ interface AdminDashboardProps {
 }
 
 const AdminDashboard = ({ timeline, user, applications }: AdminDashboardProps) => {
-  const pendingApplications = applications.filter(
-    user =>
-      user.applicationDecision === ApplicationDecision.NO_DECISION &&
-      user.applicationStatus === ApplicationStatus.SUBMITTED
-  ).length;
-  const totalApplications = applications.filter(
-    user => user.applicationStatus !== ApplicationStatus.NOT_SUBMITTED
-  ).length;
-
   return (
     <div className={styles.container}>
       <Card gap={1.5} className={`${styles.card} ${styles.actions}`}>
@@ -37,6 +28,7 @@ const AdminDashboard = ({ timeline, user, applications }: AdminDashboardProps) =
         <Button href="/createEvent">Create Events</Button>
         <Button href="/admin/scan">QR Code Check-In</Button>
         <Button href="/admin/verify-email">Send Email Verification</Button>
+        <Button href="/admin/reset-password">Generate Password Reset Link</Button>
       </Card>
       <Card gap={1.5} className={`${styles.card} ${styles.checkin}`}>
         <Heading>QR Code Check-In</Heading>

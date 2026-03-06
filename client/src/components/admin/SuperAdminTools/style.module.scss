@@ -1,0 +1,69 @@
+@use '@/styles/vars.scss' as vars;
+
+.container {
+  background: none;
+  padding: 2rem 0;
+}
+
+.toolRow {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.toolRow:first-of-type {
+  margin-top: 3rem;
+}
+.label {
+  color: vars.$white;
+  font-size: 1.25rem;
+  min-width: 200px;
+  margin-right: 1rem;
+  z-index: 1;
+}
+
+.dottedLine {
+  flex: 1;
+  border-bottom: 2px dashed #3fa9f5;
+  margin: 0 1rem;
+  z-index: 0;
+}
+
+.greenButton {
+  background-color: #27ae60 !important;
+  color: #fff !important;
+  border-radius: 12px !important;
+  font-weight: 500;
+  font-size: 1rem;
+  padding: 0.75rem 2rem !important;
+  display: flex;
+  align-items: center;
+  border: none;
+}
+
+.grayButton {
+  background-color: #6c757d !important;
+  color: #fff !important;
+  border-radius: 12px !important;
+  font-weight: 500;
+  font-size: 1rem;
+  padding: 0.75rem 2rem !important;
+  display: flex;
+  align-items: center;
+  border: none;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.redButton {
+  background-color: #e74c3c !important;
+  color: #fff !important;
+  border-radius: 12px !important;
+  font-weight: 500;
+  font-size: 1rem;
+  padding: 0.75rem 2rem !important;
+  display: flex;
+  align-items: center;
+  border: none;
+}

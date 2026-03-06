@@ -78,6 +78,12 @@ export class UserModel {
   @OneToMany(() => UserModel, (user) => user.reviewer)
   reviewees?: UserModel[];
 
+  @ManyToOne(() => UserModel, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
+  lastDecisionUpdatedBy?: UserModel | null;
+
   @Column({ type: 'text', nullable: true })
   reviewerComments: string | null;
 
@@ -95,6 +101,10 @@ export class UserModel {
 
   public isSuperAdmin(): boolean {
     return this.accessType === UserAccessType.SUPER_ADMIN;
+  }
+
+  public isRegularAdmin(): boolean {
+    return this.accessType === UserAccessType.ADMIN;
   }
 
   public getPublicProfile(): PublicProfile {
@@ -123,6 +133,7 @@ export class UserModel {
       ...this.getPrivateProfile(),
       applicationDecision: this.applicationDecision,
       reviewerComments: this.reviewerComments,
+      lastDecisionUpdatedBy: this.lastDecisionUpdatedBy?.getPublicProfile(),
     };
   }
 }

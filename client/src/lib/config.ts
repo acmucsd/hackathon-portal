@@ -25,8 +25,10 @@ const config = {
         confirmUser: '/admin/user/confirm',
         attendance: '/admin/attendance',
         emailVerificationLink: '/admin/email-verification-link',
+        passwordResetLink: '/admin/password-reset-link',
         assignments: '/admin/assignments',
         randomizeAssignments: '/admin/assignments/random',
+        reviewerOverview: '/admin/reviewer-overview',
       },
       event: {
         createEvent: '/event',

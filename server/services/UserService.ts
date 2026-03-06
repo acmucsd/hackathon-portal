@@ -17,13 +17,17 @@ import {
 } from 'routing-controllers';
 import { UpdateUser } from '../api/validators/UserControllerRequests';
 import { auth, adminAuth } from '../FirebaseAuth';
+
+import { ApplicationDecision, ApplicationStatus, FormType, UserAccessType } from '../types/Enums';
 import {
   ReviewAssignment,
   ReviewerOverviewResponse,
   ReviewerOverviewReviewer,
   UserAndToken,
 } from '../types/ApiResponses';
-import { ApplicationDecision, ApplicationStatus } from '../types/Enums';
+import { ResponseModel } from '../models/ResponseModel';
+import { Application } from '../types/Application';
+
 
 /** Internal: includes acceptedWithNotNullUniversity for computation; omitted from final output. */
 interface ReviewerOverviewReviewerInternal extends ReviewerOverviewReviewer {
@@ -50,6 +54,14 @@ export class UserService {
     // same as findById() but includes reviewer / reviewee links
     const user = await this.transactionsManager.readOnly(
       async (entityManager) => Repositories.user(entityManager).findByIdWithReviewerRelation(id),
+    );
+    if (!user) throw new NotFoundError('User not found');
+    return user;
+  }
+
+  public async findByIdWithLastDecisionUpdatedByRelation(id: string): Promise<UserModel> {
+    const user = await this.transactionsManager.readOnly(
+      async (entityManager) => Repositories.user(entityManager).findByIdWithLastDecisionUpdatedByRelation(id),
     );
     if (!user) throw new NotFoundError('User not found');
     return user;
@@ -160,6 +172,7 @@ export class UserService {
     userId: string,
     applicationDecision: ApplicationDecision,
     reviewerComments?: string | null,
+    updatedBy?: UserModel,
   ): Promise<UserModel> {
     return this.transactionsManager.readWrite(async (entityManager) => {
       const userRepository = Repositories.user(entityManager);
@@ -168,6 +181,9 @@ export class UserService {
       user.applicationDecision = applicationDecision;
       if (reviewerComments !== undefined) {
         user.reviewerComments = reviewerComments;
+      }
+      if (updatedBy) {
+        user.lastDecisionUpdatedBy = updatedBy;
       }
 
       const updatedUser = userRepository.save(user);
@@ -247,6 +263,21 @@ export class UserService {
     await sendEmailVerification(userCredential.user);
   }
 
+  public async getPasswordResetLink(email: string): Promise<string> {
+    try {
+      return await adminAuth.generatePasswordResetLink(email);
+    } catch (error) {
+      if (error instanceof FirebaseAuthError) {
+        if (error.code === 'auth/user-not-found') {
+          throw new NotFoundError(
+            'No user found with the provided email address.',
+          );
+        }
+      }
+      throw error;
+    }
+  }
+
   public async sendPasswordResetEmail(email: string): Promise<void> {
     try {
       const firebaseRecord = await adminAuth.getUserByEmail(email);
@@ -281,6 +312,7 @@ export class UserService {
   ): Promise<ReviewAssignment[]> {
     return this.transactionsManager.readWrite(async (entityManager) => {
       const userRepository = Repositories.user(entityManager);
+      const responseRepository = Repositories.response(entityManager);
       const interestFormResponseRepository = Repositories.interestFormResponse(entityManager);
 
       const newAssignments: ReviewAssignment[] = [];
@@ -289,22 +321,37 @@ export class UserService {
         ...assignmentsRequest.map(job => job.applicantId),
         ...assignmentsRequest.map(job => job.reviewerId),
       ].filter((userId): userId is string => userId != null));
-      const users = await userRepository.findByIdsWithReviewerRelation([...userIds]);
 
+      // map user ID to UserModel
+      const users = await userRepository.findByIdsWithReviewerRelation([...userIds]);
       const userMap: Record<string, UserModel> = {};
       users.forEach(user => {
         if (user) userMap[user.id] = user;
       });
 
-      const interestByEmail = await interestFormResponseRepository.findInterestByEmails(
-        assignmentsRequest.map(job => userMap[job.applicantId].email),
-      );
+      // note:
+      // if we don't need this api route to return new assignments,
+      // then we do not need to query Response and InterestForm.
+      // we only do this for didInterestForm calculation
+
+      // map user ID to Response
+      const responses = await responseRepository.findResponsesForUsersByType([...userIds], FormType.APPLICATION);
+      const responseMap: Record<string, ResponseModel> = {};
+      responses.forEach(res => {
+        if (res) responseMap[res.user.id] = res;
+      });
+
+      const allInterests = await interestFormResponseRepository.findAllInterest();
+      const allEmailInterests = new Set(allInterests.map(res => res.email));
+      const allPhoneInterests = new Set(allInterests.map(res => res.phone));
 
       const editedUsers: UserModel[] = [];
       assignmentsRequest.forEach((assignment) => {
         const reviewee = userMap[assignment.applicantId];
+        const revieweeResponse = responseMap[assignment.applicantId];
+        if (!reviewee || !revieweeResponse) return;
+
         const reviewer = assignment.reviewerId ? userMap[assignment.reviewerId] : null;
-        if (!reviewee) return;
 
         // ONLY mutate the owning side
         reviewee.reviewer = reviewer;
@@ -312,10 +359,15 @@ export class UserService {
         // persist reviewee only
         editedUsers.push(reviewee);
 
+        const email = reviewee.email;
+        const phone = (revieweeResponse.data as Application).phoneNumber;
+
         newAssignments.push({
           applicant: {
             ...reviewee.getHiddenProfile(),
-            didInterestForm: interestByEmail.get(reviewee.email) ?? false,
+            didInterestForm:
+              (!!email && allEmailInterests.has(email)) ||
+              (!!phone && allPhoneInterests.has(phone)),
           },
           reviewer: reviewer?.getHiddenProfile(),
         });
@@ -336,7 +388,7 @@ export class UserService {
     {applicantId, reviewerId} pairs are generated for each pairing
     This list is then sent to postAssignments().
 
-    Note 1: the distribution across admins is not equalized so some may have more reviews to complete than others :)
+    Note 1: idempotent since it just uses applicant index mod # of reviewers
     Note 2: not the most efficient way since it does 2 user lookups (one here, one in postAssignments), but its ok
     */
 
@@ -344,23 +396,16 @@ export class UserService {
       Repositories.user(entityManager).findAllWithReviewerRelation(),
     );
 
-    const admins = users.filter((user) => user.isAdmin());
+    const admins = users.filter((user) => user.isRegularAdmin());
     const applicantsToAssign = users.filter((user) =>
       !user.isAdmin() && // normal applicant
       user.applicationDecision == ApplicationDecision.NO_DECISION && // not already reviewed
       user.applicationStatus == ApplicationStatus.SUBMITTED, // submitted application
     );
 
-    function getRandomIntInclusive(min: number, max: number): number {
-      min = Math.ceil(min);
-      max = Math.floor(max);
-      // generates a random number in the range [min, max]
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
     const arr: ReviewAssignmentJob[] = [];
-    applicantsToAssign.forEach((reviewee) => {
-      const R = getRandomIntInclusive(0, admins.length - 1);
+    applicantsToAssign.forEach((reviewee, index) => {
+      const R = index % admins.length;
       const reviewer = admins[R];
       arr.push({
         applicantId: reviewee.id,
@@ -370,6 +415,7 @@ export class UserService {
 
     return this.assignReviews(arr);
   }
+
 
   // admin are reviewers
   private static readonly UCSD_UNIVERSITY = 'University of California, San Diego';
@@ -482,8 +528,18 @@ export class UserService {
     reviewers,
   };
   }
-}
 
+    public async updateUserAccess(email: string, access: UserAccessType) {
+    return this.transactionsManager.readWrite(async (entityManager) => {
+      const userRepository = Repositories.user(entityManager);
+      const user = await userRepository.findByEmail(email);
+      if (!user) throw new NotFoundError('User not found');
+      user.accessType = access;
+      const updatedUser = userRepository.save(user);
+      return updatedUser;
+    });
+  }
+}
 
 
 

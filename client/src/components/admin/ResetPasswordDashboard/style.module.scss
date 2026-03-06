@@ -1,0 +1,83 @@
+@use '@/styles/vars.scss' as vars;
+
+.container {
+  margin: 0 auto;
+  max-width: 800px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  label {
+    font-weight: 500;
+  }
+}
+
+.input {
+  padding: 0.75rem 1rem;
+  border: 1px solid vars.$card-stroke;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: vars.$card-bg;
+  color: vars.$white;
+  transition: border-color 0.2s;
+
+  &:focus {
+    outline: none;
+    border-color: vars.$blue;
+  }
+
+  &::placeholder {
+    color: vars.$neutral;
+  }
+}
+
+.resultSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.5rem;
+  background-color: vars.$card-bg;
+  border-radius: 8px;
+  border: 1px solid vars.$card-stroke;
+
+  @media screen and (max-width: vars.$breakpoint-md) {
+    padding: 1rem;
+  }
+}
+
+.resultLabel {
+  font-weight: 600;
+}
+
+.linkContainer {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+
+  @media screen and (max-width: vars.$breakpoint-md) {
+    flex-direction: column;
+  }
+}
+
+.linkInput {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 1px solid vars.$card-stroke;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  background-color: vars.$popup-bg;
+  color: vars.$white;
+}
+
+.note {
+  color: vars.$neutral;
+}
