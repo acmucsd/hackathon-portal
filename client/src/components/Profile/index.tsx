@@ -24,6 +24,8 @@ const Profile = ({ user, responses }: ProfileClientProps) => {
   const photoReleaseSubmitted = !!responses.find(
     response => response.formType === FormType.PHOTO_RELEASE
   );
+  console.log("liability submitted: " + liabilitySubmitted);
+  console.log("photo release submitted: " + photoReleaseSubmitted);
 
   return (
     <div className={styles.profileContainer}>
