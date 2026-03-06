@@ -19,7 +19,7 @@ import {
 } from '../../types/ApiResponses';
 import { UserAuthentication } from '../middleware/UserAuthentication';
 import { ResponseService } from '../../services/ResponseService';
-import { Application, Waiver } from '../validators/ResponseRequests';
+import { Application, RSVP, Waiver } from '../validators/ResponseRequests';
 import { StorageService } from '../../services/StorageService';
 import { FormType, MediaType } from '../../types/Enums';
 import { File } from '../../types/ApiRequests';
@@ -121,6 +121,19 @@ export class ResponseController {
       user,
       waiver,
       FormType.PHOTO_RELEASE,
+    );
+    return { error: null, response: response };
+  }
+
+  @UseBefore(UserAuthentication)
+  @Post('/rsvp')
+  async submitRSVP(
+    @Body() rsvp: RSVP,
+    @AuthenticatedUser() user: UserModel,
+  ): Promise<SubmitApplicationResponse> {
+    const response = await this.responseService.submitUserRSVP(
+      user,
+      rsvp,
     );
     return { error: null, response: response };
   }
