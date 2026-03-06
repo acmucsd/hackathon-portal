@@ -5,7 +5,7 @@ import { ResponseModel } from '../models/ResponseModel';
 import { UserModel } from '../models/UserModel';
 import { ApplicationStatus, FormType, MediaType } from '../types/Enums';
 import { Application, RSVP, Waiver } from '../types/Application';
-import { BadRequestError, NotFoundError } from 'routing-controllers';
+import { BadRequestError, ForbiddenError, NotFoundError } from 'routing-controllers';
 import { File } from '../types/ApiRequests';
 import { StorageService } from './StorageService';
 import { ApplicationConfigService } from './ApplicationConfigService';
