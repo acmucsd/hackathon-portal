@@ -7,9 +7,9 @@
   gap: 1rem;
   border-radius: 2rem;
   justify-content: space-around;
-  border: 5px solid vars.$card-shelf-color;
+  border: 2px solid vars.$card-shelf-color;
   padding: 1rem;
-  background-color: vars.$card-shelf-color;
+  background-color: transparent;
   text-align: center;
   width: 100%;
 
@@ -19,7 +19,7 @@
 }
 
 .notDone {
-  background-color: transparent;
+  background-color: vars.$card-shelf-color;
 }
 
 .onboardingImage {
