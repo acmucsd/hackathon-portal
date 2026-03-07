@@ -1,10 +1,12 @@
 import {
+  BadRequestError,
   Body,
   ForbiddenError,
   Get,
   JsonController,
   Params,
   Post,
+  Put,
   QueryParams,
   UseBefore,
 } from 'routing-controllers';
@@ -14,11 +16,18 @@ import { UserModel } from '../../models/UserModel';
 import {
   AttendEventResponse,
   GetApplicationDecisionResponse,
+  GetAssignmentsResponse,
   GetFormResponse,
   GetFormsResponse,
+  GetReviewerOverviewResponse,
+  PostAssignmentsResponse,
   UpdateApplicationDecisionResponse,
+  UpdateUserAccessResponse,
 } from '../../types/ApiResponses';
-import { UpdateApplicationDecisionRequest } from '../validators/AdminControllerRequests';
+import {
+  UpdateApplicationDecisionRequest,
+  UpdateUserAccessRequest,
+} from '../validators/AdminControllerRequests';
 import { UserAuthentication } from '../middleware/UserAuthentication';
 import { UserService } from '../../services/UserService';
 import { ResponseService } from '../../services/ResponseService';
@@ -31,6 +40,11 @@ import {
 import PermissionsService from '../../services/PermissionsService';
 import { ApplicationStatus } from '../../types/Enums';
 import { AttendanceService } from '../../services/AttendanceService';
+import { ApplicationConfigService } from '../../services/ApplicationConfigService';
+import { UpdateApplicationOpeningStatusRequest } from '../validators/AdminControllerRequests';
+import { PostAssignmentsRequest } from '../../types/ApiRequests';
+import { InterestFormResponseService } from '../../services/InterestFormResponseService';
+import { Application } from '../../types/Application';
 
 @JsonController('/admin')
 @Service()
@@ -41,14 +55,22 @@ export class AdminController {
 
   private attendanceService: AttendanceService;
 
+  private applicationConfigService: ApplicationConfigService;
+
+  private interestFormResponseService: InterestFormResponseService;
+
   constructor(
     userService: UserService,
     responseService: ResponseService,
     attendanceService: AttendanceService,
+    interestFormResponseService: InterestFormResponseService,
+    applicationConfigService: ApplicationConfigService,
   ) {
     this.userService = userService;
     this.responseService = responseService;
     this.attendanceService = attendanceService;
+    this.applicationConfigService = applicationConfigService;
+    this.interestFormResponseService = interestFormResponseService;
   }
 
   @UseBefore(UserAuthentication)
@@ -85,7 +107,10 @@ export class AdminController {
     if (!PermissionsService.canViewApplicationDecisions(currentUser))
       throw new ForbiddenError();
 
-    const user = await this.userService.findById(params.id);
+    const user =
+      await this.userService.findByIdWithLastDecisionUpdatedByRelation(
+        params.id,
+      );
     return { error: null, user: user.getHiddenProfile() };
   }
 
@@ -102,6 +127,8 @@ export class AdminController {
     const user = await this.userService.updateApplicationDecision(
       param.id,
       updateApplicationDecisionRequest.applicationDecision,
+      updateApplicationDecisionRequest.reviewerComments,
+      currentUser,
     );
     return { error: null, user: user.getHiddenProfile() };
   }
@@ -160,6 +187,20 @@ export class AdminController {
   }
 
   @UseBefore(UserAuthentication)
+  @Get('/password-reset-link')
+  async getPasswordResetLink(
+    @AuthenticatedUser() currentUser: UserModel,
+    @QueryParams() queryParams: EmailParam,
+  ) {
+    if (!PermissionsService.canGetPasswordResetLinks(currentUser))
+      throw new ForbiddenError();
+    const passwordResetLink = await this.userService.getPasswordResetLink(
+      queryParams.email,
+    );
+    return { error: null, passwordResetLink };
+  }
+
+  @UseBefore(UserAuthentication)
   @Get('/waivers/:id')
   async getWaiversById(
     @AuthenticatedUser() currentUser: UserModel,
@@ -212,11 +253,182 @@ export class AdminController {
 
   @UseBefore(UserAuthentication)
   @Post('/release-decisions')
-  async releaseDecisions(@AuthenticatedUser() currentUser: UserModel, @Body() body: { userId: string }) {
-    if (!PermissionsService.canUpdateApplicationStatusBasedOnDecision(currentUser))
+  async releaseDecisions(
+    @AuthenticatedUser() currentUser: UserModel,
+    @Body() body: { userId: string },
+  ) {
+    if (
+      !PermissionsService.canUpdateApplicationStatusBasedOnDecision(currentUser)
+    )
       throw new ForbiddenError();
-    const users = await this.userService.updateApplicationStatusBasedOnDecision(body.userId);
+    const users = await this.userService.updateApplicationStatusBasedOnDecision(
+      body.userId,
+    );
     return { error: null, users };
   }
 
+  @UseBefore(UserAuthentication)
+  @Put('/applications/set-open-status')
+  async setApplicationsOpen(
+    @AuthenticatedUser() currentUser: UserModel,
+    @Body() body: UpdateApplicationOpeningStatusRequest,
+  ) {
+    if (!PermissionsService.canSetApplicationOpeningStatus(currentUser)) {
+      throw new ForbiddenError(
+        'You do not have permission to set the application' +
+          ' opening status. Only admins can perform this action.',
+      );
+    }
+
+    const updatedBy = currentUser.id;
+
+    const config = await this.applicationConfigService.setApplicationSingleton(
+      body.applicationsOpen,
+      updatedBy,
+    );
+
+    return {
+      error: null,
+      applicationsOpen: config.applicationsOpen,
+      updatedBy: config.updatedBy,
+      updatedAt: config.updatedAt,
+    };
+  }
+
+  @UseBefore(UserAuthentication)
+  @Post('/assignments/random')
+  async postAssignmentsRandom(
+    @AuthenticatedUser() currentUser: UserModel,
+  ): Promise<PostAssignmentsResponse> {
+    if (!PermissionsService.canViewAllApplications(currentUser))
+      throw new ForbiddenError();
+
+    const newAssignments = await this.userService.randomlyAssignReviews();
+    return { error: null, newAssignments };
+  }
+
+  @UseBefore(UserAuthentication)
+  @Post('/assignments')
+  async postAssignments(
+    @Body() postAssignmentsRequest: PostAssignmentsRequest,
+    @AuthenticatedUser() currentUser: UserModel,
+  ): Promise<PostAssignmentsResponse> {
+    if (!PermissionsService.canViewAllApplications(currentUser))
+      throw new ForbiddenError();
+
+    const newAssignments = await this.userService.assignReviews(
+      postAssignmentsRequest.assignments,
+    );
+    return { error: null, newAssignments };
+  }
+
+  @UseBefore(UserAuthentication)
+  @Get('/assignments')
+  async getAssignments(
+    @AuthenticatedUser() currentUser: UserModel,
+  ): Promise<GetAssignmentsResponse> {
+    if (!PermissionsService.canViewAllApplications(currentUser))
+      throw new ForbiddenError();
+
+    const allInterests =
+      await this.interestFormResponseService.findAllInterested();
+
+    const allEmailInterests = new Set(allInterests.map((res) => res.email));
+    const allPhoneInterests = new Set(allInterests.map((res) => res.phone));
+
+    const applications =
+      await this.responseService.getAllApplicationsWithReviewerRelation();
+
+    const assignments = applications.map((app) => {
+      const user = app.user;
+      const email = user.email;
+      const phone = (app.data as Application).phoneNumber;
+      const university = (app.data as Application).university ?? null;
+      return {
+        applicant: {
+          ...user.getHiddenProfile(),
+          didInterestForm:
+            (!!email && allEmailInterests.has(email)) ||
+            (!!phone && allPhoneInterests.has(phone)),
+          university: university,
+        },
+        reviewer: user.reviewer?.getHiddenProfile(),
+      };
+    });
+
+    return { error: null, assignments };
+  }
+
+  @UseBefore(UserAuthentication)
+  @Get('/assignments/:id')
+  async getMyAssignments(
+    @AuthenticatedUser() currentUser: UserModel,
+    @Params() params: IdParam,
+  ): Promise<GetAssignmentsResponse> {
+    if (!PermissionsService.canViewAllApplications(currentUser))
+      throw new ForbiddenError();
+
+    const allInterests =
+      await this.interestFormResponseService.findAllInterested();
+
+    const allEmailInterests = new Set(allInterests.map((res) => res.email));
+    const allPhoneInterests = new Set(allInterests.map((res) => res.phone));
+
+    const applications =
+      await this.responseService.getAllApplicationsWithReviewerRelation();
+    const filteredApplications = applications.filter(
+      (app) => app.user.reviewer?.id == params.id,
+    );
+
+    const assignments = filteredApplications.map((app) => {
+      const user = app.user;
+      const email = user.email;
+      const phone = (app.data as Application).phoneNumber;
+      const university = (app.data as Application).university ?? null;
+      return {
+        applicant: {
+          ...user.getHiddenProfile(),
+          didInterestForm:
+            (!!email && allEmailInterests.has(email)) ||
+            (!!phone && allPhoneInterests.has(phone)),
+          university: university,
+        },
+        reviewer: user.reviewer?.getHiddenProfile(),
+      };
+    });
+
+    return { error: null, assignments };
+  }
+
+  @UseBefore(UserAuthentication)
+  @Get('/reviewer-overview')
+  async getReviewerOverview(
+    @AuthenticatedUser() currentUser: UserModel,
+  ): Promise<GetReviewerOverviewResponse> {
+    if (!PermissionsService.canGetReviewerOverview(currentUser)) {
+      throw new ForbiddenError();
+    }
+    const dataToReturn = await this.userService.getReviewerOverview();
+    return { error: null, dataToReturn };
+  }
+
+  @UseBefore(UserAuthentication)
+  @Put('/update-user-access')
+  async updateUserAccess(
+    @AuthenticatedUser() currentUser: UserModel,
+    @Body() updateUserAccessRequest: UpdateUserAccessRequest,
+  ): Promise<UpdateUserAccessResponse> {
+    if (!PermissionsService.canUpdateUserAccess(currentUser))
+      throw new ForbiddenError();
+
+    if (currentUser.email == updateUserAccessRequest.email) {
+      throw new BadRequestError('You cannot change your own access!');
+    }
+
+    const updatedAccess = await this.userService.updateUserAccess(
+      updateUserAccessRequest.email,
+      updateUserAccessRequest.access,
+    );
+    return { error: null, updates: updatedAccess.getPrivateProfile() };
+  }
 }

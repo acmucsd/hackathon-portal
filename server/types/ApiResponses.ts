@@ -1,3 +1,4 @@
+import { InterestFormResponseModel } from '../models/InterestFormResponseModel';
 import { ResponseModel } from '../models/ResponseModel';
 import {
   ApplicationStatus,
@@ -25,6 +26,12 @@ export interface PrivateProfile extends PublicProfile {
 
 export interface HiddenProfile extends PrivateProfile {
   applicationDecision: ApplicationDecision;
+  reviewerComments: string | null;
+  lastDecisionUpdatedBy?: PublicProfile;
+}
+
+export interface RevieweeProfile extends HiddenProfile {
+  didInterestForm: boolean;
 }
 
 export interface CustomErrorBody {
@@ -138,4 +145,82 @@ export interface PublicAttendance {
 
 export interface AttendEventResponse extends ApiResponse {
   event: PublicEvent;
+}
+
+export interface ReviewAssignment {
+  applicant: RevieweeProfile;
+  reviewer: HiddenProfile | undefined;
+}
+
+export interface PostAssignmentsResponse extends ApiResponse {
+  newAssignments: ReviewAssignment[];
+}
+
+export interface GetAssignmentsResponse extends ApiResponse {
+  assignments: ReviewAssignment[];
+}
+
+export interface UpdateUserAccessResponse extends ApiResponse {
+  updates: PrivateProfile;
+}
+
+//InterestForm responses
+export interface CheckInterestByEmailResponse extends ApiResponse {
+  interest: Boolean;
+}
+export interface CheckInterestByPhoneResponse extends ApiResponse {
+  interest: Boolean;
+}
+export interface AddInterestedEmailResponse extends ApiResponse {
+  interest: InterestFormResponseModel;
+}
+export interface AddInterestedPhoneResponse extends ApiResponse {
+  interest: InterestFormResponseModel;
+}
+
+export interface AddListOfInterestedEmailResponse extends ApiResponse {
+  interested: InterestFormResponseModel[];
+}
+export interface AddListOfInterestedPhonesResponse extends ApiResponse {
+  interested: InterestFormResponseModel[];
+}
+
+export interface GetAllInterestedUserEmailsAndPhonesResponse extends ApiResponse {
+  interested: InterestFormResponseModel[]
+}
+
+export interface RemoveInterestedEmailResponse extends ApiResponse {}
+export interface RemoveInterestedPhoneResponse extends ApiResponse {}
+
+
+export interface ReviewerOverviewApplicant {
+  userId: string;
+  firstName: string;
+  lastName: string;
+  applicationDecision: ApplicationDecision | null;
+}
+
+export interface ReviewerOverviewReviewer {
+  reviewerId: string;
+  reviewerFirstName: string;
+  reviewerLastName: string;
+  applicants: ReviewerOverviewApplicant[];
+
+  total: number;
+  accept: number;
+  reject: number;
+  waitlist: number;
+  noDecision: number;
+  /** Number of accepted applicants who are non-UCSD. */
+  acceptedNonUcsd: number;
+  /** Percentage of accepted applicants who are non-UCSD (null if no accepted with non-null university). */
+  acceptedNonUcsdPercentage: number | null;
+}
+
+export interface ReviewerOverviewResponse {
+  reviewers: ReviewerOverviewReviewer[];
+}
+
+export interface GetReviewerOverviewResponse extends ApiResponse {
+  dataToReturn: ReviewerOverviewResponse;
 }

@@ -5,9 +5,10 @@ import { ResponseModel } from '../models/ResponseModel';
 import { UserModel } from '../models/UserModel';
 import { ApplicationStatus, FormType, MediaType } from '../types/Enums';
 import { Application, Waiver } from '../types/Application';
-import { BadRequestError, NotFoundError } from 'routing-controllers';
+import { BadRequestError, ForbiddenError, NotFoundError } from 'routing-controllers';
 import { File } from '../types/ApiRequests';
 import { StorageService } from './StorageService';
+import { ApplicationConfigService } from './ApplicationConfigService';
 
 const RESUME_ALLOWED_EXTENSIONS = ['.pdf', '.doc', 'docx'];
 
@@ -17,12 +18,16 @@ export class ResponseService {
 
   private transactionsManager: TransactionsManager;
 
+  private applicationConfigService: ApplicationConfigService;
+
   constructor(
     storageService: StorageService,
     transactionsManager: TransactionsManager,
+    applicationConfigService: ApplicationConfigService,
   ) {
     this.storageService = storageService;
     this.transactionsManager = transactionsManager;
+    this.applicationConfigService = applicationConfigService;
   }
 
   public async getUserResponses(user: UserModel): Promise<ResponseModel[]> {
@@ -37,6 +42,14 @@ export class ResponseService {
     const responses = await this.transactionsManager.readOnly(
       async (entityManager) =>
         Repositories.response(entityManager).findAll(),
+    );
+    return responses;
+  }
+
+  private async getAllResponsesWithReviewerRelation(): Promise<ResponseModel[]> {
+    const responses = await this.transactionsManager.readOnly(
+      async (entityManager) =>
+        Repositories.response(entityManager).findAllWithReviewerRelation(),
     );
     return responses;
   }
@@ -85,11 +98,27 @@ export class ResponseService {
     return applications;
   }
 
+  public async getAllApplicationsWithReviewerRelation(): Promise<ResponseModel[]> {
+    const responses = await this.getAllResponsesWithReviewerRelation();
+    const applications = responses.filter(
+      (response) => response.formType === FormType.APPLICATION,
+    );
+    return applications;
+  }
+
   public async submitUserApplication(
     user: UserModel,
     application: Application,
     resume: File,
   ) {
+
+    // 0. Check if application submission is open
+    const isOpen = await this.applicationConfigService.isOpen();
+
+    if (!isOpen) {
+      throw new ForbiddenError('Applications are currently closed.');
+    }
+
     // 1. Error if the user has already applied.
     if (user.applicationStatus !== ApplicationStatus.NOT_SUBMITTED) {
       throw new Error('User has already applied');
@@ -154,6 +183,13 @@ export class ResponseService {
     updateApplication: Application,
     resume?: File,
   ): Promise<ResponseModel> {
+
+    const isOpen = await this.applicationConfigService.isOpen();
+
+    if (!isOpen) {
+      throw new ForbiddenError('Applications are currently closed.');
+    }
+
     const application = await this.getUserApplication(user);
 
     if (resume) {

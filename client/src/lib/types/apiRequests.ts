@@ -50,3 +50,10 @@ export interface UpdateEvent {
   endTime?: string;
   published?: boolean;
 }
+
+export interface PostAssignmentsRequest {
+  assignments: {
+    applicantId: string;
+    reviewerId: string | undefined;
+  }[];
+}

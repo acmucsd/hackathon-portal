@@ -17,6 +17,15 @@ export interface ResponseModel {
   data: Application;
 }
 
+export interface ResponseModelWithRevieweeProfile {
+  uuid: string;
+  user: RevieweeProfile;
+  createdAt: string;
+  updatedAt: string;
+  formType: FormType;
+  data: Application;
+}
+
 // User responses
 export interface PublicProfile {
   id: string;
@@ -35,6 +44,14 @@ export interface PrivateProfile extends PublicProfile {
 
 export interface FullProfile extends PrivateProfile {
   applicationDecision: ApplicationDecision;
+  reviewerComments: string | null;
+  lastDecisionUpdatedBy?: PublicProfile;
+}
+
+export interface RevieweeProfile extends FullProfile {
+  didInterestForm: boolean;
+  university?: string;
+  reviewer?: FullProfile;
 }
 
 export interface ValidatorError {
@@ -122,7 +139,7 @@ export interface GetApplicationResponse extends ApiResponse {
 
 // Admin User Responses
 export interface GetUsersResponse extends ApiResponse {
-  users: FullProfile[];
+  users: RevieweeProfile[];
 }
 
 export interface GetUserApplicationResponse extends ApiResponse {
@@ -205,4 +222,52 @@ export interface AttendEventResponse extends ApiResponse {
 
 export interface GetEmailVerificationLinkResponse extends ApiResponse {
   emailVerificationLink: string;
+}
+
+export interface GetPasswordResetLinkResponse extends ApiResponse {
+  passwordResetLink: string;
+}
+
+export interface ReviewerOverviewApplicant {
+  userId: string;
+  firstName: string;
+  lastName: string;
+  applicationDecision: ApplicationDecision | null;
+}
+
+export interface ReviewerOverviewReviewer {
+  reviewerId: string;
+  reviewerFirstName: string;
+  reviewerLastName: string;
+  applicants: ReviewerOverviewApplicant[];
+  total: number;
+  accept: number;
+  reject: number;
+  waitlist: number;
+  noDecision: number;
+  acceptedNonUcsd: number;
+  acceptedNonUcsdPercentage: number | null;
+}
+
+export interface ReviewerOverviewResponse {
+  reviewers: ReviewerOverviewReviewer[];
+}
+
+export interface GetReviewerOverviewResponse extends ApiResponse {
+  dataToReturn: ReviewerOverviewResponse;
+}
+
+// Assignment Responses
+
+export interface ReviewAssignment {
+  applicant: RevieweeProfile;
+  reviewer: FullProfile | undefined;
+}
+
+export interface PostAssignmentsResponse extends ApiResponse {
+  newAssignments: ReviewAssignment[];
+}
+
+export interface GetAssignmentsResponse extends ApiResponse {
+  assignments: ReviewAssignment[];
 }

@@ -65,7 +65,7 @@ export default async function ApplicationPage({ params }: ApplicationPageProps) 
         <ApplicationReview
           submittedResponses={application}
           accessToken={accessToken}
-          prev={`/apply/${appQuestions.length}`}
+          prev={deadlinePassed ? '/' : `/apply/${appQuestions.length}`}
           next={`/apply/${STEP_SUBMITTED}`}
           allowChanges={!deadlinePassed}
         />

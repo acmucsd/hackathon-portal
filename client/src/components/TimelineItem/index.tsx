@@ -18,7 +18,7 @@ const TimelineItem = ({ date, first = false, children }: PropsWithChildren<Timel
   const passed = new Date() >= date;
 
   return (
-    <div className={styles.item}>
+    <div className={`${styles.item} ${first ? styles.first : ''}`}>
       <div
         className={`${styles.circle} ${passed ? styles.complete : ''} ${
           first ? '' : styles.hasLine

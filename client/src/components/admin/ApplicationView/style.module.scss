@@ -1,9 +1,40 @@
 @use '@/styles/vars.scss' as vars;
 
+.applicationContainer {
+  gap: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
 .container {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  margin-top: 32px;
+}
+
+.backBtnContainer {
+  margin-bottom: 1.5rem;
+}
+
+.backLink {
+  font-size: 18px;
+  color: vars.$white;
+  font-weight: 700;
+  line-height: 24px;
+  letter-spacing: 0.5px;
+}
+
+.backText {
+  transition: ease-in-out 0.2s;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.heading {
+  font-size: 23px;
+  font-weight: 700;
+  color: white;
 }
 
 .responseList {
@@ -31,6 +62,12 @@
   }
 }
 
+.interestQuestion {
+  display: flex;
+  align-items: center;
+  margin-top: -16px;
+}
+
 .buttonRow {
   display: flex;
   justify-content: flex-end;
@@ -38,10 +75,33 @@
   gap: 0.5rem;
 }
 
+.stats {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.accepted {
+  color: #90e4a2; // TODO: check if in vars
+}
+
+.rejected {
+  color: #f3aab1;
+}
+
+.waitlisted {
+  color: #ffcf75;
+}
+
+.gray {
+  color: #c3c6cf;
+}
+
 .divider {
-  background-color: vars.$neutral;
+  background-color: vars.$card-stroke;
   height: 2px;
   border: 0;
+  margin-bottom: 2rem;
 }
 
 .submissionHeader {

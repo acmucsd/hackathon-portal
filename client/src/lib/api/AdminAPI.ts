@@ -13,9 +13,17 @@ import type {
   AttendEventResponse,
   PublicEvent,
   GetEmailVerificationLinkResponse,
+  PostAssignmentsResponse,
+  GetAssignmentsResponse,
+  ReviewAssignment,
+  GetPasswordResetLinkResponse,
+  GetReviewerOverviewResponse,
+  ReviewerOverviewResponse,
+  RevieweeProfile,
 } from '@/lib/types/apiResponses';
 import { ApplicationDecision } from '@/lib/types/enums';
 import axios from 'axios';
+import { PostAssignmentsRequest } from '../types/apiRequests';
 
 /**
  * Get all applications
@@ -49,12 +57,22 @@ export const getApplication = async (token: string, uuid: string): Promise<Respo
   return response.data.response;
 };
 
+export const getReviewerOverview = async (token: string): Promise<ReviewerOverviewResponse> => {
+  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.reviewerOverview}`;
+  const response = await axios.get<GetReviewerOverviewResponse>(requestUrl, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data.dataToReturn;
+};
+
 /**
  * Get all users
  * @param token
  * @returns All users application
  */
-export const getUsers = async (token: string): Promise<FullProfile[]> => {
+export const getUsers = async (token: string): Promise<RevieweeProfile[]> => {
   const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.users}`;
   const response = await axios.get<GetUsersResponse>(requestUrl, {
     headers: {
@@ -100,17 +118,20 @@ export const getApplicationDecision = async (token: string, id: string): Promise
  * Update user's application decision based on user id
  * @param token
  * @param id
+ * @param applicationDecision
+ * @param reviewerComments Optionally accepts string or null. Or omit this field to leave reviewerComments unchanged.
  * @returns User's profile with decision
  */
 export const updateApplicationDecision = async (
   token: string,
   id: string,
-  applicationDecision: ApplicationDecision
+  applicationDecision: ApplicationDecision,
+  reviewerComments?: string
 ): Promise<FullProfile> => {
   const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.application}/${id}/decision`;
   const response = await axios.post<UpdateApplicationDecisionResponse>(
     requestUrl,
-    { applicationDecision },
+    { applicationDecision, reviewerComments },
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -190,4 +211,91 @@ export const getEmailVerificationLink = async (token: string, email: string): Pr
     },
   });
   return response.data.emailVerificationLink;
+};
+
+/**
+ * Get email verification link for a user
+ * @param token
+ * @param email User's email address
+ * @returns Email verification link
+ */
+export const getPasswordResetLink = async (token: string, email: string): Promise<string> => {
+  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.passwordResetLink}?email=${encodeURIComponent(email)}`;
+  const response = await axios.get<GetPasswordResetLinkResponse>(requestUrl, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data.passwordResetLink;
+};
+
+/**
+ * Assign applications to reviewers randomly
+ * @param token
+ */
+export const postAssignments = async (
+  token: string,
+  newAssignments: PostAssignmentsRequest
+): Promise<ReviewAssignment[]> => {
+  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.assignments}`;
+  const response = await axios.post<PostAssignmentsResponse>(
+    requestUrl,
+    { newAssignments },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data.newAssignments;
+};
+
+/**
+ * Randomly assign all unassigned applications to reviewers
+ * @param token
+ */
+export const randomizeAssignments = async (token: string): Promise<ReviewAssignment[]> => {
+  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.randomizeAssignments}`;
+  const response = await axios.post<PostAssignmentsResponse>(
+    requestUrl,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data.newAssignments;
+};
+
+/**
+ * Get all existing assignments
+ * @param token
+ */
+export const getAllAssignments = async (token: string): Promise<ReviewAssignment[]> => {
+  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.assignments}`;
+  const response = await axios.get<GetAssignmentsResponse>(requestUrl, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data.assignments;
+};
+
+/**
+ * Get all existing assignments for reviewer
+ * @param token
+ * @param reviewerId
+ */
+export const getAssignmentsByReviewer = async (
+  token: string,
+  reviewerId: string
+): Promise<ReviewAssignment[]> => {
+  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.assignments}/${reviewerId}`;
+  const response = await axios.get<GetAssignmentsResponse>(requestUrl, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data.assignments;
 };

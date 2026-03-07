@@ -1,0 +1,182 @@
+@use '@/styles/vars.scss' as vars;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  background: vars.$card-bg;
+  border-left: 2px solid vars.$card-stroke;
+  border-bottom: 2px solid vars.$card-stroke;
+  border-radius: 0px 0px 0px 8px;
+  height: 100vh;
+  width: 100%;
+}
+
+.number {
+  color: white;
+}
+
+.nameSection {
+  padding: 0rem;
+  margin-top: 16px;
+  font-size: 14px;
+}
+
+.sectionTitle {
+  font-weight: 700;
+  font-size: 23px;
+  margin-bottom: 16px;
+}
+
+.label {
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.decision {
+  margin: 10px;
+}
+
+.name {
+  font-weight: 400;
+}
+
+.decisionSection {
+  padding: 1rem;
+  margin: 0px;
+  font-size: 14px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.subtitle {
+  margin-top: 16px;
+  margin-bottom: 10px;
+  font-weight: 500;
+  font-size: 18px;
+}
+
+.textarea {
+  width: 100%;
+  height: 100px;
+  border: 1px solid vars.$card-stroke;
+  border-radius: 8px;
+  padding: 8px;
+  color: white;
+  height: 160px;
+  font-size: 18px;
+  resize: none;
+  line-height: 24px;
+  letter-spacing: 0.5px;
+}
+
+.textarea::placeholder {
+  color: #a1acbd;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  justify-content: flex-end;
+  font-size: 18px;
+}
+
+.lastSavedText {
+  margin-top: 10px;
+  font-size: 14px;
+  line-height: 18px;
+  text-align: right;
+}
+
+.resetBtn {
+  border: 1px solid vars.$card-stroke;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: opacity 150ms ease-in-out;
+}
+
+.resetBtn:hover {
+  opacity: 90%;
+}
+
+.resetBtn:active {
+  opacity: 80%;
+}
+
+.saveBtn {
+  background: vars.$btn-primary;
+  color: black;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: opacity 150ms ease-in-out;
+}
+
+.saveBtn:hover {
+  opacity: 90%;
+}
+
+.saveBtn:active {
+  opacity: 80%;
+}
+
+.top {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 39px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.btn {
+  position: absolute;
+  background: vars.$btn-primary;
+  color: black;
+  padding: 9px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  transition: opacity 150ms ease-in-out;
+}
+
+.btn:hover {
+  opacity: 90%;
+}
+
+.btn:active {
+  opacity: 80%;
+}
+
+.btnDisabled {
+  background: #979797;
+}
+
+.btnDisabled:hover {
+  opacity: 100%;
+}
+
+.btnLeft {
+  left: 22%;
+}
+
+.btnRight {
+  right: 22%;
+}
+
+// TODO: figure out hover state for buttons??
+// .btn:hover {
+//   // TODO: add to vars.scss
+//   background: #57ABFF;
+//   // background: vars.$btn-primary-hover;
+// }
+
+.numApplicants {
+  font-size: 14px;
+  font-weight: 400;
+  font-family: 'DM Sans', sans-serif;
+  text-align: center;
+}

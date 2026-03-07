@@ -1,5 +1,5 @@
 import { UserModel } from '../models/UserModel';
-import { ApplicationDecision, Day, EventType } from './Enums';
+import { ApplicationDecision, Day, EventType, UserAccessType } from './Enums';
 
 declare global {
   namespace Express {
@@ -74,8 +74,44 @@ export interface UpdateEventRequest {
 // Admin requests
 export interface UpdateApplicationDecisionRequest {
   applicationDecision: ApplicationDecision;
+  reviewerComments?: string | null;
 }
 
 export interface ForgotPasswordRequest {
   email: string;
 }
+
+export interface ReviewAssignmentJob {
+  applicantId: string;
+  reviewerId: string | undefined;
+}
+
+export interface PostAssignmentsRequest {
+  assignments: ReviewAssignmentJob[];
+}
+
+export interface UpdateUserAccessRequest {
+  email: string;
+  access: UserAccessType;
+}
+
+//InterestForm request
+export interface AddInterestedEmailRequest {
+  email: string;
+}
+export interface AddInterestedPhoneRequest {
+  phone: string;
+}
+export interface RemoveInterestedEmailRequest {
+  email: string;
+}
+export interface RemoveInterestedPhoneRequest {
+  phone: string;
+}
+export interface AddListOfInterestedEmailRequest {
+  emails: string[];
+}
+export interface AddListOfInterestedPhoneRequest {
+  phones: string[];
+}
+

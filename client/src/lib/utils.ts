@@ -85,3 +85,56 @@ export function canUserSubmitWaivers(applicationStatus: ApplicationStatus): bool
     applicationStatus === ApplicationStatus.CONFIRMED
   );
 }
+
+/**
+ * Format a date-like value in Pacific time (PST/PDT depending on DST).
+ *
+ * @param value - Date object or date string
+ * @param includeDate - Whether to include MM/DD/YYYY
+ * @returns Formatted timestamp or null when input is invalid
+ */
+export function formatPacificDateTime(value: string | Date, includeDate = true): string | null {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+
+  return new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/Los_Angeles',
+    hour: 'numeric',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true,
+    ...(includeDate
+      ? {
+          month: '2-digit',
+          day: '2-digit',
+          year: 'numeric',
+        }
+      : {}),
+  }).format(date);
+}
+
+/**
+ * Format a date-like value using 24-hour (military) time in local timezone.
+ *
+ * @param value - Date object or date string
+ * @param includeDate - Whether to include MM/DD/YYYY
+ * @returns Formatted timestamp or null when input is invalid
+ */
+export function formatMilitaryDateTime(value: string | Date, includeDate = true): string | null {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+
+  return new Intl.DateTimeFormat('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+    ...(includeDate
+      ? {
+          month: '2-digit',
+          day: '2-digit',
+          year: 'numeric',
+        }
+      : {}),
+  }).format(date);
+}

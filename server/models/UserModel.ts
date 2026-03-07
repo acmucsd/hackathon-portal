@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryColumn,
   UpdateDateColumn,
@@ -62,8 +63,29 @@ export class UserModel {
   })
   responses: ResponseModel;
 
+
   @OneToMany((type) => AttendanceModel, (attendance) => attendance.user, { cascade: true })
   attendances: AttendanceModel[];
+
+  //reviewers
+  @ManyToOne(() => UserModel, (user) => user.reviewees, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
+  reviewer?: UserModel | null;
+
+  // list of whos being reviewed
+  @OneToMany(() => UserModel, (user) => user.reviewer)
+  reviewees?: UserModel[];
+
+  @ManyToOne(() => UserModel, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
+  lastDecisionUpdatedBy?: UserModel | null;
+
+  @Column({ type: 'text', nullable: true })
+  reviewerComments: string | null;
 
   public isRestricted(): boolean {
     return this.accessType === UserAccessType.RESTRICTED;
@@ -74,6 +96,14 @@ export class UserModel {
   }
 
   public isAdmin(): boolean {
+    return this.accessType === UserAccessType.ADMIN || this.accessType === UserAccessType.SUPER_ADMIN;
+  }
+
+  public isSuperAdmin(): boolean {
+    return this.accessType === UserAccessType.SUPER_ADMIN;
+  }
+
+  public isRegularAdmin(): boolean {
     return this.accessType === UserAccessType.ADMIN;
   }
 
@@ -102,6 +132,8 @@ export class UserModel {
     return {
       ...this.getPrivateProfile(),
       applicationDecision: this.applicationDecision,
+      reviewerComments: this.reviewerComments,
+      lastDecisionUpdatedBy: this.lastDecisionUpdatedBy?.getPublicProfile(),
     };
   }
 }

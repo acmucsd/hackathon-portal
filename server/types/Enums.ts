@@ -3,6 +3,7 @@ export enum UserAccessType {
   STANDARD = 'STANDARD',
   MANAGER = 'MANAGER',
   ADMIN = 'ADMIN',
+  SUPER_ADMIN = 'SUPER_ADMIN',
 }
 
 export enum ApplicationStatus {

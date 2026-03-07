@@ -15,7 +15,15 @@ export default class PermissionsService {
     return user.isAdmin();
   }
 
+  public static canSetApplicationOpeningStatus(user: UserModel): boolean {
+    return user.isSuperAdmin();
+  }
+
   public static canGetEmailVerificationLinks(user: UserModel): boolean {
+    return user.isAdmin();
+  }
+
+  public static canGetPasswordResetLinks(user: UserModel): boolean {
     return user.isAdmin();
   }
 
@@ -27,7 +35,33 @@ export default class PermissionsService {
     return user.isAdmin();
   }
 
-  public static canUpdateApplicationStatusBasedOnDecision(user: UserModel): boolean {
+  public static canUpdateApplicationStatusBasedOnDecision(
+    user: UserModel,
+  ): boolean {
     return user.isAdmin();
+  }
+
+  public static canEditInterestEmailsOrPhones(user: UserModel): boolean {
+    return user.isAdmin();
+  }
+
+  public static canGetReviewerOverview(user: UserModel): boolean {
+    return user.isAdmin();
+  }
+
+  public static canOpenCloseApplications(user: UserModel): boolean {
+    return user.isSuperAdmin();
+  }
+
+  public static canAssignReviewers(user: UserModel): boolean {
+    return user.isSuperAdmin();
+  }
+
+  public static canReleaseApplicationDecisions(user: UserModel): boolean {
+    return user.isSuperAdmin();
+  }
+
+  public static canUpdateUserAccess(user: UserModel): boolean {
+    return user.isSuperAdmin();
   }
 }
