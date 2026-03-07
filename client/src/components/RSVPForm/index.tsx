@@ -24,7 +24,11 @@ const RSVPForm = ({ accessToken }: RSVPFormProps) => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<RSVP>();
+  } = useForm<RSVP>({
+    defaultValues: {
+      joinedDiscord: Yes.YES
+    }
+  });
 
   const onSubmit: SubmitHandler<RSVP> = async form => {
     const submittedForm = await ResponseAPI.submitRSVP(accessToken, form);
