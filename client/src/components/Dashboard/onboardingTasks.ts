@@ -58,7 +58,7 @@ export const ONBOARDING_TASKS: OnboardingTask[] = [
     imageAlt: 'DiamondHacks Crest',
     title: 'Fill out the Travel Reimbursement Form',
     subtitle: 'This allows us to reimburse you for travel expenses related to the event.',
-    href: 'https://forms.gle/AC4muEz1rboJvb2PA',
+    href: 'https://forms.gle/jCheppRDgi5NYhvQ6',
     buttonLabel: 'Complete',
     variant: 'secondary',
     openNewTab: true,
