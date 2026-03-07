@@ -6,11 +6,9 @@ import styles from './style.module.scss';
 import TopBanner from '@/../public/assets/banner2.png';
 import BottomBanner from '@/../public/assets/bottombanner.png';
 import SunGod from '@/../public/assets/sungod-with-book.png';
-import Racoon from '@/../public/assets/racoon.png';
-import Sungod from '@/../public/assets/sungod-mini.png';
-import Geisel from '@/../public/assets/geisel-mini.png';
-import KingTriton from '@/../public/assets/king-triton-mini.png';
 import Typography from '../Typography';
+import OnboardingTaskCard from '../OnboardingTaskCard';
+import { ONBOARDING_TASKS } from './onboardingTasks';
 import Link from 'next/link';
 import FAQ, { FAQQuestion } from '../FAQAccordion';
 import DashboardStatus from '../DashboardStatus';
@@ -18,7 +16,7 @@ import TimelineItem from '../TimelineItem';
 import { PrivateProfile, PublicEvent, ResponseModel } from '@/lib/types/apiResponses';
 import QrCode from '../QrCode';
 import Button from '../Button';
-import { ApplicationStatus, Day } from '@/lib/types/enums';
+import { ApplicationStatus, Day, FormType } from '@/lib/types/enums';
 import Modal from '../Modal';
 import { useState } from 'react';
 import { addToGoogleWallet } from './wallet';
@@ -48,9 +46,10 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
     user.applicationStatus === ApplicationStatus.CONFIRMED ||
     user.applicationStatus === ApplicationStatus.ACCEPTED;
 
-  const rsvpDone = !!responses.find(response => response.formType === 'RSVP');
-  const photoReleaseDone = !!responses.find(response => response.formType === 'PHOTO_RELEASE');
-  const liabilityDone = !!responses.find(response => response.formType === 'LIABILITY_WAIVER');
+  const completedFormTypes = new Set(responses.map(r => r.formType));
+  const qrUnlocked =
+    completedFormTypes.has(FormType.LIABILITY_WAIVER) &&
+    completedFormTypes.has(FormType.PHOTO_RELEASE);
 
   return (
     <div
@@ -78,69 +77,13 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
               Onboarding Tasks
             </Typography>
             <div className={styles.onboardingTaskGrid}>
-              <div className={styles.onboardingTaskCard}>
-                <div className={styles.onboardingTaskImagePlaceholder}>
-                  <Image src={Racoon} alt="Racoon" fill style={{ objectFit: 'contain' }} />
-                </div>
-                <Typography variant="body/large" component="h3">
-                  Fill out the RSVP form
-                </Typography>
-
-                <Button
-                  href={rsvpDone ? undefined : '/rsvp'}
-                  disabled={rsvpDone}
-                  variant={rsvpDone ? undefined : 'primary'}
-                  className={rsvpDone ? styles.successButton : ''}
-                >
-                  {rsvpDone ? 'All Done!' : 'Go to Profile Page'}
-                </Button>
-              </div>
-
-              <div className={styles.onboardingTaskCard}>
-                <div className={styles.onboardingTaskImagePlaceholder}>
-                  <Image src={Sungod} alt="Sungod" fill style={{ objectFit: 'contain' }} />
-                </div>
-                <Typography variant="body/large" component="h3">
-                  Fill out the Photo Release Waiver
-                </Typography>
-                <Button
-                  href={photoReleaseDone ? undefined : '/photoRelease'}
-                  disabled={photoReleaseDone}
-                  variant={photoReleaseDone ? undefined : 'primary'}
-                  className={photoReleaseDone ? styles.successButton : ''}
-                >
-                  {photoReleaseDone ? 'All Done!' : 'Go to Profile Page'}
-                </Button>
-              </div>
-
-              <div className={styles.onboardingTaskCard}>
-                <div className={styles.onboardingTaskImagePlaceholder}>
-                  <Image src={Geisel} alt="Geisel" fill style={{ objectFit: 'contain' }} />
-                </div>
-                <Typography variant="body/large" component="h3">
-                  Fill out the Liability Waiver
-                </Typography>
-                <Button
-                  href={liabilityDone ? undefined : '/liability'}
-                  disabled={liabilityDone}
-                  variant={liabilityDone ? undefined : 'primary'}
-                  className={liabilityDone ? styles.successButton : ''}
-                >
-                  {liabilityDone ? 'All Done!' : 'Go to Profile Page'}
-                </Button>
-              </div>
-
-              <div className={styles.onboardingTaskCard}>
-                <div className={styles.onboardingTaskImagePlaceholder}>
-                  <Image src={KingTriton} alt="King Triton" fill style={{ objectFit: 'contain' }} />
-                </div>
-                <Typography variant="body/large" component="h3">
-                  Fill out the Travel Reimbursement Form (optional)
-                </Typography>
-                <Button href="https://forms.gle/AC4muEz1rboJvb2PA" variant="secondary">
-                  Go to Form
-                </Button>
-              </div>
+              {ONBOARDING_TASKS.map(task => (
+                <OnboardingTaskCard
+                  key={task.title}
+                  task={task}
+                  done={task.formType ? completedFormTypes.has(task.formType) : false}
+                />
+              ))}
             </div>
           </Card>
 
@@ -148,23 +91,31 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
             <Typography variant="headline/heavy/small" component="h2">
               QR Code Check-In
             </Typography>
-            <QrCode data={user.id} />
-            <Typography variant="body/medium" component="p">
-              Use this QR Code to check into ACM-affiliated hackathon events, grab free food, and
-              more!
+            <div className={styles.qrWrapper}>
+              <QrCode data={user.id} className={!qrUnlocked ? styles.qrBlurred : undefined} />
+              {!qrUnlocked && <div className={styles.qrOverlay} />}
+            </div>
+            <Typography className={styles.qrText} variant="body/medium" component="p">
+              {qrUnlocked
+                ? 'Use this QR Code to check into ACM-affiliated hackathon events, grab free food, and more!'
+                : 'Complete the required forms to unlock the QR code!'}
             </Typography>
-            <Button onClick={() => setShowBigQr(true)}>Enlarge QR Code</Button>
-            <Button
-              onClick={async () => {
-                const error = await addToGoogleWallet(window.location.origin);
-                if (error) {
-                  showToast('Failed to create a pass', error);
-                }
-              }}
-              variant="secondary"
-            >
-              Add to Google Wallet
-            </Button>
+            {qrUnlocked && (
+              <>
+                <Button onClick={() => setShowBigQr(true)}>Enlarge QR Code</Button>
+                <Button
+                  onClick={async () => {
+                    const error = await addToGoogleWallet(window.location.origin);
+                    if (error) {
+                      showToast('Failed to create a pass', error);
+                    }
+                  }}
+                  variant="secondary"
+                >
+                  Add to Google Wallet
+                </Button>
+              </>
+            )}
           </Card>
 
           <Card gap={1.5} className={`${styles.card} ${styles.faq}`}>
@@ -181,6 +132,12 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
               </Link>{' '}
               to reach DiamondHacks organizers!
             </Typography>
+            <Image
+              src={SunGod}
+              alt="Sun God holding a book"
+              quality={100}
+              className={styles.sunGodImage}
+            />
           </Card>
         </>
       ) : (
@@ -221,6 +178,12 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
               </Link>{' '}
               to reach DiamondHacks organizers!
             </Typography>
+            <Image
+              src={SunGod}
+              alt="Sun God holding a book"
+              quality={100}
+              className={styles.sunGodImage}
+            />
           </Card>
         </>
       )}

@@ -6,6 +6,7 @@
   grid-template-areas:
     'banner banner'
     'status timeline'
+    'onboarding onboarding'
     'faq faq'
     'banner2 banner2';
   grid-template-columns: 1fr 1fr;
@@ -20,9 +21,6 @@
   }
 
   .card {
-    background-color: vars.$card-shelf-bg;
-    border: vars.$card-shelf-border-width solid vars.$card-shelf-color;
-    border-radius: 28px;
     padding: 2rem;
 
     animation: card-in 0.5s backwards;
@@ -167,11 +165,11 @@
     position: absolute;
     bottom: -24px;
     right: -56px;
-    width: 250px;
+    width: 150px;
     height: auto;
 
     @media screen and (max-width: vars.$breakpoint-lg) {
-      width: 220px;
+      width: 100px;
     }
 
     @media screen and (max-width: vars.$breakpoint-md) {
@@ -194,6 +192,28 @@
   .bigQr {
     max-width: unset;
     width: 100%;
+  }
+
+  .qrText {
+    text-align: center;
+  }
+
+  .qrWrapper {
+    position: relative;
+    width: fit-content;
+    margin: 0 auto;
+  }
+
+  .qrBlurred {
+    filter: blur(8px);
+    user-select: none;
+    pointer-events: none;
+  }
+
+  .qrOverlay {
+    position: absolute;
+    inset: 0;
+    border-radius: 0.5rem;
   }
 
   .banner2 {
@@ -223,62 +243,10 @@
   grid-template-columns: 1fr 1fr;
 }
 
+
 .onboardingTaskGrid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1rem;
-
-  @media screen and (max-width: vars.$breakpoint-lg) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  @media screen and (max-width: vars.$breakpoint-md) {
-    grid-template-columns: 1fr;
-  }
-}
-
-.onboardingTaskCard {
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 0.75rem;
-  padding: 0.75rem;
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  min-height: 240px;
-  text-align: center;
-  align-items: center;
-
-  h3 {
-    margin-top: auto;
-  }
-
-  button {
-    width: 100%;
-    margin-top: auto;
-  }
-}
-
-.onboardingTaskImagePlaceholder {
-  width: 90vw;
-  max-width: 120px;
-  aspect-ratio: 1 / 1;
-  border-radius: 0.5rem;
-  position: relative;
-  overflow: hidden;
-  background: none;
-  padding: 0;
-  margin: 0 auto 0.75rem auto;
-}
-
-.successButton {
-  background-color: #22c55e !important;
-  color: vars.$white !important;
-  cursor: default !important;
-
-  &:hover,
-  &:focus,
-  &:active {
-    background-color: #22c55e !important;
-    color: vars.$white !important;
-  }
+  justify-content: start;
+  overflow-x: scroll;
+  gap: 1rem;
 }
