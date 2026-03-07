@@ -1,7 +1,9 @@
 'use client ';
 
 import { Checkbox, CheckboxProps, Radio, RadioProps } from '@mui/material';
-import { UseFormRegister } from 'react-hook-form';
+import Typography from '../Typography';
+import ErrorIcon from '../../../public/assets/icons/error.svg';
+import { UseFormRegisterReturn } from 'react-hook-form';
 import styles from './style.module.scss';
 import { useRef, useState } from 'react';
 
@@ -16,7 +18,9 @@ interface MultipleChoiceGroupProps {
   mode: 'radio' | 'checkbox';
   name: string;
   choices: string[];
-  formRegister?: UseFormRegister<any>;
+  formRegister?: UseFormRegisterReturn;
+  error?: any;
+  color?: any;
   other?: boolean;
   inline?: boolean;
   required?: boolean;
@@ -29,6 +33,8 @@ const MultipleChoiceGroup = ({
   name,
   choices,
   formRegister,
+  error,
+  color,
   inline = false,
   other = false,
   required = false,
@@ -59,15 +65,16 @@ const MultipleChoiceGroup = ({
     <div className={`${styles.wrapper} ${inline ? styles.inline : ''}`} ref={ref}>
       {choices.map(choice => {
         const props: RadioProps & CheckboxProps = {
-          ...formRegister?.(name),
+          ...formRegister,
           name,
           value: choice,
+          sx: !error ? color : { color: '#ffb3b4' },
           // For checkboxes, we can require at least one checkbox by
           // only setting all of them `required` if none of them are
           // checked
           required: required && (mode === 'radio' || selected === NONE),
           onChange: e => {
-            formRegister?.(name).onChange(e);
+            formRegister?.onChange(e);
             if (e.currentTarget.checked) {
               setSelected(choice);
             } else if (mode === 'checkbox' && !ref.current?.querySelector(':checked')) {
@@ -132,6 +139,12 @@ const MultipleChoiceGroup = ({
           />
         </p>
       ) : null}
+      {error && (
+        <Typography variant="label/small" component="p" className={styles.formError}>
+          {error && <ErrorIcon />}
+          {error?.message}
+        </Typography>
+      )}
     </div>
   );
 };

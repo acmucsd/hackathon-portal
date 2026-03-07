@@ -310,12 +310,6 @@ export class ResponseService {
     user: UserModel,
     formData: RSVP,
   ): Promise<ResponseModel> {
-    if (user.applicationStatus !== ApplicationStatus.ACCEPTED) {
-      throw new BadRequestError(
-        'User must have an accepted application to submit this form.',
-      );
-    }
-
     const existingForms = await this.transactionsManager.readOnly(
       async (entityManager) =>
         Repositories.response(entityManager).findResponsesForUserByType(
@@ -325,6 +319,12 @@ export class ResponseService {
     );
     if (existingForms.length > 0) {
       throw new BadRequestError('User has already RSVPed.');
+    }
+    
+    if (user.applicationStatus !== ApplicationStatus.ACCEPTED) {
+      throw new BadRequestError(
+        'User must have an accepted application to submit this form.',
+      );
     }
 
     const response = await this.transactionsManager.readWrite(
