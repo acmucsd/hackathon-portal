@@ -35,12 +35,6 @@ export default class PermissionsService {
     return user.isAdmin();
   }
 
-  public static canUpdateApplicationStatusBasedOnDecision(
-    user: UserModel,
-  ): boolean {
-    return user.isAdmin();
-  }
-
   public static canEditInterestEmailsOrPhones(user: UserModel): boolean {
     return user.isAdmin();
   }
@@ -58,7 +52,7 @@ export default class PermissionsService {
   }
 
   public static canReleaseApplicationDecisions(user: UserModel): boolean {
-    return user.isSuperAdmin();
+    return user.isAdmin();
   }
 
   public static canUpdateUserAccess(user: UserModel): boolean {

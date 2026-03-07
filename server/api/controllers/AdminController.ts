@@ -253,18 +253,14 @@ export class AdminController {
 
   @UseBefore(UserAuthentication)
   @Post('/release-decisions')
-  async releaseDecisions(
-    @AuthenticatedUser() currentUser: UserModel,
-    @Body() body: { userId: string },
-  ) {
-    if (
-      !PermissionsService.canUpdateApplicationStatusBasedOnDecision(currentUser)
-    )
+  async releaseDecisions(@AuthenticatedUser() currentUser: UserModel) {
+    if (!PermissionsService.canReleaseApplicationDecisions(currentUser))
       throw new ForbiddenError();
-    const users = await this.userService.updateApplicationStatusBasedOnDecision(
-      body.userId,
-    );
-    return { error: null, users };
+    const users = await this.userService.releaseApplicationDecisions();
+    return {
+      error: null,
+      users: users.map((user) => user.getPrivateProfile()),
+    };
   }
 
   @UseBefore(UserAuthentication)

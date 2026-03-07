@@ -32,6 +32,7 @@ import {
 } from '../types/ApiResponses';
 import { ResponseModel } from '../models/ResponseModel';
 import { Application } from '../types/Application';
+import { In } from 'typeorm';
 
 /** Internal: includes acceptedWithNotNullUniversity for computation; omitted from final output. */
 interface ReviewerOverviewReviewerInternal extends ReviewerOverviewReviewer {
@@ -54,35 +55,44 @@ export class UserService {
     return user;
   }
 
-  public async updateApplicationStatusBasedOnDecision(
-    id: string,
-  ): Promise<UserModel> {
+  public async releaseApplicationDecisions(): Promise<UserModel[]> {
     return this.transactionsManager.readWrite(async (entityManager) => {
       const userRepository = Repositories.user(entityManager);
 
-      const user = await userRepository.findById(id);
-      if (!user) throw new NotFoundError('User not found');
+      // can only update decision of users that are not submitted, withdrawn, or confirmed
+      const users = await userRepository.findBy({
+        applicationStatus: In([
+          ApplicationStatus.SUBMITTED,
+          ApplicationStatus.ACCEPTED,
+          ApplicationStatus.REJECTED,
+          ApplicationStatus.WAITLISTED,
+        ]),
+      });
 
-      const decisionToStatusMap: Record<
-        ApplicationDecision,
-        ApplicationStatus | null
-      > = {
+      const decisionToStatusMap = {
         [ApplicationDecision.ACCEPT]: ApplicationStatus.ACCEPTED,
         [ApplicationDecision.REJECT]: ApplicationStatus.REJECTED,
         [ApplicationDecision.WAITLIST]: ApplicationStatus.WAITLISTED,
         [ApplicationDecision.NO_DECISION]: null,
       };
 
-      const nextStatus = decisionToStatusMap[user.applicationDecision];
-      if (!nextStatus) {
-        throw new BadRequestError(
-          'User has no releasable application decision',
-        );
-      }
+      // get only the users that will have a different status
+      const usersToUpdate = users.filter((user) => {
+        const newStatus =
+          decisionToStatusMap[user.applicationDecision] ??
+          user.applicationStatus;
+        return newStatus != user.applicationStatus;
+      });
 
-      user.applicationStatus = nextStatus;
+      // update the status
+      usersToUpdate.forEach((user) => {
+        user.applicationStatus =
+          decisionToStatusMap[user.applicationDecision] ??
+          user.applicationStatus;
+      });
 
-      return userRepository.save(user);
+      const updatedUsers = userRepository.save(usersToUpdate);
+      return updatedUsers;
     });
   }
 
