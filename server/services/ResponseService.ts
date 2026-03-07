@@ -310,7 +310,10 @@ export class ResponseService {
     user: UserModel,
     formData: RSVP,
   ): Promise<ResponseModel> {
-    if (user.applicationStatus !== ApplicationStatus.ACCEPTED) {
+    if (
+      user.applicationStatus !== ApplicationStatus.ACCEPTED &&
+      user.applicationStatus !== ApplicationStatus.CONFIRMED
+    ) {
       throw new BadRequestError(
         'User must have an accepted application to submit this form.',
       );
