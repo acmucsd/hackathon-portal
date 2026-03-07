@@ -26,8 +26,9 @@ const getStatusDescription = (timeline: Deadlines, status: Status) => {
     case 'SUBMITTED':
       return 'Congrats on applying to DiamondHacks!';
     case 'ACCEPTED':
+      return 'Congrats on your acceptance to DiamondHacks! Make sure to fill out the required forms in the Onboarding Tasks section to secure your spot at the event. You must fill out at least the RSVP form by 3/13 to be confirmed for the event or your spot will be forfeited to people on the waitlist.';
     case 'CONFIRMED':
-      return 'Congrats on your acceptance to DiamondHacks! Make sure to fill out the required forms in the Onboarding Tasks section to secure your spot at the event.';
+      return "Your place at DiamondHacks has been confirmed! 🪄✨ We're thrilled to welcome you to a weekend of creativity, innovation, and a little bit of magic on April 4–5.\n\nGather your ideas, prepare your spells (or code), and get ready to collaborate with fellow wizards and innovators as you build something extraordinary. We can't wait to see what you'll create when the magic begins!";
     case 'WAITLISTED':
       return 'You have been waitlisted for DiamondHacks. We will notify you if a spot becomes available starting 3/14.';
     case 'REJECTED':
@@ -57,9 +58,7 @@ const DashboardStatus = ({ status, timeline }: DashboardStatusProps) => {
         </Typography>
       ) : null}
 
-      {status === 'CONFIRMED' ? (
-        <Button href="/confirmation">View Confirmation</Button>
-      ) : status === 'NOT_SUBMITTED' ? (
+      {status === 'NOT_SUBMITTED' ? (
         new Date() < timeline.application ? (
           <Button href="/apply">Apply Now</Button>
         ) : null
