@@ -46,6 +46,7 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
   const [showBigQr, setShowBigQr] = useState(false);
   const isConfirmed = user.applicationStatus === ApplicationStatus.CONFIRMED;
 
+  const rsvpDone = !!responses.find(response => response.formType === 'RSVP');
   const photoReleaseDone = !!responses.find(
     response => response.formType === 'PHOTO_RELEASE'
   );
@@ -84,9 +85,8 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
                 <Typography variant="body/large" component="h3">
                   Fill out the RSVP form
                 </Typography>
-                <Button href="/profile" variant="primary">
-                  Go to Profile Page
-                </Button>
+
+                <Button href={ rsvpDone ? undefined : '/profile' } disabled = {rsvpDone} variant = {rsvpDone ? undefined : "primary"} className={rsvpDone ? styles.successButton : ''}>{rsvpDone ? 'All Done!' : 'Go to Profile Page'}</Button>
               </div>
 
               <div className={styles.onboardingTaskCard}>
