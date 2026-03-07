@@ -25,7 +25,7 @@ const RSVPForm = ({ accessToken }: RSVPFormProps) => {
     handleSubmit,
     formState: { errors },
   } = useForm<RSVP>({
-    defaultValues: {
+    defaultValues: { // remove the default value if discord field comes back
       joinedDiscord: Yes.YES,
     },
   });
@@ -38,6 +38,14 @@ const RSVPForm = ({ accessToken }: RSVPFormProps) => {
     }
     router.push('/profile');
   };
+
+  const radioColor = {
+    color: 'rgba(255, 255, 255, 0.35)',
+    '&.Mui-checked': {
+      color: '#1976d2',
+    },
+  }
+
   return (
     <Card gap={1.5} className={styles.container}>
       <Heading>DiamondHacks RSVP Form</Heading>
@@ -63,8 +71,11 @@ const RSVPForm = ({ accessToken }: RSVPFormProps) => {
         mode="radio"
         name="willAttend"
         choices={[Yes.YES]}
-        formRegister={register}
-        required
+        error={errors.willAttend}
+        formRegister={register("willAttend", {
+          required: 'Missing input/field.',
+        })}
+        color={radioColor}
       />
       {/* <Typography variant="label/medium" component="p">
         I joined the DiamondHacks discord (
@@ -77,15 +88,18 @@ const RSVPForm = ({ accessToken }: RSVPFormProps) => {
         mode="radio"
         name="joinedDiscord"
         choices={[Yes.YES]}
-        formRegister={register}
-        required
+        error={errors.joinedDiscord}
+        formRegister={register("joinedDiscord", {
+          required: 'Missing input/field.',
+        })}
+        color={radioColor}
       /> */}
       <TextField
         id="additionalComments"
         label="Any questions, comments, or concerns?"
         defaultText="Type answer here..."
         error={errors.additionalComments}
-        formRegister={register('additionalComments', {})}
+        formRegister={register('additionalComments')}
         type="text"
         autoComplete="name"
       />
