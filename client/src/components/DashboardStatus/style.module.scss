@@ -16,9 +16,21 @@
     background-color: #d7ede7;
     color: #00573f;
   }
-  &.ACCEPTED {
+  &.CONFIRMED {
     background-color: #ece6f9;
     color: #35118d;
+  }
+  &.WAITLISTED {
+    background-color: #ecdf98;
+    color: #8d490d;
+  }
+  &.REJECTED {
+    background-color: #fad5dc;
+    color: #8d0d25;
+  }
+  &.WITHDRAWN {
+    background-color: #ecdf98;
+    color: #8d490d;
   }
 }
 
