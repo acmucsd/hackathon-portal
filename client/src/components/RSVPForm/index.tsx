@@ -59,7 +59,7 @@ const RSVPForm = ({ accessToken }: RSVPFormProps) => {
         formRegister={register}
         required
       />
-      <Typography variant="label/medium" component="p">
+      {/* <Typography variant="label/medium" component="p">
         I joined the DiamondHacks discord (
           <a href='https://acmurl.com/diamondhacks26-discord'>
             https://acmurl.com/diamondhacks26-discord
@@ -72,7 +72,7 @@ const RSVPForm = ({ accessToken }: RSVPFormProps) => {
         choices={[Yes.YES]}
         formRegister={register}
         required
-      />
+      /> */}
       <TextField
         id="additionalComments"
         label="Any questions, comments, or concerns?"
