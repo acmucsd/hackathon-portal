@@ -22,7 +22,7 @@ export default async function PhotoReleasePage() {
 
   // Only allow accepted participants to fill out photo release form
   if (!canUserSubmitWaivers(fetchedUser.applicationStatus)) {
-    redirect('/profile');
+    redirect('/');
   }
 
   return (

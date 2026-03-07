@@ -22,7 +22,7 @@ export default async function RSVPPage() {
 
   // Only allow accepted participants to fill out RSVP form
   if (!canUserSubmitWaivers(fetchedUser.applicationStatus)) {
-    redirect('/profile');
+    redirect('/');
   }
 
   return (

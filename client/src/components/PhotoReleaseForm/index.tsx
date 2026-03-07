@@ -36,7 +36,7 @@ const PhotoReleaseForm = ({ accessToken }: PhotoReleaseFormProps) => {
       showToast("Couldn't submit waiver", submittedWaiver.error);
       return;
     }
-    router.push('/profile');
+    router.push('/');
   };
   return (
     <Card gap={1.5} className={styles.container}>
