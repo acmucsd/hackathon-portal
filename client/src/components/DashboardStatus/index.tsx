@@ -2,14 +2,9 @@ import Typography from '../Typography';
 import { Deadlines } from '../Dashboard';
 import Button from '../Button';
 import styles from './style.module.scss';
+import { ApplicationStatus } from '@/lib/types/enums';
 
-export type Status =
-  | 'NOT_SUBMITTED'
-  | 'SUBMITTED'
-  | 'WITHDRAWN'
-  | 'ACCEPTED'
-  | 'REJECTED'
-  | 'CONFIRMED';
+export type Status = ApplicationStatus;
 
 export const dateFormat = new Intl.DateTimeFormat('en-US', {
   timeZone: 'America/Los_Angeles',
@@ -32,7 +27,11 @@ const getStatusDescription = (timeline: Deadlines, status: Status) => {
       return 'Congrats on applying to DiamondHacks!';
     case 'ACCEPTED':
     case 'CONFIRMED':
-      return 'Congrats on your acceptance to DiamondHacks! Make sure to fill out your waivers on the Profile page and the RSVP form sent to your email!';
+      return 'Congrats on your acceptance to DiamondHacks! Make sure to fill out the required forms in the Onboarding Tasks section to secure your spot at the event.';
+    case 'WAITLISTED':
+      return 'You have been waitlisted for DiamondHacks. We will notify you if a spot becomes available starting 3/14.';
+    case 'REJECTED':
+      return 'Thank you for applying to DiamondHacks! Unfortunately, we are unable to offer you a spot this year. We hope to see you next year!';
     default:
       if (new Date() < timeline.application) {
         return 'Our records have indicated that you have not started on your application. Click below to go on your hacker journey!';

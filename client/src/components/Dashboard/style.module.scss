@@ -140,6 +140,10 @@
     grid-area: status;
   }
 
+  .qr {
+    grid-area: qr;
+  }
+
   .onboarding {
     grid-area: onboarding;
   }
@@ -246,8 +250,9 @@
 .confirmedContainer {
   grid-template-areas:
     'banner banner'
+    'status timeline'
     'onboarding onboarding'
-    'status faq'
+    'qr faq'
     'banner2 banner2';
   grid-template-columns: 1fr 1fr;
 }
