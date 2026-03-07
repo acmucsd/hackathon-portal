@@ -1,4 +1,9 @@
-import type { ApiResponse, CustomErrorBody, ValidatorError } from '@/lib/types/apiResponses';
+import type {
+  ApiResponse,
+  CustomErrorBody,
+  ValidatorError,
+  RevieweeProfile,
+} from '@/lib/types/apiResponses';
 import showToast from '@/lib/showToast';
 import { AxiosError } from 'axios';
 import { ApplicationStatus } from './types/enums';
@@ -137,4 +142,65 @@ export function formatMilitaryDateTime(value: string | Date, includeDate = true)
         }
       : {}),
   }).format(date);
+}
+
+/**
+ * Parses a date-like value into a numeric timestamp for sorting.
+ * Returns POSITIVE_INFINITY for missing or invalid values so they sort to the end.
+ *
+ * @param value - Date object or date string
+ */
+function parseCreatedAt(value?: string | Date): number {
+  if (!value) return Number.POSITIVE_INFINITY;
+  const time = new Date(value).getTime();
+  return Number.isNaN(time) ? Number.POSITIVE_INFINITY : time;
+}
+
+/**
+ * Sorts RevieweeProfile objects by createdAt ascending, then last name, first name, and id.
+ *
+ * @param a - First profile to compare
+ * @param b - Second profile to compare
+ */
+export function sortRevieweeProfiles(a: RevieweeProfile, b: RevieweeProfile): number {
+  const createdAtDiff = parseCreatedAt(a.createdAt) - parseCreatedAt(b.createdAt);
+  if (createdAtDiff !== 0) return createdAtDiff;
+  const lastNameDiff = a.lastName.localeCompare(b.lastName, undefined, { sensitivity: 'base' });
+  if (lastNameDiff !== 0) return lastNameDiff;
+  const firstNameDiff = a.firstName.localeCompare(b.firstName, undefined, { sensitivity: 'base' });
+  if (firstNameDiff !== 0) return firstNameDiff;
+  return a.id.localeCompare(b.id);
+}
+
+const DECISION_STATUS_LABELS: Record<string, string> = {
+  ACCEPT: 'ACCEPTED',
+  REJECT: 'REJECTED',
+  WAITLIST: 'WAITLISTED',
+  NO_DECISION: 'NO_DECISION',
+};
+
+/**
+ * Filters a list of RevieweeProfiles by application status/decision and name search query.
+ *
+ * @param users - List of profiles to filter
+ * @param status - Application status or decision label to filter by (e.g. 'SUBMITTED', 'ACCEPTED'). Pass 'All' or omit to skip status filtering.
+ * @param query - Name search string. Omit or pass empty string to skip.
+ */
+export function filterApplicantsByCriteria(
+  users: RevieweeProfile[],
+  status?: string,
+  query?: string
+): RevieweeProfile[] {
+  return users
+    .filter(user => {
+      if (!status || status === 'All') return true;
+      return (
+        user.applicationStatus === status ||
+        DECISION_STATUS_LABELS[user.applicationDecision] === status
+      );
+    })
+    .filter(
+      user =>
+        !query || `${user.firstName} ${user.lastName}`.toLowerCase().includes(query.toLowerCase())
+    );
 }
