@@ -39,11 +39,10 @@ interface DashboardProps {
 
 const Dashboard = ({ faq, timeline, user }: DashboardProps) => {
   const [showBigQr, setShowBigQr] = useState(false);
+  const confirmed = user.applicationStatus === ApplicationStatus.CONFIRMED;
 
   return (
-    <div
-      className={`${styles.container} ${user.applicationStatus !== ApplicationStatus.CONFIRMED ? styles.notConfirmed : ''}`}
-    >
+    <div className={`${styles.container} ${!confirmed ? styles.notConfirmed : ''}`}>
       {/* Welcome */}
       <Card gap={1.5} className={`${styles.card} ${styles.banner}`}>
         <Typography variant="headline/heavy/large" component="h1" className={styles.title}>
@@ -59,7 +58,7 @@ const Dashboard = ({ faq, timeline, user }: DashboardProps) => {
           className={styles.bannerImage}
         />
       </Card>
-      {user.applicationStatus === ApplicationStatus.CONFIRMED && (
+      {confirmed && (
         <>
           {/* Onboarding */}
           <Card gap={1.5} className={`${styles.card} ${styles.onboarding}`}>
@@ -146,7 +145,7 @@ const Dashboard = ({ faq, timeline, user }: DashboardProps) => {
           </Card>
         </>
       )}
-      {user.applicationStatus !== ApplicationStatus.CONFIRMED && (
+      {!confirmed && (
         <>
           <Card gap={1.5} className={`${styles.card} ${styles.status}`}>
             <Typography variant="headline/heavy/small" component="h2">

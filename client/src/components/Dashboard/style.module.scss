@@ -4,13 +4,13 @@
 .container {
   display: grid;
   grid-template-areas:
-    'banner banner banner'
-    'onboarding onboarding onboarding'
-    'status faq faq'
-    'banner2 banner2 banner2';
-  grid-template-columns: 1fr 1fr 1fr;
+    'banner banner'
+    'status onboarding'
+    'faq faq'
+    'banner2 banner2';
+  grid-template-columns: 1fr 1fr;
   gap: 1rem;
-  align-items: start;
+  align-items: stretch;
 
   @media screen and (max-width: vars.$breakpoint-md) {
     display: flex;
@@ -122,6 +122,10 @@
 
       @media screen and (max-width: vars.$breakpoint-md) {
         height: 45%;
+      }
+
+      @media screen and (max-width: vars.$breakpoint-sm) {
+        height: 35%;
       }
     }
 
