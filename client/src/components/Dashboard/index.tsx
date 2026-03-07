@@ -44,7 +44,7 @@ interface DashboardProps {
 
 const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
   const [showBigQr, setShowBigQr] = useState(false);
-  const isConfirmed = user.applicationStatus === ApplicationStatus.CONFIRMED;
+  const isConfirmed = user.applicationStatus === ApplicationStatus.CONFIRMED || user.applicationStatus === ApplicationStatus.ACCEPTED;
 
   const rsvpDone = !!responses.find(response => response.formType === 'RSVP');
   const photoReleaseDone = !!responses.find(
@@ -86,7 +86,7 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
                   Fill out the RSVP form
                 </Typography>
 
-                <Button href={ rsvpDone ? undefined : '/profile' } disabled = {rsvpDone} variant = {rsvpDone ? undefined : "primary"} className={rsvpDone ? styles.successButton : ''}>{rsvpDone ? 'All Done!' : 'Go to Profile Page'}</Button>
+                <Button href={ rsvpDone ? undefined : '/rsvp' } disabled = {rsvpDone} variant = {rsvpDone ? undefined : "primary"} className={rsvpDone ? styles.successButton : ''}>{rsvpDone ? 'All Done!' : 'Go to Profile Page'}</Button>
               </div>
 
               <div className={styles.onboardingTaskCard}>
@@ -97,7 +97,7 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
                   Fill out the Photo Release Waiver
                 </Typography>
                 <Button
-                  href={photoReleaseDone ? undefined : '/profile'}
+                  href={photoReleaseDone ? undefined : '/photoRelease'}
                   disabled={photoReleaseDone}
                   variant={photoReleaseDone ? undefined : 'primary'}
                   className={photoReleaseDone ? styles.successButton : ''}
@@ -114,7 +114,7 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
                   Fill out the Liability Waiver
                 </Typography>
                 <Button
-                  href={liabilityDone ? undefined : '/profile'}
+                  href={liabilityDone ? undefined : '/liability'}
                   disabled={liabilityDone}
                   variant={liabilityDone ? undefined : 'primary'}
                   className={liabilityDone ? styles.successButton : ''}
