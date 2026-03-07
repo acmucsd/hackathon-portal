@@ -5,7 +5,6 @@ import { ResponseModel } from '../models/ResponseModel';
 import { UserModel } from '../models/UserModel';
 import { ApplicationStatus, FormType, MediaType } from '../types/Enums';
 import { Application, RSVP, Waiver } from '../types/Application';
-import { Application, RSVP, Waiver } from '../types/Application';
 import { BadRequestError, ForbiddenError, NotFoundError } from 'routing-controllers';
 import { File } from '../types/ApiRequests';
 import { StorageService } from './StorageService';
@@ -305,5 +304,56 @@ export class ResponseService {
     );
     if (!waivers) throw new NotFoundError('No waivers found for user');
     return waivers;
+  }
+
+  public async submitUserRSVP(
+    user: UserModel,
+    formData: RSVP,
+  ): Promise<ResponseModel> {
+    if (user.applicationStatus !== ApplicationStatus.ACCEPTED) {
+      throw new BadRequestError(
+        'User must have an accepted application to submit this form.',
+      );
+    }
+
+    const existingForms = await this.transactionsManager.readOnly(
+      async (entityManager) =>
+        Repositories.response(entityManager).findResponsesForUserByType(
+          user,
+          FormType.RSVP,
+        ),
+    );
+    if (existingForms.length > 0) {
+      throw new BadRequestError('User has already RSVPed.');
+    }
+
+    const response = await this.transactionsManager.readWrite(
+      async (entityManager) => {
+        const responseRepository = Repositories.response(entityManager);
+        const newResponse = responseRepository.create({
+          user,
+          formType: FormType.RSVP,
+          data: formData,
+        });
+        const createdResponse = responseRepository.save(newResponse);
+        return createdResponse;
+      },
+    );
+
+    await this.userService.updateUserStatus(
+      user.id,
+      ApplicationStatus.CONFIRMED,
+    );
+
+    return response;
+  }
+
+  public async getUserRSVP(user: UserModel): Promise<ResponseModel> {
+    const userResponses = await this.getUserResponses(user);
+    const rsvp = userResponses.find(
+      (response) => response.formType === FormType.RSVP,
+    );
+    if (!rsvp) throw new NotFoundError('No RSVP found for user');
+    return rsvp;
   }
 }

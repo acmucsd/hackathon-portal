@@ -27,7 +27,7 @@ const RSVPForm = ({ accessToken }: RSVPFormProps) => {
   } = useForm<RSVP>();
 
   const onSubmit: SubmitHandler<RSVP> = async form => {
-    const submittedForm = await ResponseAPI.submitRSVP(accessToken, form); // change route
+    const submittedForm = await ResponseAPI.submitRSVP(accessToken, form);
     if ('error' in submittedForm) {
       showToast("Couldn't submit form", submittedForm.error);
       return;
@@ -49,23 +49,28 @@ const RSVPForm = ({ accessToken }: RSVPFormProps) => {
       <Typography variant="body/medium">
         Contact hackathon@acmucsd.org with any questions!
       </Typography>
-      {/*Make sure the fields below work*/}
-      <Typography variant="body/large">
+      <Typography variant="label/medium" component="p">
         I am attending DiamondHacks on April 4-5 at UC San Diego.
       </Typography>
       <MultipleChoiceGroup
         mode="radio"
         name="willAttend"
         choices={[Yes.YES]}
+        formRegister={register}
         required
       />
-      <Typography variant="body/large">
-        I joined the DiamondHacks discord (https://acmurl.com/diamondhacks26-discord)
+      <Typography variant="label/medium" component="p">
+        I joined the DiamondHacks discord (
+          <a href='https://acmurl.com/diamondhacks26-discord'>
+            https://acmurl.com/diamondhacks26-discord
+          </a>
+        )
       </Typography>
       <MultipleChoiceGroup
         mode="radio"
         name="joinedDiscord"
         choices={[Yes.YES]}
+        formRegister={register}
         required
       />
       <TextField
