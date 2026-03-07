@@ -12,13 +12,19 @@ interface TimelineItemProps {
   /** In local time (America/Los_Angeles) */
   date: Date;
   first?: boolean;
+  nextUpcoming?: boolean;
 }
 
-const TimelineItem = ({ date, first = false, children }: PropsWithChildren<TimelineItemProps>) => {
+const TimelineItem = ({
+  date,
+  first = false,
+  nextUpcoming = false,
+  children,
+}: PropsWithChildren<TimelineItemProps>) => {
   const passed = new Date() >= date;
 
   return (
-    <div className={`${styles.item} ${first ? styles.first : ''}`}>
+    <div className={`${styles.item} ${nextUpcoming ? styles.nextUpcoming : ''}`}>
       <div
         className={`${styles.circle} ${passed ? styles.complete : ''} ${
           first ? '' : styles.hasLine

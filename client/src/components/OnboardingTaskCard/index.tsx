@@ -25,7 +25,7 @@ const OnboardingTaskCard = ({ task, done = false }: OnboardingTaskCardProps) => 
   const isDone = !!formType && done;
 
   return (
-    <div className={styles.onboardingTaskCard}>
+    <div className={`${styles.onboardingTaskCard} ${!isDone ? styles.notDone : ''}`}>
       <span className={required ? styles.badgeRequired : styles.badgeOptional}>
         {required ? 'Required' : 'Optional'}
       </span>

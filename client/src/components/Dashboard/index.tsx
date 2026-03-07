@@ -51,6 +51,15 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
     completedFormTypes.has(FormType.LIABILITY_WAIVER) &&
     completedFormTypes.has(FormType.PHOTO_RELEASE);
 
+  const timelineItems: [Date, string][] = [
+    [timeline.application, 'Application Deadline'],
+    [timeline.decisions, 'Decisions Released'],
+    [timeline.acceptance, 'RSVP Deadline'],
+    [timeline.waitlist, 'Rolling Waitlist RSVP'],
+    [timeline.hackathon, 'Hackathon Day!'],
+  ];
+  const nextUpcomingIndex = timelineItems.findIndex(([date]) => new Date() < date);
+
   return (
     <div
       className={`${styles.container} ${isConfirmed ? styles.confirmedContainer : styles.notConfirmed}`}
@@ -111,13 +120,19 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
               Onboarding Tasks
             </Typography>
             <div className={styles.onboardingTaskGrid}>
-              {ONBOARDING_TASKS.map(task => (
-                <OnboardingTaskCard
-                  key={task.title}
-                  task={task}
-                  done={task.formType ? completedFormTypes.has(task.formType) : false}
-                />
-              ))}
+              {[...ONBOARDING_TASKS]
+                .sort((a, b) => {
+                  const aDone = a.formType ? completedFormTypes.has(a.formType) : false;
+                  const bDone = b.formType ? completedFormTypes.has(b.formType) : false;
+                  return Number(aDone) - Number(bDone);
+                })
+                .map(task => (
+                  <OnboardingTaskCard
+                    key={task.title}
+                    task={task}
+                    done={task.formType ? completedFormTypes.has(task.formType) : false}
+                  />
+                ))}
             </div>
           </Card>
         </>
@@ -135,13 +150,16 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
           Timeline
         </Typography>
         <div className={styles.timelineItemWrapper}>
-          <TimelineItem date={timeline.application} first>
-            Application Deadline
-          </TimelineItem>
-          <TimelineItem date={timeline.decisions}>Decisions Released</TimelineItem>
-          <TimelineItem date={timeline.acceptance}>RSVP Deadline</TimelineItem>
-          <TimelineItem date={timeline.waitlist}>Rolling Waitlist RSVP</TimelineItem>
-          <TimelineItem date={timeline.hackathon}>Hackathon Day!</TimelineItem>
+          {timelineItems.map(([date, label], i) => (
+            <TimelineItem
+              key={i}
+              date={date}
+              first={i === 0}
+              nextUpcoming={i === nextUpcomingIndex}
+            >
+              {label}
+            </TimelineItem>
+          ))}
         </div>
       </Card>
 
