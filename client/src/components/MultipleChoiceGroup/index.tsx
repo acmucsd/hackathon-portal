@@ -68,7 +68,7 @@ const MultipleChoiceGroup = ({
           ...formRegister,
           name,
           value: choice,
-          sx: !error ? color : {color: '#ffb3b4'},
+          sx: !error ? color : { color: '#ffb3b4' },
           // For checkboxes, we can require at least one checkbox by
           // only setting all of them `required` if none of them are
           // checked

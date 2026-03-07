@@ -25,7 +25,8 @@ const RSVPForm = ({ accessToken }: RSVPFormProps) => {
     handleSubmit,
     formState: { errors },
   } = useForm<RSVP>({
-    defaultValues: { // remove the default value if discord field comes back
+    defaultValues: {
+      // remove the default value if discord field comes back
       joinedDiscord: Yes.YES,
     },
   });
@@ -44,7 +45,7 @@ const RSVPForm = ({ accessToken }: RSVPFormProps) => {
     '&.Mui-checked': {
       color: '#1976d2',
     },
-  }
+  };
 
   return (
     <Card gap={1.5} className={styles.container}>
@@ -72,7 +73,7 @@ const RSVPForm = ({ accessToken }: RSVPFormProps) => {
         name="willAttend"
         choices={[Yes.YES]}
         error={errors.willAttend}
-        formRegister={register("willAttend", {
+        formRegister={register('willAttend', {
           required: 'Missing input/field.',
         })}
         color={radioColor}
