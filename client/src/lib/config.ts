@@ -30,6 +30,7 @@ const config = {
         assignments: '/admin/assignments',
         randomizeAssignments: '/admin/assignments/random',
         reviewerOverview: '/admin/reviewer-overview',
+        releaseDecisions: '/admin/release-decisions',
       },
       event: {
         createEvent: '/event',
