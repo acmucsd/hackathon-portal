@@ -1,5 +1,5 @@
 'use client';
-import { RSVP } from '@/lib/types/application'
+import { RSVP } from '@/lib/types/application';
 import Card from '../Card';
 import Heading from '../Heading';
 import MultipleChoiceGroup from '../MultipleChoiceGroup';
@@ -38,13 +38,16 @@ const RSVPForm = ({ accessToken }: RSVPFormProps) => {
     <Card gap={1.5} className={styles.container}>
       <Heading>DiamondHacks RSVP Form</Heading>
       <Typography variant="body/medium">
-        Welcome to DiamondHacks 2026! Please fill out this form to confirm your acceptance and reserve your spot.
+        Welcome to DiamondHacks 2026! Please fill out this form to confirm your acceptance and
+        reserve your spot.
       </Typography>
       <Typography variant="body/medium">
         Spots that are unfilled by 3/20 will be offered to waitlisted attendees.
       </Typography>
       <Typography variant="body/medium">
-        Our mission at DiamondHacks is to bring together hackers from diverse backgrounds to develop innovative solutions to real world problems. All experience levels are welcome. We hope to see you there!
+        Our mission at DiamondHacks is to bring together hackers from diverse backgrounds to develop
+        innovative solutions to real world problems. All experience levels are welcome. We hope to
+        see you there!
       </Typography>
       <Typography variant="body/medium">
         Contact hackathon@acmucsd.org with any questions!
