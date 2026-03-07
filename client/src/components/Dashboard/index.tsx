@@ -73,21 +73,6 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
 
       {isConfirmed ? (
         <>
-          <Card gap={1.5} className={`${styles.card} ${styles.onboarding}`}>
-            <Typography variant="headline/heavy/small" component="h2">
-              Onboarding Tasks
-            </Typography>
-            <div className={styles.onboardingTaskGrid}>
-              {ONBOARDING_TASKS.map(task => (
-                <OnboardingTaskCard
-                  key={task.title}
-                  task={task}
-                  done={task.formType ? completedFormTypes.has(task.formType) : false}
-                />
-              ))}
-            </div>
-          </Card>
-
           <Card gap={1.5} className={`${styles.card} ${styles.status}`}>
             <Typography variant="headline/heavy/small" component="h2">
               QR Code Check-In
@@ -117,6 +102,20 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
                 </Button>
               </>
             )}
+          </Card>
+          <Card gap={1.5} className={`${styles.card} ${styles.onboarding}`}>
+            <Typography variant="headline/heavy/small" component="h2">
+              Onboarding Tasks
+            </Typography>
+            <div className={styles.onboardingTaskGrid}>
+              {ONBOARDING_TASKS.map(task => (
+                <OnboardingTaskCard
+                  key={task.title}
+                  task={task}
+                  done={task.formType ? completedFormTypes.has(task.formType) : false}
+                />
+              ))}
+            </div>
           </Card>
 
           <Card gap={1.5} className={`${styles.card} ${styles.faq}`}>
