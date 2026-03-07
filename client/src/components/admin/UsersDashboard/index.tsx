@@ -5,7 +5,7 @@ import Button from '@/components/Button';
 import Search from '@/components/Search';
 import { RevieweeProfile } from '@/lib/types/apiResponses';
 import { ApplicationDecision, ApplicationStatus } from '@/lib/types/enums';
-import { formatTitleCase } from '@/lib/utils';
+import { filterApplicantsByCriteria, formatTitleCase, sortRevieweeProfiles } from '@/lib/utils';
 import styles from './style.module.scss';
 import UsersTable from '../UsersTable';
 
@@ -19,26 +19,11 @@ const UsersDashboard = ({ users, assignedUsers, superAdmin }: UsersDashboardProp
   const [filterStatus, setFilterStatus] = useState(superAdmin ? 'All' : 'My Assignments');
   const [searchQuery, setSearchQuery] = useState('');
 
-  const decisionMap: Record<ApplicationDecision, string> = {
-    [ApplicationDecision.ACCEPT]: 'ACCEPTED',
-    [ApplicationDecision.REJECT]: 'REJECTED',
-    [ApplicationDecision.WAITLIST]: 'WAITLISTED',
-    [ApplicationDecision.NO_DECISION]: 'NO_DECISION',
-  };
-
   const sourceUsers = superAdmin ? users : assignedUsers;
 
-  const filteredUsers = sourceUsers
-    .filter(user => {
-      if (filterStatus === 'All') return true;
-      return (
-        user.applicationStatus === filterStatus ||
-        decisionMap[user.applicationDecision] === filterStatus
-      );
-    })
-    .filter(user =>
-      `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+  const filteredUsers = filterApplicantsByCriteria(sourceUsers, filterStatus, searchQuery).sort(
+    sortRevieweeProfiles
+  );
 
   const assignedFilteredUsers = {
     'To Review': assignedUsers
@@ -111,6 +96,7 @@ const UsersDashboard = ({ users, assignedUsers, superAdmin }: UsersDashboardProp
             filteredUsers={filteredUsers}
             itemsPerPage={itemsPerPage}
             superAdmin={superAdmin}
+            filterCriteria={superAdmin ? { status: filterStatus, q: searchQuery } : undefined}
           />
         </>
       )}
