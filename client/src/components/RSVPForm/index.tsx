@@ -26,8 +26,8 @@ const RSVPForm = ({ accessToken }: RSVPFormProps) => {
     formState: { errors },
   } = useForm<RSVP>({
     defaultValues: {
-      joinedDiscord: Yes.YES
-    }
+      joinedDiscord: Yes.YES,
+    },
   });
 
   const onSubmit: SubmitHandler<RSVP> = async form => {
