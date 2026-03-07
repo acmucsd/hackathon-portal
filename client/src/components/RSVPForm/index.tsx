@@ -46,7 +46,7 @@ const RSVPForm = ({ accessToken }: RSVPFormProps) => {
         reserve your spot.
       </Typography>
       <Typography variant="body/medium">
-        Spots that are unfilled by 3/20 will be offered to waitlisted attendees.
+        Spots that are unfilled by 3/13 will be offered to waitlisted attendees.
       </Typography>
       <Typography variant="body/medium">
         Our mission at DiamondHacks is to bring together hackers from diverse backgrounds to develop
