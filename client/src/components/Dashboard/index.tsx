@@ -44,18 +44,18 @@ interface DashboardProps {
 
 const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
   const [showBigQr, setShowBigQr] = useState(false);
-  const isConfirmed = user.applicationStatus === ApplicationStatus.CONFIRMED || user.applicationStatus === ApplicationStatus.ACCEPTED;
+  const isConfirmed =
+    user.applicationStatus === ApplicationStatus.CONFIRMED ||
+    user.applicationStatus === ApplicationStatus.ACCEPTED;
 
   const rsvpDone = !!responses.find(response => response.formType === 'RSVP');
-  const photoReleaseDone = !!responses.find(
-    response => response.formType === 'PHOTO_RELEASE'
-  );
-  const liabilityDone = !!responses.find(
-    response => response.formType === 'LIABILITY_WAIVER'
-  );
+  const photoReleaseDone = !!responses.find(response => response.formType === 'PHOTO_RELEASE');
+  const liabilityDone = !!responses.find(response => response.formType === 'LIABILITY_WAIVER');
 
   return (
-    <div className={`${styles.container} ${isConfirmed ? styles.confirmedContainer : styles.notConfirmed}`}>
+    <div
+      className={`${styles.container} ${isConfirmed ? styles.confirmedContainer : styles.notConfirmed}`}
+    >
       <Card gap={1.5} className={`${styles.card} ${styles.banner}`}>
         <Typography variant="headline/heavy/large" component="h1" className={styles.title}>
           Welcome, {user.firstName + ' ' + user.lastName}!
@@ -86,7 +86,14 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
                   Fill out the RSVP form
                 </Typography>
 
-                <Button href={ rsvpDone ? undefined : '/rsvp' } disabled = {rsvpDone} variant = {rsvpDone ? undefined : "primary"} className={rsvpDone ? styles.successButton : ''}>{rsvpDone ? 'All Done!' : 'Go to Profile Page'}</Button>
+                <Button
+                  href={rsvpDone ? undefined : '/rsvp'}
+                  disabled={rsvpDone}
+                  variant={rsvpDone ? undefined : 'primary'}
+                  className={rsvpDone ? styles.successButton : ''}
+                >
+                  {rsvpDone ? 'All Done!' : 'Go to Profile Page'}
+                </Button>
               </div>
 
               <div className={styles.onboardingTaskCard}>

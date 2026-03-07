@@ -18,11 +18,14 @@ export default async function Home() {
     const fetchedUser = await UserAPI.getCurrentUser(accessToken);
     const fetchedResponses = await ResponseAPI.getResponsesForCurrentUser(accessToken);
 
-
-
     return (
       <main className={styles.main}>
-        <Dashboard faq={FAQ_QUESTIONS} timeline={TIMELINE} user={fetchedUser} responses={fetchedResponses} />
+        <Dashboard
+          faq={FAQ_QUESTIONS}
+          timeline={TIMELINE}
+          user={fetchedUser}
+          responses={fetchedResponses}
+        />
       </main>
     );
   } catch (error) {
