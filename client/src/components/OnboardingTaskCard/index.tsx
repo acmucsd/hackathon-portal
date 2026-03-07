@@ -10,15 +10,34 @@ interface OnboardingTaskCardProps {
 }
 
 const OnboardingTaskCard = ({ task, done = false }: OnboardingTaskCardProps) => {
-  const { image, imageAlt, title, href, buttonLabel, formType, variant, openNewTab } = task;
+  const {
+    image,
+    imageAlt,
+    title,
+    subtitle,
+    href,
+    buttonLabel,
+    formType,
+    variant,
+    openNewTab,
+    required,
+  } = task;
   const isDone = !!formType && done;
 
   return (
     <div className={styles.onboardingTaskCard}>
+      <span className={required ? styles.badgeRequired : styles.badgeOptional}>
+        {required ? 'Required' : 'Optional'}
+      </span>
       <Image className={styles.onboardingImage} src={image} alt={imageAlt} />
-      <Typography variant="body/large" component="h3">
+      <Typography className={styles.onboardingTitle} variant="body/large" component="h3">
         {title}
       </Typography>
+      {subtitle && (
+        <Typography variant="body/small" component="p">
+          {subtitle}
+        </Typography>
+      )}
       <Button
         href={isDone ? undefined : href}
         disabled={isDone}

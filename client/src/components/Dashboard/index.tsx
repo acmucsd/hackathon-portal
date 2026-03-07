@@ -48,6 +48,7 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
 
   const completedFormTypes = new Set(responses.map(r => r.formType));
   const qrUnlocked =
+    user.applicationStatus === ApplicationStatus.CONFIRMED &&
     completedFormTypes.has(FormType.LIABILITY_WAIVER) &&
     completedFormTypes.has(FormType.PHOTO_RELEASE);
 

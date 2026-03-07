@@ -243,10 +243,9 @@
   grid-template-columns: 1fr 1fr;
 }
 
-
 .onboardingTaskGrid {
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
   overflow-x: scroll;
   gap: 1rem;
 }

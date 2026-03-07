@@ -36,7 +36,7 @@ const RSVPForm = ({ accessToken }: RSVPFormProps) => {
       showToast("Couldn't submit form", submittedForm.error);
       return;
     }
-    router.push('/profile');
+    router.push('/');
   };
   return (
     <Card gap={1.5} className={styles.container}>
