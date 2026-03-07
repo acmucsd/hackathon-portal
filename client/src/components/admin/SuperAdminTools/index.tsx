@@ -4,7 +4,8 @@ import Button from '@/components/Button';
 import { useState } from 'react';
 import GroupIcon from '@mui/icons-material/Group';
 import SendIcon from '@mui/icons-material/Send';
-import { randomizeAssignments } from '@/lib/api/AdminAPI';
+import { randomizeAssignments, releaseDecisions } from '@/lib/api/AdminAPI';
+import showToast from '@/lib/showToast';
 
 interface SuperAdminToolsProps {
   user?: { firstName: string };
@@ -19,7 +20,19 @@ const SuperAdminTools = ({ user, token }: SuperAdminToolsProps) => {
       await randomizeAssignments(token);
       setReviewersAssigned(true);
     } catch (error) {
-      console.error('Error assigning reviewers:', error);
+      showToast('Error assigning reviewers', String(error));
+    }
+  };
+  const handleReleaseDecisions = async () => {
+    if (releaseStep < 2) {
+      setReleaseStep(prev => prev + 1);
+    } else if (releaseStep === 2) {
+      try {
+        await releaseDecisions(token);
+        setReleaseStep(3);
+      } catch (error) {
+        showToast('Error releasing decisions', String(error));
+      }
     }
   };
   const getReleaseButtonText = () => {
@@ -58,9 +71,7 @@ const SuperAdminTools = ({ user, token }: SuperAdminToolsProps) => {
         <span className={styles.label}>Release Applications</span>
         <Button
           className={getReleaseButtonClass()}
-          onClick={() => {
-            if (releaseStep < 3) setReleaseStep(prev => prev + 1);
-          }}
+          onClick={handleReleaseDecisions}
           disabled={releaseStep >= 3}
         >
           <SendIcon style={{ marginRight: 8 }} />

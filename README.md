@@ -17,6 +17,12 @@
     4. `yarn run db:migrate`  
     5. `yarn dev`  
 
+    (If PostgreSQL is running both locally and in Docker, the backend may connect to the local database by mistake, causing errors like `database "acmucsd_dev" does not exist.` To fix this, stop the local PostgreSQL service and restart the backend. )
+
+    often used command:
+    open PostgreSQL:
+    docker exec -it rds.hackathon.acmucsd.local psql -U acmucsd_dev -d hackathon_portal
+
 - [`client`](./client/): frontend
     setup:
     1. install Node.js
@@ -25,3 +31,4 @@
     to run the system:
     1. `yarn install`
     2. `yarn dev`
+

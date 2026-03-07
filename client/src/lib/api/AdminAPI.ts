@@ -269,6 +269,23 @@ export const randomizeAssignments = async (token: string): Promise<ReviewAssignm
 };
 
 /**
+ * Release application decisions to all applicants
+ * @param token
+ */
+export const releaseDecisions = async (token: string): Promise<void> => {
+  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.releaseDecisions}`;
+  await axios.post(
+    requestUrl,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+};
+
+/**
  * Get all existing assignments
  * @param token
  */
