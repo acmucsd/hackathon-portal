@@ -45,7 +45,7 @@ const Dashboard = ({ faq, timeline, user }: DashboardProps) => {
       className={`${styles.container} ${user.applicationStatus !== ApplicationStatus.CONFIRMED ? styles.notConfirmed : ''}`}
     >
       {/* Welcome */}
-      <Card gap={1.5} className={`${styles.card} ${styles.banner} ${styles.shelf}`}>
+      <Card gap={1.5} className={`${styles.card} ${styles.banner}`}>
         <Typography variant="headline/heavy/large" component="h1" className={styles.title}>
           Welcome, {user.firstName + ' ' + user.lastName}!
         </Typography>

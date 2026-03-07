@@ -56,6 +56,10 @@
     align-items: flex-start;
     overflow: visible;
 
+    @media screen and (max-width: vars.$breakpoint-md) {
+      height: 350px;
+    }
+
     .title {
       background-image: linear-gradient(
         to left,
@@ -92,6 +96,10 @@
     .subtitle {
       text-shadow: vars.$text-shadow;
       animation: fade-in 1s 1.5s backwards;
+
+      @media screen and (max-width: vars.$breakpoint-md) {
+        margin-bottom: 100px;
+      }
     }
 
     .bannerImage {
@@ -104,12 +112,16 @@
       height: 95%;
       animation: fade-in 3.5s 1.5s backwards;
 
-      @media screen and (max-width: vars.$breakpoint-md) {
+      @media screen and (max-width: vars.$breakpoint-lg) {
         position: absolute;
         left: 50.5%;
         transform: translateX(-50%);
         width: auto;
         height: 55%;
+      }
+
+      @media screen and (max-width: vars.$breakpoint-md) {
+        height: 45%;
       }
     }
 
