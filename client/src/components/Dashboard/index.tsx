@@ -6,6 +6,7 @@ import styles from './style.module.scss';
 import TopBanner from '@/../public/assets/banner2.png';
 import BottomBanner from '@/../public/assets/bottombanner.png';
 import SunGod from '@/../public/assets/sungod-with-book.png';
+import LockIcon from '@/../public/assets/icons/lock.svg';
 import Typography from '../Typography';
 import OnboardingTaskCard from '../OnboardingTaskCard';
 import { ONBOARDING_TASKS } from './onboardingTasks';
@@ -79,7 +80,11 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
             </Typography>
             <div className={styles.qrWrapper}>
               <QrCode data={user.id} className={!qrUnlocked ? styles.qrBlurred : undefined} />
-              {!qrUnlocked && <div className={styles.qrOverlay} />}
+              {!qrUnlocked && (
+                <div className={styles.qrOverlay}>
+                  <LockIcon className={styles.lockIcon} />
+                </div>
+              )}
             </div>
             <Typography className={styles.qrText} variant="body/medium" component="p">
               {qrUnlocked
