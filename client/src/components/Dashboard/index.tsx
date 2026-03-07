@@ -60,6 +60,29 @@ const Dashboard = ({ faq, timeline, user }: DashboardProps) => {
       </Card>
       {confirmed && (
         <>
+          {/* QR Code */}
+          <Card gap={1.5} className={`${styles.card} ${styles.status}`}>
+            <Typography variant="headline/heavy/small" component="h2">
+              QR Code Check-In
+            </Typography>
+            <QrCode data={user.id} />
+            <Typography variant="body/medium" component="p">
+              Use this QR Code to check into ACM-affiliated hackathon events, grab free food, and
+              more!
+            </Typography>
+            <Button onClick={() => setShowBigQr(true)}>Enlarge QR Code</Button>
+            <Button
+              onClick={async () => {
+                const error = await addToGoogleWallet(window.location.origin);
+                if (error) {
+                  showToast('Failed to create a pass', error);
+                }
+              }}
+              variant="secondary"
+            >
+              Add to Google Wallet
+            </Button>
+          </Card>
           {/* Onboarding */}
           <Card gap={1.5} className={`${styles.card} ${styles.onboarding}`}>
             <Typography variant="headline/heavy/small" component="h2">
@@ -119,29 +142,6 @@ const Dashboard = ({ faq, timeline, user }: DashboardProps) => {
                 </Typography>
               </li>
             </ul>
-          </Card>
-          {/* QR Code */}
-          <Card gap={1.5} className={`${styles.card} ${styles.status}`}>
-            <Typography variant="headline/heavy/small" component="h2">
-              QR Code Check-In
-            </Typography>
-            <QrCode data={user.id} />
-            <Typography variant="body/medium" component="p">
-              Use this QR Code to check into ACM-affiliated hackathon events, grab free food, and
-              more!
-            </Typography>
-            <Button onClick={() => setShowBigQr(true)}>Enlarge QR Code</Button>
-            <Button
-              onClick={async () => {
-                const error = await addToGoogleWallet(window.location.origin);
-                if (error) {
-                  showToast('Failed to create a pass', error);
-                }
-              }}
-              variant="secondary"
-            >
-              Add to Google Wallet
-            </Button>
           </Card>
         </>
       )}
