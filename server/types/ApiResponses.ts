@@ -230,6 +230,10 @@ export interface GetReviewerOverviewResponse extends ApiResponse {
   dataToReturn: ReviewerOverviewResponse;
 }
 
+export interface HouseLeaderboardResponse extends ApiResponse {
+  leaderboard: House[];
+}
+
 // House responses
 export type HouseHeadcountsResponse = Record<House, number>;
 export type HousePointsResponse = Record<House, number>;

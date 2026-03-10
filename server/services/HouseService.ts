@@ -38,6 +38,7 @@ export class HouseService {
 
     const countMap = new Map(counts.map(({ house, count }) => [house, Number(count)]));
     for (const house of Object.values(House)) {
+      if (house == House.UNASSIGNED) continue;
       const count = countMap.get(house) ?? 0;
       if (count < minCount) {
         minCount = count;
@@ -54,12 +55,12 @@ export class HouseService {
     );
 
     const pointCounts: HousePointsResponse = Object.values(House).reduce((acc, house) => {
-      acc[house] = 0;
+      if (house != House.UNASSIGNED) acc[house] = 0;
       return acc;
     }, {} as Record<House, number>);
 
     sums.forEach(({ house, points }) => {
-      pointCounts[house] = Number(points);
+      if (house != House.UNASSIGNED) pointCounts[house] = Number(points);
     });
 
     return pointCounts;
