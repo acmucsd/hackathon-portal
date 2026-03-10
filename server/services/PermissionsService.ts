@@ -58,4 +58,8 @@ export default class PermissionsService {
   public static canUpdateUserAccess(user: UserModel): boolean {
     return user.isSuperAdmin();
   }
+
+  public static canViewLeaderboardWithPoints(user: UserModel): boolean {
+    return user.isAdmin();
+  }
 }

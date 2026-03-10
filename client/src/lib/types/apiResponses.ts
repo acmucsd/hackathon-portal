@@ -276,3 +276,17 @@ export interface PostAssignmentsResponse extends ApiResponse {
 export interface GetAssignmentsResponse extends ApiResponse {
   assignments: ReviewAssignment[];
 }
+
+// Leaderboard Responses
+
+export interface HouseLeaderboardResponse extends ApiResponse {
+  leaderboard: House[];
+}
+
+export interface HousePoints {
+  house: House,
+  points: number,
+}
+export interface HouseLeaderboardWithPointsResponse extends ApiResponse {
+  leaderboard: HousePoints[];
+}

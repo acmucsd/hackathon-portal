@@ -40,6 +40,10 @@ const config = {
         updateEvent: '/event',
         deleteEvent: '/event',
       },
+      leaderboard: {
+        house: '/leaderboard/house',
+        housePoints: '/leaderboard/house-points'
+      }
     },
   },
 };
