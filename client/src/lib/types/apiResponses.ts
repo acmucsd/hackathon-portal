@@ -282,11 +282,3 @@ export interface GetAssignmentsResponse extends ApiResponse {
 export interface HouseLeaderboardResponse extends ApiResponse {
   leaderboard: House[];
 }
-
-export interface HousePoints {
-  house: House,
-  points: number,
-}
-export interface HouseLeaderboardWithPointsResponse extends ApiResponse {
-  leaderboard: HousePoints[];
-}

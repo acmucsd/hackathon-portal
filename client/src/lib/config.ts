@@ -41,8 +41,7 @@ const config = {
         deleteEvent: '/event',
       },
       leaderboard: {
-        house: '/leaderboard/house',
-        housePoints: '/leaderboard/house-points'
+        leaderboard: '/leaderboard',
       }
     },
   },

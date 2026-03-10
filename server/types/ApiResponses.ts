@@ -234,13 +234,6 @@ export interface HouseLeaderboardResponse extends ApiResponse {
   leaderboard: House[];
 }
 
-export interface HouseLeaderboardWithPointsResponse extends ApiResponse {
-  leaderboard: {
-    house: House,
-    points: number,
-  }[];
-}
-
 // House responses
 export type HouseHeadcountsResponse = Record<House, number>;
 export type HousePointsResponse = Record<House, number>;

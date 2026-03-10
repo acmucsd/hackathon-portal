@@ -2,7 +2,7 @@ import { ForbiddenError, Get, JsonController, UseBefore } from "routing-controll
 import { UserService } from "../../services/UserService";
 import { Service } from "typedi";
 import { HouseService } from "../../services/HouseService";
-import { HouseLeaderboardResponse, HouseLeaderboardWithPointsResponse, HousePointsResponse } from "../../types/ApiResponses";
+import { HouseLeaderboardResponse } from "../../types/ApiResponses";
 import { House } from "../../types/Enums";
 import { AuthenticatedUser } from "../decorators/AuthenticatedUser";
 import { UserModel } from "../../models/UserModel";
@@ -25,7 +25,7 @@ export class LeaderboardController {
   }
 
   @UseBefore(UserAuthentication)
-  @Get('/house')
+  @Get()
   async houseLeaderboard(
     @AuthenticatedUser() user: UserModel,
   ): Promise<HouseLeaderboardResponse> {
@@ -37,21 +37,4 @@ export class LeaderboardController {
 
     return { error: null, leaderboard };
   }
-
-  @UseBefore(UserAuthentication)
-  @Get('/house-points')
-  async houseLeaderboardWithPoints(
-    @AuthenticatedUser() user: UserModel,
-  ): Promise<HouseLeaderboardWithPointsResponse> {
-    const pointsByHouse = await this.houseService.getHousePoints();
-    if (!PermissionsService.canViewLeaderboardWithPoints(user))
-      throw new ForbiddenError();
-
-    const leaderboard = Object.entries(pointsByHouse)
-      .sort(([, pointsA], [, pointsB]) => pointsB - pointsA)
-      .map(([house, points]) => ({ house: house as House, points }));
-
-    return { error: null, leaderboard };
-  }
-
 }
