@@ -108,24 +108,8 @@ export default async function ApplicationReviewPage({ params }: ApplicationRevie
         assignedApplicants={assignedApplicants}
         stats={stats}
         isSuperAdmin={isSuperAdmin}
-        currentUser={
-          currentUser
-            ? {
-                id: currentUser.id,
-                firstName: currentUser.firstName,
-                lastName: currentUser.lastName,
-              }
-            : undefined
-        }
-        reviewer={
-          reviewerProfile
-            ? {
-                id: reviewerProfile.id,
-                firstName: reviewerProfile.firstName,
-                lastName: reviewerProfile.lastName,
-              }
-            : undefined
-        }
+        currentUser={currentUser}
+        reviewer={reviewerProfile}
       />
     );
   } catch (err: any) {

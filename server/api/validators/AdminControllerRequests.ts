@@ -37,5 +37,4 @@ export class UpdateUserAccessRequest implements IUpdateUserAccessRequest {
   @IsNotEmpty()
   @IsIn(AllowedRolesForUpdate)
   access: UserAccessType;
-
 }

@@ -36,6 +36,7 @@ export interface CreateEvent {
   startTime: string;
   endTime: string;
   published: boolean;
+  pointValue: number;
 }
 
 export interface UpdateEvent {
@@ -49,6 +50,7 @@ export interface UpdateEvent {
   startTime?: string;
   endTime?: string;
   published?: boolean;
+  pointValue?: number;
 }
 
 export interface PostAssignmentsRequest {

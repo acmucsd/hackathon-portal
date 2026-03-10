@@ -262,7 +262,10 @@ export class AdminController {
       params.uuid,
     );
     const { event } = attendance.getPublicAttendance();
-    return { error: null, event };
+
+    let user = await this.userService.addHousePointsToUser(params.id, event.pointValue);
+
+    return { error: null, event, user };
   }
 
   @UseBefore(UserAuthentication)

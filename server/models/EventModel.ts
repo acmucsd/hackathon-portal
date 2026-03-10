@@ -42,6 +42,9 @@ export class EventModel {
   @Column()
   published: boolean;
 
+  @Column({ default: 0 })
+  pointValue: number;
+
   @OneToMany((type) => AttendanceModel, (attendance) => attendance.event, { cascade: true })
   attendances: AttendanceModel[];
 
@@ -58,6 +61,7 @@ export class EventModel {
       startTime: this.startTime,
       endTime: this.endTime,
       published: this.published,
+      pointValue: this.pointValue,
     };
   }
 }
