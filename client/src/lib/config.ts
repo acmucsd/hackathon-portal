@@ -42,7 +42,7 @@ const config = {
       },
       leaderboard: {
         leaderboard: '/leaderboard',
-      }
+      },
     },
   },
 };

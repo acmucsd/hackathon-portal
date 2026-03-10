@@ -1,13 +1,12 @@
-import { ForbiddenError, Get, JsonController, UseBefore } from "routing-controllers";
-import { UserService } from "../../services/UserService";
-import { Service } from "typedi";
-import { HouseService } from "../../services/HouseService";
-import { HouseLeaderboardResponse } from "../../types/ApiResponses";
-import { House } from "../../types/Enums";
-import { AuthenticatedUser } from "../decorators/AuthenticatedUser";
-import { UserModel } from "../../models/UserModel";
-import PermissionsService from "../../services/PermissionsService";
-import { UserAuthentication } from "../middleware/UserAuthentication";
+import { Get, JsonController, UseBefore } from 'routing-controllers';
+import { Service } from 'typedi';
+import { HouseService } from '../../services/HouseService';
+import { HouseLeaderboardResponse } from '../../types/ApiResponses';
+import { House } from '../../types/Enums';
+import { AuthenticatedUser } from '../decorators/AuthenticatedUser';
+import { UserModel } from '../../models/UserModel';
+import PermissionsService from '../../services/PermissionsService';
+import { UserAuthentication } from '../middleware/UserAuthentication';
 
 @JsonController('/leaderboard')
 @Service()

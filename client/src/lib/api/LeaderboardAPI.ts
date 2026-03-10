@@ -1,7 +1,7 @@
-import axios from "axios";
-import { HouseLeaderboardResponse } from "../types/apiResponses";
-import { House } from "../types/enums";
-import config from "../config";
+import axios from 'axios';
+import { HouseLeaderboardResponse } from '../types/apiResponses';
+import { House } from '../types/enums';
+import config from '../config';
 
 /**
  * Get House leaderboard
