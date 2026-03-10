@@ -12,34 +12,35 @@ export class HouseService {
   }
 
   public async getHouseHeadcounts(): Promise<HouseHeadcountsResponse> {
-    const users = await this.transactionsManager.readOnly(async (entityManager) =>
-      Repositories.user(entityManager).findAll(),
+    const counts = await this.transactionsManager.readOnly(async (entityManager) =>
+      Repositories.user(entityManager).getHeadcountsByHouse(),
     );
 
-    // initialize headcounts using House enum as keys
-    const headcounts: HouseHeadcountsResponse = {
-      ...Object.values(House).reduce((acc, house) => {
-        acc[house] = 0;
-        return acc;
-      }, {} as Record<House, number>),
-    };
+    const headcounts: HouseHeadcountsResponse = Object.values(House).reduce((acc, house) => {
+      acc[house] = 0;
+      return acc;
+    }, {} as Record<House, number>);
 
-    users.forEach(user => {
-      headcounts[user.house]++;
+    counts.forEach(({ house, count }) => {
+      headcounts[house] = Number(count);
     });
 
     return headcounts;
   }
 
   public async getLeastPopulated(): Promise<House> {
-    const headcounts = await this.getHouseHeadcounts();
+    const counts = await this.transactionsManager.readOnly(async (entityManager) =>
+      Repositories.user(entityManager).getHeadcountsByHouse(),
+    );
 
     let leastPopulatedHouse: House = House.GEISEL;
     let minCount = Infinity;
 
+    const countMap = new Map(counts.map(({ house, count }) => [house, Number(count)]));
     for (const house of Object.values(House)) {
-      if (headcounts[house] < minCount) {
-        minCount = headcounts[house];
+      const count = countMap.get(house) ?? 0;
+      if (count < minCount) {
+        minCount = count;
         leastPopulatedHouse = house;
       }
     }
@@ -48,20 +49,17 @@ export class HouseService {
   }
 
   public async getHousePoints(): Promise<HousePointsResponse> {
-    const users = await this.transactionsManager.readOnly(async (entityManager) =>
-      Repositories.user(entityManager).findAll(),
+    const sums = await this.transactionsManager.readOnly(async (entityManager) =>
+      Repositories.user(entityManager).getPointsSumByHouse(),
     );
 
-    // initialize point counts using House enum as keys
-    const pointCounts: HousePointsResponse = {
-      ...Object.values(House).reduce((acc, house) => {
-        acc[house] = 0;
-        return acc;
-      }, {} as Record<House, number>),
-    };
+    const pointCounts: HousePointsResponse = Object.values(House).reduce((acc, house) => {
+      acc[house] = 0;
+      return acc;
+    }, {} as Record<House, number>);
 
-    users.forEach(user => {
-      pointCounts[user.house] += user.points;
+    sums.forEach(({ house, points }) => {
+      pointCounts[house] = Number(points);
     });
 
     return pointCounts;

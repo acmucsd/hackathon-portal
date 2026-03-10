@@ -1,6 +1,7 @@
 import { DataSource, In } from 'typeorm';
 import { UserModel } from '../models/UserModel';
 import Container from 'typedi';
+import { House } from '../types/Enums';
 
 export const UserRepository = Container.get(DataSource)
   .getRepository(UserModel)
@@ -48,5 +49,21 @@ export const UserRepository = Container.get(DataSource)
 
     async findByEmails(emails: string[]): Promise<UserModel[]> {
       return this.findBy({ email: In(emails) });
+    },
+
+    async getHeadcountsByHouse(): Promise<{ house: House; count: number }[]> {
+      return this.createQueryBuilder('user')
+        .select('user.house', 'house')
+        .addSelect('COUNT(*)', 'count')
+        .groupBy('user.house')
+        .getRawMany();
+    },
+
+    async getPointsSumByHouse(): Promise<{ house: House; points: number }[]> {
+      return this.createQueryBuilder('user')
+        .select('user.house', 'house')
+        .addSelect('SUM(user.points)', 'points')
+        .groupBy('user.house')
+        .getRawMany();
     },
   });
