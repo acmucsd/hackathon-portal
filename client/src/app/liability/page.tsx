@@ -22,7 +22,7 @@ export default async function LiabilityPage() {
 
   // Only allow accepted participants to fill out liability form
   if (!canUserSubmitWaivers(fetchedUser.applicationStatus)) {
-    redirect('/profile');
+    redirect('/');
   }
 
   return (

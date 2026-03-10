@@ -1,6 +1,7 @@
 'use client ';
 
 import { Checkbox, CheckboxProps, Radio, RadioProps } from '@mui/material';
+import { UseFormRegister } from 'react-hook-form';
 import styles from './style.module.scss';
 import { useRef, useState } from 'react';
 
@@ -15,6 +16,7 @@ interface MultipleChoiceGroupProps {
   mode: 'radio' | 'checkbox';
   name: string;
   choices: string[];
+  formRegister?: UseFormRegister<any>;
   other?: boolean;
   inline?: boolean;
   required?: boolean;
@@ -26,6 +28,7 @@ const MultipleChoiceGroup = ({
   mode,
   name,
   choices,
+  formRegister,
   inline = false,
   other = false,
   required = false,
@@ -56,6 +59,7 @@ const MultipleChoiceGroup = ({
     <div className={`${styles.wrapper} ${inline ? styles.inline : ''}`} ref={ref}>
       {choices.map(choice => {
         const props: RadioProps & CheckboxProps = {
+          ...formRegister?.(name),
           name,
           value: choice,
           // For checkboxes, we can require at least one checkbox by
@@ -63,6 +67,7 @@ const MultipleChoiceGroup = ({
           // checked
           required: required && (mode === 'radio' || selected === NONE),
           onChange: e => {
+            formRegister?.(name).onChange(e);
             if (e.currentTarget.checked) {
               setSelected(choice);
             } else if (mode === 'checkbox' && !ref.current?.querySelector(':checked')) {

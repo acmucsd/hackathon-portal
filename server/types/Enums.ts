@@ -27,6 +27,7 @@ export enum FormType {
   APPLICATION = 'APPLICATION',
   LIABILITY_WAIVER = 'LIABILITY_WAIVER',
   PHOTO_RELEASE = 'PHOTO_RELEASE',
+  RSVP = 'RSVP',
 }
 
 export enum YesOrNo {

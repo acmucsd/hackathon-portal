@@ -1,4 +1,4 @@
-import PhotoReleaseForm from '@/components/PhotoReleaseForm';
+import RSVPForm from '@/components/RSVPForm';
 import { UserAPI } from '@/lib/api';
 import { getCookie } from '@/lib/services/CookieService';
 import { CookieType, ApplicationStatus } from '@/lib/types/enums';
@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation';
 import styles from './page.module.scss';
 import { canUserSubmitWaivers } from '@/lib/utils';
 
-export default async function PhotoReleasePage() {
+export default async function RSVPPage() {
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
 
   if (!accessToken) {
@@ -20,14 +20,14 @@ export default async function PhotoReleasePage() {
     redirect('/api/logout');
   }
 
-  // Only allow accepted participants to fill out photo release form
+  // Only allow accepted participants to fill out RSVP form
   if (!canUserSubmitWaivers(fetchedUser.applicationStatus)) {
     redirect('/');
   }
 
   return (
     <main className={styles.main}>
-      <PhotoReleaseForm accessToken={accessToken} />
+      <RSVPForm accessToken={accessToken} />
     </main>
   );
 }

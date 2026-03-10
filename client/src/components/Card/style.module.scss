@@ -5,9 +5,9 @@
   flex-direction: column;
   gap: 2rem;
   padding: vars.$card-padding;
-  background-color: vars.$card-bg;
-  border: 1px solid vars.$card-stroke;
-  border-radius: 0.5rem;
+  background-color: vars.$card-shelf-bg;
+  border: vars.$card-shelf-border-width solid vars.$card-shelf-color;
+  border-radius: 1.75rem;
 
   @media screen and (max-width: vars.$breakpoint-md) {
     padding: vars.$card-padding-mobile;

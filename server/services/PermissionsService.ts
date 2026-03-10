@@ -52,7 +52,7 @@ export default class PermissionsService {
   }
 
   public static canReleaseApplicationDecisions(user: UserModel): boolean {
-    return user.isSuperAdmin();
+    return user.isAdmin();
   }
 
   public static canUpdateUserAccess(user: UserModel): boolean {

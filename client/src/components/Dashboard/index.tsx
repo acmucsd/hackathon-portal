@@ -3,22 +3,25 @@
 import Image from 'next/image';
 import Card from '../Card';
 import styles from './style.module.scss';
-import Banner from '@/../public/assets/banner.png';
+import TopBanner from '@/../public/assets/banner2.png';
+import BottomBanner from '@/../public/assets/bottombanner.png';
+import SunGod from '@/../public/assets/sungod-with-book.png';
+import LockIcon from '@/../public/assets/icons/lock.svg';
 import Typography from '../Typography';
+import OnboardingTaskCard from '../OnboardingTaskCard';
+import { ONBOARDING_TASKS } from './onboardingTasks';
 import Link from 'next/link';
 import FAQ, { FAQQuestion } from '../FAQAccordion';
 import DashboardStatus from '../DashboardStatus';
 import TimelineItem from '../TimelineItem';
-import { PrivateProfile, PublicEvent } from '@/lib/types/apiResponses';
+import { PrivateProfile, PublicEvent, ResponseModel } from '@/lib/types/apiResponses';
 import QrCode from '../QrCode';
 import Button from '../Button';
-import { ApplicationStatus, Day } from '@/lib/types/enums';
+import { ApplicationStatus, Day, FormType } from '@/lib/types/enums';
 import Modal from '../Modal';
 import { useState } from 'react';
 import { addToGoogleWallet } from './wallet';
 import showToast from '@/lib/showToast';
-
-type Status = 'NOT_SUBMITTED' | 'SUBMITTED' | 'WITHDRAWN' | 'ACCEPTED' | 'REJECTED' | 'CONFIRMED';
 
 /** Dates are in local time (America/Los_Angeles) */
 export interface Deadlines {
@@ -33,151 +36,162 @@ interface DashboardProps {
   faq: FAQQuestion[];
   timeline: Deadlines;
   user: PrivateProfile;
+  responses: ResponseModel[];
 }
 
-const Dashboard = ({ faq, timeline, user }: DashboardProps) => {
+const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
   const [showBigQr, setShowBigQr] = useState(false);
+  const isConfirmed =
+    user.applicationStatus === ApplicationStatus.CONFIRMED ||
+    user.applicationStatus === ApplicationStatus.ACCEPTED;
+
+  const completedFormTypes = new Set(responses.map(r => r.formType));
+  const qrUnlocked =
+    user.applicationStatus === ApplicationStatus.CONFIRMED &&
+    completedFormTypes.has(FormType.LIABILITY_WAIVER) &&
+    completedFormTypes.has(FormType.PHOTO_RELEASE);
+
+  const timelineItems: [Date, string][] = [
+    [timeline.application, 'Application Deadline'],
+    [timeline.decisions, 'Decisions Released'],
+    [timeline.acceptance, 'RSVP Deadline'],
+    [timeline.waitlist, 'Rolling Waitlist RSVP'],
+    [timeline.hackathon, 'Hackathon Day!'],
+  ];
+  const nextUpcomingIndex = timelineItems.findIndex(([date]) => new Date() < date);
 
   return (
-    <div className={styles.container}>
+    <div
+      className={`${styles.container} ${isConfirmed ? styles.confirmedContainer : styles.notConfirmed}`}
+    >
       <Card gap={1.5} className={`${styles.card} ${styles.banner}`}>
         <Typography variant="headline/heavy/large" component="h1" className={styles.title}>
           Welcome, {user.firstName + ' ' + user.lastName}!
         </Typography>
         <Typography variant="body/medium" component="p" className={styles.subtitle}>
-          View DiamondHacks updates, resources, and check-in to events here.
+          Access the application and view DiamondHacks updates below.
         </Typography>
         <Image
-          src={Banner}
-          alt="Two diamond critters find a large jewel in a vault"
+          src={TopBanner}
+          alt="Books and potions in the shelf"
           quality={100}
           className={styles.bannerImage}
         />
       </Card>
-      {user.applicationStatus === ApplicationStatus.CONFIRMED ? (
-        <Card gap={1.5} className={`${styles.card} ${styles.status}`}>
-          <Typography variant="headline/heavy/small" component="h2">
-            QR Code Check-In
-          </Typography>
-          <QrCode data={user.id} />
-          <Typography variant="body/medium" component="p">
-            Use this QR Code to check into ACM-affiliated hackathon events, grab free food, and
-            more!
-          </Typography>
-          <Button onClick={() => setShowBigQr(true)}>Enlarge QR Code</Button>
-          <Button
-            onClick={async () => {
-              const error = await addToGoogleWallet(window.location.origin);
-              if (error) {
-                showToast('Failed to create a pass', error);
-              }
-            }}
-            variant="secondary"
-          >
-            Add to Google Wallet
-          </Button>
-        </Card>
-      ) : (
-        <Card gap={1.5} className={`${styles.card} ${styles.status}`}>
-          <Typography variant="headline/heavy/small" component="h2">
-            Application Status
-          </Typography>
-          <DashboardStatus status={user.applicationStatus as Status} timeline={timeline} />
-        </Card>
+
+      {isConfirmed && (
+        <>
+          <Card gap={1.5} className={`${styles.card} ${styles.qr}`}>
+            <Typography variant="headline/heavy/small" component="h2">
+              QR Code Check-In
+            </Typography>
+            <div className={styles.qrWrapper}>
+              <QrCode data={user.id} className={!qrUnlocked ? styles.qrBlurred : undefined} />
+              {!qrUnlocked && (
+                <div className={styles.qrOverlay}>
+                  <LockIcon className={styles.lockIcon} />
+                </div>
+              )}
+            </div>
+            <Typography className={styles.qrText} variant="body/medium" component="p">
+              {qrUnlocked
+                ? 'Use this QR Code to check into ACM-affiliated hackathon events, grab free food, and more!'
+                : 'Complete the required forms to unlock the QR code!'}
+            </Typography>
+            {qrUnlocked && (
+              <>
+                <Button onClick={() => setShowBigQr(true)}>Enlarge QR Code</Button>
+                <Button
+                  onClick={async () => {
+                    const error = await addToGoogleWallet(window.location.origin);
+                    if (error) {
+                      showToast('Failed to create a pass', error);
+                    }
+                  }}
+                  variant="secondary"
+                >
+                  Add to Google Wallet
+                </Button>
+              </>
+            )}
+          </Card>
+          <Card gap={1.5} className={`${styles.card} ${styles.onboarding}`}>
+            <Typography variant="headline/heavy/small" component="h2">
+              Onboarding Tasks
+            </Typography>
+            <div className={styles.onboardingTaskGrid}>
+              {[...ONBOARDING_TASKS]
+                .sort((a, b) => {
+                  const aDone = a.formType ? completedFormTypes.has(a.formType) : false;
+                  const bDone = b.formType ? completedFormTypes.has(b.formType) : false;
+                  return Number(aDone) - Number(bDone);
+                })
+                .map(task => (
+                  <OnboardingTaskCard
+                    key={task.title}
+                    task={task}
+                    done={task.formType ? completedFormTypes.has(task.formType) : false}
+                  />
+                ))}
+            </div>
+          </Card>
+        </>
       )}
-      {user.applicationStatus === ApplicationStatus.CONFIRMED ? (
-        <Card gap={1.5} className={`${styles.card} ${styles.timeline}`}>
-          <Typography variant="headline/heavy/small" component="h2">
-            Onboarding Checklist
-          </Typography>
-          <ul className={styles.onboardingChecklist}>
-            <li>
-              <Typography variant="body/large">
-                Fill out the{' '}
-                <Link href="/photoRelease" className={styles.link}>
-                  photo release waiver
-                </Link>
-              </Typography>
-            </li>
-            <li>
-              <Typography variant="body/large">
-                Fill out the{' '}
-                <Link href="/liability" className={styles.link}>
-                  liability waiver
-                </Link>
-              </Typography>
-            </li>
-            <li>
-              <Typography variant="body/large">
-                Join the{' '}
-                <Link
-                  href="http://acmurl.com/diamondhacks25-discord"
-                  className={styles.link}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  ACM DiamondHacks Discord
-                </Link>{' '}
-                for real-time, up-to-date announcements
-              </Typography>
-            </li>
-            <li>
-              <Typography variant="body/large">
-                Check out the{' '}
-                <Link
-                  href="http://acmurl.com/diamondhacks25-guide"
-                  className={styles.link}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  ACM DiamondHacks Hacker Guide
-                </Link>
-              </Typography>
-            </li>
-            <li>
-              <Typography variant="body/large">
-                Check out the{' '}
-                <Link href="/schedule" className={styles.link}>
-                  schedule
-                </Link>{' '}
-                of events and workshops
-              </Typography>
-            </li>
-          </ul>
-        </Card>
-      ) : (
-        <Card gap={1.5} className={`${styles.card} ${styles.timeline}`}>
-          <Typography variant="headline/heavy/small" component="h2">
-            Timeline
-          </Typography>
-          <div className={styles.timelineItemWrapper}>
-            <TimelineItem date={timeline.application} first>
-              Application Deadline
+
+      <Card gap={1.5} className={`${styles.card} ${styles.status}`}>
+        <Typography variant="headline/heavy/small" component="h2">
+          Application Status
+        </Typography>
+        <DashboardStatus status={user.applicationStatus} timeline={timeline} />
+      </Card>
+
+      <Card gap={1.5} className={`${styles.card} ${styles.timeline}`}>
+        <Typography variant="headline/heavy/small" component="h2">
+          Timeline
+        </Typography>
+        <div className={styles.timelineItemWrapper}>
+          {timelineItems.map(([date, label], i) => (
+            <TimelineItem
+              key={i}
+              date={date}
+              first={i === 0}
+              nextUpcoming={i === nextUpcomingIndex}
+            >
+              {label}
             </TimelineItem>
-            <TimelineItem date={timeline.decisions}>Decisions Released</TimelineItem>
-            <TimelineItem date={timeline.acceptance}>RSVP Deadline</TimelineItem>
-            <TimelineItem date={timeline.waitlist}>Rolling Waitlist RSVP</TimelineItem>
-            <TimelineItem date={timeline.hackathon}>Hackathon Day!</TimelineItem>
-          </div>
-        </Card>
-      )}
-      {user.applicationStatus === ApplicationStatus.CONFIRMED ? null : (
-        <Card gap={1.5} className={`${styles.card} ${styles.faq}`}>
-          <Typography variant="headline/heavy/small" component="h2">
-            Frequently Asked Questions
-          </Typography>
-          <div>
-            <FAQ data={faq} />
-          </div>
-          <Typography variant="body/large" component="p">
-            Still have questions? Email{' '}
-            <Link href="mailto:hackathon@acmucsd.org" className="link">
-              hackathon@acmucsd.org
-            </Link>{' '}
-            to reach DiamondHacks’s organizers!
-          </Typography>
-        </Card>
-      )}
+          ))}
+        </div>
+      </Card>
+
+      <Card gap={1.5} className={`${styles.card} ${styles.faq}`}>
+        <Typography variant="headline/heavy/small" component="h2">
+          Frequently Asked Questions
+        </Typography>
+        <div>
+          <FAQ data={faq} />
+        </div>
+        <Typography variant="body/large" component="p">
+          Still have questions? Email{' '}
+          <Link href="mailto:hackathon@acmucsd.org" className="link">
+            hackathon@acmucsd.org
+          </Link>{' '}
+          to reach DiamondHacks organizers!
+        </Typography>
+        <Image
+          src={SunGod}
+          alt="Sun God holding a book"
+          quality={100}
+          className={styles.sunGodImage}
+        />
+      </Card>
+
+      <Image
+        src={BottomBanner}
+        alt="Banners of the four houses: Raccoon, Sun God, Geisel, and Triton"
+        quality={100}
+        className={styles.banner2}
+      />
+
       <Modal
         title={`${user.firstName} ${user.lastName}'s QR Code`}
         open={showBigQr}

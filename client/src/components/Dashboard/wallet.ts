@@ -52,7 +52,6 @@ export async function addToGoogleWallet(baseUrl: string): Promise<string> {
       hexBackgroundColor: '#151625',
       heroImage: { sourceUri: { uri: `${baseUrl}/assets/google-wallet-hero.png` } },
     };
-    console.log(objectData);
     let genericObject = await client.getObject(ISSUER_ID, objectSuffix);
     if (!genericObject) {
       genericObject = await client.createObject(objectData);

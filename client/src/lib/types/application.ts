@@ -46,3 +46,9 @@ export interface Waiver {
   signature: string;
   date: string;
 }
+
+export interface RSVP {
+  willAttend: Yes;
+  joinedDiscord: Yes;
+  additionalComments: string;
+}

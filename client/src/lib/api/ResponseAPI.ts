@@ -8,7 +8,7 @@ import type {
   SubmitApplicationResponse,
 } from '@/lib/types/apiResponses';
 import axios from 'axios';
-import { Application, Waiver } from '../types/application';
+import { Application, RSVP, Waiver } from '../types/application';
 import { getErrorMessage } from '../utils';
 
 /**
@@ -136,6 +136,29 @@ export const submitPhotoRelease = async (
 
   try {
     const response = await axios.post<SubmitApplicationResponse>(requestUrl, waiver, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data.response;
+  } catch (error) {
+    return { error: getErrorMessage(error) };
+  }
+};
+
+/**
+ * Submit RSVP form for the current user
+ * @param form Form
+ * @returns Created Form
+ */
+export const submitRSVP = async (
+  token: string,
+  form: RSVP
+): Promise<ResponseModel | { error: string }> => {
+  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.response.rsvp}`;
+
+  try {
+    const response = await axios.post<SubmitApplicationResponse>(requestUrl, form, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

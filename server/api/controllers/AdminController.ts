@@ -24,7 +24,10 @@ import {
   UpdateApplicationDecisionResponse,
   UpdateUserAccessResponse,
 } from '../../types/ApiResponses';
-import { UpdateApplicationDecisionRequest, UpdateUserAccessRequest } from '../validators/AdminControllerRequests';
+import {
+  UpdateApplicationDecisionRequest,
+  UpdateUserAccessRequest,
+} from '../validators/AdminControllerRequests';
 import { UserAuthentication } from '../middleware/UserAuthentication';
 import { UserService } from '../../services/UserService';
 import { ResponseService } from '../../services/ResponseService';
@@ -104,7 +107,10 @@ export class AdminController {
     if (!PermissionsService.canViewApplicationDecisions(currentUser))
       throw new ForbiddenError();
 
-    const user = await this.userService.findByIdWithLastDecisionUpdatedByRelation(params.id);
+    const user =
+      await this.userService.findByIdWithLastDecisionUpdatedByRelation(
+        params.id,
+      );
     return { error: null, user: user.getHiddenProfile() };
   }
 
@@ -188,8 +194,9 @@ export class AdminController {
   ) {
     if (!PermissionsService.canGetPasswordResetLinks(currentUser))
       throw new ForbiddenError();
-    const passwordResetLink =
-      await this.userService.getPasswordResetLink(queryParams.email);
+    const passwordResetLink = await this.userService.getPasswordResetLink(
+      queryParams.email,
+    );
     return { error: null, passwordResetLink };
   }
 
@@ -205,6 +212,20 @@ export class AdminController {
     const user = await this.userService.findById(params.id);
     const responses = await this.responseService.getUserWaivers(user);
     return { error: null, responses: responses };
+  }
+
+  @UseBefore(UserAuthentication)
+  @Get('/rsvp/:id')
+  async getRSVPById(
+    @AuthenticatedUser() currentUser: UserModel,
+    @Params() params: IdParam,
+  ): Promise<GetFormResponse> {
+    if (!PermissionsService.canViewAllApplications(currentUser))
+      throw new ForbiddenError();
+
+    const user = await this.userService.findById(params.id);
+    const response = await this.responseService.getUserRSVP(user);
+    return { error: null, response: response };
   }
 
   @UseBefore(UserAuthentication)
@@ -248,15 +269,28 @@ export class AdminController {
   }
 
   @UseBefore(UserAuthentication)
+  @Post('/release-decisions')
+  async releaseDecisions(@AuthenticatedUser() currentUser: UserModel) {
+    if (!PermissionsService.canReleaseApplicationDecisions(currentUser))
+      throw new ForbiddenError();
+    const users = await this.userService.releaseApplicationDecisions();
+    return {
+      error: null,
+      users: users.map((user) => user.getPrivateProfile()),
+    };
+  }
+
+  @UseBefore(UserAuthentication)
   @Put('/applications/set-open-status')
   async setApplicationsOpen(
     @AuthenticatedUser() currentUser: UserModel,
     @Body() body: UpdateApplicationOpeningStatusRequest,
   ) {
-
     if (!PermissionsService.canSetApplicationOpeningStatus(currentUser)) {
-      throw new ForbiddenError('You do not have permission to set the application' +
-        ' opening status. Only admins can perform this action.');
+      throw new ForbiddenError(
+        'You do not have permission to set the application' +
+          ' opening status. Only admins can perform this action.',
+      );
     }
 
     const updatedBy = currentUser.id;
@@ -295,7 +329,9 @@ export class AdminController {
     if (!PermissionsService.canViewAllApplications(currentUser))
       throw new ForbiddenError();
 
-    const newAssignments = await this.userService.assignReviews(postAssignmentsRequest.assignments);
+    const newAssignments = await this.userService.assignReviews(
+      postAssignmentsRequest.assignments,
+    );
     return { error: null, newAssignments };
   }
 
@@ -307,12 +343,14 @@ export class AdminController {
     if (!PermissionsService.canViewAllApplications(currentUser))
       throw new ForbiddenError();
 
-    const allInterests = await this.interestFormResponseService.findAllInterested();
+    const allInterests =
+      await this.interestFormResponseService.findAllInterested();
 
-    const allEmailInterests = new Set(allInterests.map(res => res.email));
-    const allPhoneInterests = new Set(allInterests.map(res => res.phone));
+    const allEmailInterests = new Set(allInterests.map((res) => res.email));
+    const allPhoneInterests = new Set(allInterests.map((res) => res.phone));
 
-    const applications = await this.responseService.getAllApplicationsWithReviewerRelation();
+    const applications =
+      await this.responseService.getAllApplicationsWithReviewerRelation();
 
     const assignments = applications.map((app) => {
       const user = app.user;
@@ -343,13 +381,17 @@ export class AdminController {
     if (!PermissionsService.canViewAllApplications(currentUser))
       throw new ForbiddenError();
 
-    const allInterests = await this.interestFormResponseService.findAllInterested();
+    const allInterests =
+      await this.interestFormResponseService.findAllInterested();
 
-    const allEmailInterests = new Set(allInterests.map(res => res.email));
-    const allPhoneInterests = new Set(allInterests.map(res => res.phone));
+    const allEmailInterests = new Set(allInterests.map((res) => res.email));
+    const allPhoneInterests = new Set(allInterests.map((res) => res.phone));
 
-    const applications = await this.responseService.getAllApplicationsWithReviewerRelation();
-    const filteredApplications = (applications).filter(app => app.user.reviewer?.id == params.id);
+    const applications =
+      await this.responseService.getAllApplicationsWithReviewerRelation();
+    const filteredApplications = applications.filter(
+      (app) => app.user.reviewer?.id == params.id,
+    );
 
     const assignments = filteredApplications.map((app) => {
       const user = app.user;
@@ -373,7 +415,9 @@ export class AdminController {
 
   @UseBefore(UserAuthentication)
   @Get('/reviewer-overview')
-  async getReviewerOverview(@AuthenticatedUser() currentUser: UserModel): Promise<GetReviewerOverviewResponse> {
+  async getReviewerOverview(
+    @AuthenticatedUser() currentUser: UserModel,
+  ): Promise<GetReviewerOverviewResponse> {
     if (!PermissionsService.canGetReviewerOverview(currentUser)) {
       throw new ForbiddenError();
     }
@@ -385,9 +429,8 @@ export class AdminController {
   @Put('/update-user-access')
   async updateUserAccess(
     @AuthenticatedUser() currentUser: UserModel,
-    @Body() updateUserAccessRequest : UpdateUserAccessRequest,
-  ) : Promise<UpdateUserAccessResponse> {
-
+    @Body() updateUserAccessRequest: UpdateUserAccessRequest,
+  ): Promise<UpdateUserAccessResponse> {
     if (!PermissionsService.canUpdateUserAccess(currentUser))
       throw new ForbiddenError();
 
@@ -396,7 +439,8 @@ export class AdminController {
     }
 
     const updatedAccess = await this.userService.updateUserAccess(
-      updateUserAccessRequest.email, updateUserAccessRequest.access,
+      updateUserAccessRequest.email,
+      updateUserAccessRequest.access,
     );
     return { error: null, updates: updatedAccess.getPrivateProfile() };
   }
