@@ -10,6 +10,7 @@ import { File } from '../types/ApiRequests';
 import { StorageService } from './StorageService';
 import { UserService } from './UserService';
 import { ApplicationConfigService } from './ApplicationConfigService';
+import { RSVP_DEADLINE } from '../config/rsvpDeadline';
 
 const RESUME_ALLOWED_EXTENSIONS = ['.pdf', '.doc', 'docx'];
 
@@ -314,6 +315,10 @@ export class ResponseService {
       throw new BadRequestError(
         'User must have an accepted application to submit this form.',
       );
+    }
+
+    if (new Date() > RSVP_DEADLINE) {
+      throw new BadRequestError('RSVP deadline has passed.');
     }
 
     const existingForms = await this.transactionsManager.readOnly(
