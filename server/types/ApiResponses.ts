@@ -139,6 +139,10 @@ export interface UpdateApplicationDecisionResponse extends ApiResponse {
   user: HiddenProfile;
 }
 
+export interface SetAcceptanceDeadlinePassedResponse extends ApiResponse {
+  updatedCount: number;
+}
+
 export interface ForgotPasswordResponse extends ApiResponse {}
 
 export interface PublicAttendance {

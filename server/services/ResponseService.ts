@@ -311,14 +311,14 @@ export class ResponseService {
     user: UserModel,
     formData: RSVP,
   ): Promise<ResponseModel> {
-    if (user.applicationStatus !== ApplicationStatus.ACCEPTED) {
+    if (user.applicationStatus !== ApplicationStatus.ACCEPTED && user.applicationStatus !== ApplicationStatus.ACCEPTED_FROM_WAITLIST) {
       throw new BadRequestError(
         'User must have an accepted application to submit this form.',
       );
     }
 
-    if (new Date() > RSVP_DEADLINE) {
-      throw new BadRequestError('RSVP deadline has passed.');
+    if (new Date() > RSVP_DEADLINE && user.applicationStatus == ApplicationStatus.ACCEPTED) {
+      throw new BadRequestError('RSVP deadline has passed for accepted users.');
     }
 
     const existingForms = await this.transactionsManager.readOnly(

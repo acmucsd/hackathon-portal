@@ -21,6 +21,7 @@ import {
   GetFormsResponse,
   GetReviewerOverviewResponse,
   PostAssignmentsResponse,
+  SetAcceptanceDeadlinePassedResponse,
   UpdateApplicationDecisionResponse,
   UpdateUserAccessResponse,
 } from '../../types/ApiResponses';
@@ -306,6 +307,19 @@ export class AdminController {
       updatedBy: config.updatedBy,
       updatedAt: config.updatedAt,
     };
+  }
+
+  @UseBefore(UserAuthentication)
+  @Post('/applications/set-acceptance-deadline-passed')
+  async setAcceptanceDeadlinePassed(
+    @AuthenticatedUser() currentUser: UserModel,
+  ): Promise<SetAcceptanceDeadlinePassedResponse> {
+    if (!PermissionsService.canReleaseApplicationDecisions(currentUser)) {
+      throw new ForbiddenError();
+    }
+    const updatedCount =
+      await this.userService.setAcceptedUsersToDeadlinePassed();
+    return { error: null, updatedCount };
   }
 
   @UseBefore(UserAuthentication)
