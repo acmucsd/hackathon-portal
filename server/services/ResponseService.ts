@@ -311,7 +311,10 @@ export class ResponseService {
     user: UserModel,
     formData: RSVP,
   ): Promise<ResponseModel> {
-    if (user.applicationStatus !== ApplicationStatus.ACCEPTED && user.applicationStatus !== ApplicationStatus.ACCEPTED_FROM_WAITLIST) {
+    if (
+      user.applicationStatus !== ApplicationStatus.ACCEPTED &&
+      user.applicationStatus !== ApplicationStatus.ACCEPTED_FROM_WAITLIST
+    ) {
       throw new BadRequestError(
         'User must have an accepted application to submit this form.',
       );

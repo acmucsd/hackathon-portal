@@ -30,7 +30,6 @@ import { Application } from '../types/Application';
 import { HouseService } from './HouseService';
 
 import { In } from 'typeorm';
-import { RSVP_DEADLINE } from '../config/rsvpDeadline';
 
 /** Internal: includes acceptedWithNotNullUniversity for computation; omitted from final output. */
 interface ReviewerOverviewReviewerInternal extends ReviewerOverviewReviewer {
@@ -106,7 +105,7 @@ export class UserService {
 
       const result = await userRepository.update(
         { applicationStatus: ApplicationStatus.ACCEPTED },
-        { applicationStatus: ApplicationStatus.DEADLINE_PASSED }
+        { applicationStatus: ApplicationStatus.DEADLINE_PASSED },
       );
 
       return result.affected ?? 0;
