@@ -46,11 +46,11 @@ const RECOMMENDED_ITEMS = [
   },
   {
     label: "View DiamondHacks' Hacker Guide",
-    href: '/'
+    href: 'https://acmucsd.notion.site/diamondhacks-hacker-guide-2026'
   },
   {
     label: 'Join the DiamondHacks Discord Server',
-    href: 'https://discord.gg/acmucsd',
+    href: 'https://acmurl.com/diamondhacks26-discord',
     suffix: ' for real-time, up-to-date announcements!'
   }
 ]
@@ -138,7 +138,7 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
             <ul className={styles.recommendedList}>
                 {RECOMMENDED_ITEMS.map(({ label, href, prefix, suffix }, i) => (
                   <li key={i}>
-                    <Typography variant="body/large" component="span">
+                    <Typography variant="label/medium" component="span">
                     {prefix}
                     <Link href={href} className="link">
                       {label}
