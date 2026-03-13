@@ -38,6 +38,22 @@ interface DashboardProps {
   user: PrivateProfile;
   responses: ResponseModel[];
 }
+const RECOMMENDED_ITEMS = [
+  {
+    label: 'Travel Reimbursement Form',
+    href: 'https://forms.gle/jCheppRDgi5NYhvQ6',
+    prefix: '[Optional] Fill out the '
+  },
+  {
+    label: "View DiamondHacks' Hacker Guide",
+    href: '/'
+  },
+  {
+    label: 'Join the DiamondHacks Discord Server',
+    href: 'https://discord.gg/acmucsd',
+    suffix: ' for real-time, up-to-date announcements!'
+  }
+]
 
 const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
   const [showBigQr, setShowBigQr] = useState(false);
@@ -114,6 +130,25 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
                 </Button>
               </>
             )}
+          </Card>
+          <Card gap={1.5} className={`${styles.card} ${styles.recommended}`}>
+            <Typography variant="headline/heavy/small" component="h2">
+              Recommended Items
+            </Typography>
+            <ul className={styles.recommendedList}>
+                {RECOMMENDED_ITEMS.map(({ label, href, prefix, suffix }, i) => (
+                  <li key={i}>
+                    <Typography variant="body/large" component="span">
+                    {prefix}
+                    <Link href={href} className="link">
+                      {label}
+                    </Link>
+                    {suffix}
+                    </Typography>
+
+                  </li>
+                ))}
+            </ul>
           </Card>
           <Card gap={1.5} className={`${styles.card} ${styles.onboarding}`}>
             <Typography variant="headline/heavy/small" component="h2">
