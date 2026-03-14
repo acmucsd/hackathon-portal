@@ -44,7 +44,8 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
   const [showBigQr, setShowBigQr] = useState(false);
   const isConfirmed =
     user.applicationStatus === ApplicationStatus.CONFIRMED ||
-    user.applicationStatus === ApplicationStatus.ACCEPTED;
+    user.applicationStatus === ApplicationStatus.ACCEPTED ||
+    user.applicationStatus === ApplicationStatus.ACCEPTED_FROM_WAITLIST;
 
   const completedFormTypes = new Set(responses.map(r => r.formType));
   const qrUnlocked =

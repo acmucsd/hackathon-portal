@@ -233,6 +233,10 @@ export interface GetPasswordResetLinkResponse extends ApiResponse {
   passwordResetLink: string;
 }
 
+export interface SetAcceptanceDeadlinePassedResponse extends ApiResponse {
+  updatedCount: number;
+}
+
 export interface ReviewerOverviewApplicant {
   userId: string;
   firstName: string;
