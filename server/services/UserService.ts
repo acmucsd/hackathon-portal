@@ -99,6 +99,19 @@ export class UserService {
     });
   }
 
+  public async setAcceptedUsersToDeadlinePassed(): Promise<number> {
+    return this.transactionsManager.readWrite(async (entityManager) => {
+      const userRepository = Repositories.user(entityManager);
+
+      const result = await userRepository.update(
+        { applicationStatus: ApplicationStatus.ACCEPTED },
+        { applicationStatus: ApplicationStatus.DEADLINE_PASSED },
+      );
+
+      return result.affected ?? 0;
+    });
+  }
+
   public async findByIdWithReviewerRelation(id: string): Promise<UserModel> {
     // same as findById() but includes reviewer / reviewee links
     const user = await this.transactionsManager.readOnly(
