@@ -28,7 +28,7 @@ const UsersTable = ({ filteredUsers, itemsPerPage = 10, superAdmin }: UsersTable
     'Status',
     'School',
     'Interest Form?',
-    'Submission',
+    'Notes',
     ...(superAdmin ? ['Assigned Reviewer'] : []),
     'Action',
   ];
