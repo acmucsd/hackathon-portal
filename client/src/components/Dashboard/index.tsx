@@ -22,6 +22,7 @@ import Modal from '../Modal';
 import { useState } from 'react';
 import { addToGoogleWallet } from './wallet';
 import showToast from '@/lib/showToast';
+import { RECOMMENDED_ITEMS } from './recommendedItems';
 
 /** Dates are in local time (America/Los_Angeles) */
 export interface Deadlines {
@@ -38,22 +39,6 @@ interface DashboardProps {
   user: PrivateProfile;
   responses: ResponseModel[];
 }
-const RECOMMENDED_ITEMS = [
-  {
-    label: 'Travel Reimbursement Form',
-    href: 'https://forms.gle/jCheppRDgi5NYhvQ6',
-    prefix: '[Optional] Fill out the '
-  },
-  {
-    label: "View DiamondHacks' Hacker Guide",
-    href: 'https://acmucsd.notion.site/diamondhacks-hacker-guide-2026'
-  },
-  {
-    label: 'Join the DiamondHacks Discord Server',
-    href: 'https://acmurl.com/diamondhacks26-discord',
-    suffix: ' for real-time, up-to-date announcements!'
-  }
-]
 
 const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
   const [showBigQr, setShowBigQr] = useState(false);
@@ -136,18 +121,21 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
               Recommended Items
             </Typography>
             <ul className={styles.recommendedList}>
-                {RECOMMENDED_ITEMS.map(({ label, href, prefix, suffix }, i) => (
-                  <li key={i}>
-                    <Typography variant="label/medium" component="span">
+              {RECOMMENDED_ITEMS.map(({ label, href, prefix, suffix }, i) => (
+                <li key={i}>
+                  <Typography
+                    variant="label/medium"
+                    component="span"
+                    className={styles.recommendedItem}
+                  >
                     {prefix}
-                    <Link href={href} className="link">
+                    <Link href={href} className="link" target="_blank" rel="noopener noreferrer">
                       {label}
                     </Link>
                     {suffix}
-                    </Typography>
-
-                  </li>
-                ))}
+                  </Typography>
+                </li>
+              ))}
             </ul>
           </Card>
           <Card gap={1.5} className={`${styles.card} ${styles.onboarding}`}>
