@@ -18,7 +18,13 @@ import {
 import { UpdateUser } from '../api/validators/UserControllerRequests';
 import { auth, adminAuth } from '../FirebaseAuth';
 
-import { ApplicationDecision, ApplicationStatus, FormType, House, UserAccessType } from '../types/Enums';
+import {
+  ApplicationDecision,
+  ApplicationStatus,
+  FormType,
+  House,
+  UserAccessType,
+} from '../types/Enums';
 import {
   ReviewAssignment,
   ReviewerOverviewResponse,
@@ -62,37 +68,47 @@ export class UserService {
     return this.transactionsManager.readWrite(async (entityManager) => {
       const userRepository = Repositories.user(entityManager);
 
-      // can only update decision of users that are not submitted, withdrawn, or confirmed
+      // can only change status of users who are pending review or confirmation
       const users = await userRepository.findBy({
         applicationStatus: In([
           ApplicationStatus.SUBMITTED,
           ApplicationStatus.ACCEPTED,
           ApplicationStatus.REJECTED,
           ApplicationStatus.WAITLISTED,
+          ApplicationStatus.ACCEPTED_FROM_WAITLIST,
         ]),
       });
 
-      const decisionToStatusMap = {
-        [ApplicationDecision.ACCEPT]: ApplicationStatus.ACCEPTED,
-        [ApplicationDecision.REJECT]: ApplicationStatus.REJECTED,
-        [ApplicationDecision.WAITLIST]: ApplicationStatus.WAITLISTED,
-        [ApplicationDecision.NO_DECISION]: null,
-      };
+      function getNewStatus(
+        currentStatus: ApplicationStatus,
+        decision: ApplicationDecision,
+      ): ApplicationStatus {
+        switch (decision) {
+          case ApplicationDecision.ACCEPT:
+            if (currentStatus === ApplicationStatus.WAITLISTED) {
+              return ApplicationStatus.ACCEPTED_FROM_WAITLIST;
+            }
+            return ApplicationStatus.ACCEPTED;
+          case ApplicationDecision.REJECT:
+            return ApplicationStatus.REJECTED;
+          case ApplicationDecision.WAITLIST:
+            return ApplicationStatus.WAITLISTED;
+          case ApplicationDecision.NO_DECISION:
+            return currentStatus;
+        }
+      }
 
-      // get only the users that will have a different status
-      const usersToUpdate = users.filter((user) => {
-        const newStatus =
-          decisionToStatusMap[user.applicationDecision] ??
-          user.applicationStatus;
-        return newStatus != user.applicationStatus;
-      });
-
-      // update the status
-      usersToUpdate.forEach((user) => {
-        user.applicationStatus =
-          decisionToStatusMap[user.applicationDecision] ??
-          user.applicationStatus;
-      });
+      // get and update only the users that will have a different status
+      let usersToUpdate = [];
+      for (let user of users) {
+        const newStatus = getNewStatus(
+          user.applicationStatus,
+          user.applicationDecision,
+        );
+        if (newStatus === user.applicationStatus) continue;
+        user.applicationStatus = newStatus;
+        usersToUpdate.push(user);
+      }
 
       const updatedUsers = userRepository.save(usersToUpdate);
       return updatedUsers;
@@ -104,7 +120,12 @@ export class UserService {
       const userRepository = Repositories.user(entityManager);
 
       const result = await userRepository.update(
-        { applicationStatus: ApplicationStatus.ACCEPTED },
+        {
+          applicationStatus: In([
+            ApplicationStatus.ACCEPTED,
+            ApplicationStatus.ACCEPTED_FROM_WAITLIST,
+          ]),
+        },
         { applicationStatus: ApplicationStatus.DEADLINE_PASSED },
       );
 
@@ -629,7 +650,10 @@ export class UserService {
     });
   }
 
-  public async addHousePointsToUser(id: string, points: number): Promise<UserModel> {
+  public async addHousePointsToUser(
+    id: string,
+    points: number,
+  ): Promise<UserModel> {
     return this.transactionsManager.readWrite(async (entityManager) => {
       const userRepository = Repositories.user(entityManager);
       const user = await Repositories.user(entityManager).findById(id);
