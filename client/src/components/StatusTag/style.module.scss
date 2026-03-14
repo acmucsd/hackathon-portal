@@ -4,6 +4,7 @@
   line-height: 0.75rem;
   padding: 0.5rem 0.75rem;
   border-radius: 0.5rem;
+  white-space: nowrap;
 
   &.NOT_SUBMITTED {
     color: #8d0d25;
@@ -18,6 +19,7 @@
   }
 
   &.ACCEPTED,
+  &.ACCEPTED_FROM_WAITLIST,
   &.ACCEPT,
   &.INFO,
   &.SOCIAL {
@@ -33,6 +35,7 @@
   }
 
   &.REJECTED,
+  &.DEADLINE_PASSED,
   &.REJECT {
     color: #8d0d25;
     background-color: #fad5dc;
