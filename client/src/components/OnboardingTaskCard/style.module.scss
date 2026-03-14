@@ -12,6 +12,7 @@
   background-color: transparent;
   text-align: center;
   width: 100%;
+  max-width: 300px;
 
   @media screen and (max-width: vars.$breakpoint-md) {
     min-width: 250px;

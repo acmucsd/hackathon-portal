@@ -144,6 +144,9 @@
     grid-area: qr;
   }
 
+  .recommended {
+    grid-area: recommended;
+  }
   .onboarding {
     grid-area: onboarding;
   }
@@ -229,6 +232,20 @@
     filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.6));
   }
 
+  .recommendedList {
+    margin: 0;
+    padding: 0 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .recommendedItem {
+    @media screen and (max-width: vars.$breakpoint-md) {
+      font-size: 1.15rem !important;
+    }
+  }
+
   .banner2 {
     grid-area: banner2;
     margin-top: 2rem;
@@ -251,8 +268,9 @@
   grid-template-areas:
     'banner banner'
     'status timeline'
+    'qr recommended'
     'onboarding onboarding'
-    'qr faq'
+    'faq faq'
     'banner2 banner2';
   grid-template-columns: 1fr 1fr;
 }

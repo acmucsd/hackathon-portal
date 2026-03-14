@@ -53,14 +53,4 @@ export const ONBOARDING_TASKS: OnboardingTask[] = [
     formType: FormType.LIABILITY_WAIVER,
     required: true,
   },
-  {
-    image: Crest,
-    imageAlt: 'DiamondHacks Crest',
-    title: 'Fill out the Travel Reimbursement Form',
-    subtitle: 'This allows us to reimburse you for travel expenses related to the event.',
-    href: 'https://forms.gle/jCheppRDgi5NYhvQ6',
-    buttonLabel: 'Complete',
-    variant: 'secondary',
-    openNewTab: true,
-  },
 ];

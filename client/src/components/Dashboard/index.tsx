@@ -22,6 +22,7 @@ import Modal from '../Modal';
 import { useState } from 'react';
 import { addToGoogleWallet } from './wallet';
 import showToast from '@/lib/showToast';
+import { RECOMMENDED_ITEMS } from './recommendedItems';
 
 /** Dates are in local time (America/Los_Angeles) */
 export interface Deadlines {
@@ -114,6 +115,28 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
                 </Button>
               </>
             )}
+          </Card>
+          <Card gap={1.5} className={`${styles.card} ${styles.recommended}`}>
+            <Typography variant="headline/heavy/small" component="h2">
+              Recommended Items
+            </Typography>
+            <ul className={styles.recommendedList}>
+              {RECOMMENDED_ITEMS.map(({ label, href, prefix, suffix }, i) => (
+                <li key={i}>
+                  <Typography
+                    variant="label/medium"
+                    component="span"
+                    className={styles.recommendedItem}
+                  >
+                    {prefix}
+                    <Link href={href} className="link" target="_blank" rel="noopener noreferrer">
+                      {label}
+                    </Link>
+                    {suffix}
+                  </Typography>
+                </li>
+              ))}
+            </ul>
           </Card>
           <Card gap={1.5} className={`${styles.card} ${styles.onboarding}`}>
             <Typography variant="headline/heavy/small" component="h2">
