@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import styles from './style.module.scss';
 
 import ApplicationView from '@/components/admin/ApplicationView';
@@ -9,7 +9,7 @@ import ApplicationReviewPanel from '@/components/ApplicationReviewPanel';
 import { ApplicationDecision, ApplicationStatus } from '@/lib/types/enums';
 import showToast from '@/lib/showToast';
 import { AdminAPI } from '@/lib/api';
-import { reportError } from '@/lib/utils';
+import { reportError, sortRevieweeProfiles } from '@/lib/utils';
 import type {
   PublicProfile,
   RevieweeProfile,
@@ -122,6 +122,7 @@ export default function ApplicationReviewClient({
   currentUser,
 }: Props) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const isNonUcsd = (fetchedApplication.data as Application)?.university !== UCSD;
 
   const [assignedApplicants, setAssignedApplicants] =
@@ -154,28 +155,7 @@ export default function ApplicationReviewClient({
     const applicantsToSort =
       assignedApplicants.length > 0 ? assignedApplicants : [fetchedApplication.user];
 
-    const parseCreatedAt = (value?: string | Date) => {
-      if (!value) return Number.POSITIVE_INFINITY;
-      const time = new Date(value).getTime();
-      return Number.isNaN(time) ? Number.POSITIVE_INFINITY : time;
-    };
-
-    return [...applicantsToSort].sort((a, b) => {
-      const createdAtDiff = parseCreatedAt(a.createdAt) - parseCreatedAt(b.createdAt);
-      if (createdAtDiff !== 0) return createdAtDiff;
-
-      const lastNameDiff = a.lastName.localeCompare(b.lastName, undefined, {
-        sensitivity: 'base',
-      });
-      if (lastNameDiff !== 0) return lastNameDiff;
-
-      const firstNameDiff = a.firstName.localeCompare(b.firstName, undefined, {
-        sensitivity: 'base',
-      });
-      if (firstNameDiff !== 0) return firstNameDiff;
-
-      return a.id.localeCompare(b.id);
-    });
+    return [...applicantsToSort].sort(sortRevieweeProfiles);
   }, [assignedApplicants, fetchedApplication.user]);
 
   const currentIndex = useMemo(() => {
@@ -190,9 +170,15 @@ export default function ApplicationReviewClient({
     (index: number) => {
       const applicant = applicants[index];
       if (!applicant) return;
-      router.push(`/applicationView/${applicant.id}`);
+      const status = searchParams.get('status');
+      const q = searchParams.get('q');
+      const qs =
+        status !== null
+          ? `?status=${encodeURIComponent(status)}&q=${encodeURIComponent(q ?? '')}`
+          : '';
+      router.push(`/applicationView/${applicant.id}${qs}`);
     },
-    [applicants, router]
+    [applicants, router, searchParams]
   );
 
   const onPrev = () => goToApplicant(Math.max(0, currentIndex - 1));
