@@ -11,17 +11,19 @@ export const dateFormat = new Intl.DateTimeFormat('en-US', {
 interface TimelineItemProps {
   /** In local time (America/Los_Angeles) */
   date: Date;
+  ongoing?: boolean;
   first?: boolean;
   nextUpcoming?: boolean;
 }
 
 const TimelineItem = ({
   date,
+  ongoing = false,
   first = false,
   nextUpcoming = false,
   children,
 }: PropsWithChildren<TimelineItemProps>) => {
-  const passed = new Date() >= date;
+  const passed = !ongoing && new Date() >= date;
 
   return (
     <div className={`${styles.item} ${nextUpcoming ? styles.nextUpcoming : ''}`}>
@@ -29,7 +31,7 @@ const TimelineItem = ({
         className={`${styles.circle} ${passed ? styles.complete : ''} ${
           first ? '' : styles.hasLine
         }`}
-        aria-label={passed ? 'Date has passed.' : 'Upcoming date.'}
+        aria-label={passed ? 'Date has passed.' : ongoing ? 'Ongoing date.' : 'Upcoming date.'}
       >
         {passed ? <CheckIcon aria-hidden /> : null}
       </div>

@@ -53,14 +53,19 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
     completedFormTypes.has(FormType.LIABILITY_WAIVER) &&
     completedFormTypes.has(FormType.PHOTO_RELEASE);
 
-  const timelineItems: [Date, string][] = [
+  const waitlistOngoing = new Date() >= timeline.waitlist && new Date() < timeline.hackathon;
+
+  const timelineItems: [Date, string, boolean?][] = [
     [timeline.application, 'Application Deadline'],
     [timeline.decisions, 'Decisions Released'],
     [timeline.acceptance, 'RSVP Deadline'],
-    [timeline.waitlist, 'Rolling Waitlist RSVP'],
+    [timeline.waitlist, 'Rolling Waitlist RSVP', waitlistOngoing],
     [timeline.hackathon, 'Hackathon Day!'],
   ];
-  const nextUpcomingIndex = timelineItems.findIndex(([date]) => new Date() < date);
+  const nextUpcomingIndex = timelineItems.findIndex(([date, _label, ongoing]) => {
+    if (ongoing) return true;
+    return new Date() < date;
+  });
 
   return (
     <div
@@ -174,10 +179,11 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
           Timeline
         </Typography>
         <div className={styles.timelineItemWrapper}>
-          {timelineItems.map(([date, label], i) => (
+          {timelineItems.map(([date, label, ongoing], i) => (
             <TimelineItem
               key={i}
               date={date}
+              ongoing={ongoing}
               first={i === 0}
               nextUpcoming={i === nextUpcomingIndex}
             >
