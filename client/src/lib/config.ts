@@ -41,6 +41,9 @@ const config = {
         updateEvent: '/event',
         deleteEvent: '/event',
       },
+      leaderboard: {
+        leaderboard: '/leaderboard',
+      },
     },
   },
 };
