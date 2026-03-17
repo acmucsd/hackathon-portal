@@ -2,14 +2,9 @@ import Typography from '../Typography';
 import { Deadlines } from '../Dashboard';
 import Button from '../Button';
 import styles from './style.module.scss';
+import { ApplicationStatus } from '@/lib/types/enums';
 
-export type Status =
-  | 'NOT_SUBMITTED'
-  | 'SUBMITTED'
-  | 'WITHDRAWN'
-  | 'ACCEPTED'
-  | 'REJECTED'
-  | 'CONFIRMED';
+export type Status = ApplicationStatus;
 
 export const dateFormat = new Intl.DateTimeFormat('en-US', {
   timeZone: 'America/Los_Angeles',
@@ -22,7 +17,7 @@ interface DashboardStatusProps {
 }
 
 const statusText = (status: string) => {
-  const formatted = status.replace('_', ' ').toLowerCase();
+  const formatted = status.replace(/_/g, ' ').toLowerCase();
   return formatted.charAt(0).toUpperCase() + formatted.slice(1);
 };
 
@@ -31,8 +26,19 @@ const getStatusDescription = (timeline: Deadlines, status: Status) => {
     case 'SUBMITTED':
       return 'Congrats on applying to DiamondHacks!';
     case 'ACCEPTED':
+      return 'Congrats on your acceptance to DiamondHacks! Make sure to fill out the required forms in the Onboarding Tasks section to secure your spot at the event. You must fill out at least the RSVP form by 3/13 to be confirmed for the event or your spot will be forfeited to people on the waitlist.';
+    case 'ACCEPTED_FROM_WAITLIST':
+      return 'A spot opened up and you have been accepted from the waitlist! Please complete the required onboarding forms as soon as possible to secure your place at the event.';
     case 'CONFIRMED':
-      return 'Congrats on your acceptance to DiamondHacks! Make sure to fill out your waivers on the Profile page and the RSVP form sent to your email!';
+      return "Your place at DiamondHacks has been confirmed! 🪄✨ We're thrilled to welcome you to a weekend of creativity, innovation, and a little bit of magic on April 4–5.\n\nGather your ideas, prepare your spells (or code), and get ready to collaborate with fellow wizards and innovators as you build something extraordinary. We can't wait to see what you'll create when the magic begins!";
+    case 'DEADLINE_PASSED':
+      return 'Your acceptance window has passed, and your spot has been released to applicants on the waitlist.';
+    case 'WAITLISTED':
+      return 'You have been waitlisted for DiamondHacks. We will notify you if a spot becomes available starting 3/14.';
+    case 'REJECTED':
+      return 'Thank you for applying to DiamondHacks! Unfortunately, we are unable to offer you a spot this year. We hope to see you next year!';
+    case 'WITHDRAWN':
+      return 'Your application has been withdrawn. If this was a mistake, please contact the organizers.';
     default:
       if (new Date() < timeline.application) {
         return 'Our records have indicated that you have not started on your application. Click below to go on your hacker journey!';
@@ -58,9 +64,7 @@ const DashboardStatus = ({ status, timeline }: DashboardStatusProps) => {
         </Typography>
       ) : null}
 
-      {status === 'CONFIRMED' ? (
-        <Button href="/confirmation">View Confirmation</Button>
-      ) : status === 'NOT_SUBMITTED' ? (
+      {status === 'NOT_SUBMITTED' ? (
         new Date() < timeline.application ? (
           <Button href="/apply">Apply Now</Button>
         ) : null

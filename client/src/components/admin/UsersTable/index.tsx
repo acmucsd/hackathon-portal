@@ -34,7 +34,7 @@ const UsersTable = ({
     'Status',
     'School',
     'Interest Form?',
-    'Submission',
+    'Notes',
     ...(superAdmin ? ['Assigned Reviewer'] : []),
     'Action',
   ];

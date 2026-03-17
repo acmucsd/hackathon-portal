@@ -6,18 +6,23 @@
   grid-template-areas:
     'banner banner'
     'status timeline'
-    'faq faq';
+    'onboarding onboarding'
+    'faq faq'
+    'banner2 banner2';
   grid-template-columns: 1fr 1fr;
-  gap: 3.5rem;
+  gap: 1rem;
   align-items: stretch;
 
   @media screen and (max-width: vars.$breakpoint-md) {
     display: flex;
     flex-direction: column;
     gap: vars.$side-padding-mobile;
+    align-items: stretch;
   }
 
   .card {
+    padding: 2rem;
+
     animation: card-in 0.5s backwards;
 
     @for $i from 1 through 4 {
@@ -42,12 +47,16 @@
     grid-area: banner;
     position: relative;
     z-index: 0;
-    height: 350px;
+    height: 250px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    overflow: hidden;
+    overflow: visible;
+
+    @media screen and (max-width: vars.$breakpoint-md) {
+      height: 350px;
+    }
 
     .title {
       background-image: linear-gradient(
@@ -65,7 +74,6 @@
       background-size: 500%;
       animation: gradient-in 2.5s 0.5s both;
 
-      // Wrap each shadow in drop-shadow()
       $drop-shadows: ();
       @each $shadow in vars.$text-shadow {
         $drop-shadows: list.append($drop-shadows, drop-shadow(#{$shadow}));
@@ -85,16 +93,37 @@
     .subtitle {
       text-shadow: vars.$text-shadow;
       animation: fade-in 1s 1.5s backwards;
+
+      @media screen and (max-width: vars.$breakpoint-md) {
+        margin-bottom: 100px;
+      }
     }
 
     .bannerImage {
+      z-index: 10;
       position: absolute;
-      top: 0;
-      right: 0;
+      bottom: -4px;
+      right: 4%;
       z-index: -1;
       width: auto;
-      height: 100%;
+      height: 95%;
       animation: fade-in 3.5s 1.5s backwards;
+
+      @media screen and (max-width: vars.$breakpoint-lg) {
+        position: absolute;
+        left: 50.5%;
+        transform: translateX(-50%);
+        width: auto;
+        height: 55%;
+      }
+
+      @media screen and (max-width: vars.$breakpoint-md) {
+        height: 45%;
+      }
+
+      @media screen and (max-width: vars.$breakpoint-sm) {
+        height: 35%;
+      }
     }
 
     @keyframes fade-in {
@@ -111,6 +140,17 @@
     grid-area: status;
   }
 
+  .qr {
+    grid-area: qr;
+  }
+
+  .recommended {
+    grid-area: recommended;
+  }
+  .onboarding {
+    grid-area: onboarding;
+  }
+
   .timeline {
     grid-area: timeline;
 
@@ -121,26 +161,139 @@
       position: relative;
       z-index: 0;
     }
-
-    .onboardingChecklist {
-      padding-left: 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .link {
-      text-decoration: underline;
-      color: vars.$blue-4;
-    }
   }
 
   .faq {
     grid-area: faq;
+    position: relative;
+  }
+
+  .sunGodImage {
+    position: absolute;
+    bottom: -24px;
+    right: -56px;
+    width: 150px;
+    height: auto;
+
+    @media screen and (max-width: vars.$breakpoint-lg) {
+      width: 100px;
+    }
+
+    @media screen and (max-width: vars.$breakpoint-md) {
+      position: relative;
+      left: 53%;
+      transform: translateX(-50%);
+      width: 65%;
+      bottom: -60px;
+    }
+  }
+
+  .stillHaveQuestions {
+    width: calc(100% - 200px);
+
+    @media screen and (max-width: vars.$breakpoint-md) {
+      width: 100%;
+    }
   }
 
   .bigQr {
     max-width: unset;
     width: 100%;
+  }
+
+  .qrText {
+    text-align: center;
+  }
+
+  .qrWrapper {
+    position: relative;
+    width: fit-content;
+    margin: 0 auto;
+  }
+
+  .qrBlurred {
+    filter: brightness(0.4) blur(4px);
+    user-select: none;
+    pointer-events: none;
+  }
+
+  .qrOverlay {
+    position: absolute;
+    inset: 0;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .lockIcon {
+    width: 2.5rem;
+    height: auto;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.6));
+  }
+
+  .recommendedList {
+    margin: 0;
+    padding: 0 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .recommendedItem {
+    @media screen and (max-width: vars.$breakpoint-md) {
+      font-size: 1.15rem !important;
+    }
+  }
+
+  .banner2 {
+    grid-area: banner2;
+    margin-top: 2rem;
+    width: 100%;
+    height: auto;
+  }
+}
+
+.notConfirmed {
+  grid-template-areas:
+    'banner banner'
+    'status timeline'
+    'faq faq'
+    'banner2 banner2';
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+}
+
+.confirmedContainer {
+  grid-template-areas:
+    'banner banner'
+    'status timeline'
+    'qr recommended'
+    'onboarding onboarding'
+    'faq faq'
+    'banner2 banner2';
+  grid-template-columns: 1fr 1fr;
+}
+
+.onboardingTaskGrid {
+  display: flex;
+  justify-content: flex-start;
+  overflow-x: auto;
+  gap: 1rem;
+  scrollbar-color: vars.$card-stroke vars.$card-bg;
+
+  @supports selector(::-webkit-scrollbar) {
+    scrollbar-color: auto;
+  }
+
+  &::-webkit-scrollbar {
+    background-color: vars.$card-bg;
+    border-radius: 3rem;
+    height: 0.5rem;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: vars.$card-stroke;
+    border-radius: 3rem;
   }
 }

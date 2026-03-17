@@ -14,6 +14,8 @@ export enum ApplicationStatus {
   NOT_SUBMITTED = 'NOT_SUBMITTED',
   SUBMITTED = 'SUBMITTED',
   WITHDRAWN = 'WITHDRAWN',
+  DEADLINE_PASSED = 'DEADLINE_PASSED',
+  ACCEPTED_FROM_WAITLIST = 'ACCEPTED_FROM_WAITLIST',
 }
 
 export enum ApplicationDecision {
@@ -27,6 +29,7 @@ export enum FormType {
   APPLICATION = 'APPLICATION',
   LIABILITY_WAIVER = 'LIABILITY_WAIVER',
   PHOTO_RELEASE = 'PHOTO_RELEASE',
+  RSVP = 'RSVP',
 }
 
 export enum YesOrNo {
@@ -56,4 +59,12 @@ export enum EventType {
 export enum Day {
   SATURDAY = 'SATURDAY',
   SUNDAY = 'SUNDAY',
+}
+
+export enum House {
+  GEISEL = 'GEISEL',
+  SUN_GOD = 'SUN_GOD',
+  RACCOON = 'RACCOON',
+  TRITON = 'TRITON',
+  UNASSIGNED = 'UNASSIGNED',
 }

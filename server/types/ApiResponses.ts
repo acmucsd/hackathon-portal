@@ -6,6 +6,7 @@ import {
   UserAccessType,
   EventType,
   Day,
+  House,
 } from './Enums';
 
 // User responses
@@ -13,6 +14,8 @@ export interface PublicProfile {
   id: string;
   firstName: string;
   lastName: string;
+  house: House;
+  points: number;
 }
 
 export interface PrivateProfile extends PublicProfile {
@@ -102,6 +105,7 @@ export interface PublicEvent {
   startTime: string;
   endTime: string;
   published: boolean;
+  pointValue: number;
 }
 
 export interface CreateEventResponse extends ApiResponse {
@@ -135,6 +139,10 @@ export interface UpdateApplicationDecisionResponse extends ApiResponse {
   user: HiddenProfile;
 }
 
+export interface SetAcceptanceDeadlinePassedResponse extends ApiResponse {
+  updatedCount: number;
+}
+
 export interface ForgotPasswordResponse extends ApiResponse {}
 
 export interface PublicAttendance {
@@ -145,6 +153,7 @@ export interface PublicAttendance {
 
 export interface AttendEventResponse extends ApiResponse {
   event: PublicEvent;
+  user: PublicProfile;
 }
 
 export interface ReviewAssignment {
@@ -224,3 +233,7 @@ export interface ReviewerOverviewResponse {
 export interface GetReviewerOverviewResponse extends ApiResponse {
   dataToReturn: ReviewerOverviewResponse;
 }
+
+// House responses
+export type HouseHeadcountsResponse = Record<House, number>;
+export type HousePointsResponse = Record<House, number>;

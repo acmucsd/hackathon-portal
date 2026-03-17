@@ -32,7 +32,7 @@ const UserRow = ({ user, superAdmin, filterCriteria }: UserRowProps) => {
       <TableCell>
         <InterestFormTag status={user.didInterestForm ? 'YES' : 'NO'} />
       </TableCell>
-      <TableCell className={styles.dateField}>{formattedDate}</TableCell>
+      <TableCell className={styles.notesField}>{user.reviewerComments}</TableCell>
       {superAdmin && (
         <TableCell>
           {user.reviewer ? `${user.reviewer.firstName} ${user.reviewer.lastName}` : 'Unassigned'}

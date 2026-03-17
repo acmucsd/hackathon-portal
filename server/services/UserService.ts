@@ -18,7 +18,13 @@ import {
 import { UpdateUser } from '../api/validators/UserControllerRequests';
 import { auth, adminAuth } from '../FirebaseAuth';
 
-import { ApplicationDecision, ApplicationStatus, FormType, UserAccessType } from '../types/Enums';
+import {
+  ApplicationDecision,
+  ApplicationStatus,
+  FormType,
+  House,
+  UserAccessType,
+} from '../types/Enums';
 import {
   ReviewAssignment,
   ReviewerOverviewResponse,
@@ -27,7 +33,9 @@ import {
 } from '../types/ApiResponses';
 import { ResponseModel } from '../models/ResponseModel';
 import { Application } from '../types/Application';
+import { HouseService } from './HouseService';
 
+import { In } from 'typeorm';
 
 /** Internal: includes acceptedWithNotNullUniversity for computation; omitted from final output. */
 interface ReviewerOverviewReviewerInternal extends ReviewerOverviewReviewer {
@@ -36,9 +44,15 @@ interface ReviewerOverviewReviewerInternal extends ReviewerOverviewReviewer {
 
 @Service()
 export class UserService {
+  private houseService: HouseService;
+
   private transactionsManager: TransactionsManager;
 
-  constructor(transactionsManager: TransactionsManager) {
+  constructor(
+    houseService: HouseService,
+    transactionsManager: TransactionsManager,
+  ) {
+    this.houseService = houseService;
     this.transactionsManager = transactionsManager;
   }
 
@@ -50,18 +64,93 @@ export class UserService {
     return user;
   }
 
+  public async releaseApplicationDecisions(): Promise<UserModel[]> {
+    return this.transactionsManager.readWrite(async (entityManager) => {
+      const userRepository = Repositories.user(entityManager);
+
+      // can only change status of users who are pending review or confirmation
+      const users = await userRepository.findBy({
+        applicationStatus: In([
+          ApplicationStatus.SUBMITTED,
+          ApplicationStatus.ACCEPTED,
+          ApplicationStatus.REJECTED,
+          ApplicationStatus.WAITLISTED,
+          ApplicationStatus.ACCEPTED_FROM_WAITLIST,
+        ]),
+      });
+
+      function getNewStatus(
+        currentStatus: ApplicationStatus,
+        decision: ApplicationDecision,
+      ): ApplicationStatus {
+        switch (decision) {
+          case ApplicationDecision.ACCEPT:
+            if (currentStatus === ApplicationStatus.WAITLISTED) {
+              return ApplicationStatus.ACCEPTED_FROM_WAITLIST;
+            }
+            return ApplicationStatus.ACCEPTED;
+          case ApplicationDecision.REJECT:
+            return ApplicationStatus.REJECTED;
+          case ApplicationDecision.WAITLIST:
+            return ApplicationStatus.WAITLISTED;
+          case ApplicationDecision.NO_DECISION:
+            return currentStatus;
+        }
+      }
+
+      // get and update only the users that will have a different status
+      let usersToUpdate = [];
+      for (let user of users) {
+        const newStatus = getNewStatus(
+          user.applicationStatus,
+          user.applicationDecision,
+        );
+        if (newStatus === user.applicationStatus) continue;
+        user.applicationStatus = newStatus;
+        usersToUpdate.push(user);
+      }
+
+      const updatedUsers = userRepository.save(usersToUpdate);
+      return updatedUsers;
+    });
+  }
+
+  public async setAcceptedUsersToDeadlinePassed(): Promise<number> {
+    return this.transactionsManager.readWrite(async (entityManager) => {
+      const userRepository = Repositories.user(entityManager);
+
+      const result = await userRepository.update(
+        {
+          applicationStatus: In([
+            ApplicationStatus.ACCEPTED,
+            ApplicationStatus.ACCEPTED_FROM_WAITLIST,
+          ]),
+        },
+        { applicationStatus: ApplicationStatus.DEADLINE_PASSED },
+      );
+
+      return result.affected ?? 0;
+    });
+  }
+
   public async findByIdWithReviewerRelation(id: string): Promise<UserModel> {
     // same as findById() but includes reviewer / reviewee links
     const user = await this.transactionsManager.readOnly(
-      async (entityManager) => Repositories.user(entityManager).findByIdWithReviewerRelation(id),
+      async (entityManager) =>
+        Repositories.user(entityManager).findByIdWithReviewerRelation(id),
     );
     if (!user) throw new NotFoundError('User not found');
     return user;
   }
 
-  public async findByIdWithLastDecisionUpdatedByRelation(id: string): Promise<UserModel> {
+  public async findByIdWithLastDecisionUpdatedByRelation(
+    id: string,
+  ): Promise<UserModel> {
     const user = await this.transactionsManager.readOnly(
-      async (entityManager) => Repositories.user(entityManager).findByIdWithLastDecisionUpdatedByRelation(id),
+      async (entityManager) =>
+        Repositories.user(
+          entityManager,
+        ).findByIdWithLastDecisionUpdatedByRelation(id),
     );
     if (!user) throw new NotFoundError('User not found');
     return user;
@@ -313,19 +402,24 @@ export class UserService {
     return this.transactionsManager.readWrite(async (entityManager) => {
       const userRepository = Repositories.user(entityManager);
       const responseRepository = Repositories.response(entityManager);
-      const interestFormResponseRepository = Repositories.interestFormResponse(entityManager);
+      const interestFormResponseRepository =
+        Repositories.interestFormResponse(entityManager);
 
       const newAssignments: ReviewAssignment[] = [];
 
-      const userIds = new Set([
-        ...assignmentsRequest.map(job => job.applicantId),
-        ...assignmentsRequest.map(job => job.reviewerId),
-      ].filter((userId): userId is string => userId != null));
+      const userIds = new Set(
+        [
+          ...assignmentsRequest.map((job) => job.applicantId),
+          ...assignmentsRequest.map((job) => job.reviewerId),
+        ].filter((userId): userId is string => userId != null),
+      );
 
       // map user ID to UserModel
-      const users = await userRepository.findByIdsWithReviewerRelation([...userIds]);
+      const users = await userRepository.findByIdsWithReviewerRelation([
+        ...userIds,
+      ]);
       const userMap: Record<string, UserModel> = {};
-      users.forEach(user => {
+      users.forEach((user) => {
         if (user) userMap[user.id] = user;
       });
 
@@ -335,15 +429,19 @@ export class UserService {
       // we only do this for didInterestForm calculation
 
       // map user ID to Response
-      const responses = await responseRepository.findResponsesForUsersByType([...userIds], FormType.APPLICATION);
+      const responses = await responseRepository.findResponsesForUsersByType(
+        [...userIds],
+        FormType.APPLICATION,
+      );
       const responseMap: Record<string, ResponseModel> = {};
-      responses.forEach(res => {
+      responses.forEach((res) => {
         if (res) responseMap[res.user.id] = res;
       });
 
-      const allInterests = await interestFormResponseRepository.findAllInterest();
-      const allEmailInterests = new Set(allInterests.map(res => res.email));
-      const allPhoneInterests = new Set(allInterests.map(res => res.phone));
+      const allInterests =
+        await interestFormResponseRepository.findAllInterest();
+      const allEmailInterests = new Set(allInterests.map((res) => res.email));
+      const allPhoneInterests = new Set(allInterests.map((res) => res.phone));
 
       const editedUsers: UserModel[] = [];
       assignmentsRequest.forEach((assignment) => {
@@ -351,7 +449,9 @@ export class UserService {
         const revieweeResponse = responseMap[assignment.applicantId];
         if (!reviewee || !revieweeResponse) return;
 
-        const reviewer = assignment.reviewerId ? userMap[assignment.reviewerId] : null;
+        const reviewer = assignment.reviewerId
+          ? userMap[assignment.reviewerId]
+          : null;
 
         // ONLY mutate the owning side
         reviewee.reviewer = reviewer;
@@ -392,15 +492,17 @@ export class UserService {
     Note 2: not the most efficient way since it does 2 user lookups (one here, one in postAssignments), but its ok
     */
 
-    const users = await this.transactionsManager.readOnly(async (entityManager) =>
-      Repositories.user(entityManager).findAllWithReviewerRelation(),
+    const users = await this.transactionsManager.readOnly(
+      async (entityManager) =>
+        Repositories.user(entityManager).findAllWithReviewerRelation(),
     );
 
     const admins = users.filter((user) => user.isRegularAdmin());
-    const applicantsToAssign = users.filter((user) =>
-      !user.isAdmin() && // normal applicant
-      user.applicationDecision == ApplicationDecision.NO_DECISION && // not already reviewed
-      user.applicationStatus == ApplicationStatus.SUBMITTED, // submitted application
+    const applicantsToAssign = users.filter(
+      (user) =>
+        !user.isAdmin() && // normal applicant
+        user.applicationDecision == ApplicationDecision.NO_DECISION && // not already reviewed
+        user.applicationStatus == ApplicationStatus.SUBMITTED, // submitted application
     );
 
     const arr: ReviewAssignmentJob[] = [];
@@ -416,17 +518,18 @@ export class UserService {
     return this.assignReviews(arr);
   }
 
-
   // admin are reviewers
-  private static readonly UCSD_UNIVERSITY = 'University of California, San Diego';
+  private static readonly UCSD_UNIVERSITY =
+    'University of California, San Diego';
 
   // 1, Find all reviewers
   // 2, Find the users (applicants) each reviewer is responsible for
   // 3, Return the ApplicationDecision status of the users each reviewer reviews
 
   public async getReviewerOverview(): Promise<ReviewerOverviewResponse> {
-    const rows = await this.transactionsManager.readOnly(async (entityManager) =>
-    entityManager.query(`
+    const rows = await this.transactionsManager.readOnly(
+      async (entityManager) =>
+        entityManager.query(`
       SELECT DISTINCT ON (r.id, a.id)
         r.id          AS reviewer_id,
         r."firstName" AS reviewer_first_name,
@@ -444,92 +547,99 @@ export class UserService {
       WHERE r."accessType" = 'ADMIN'
       ORDER BY r.id, a.id, res."updatedAt" DESC NULLS LAST
     `),
-  );
+    );
 
-  const map = new Map<string, ReviewerOverviewReviewerInternal>();
+    const map = new Map<string, ReviewerOverviewReviewerInternal>();
 
-  for (const row of rows) {
-    const reviewerId = row.reviewer_id;
+    for (const row of rows) {
+      const reviewerId = row.reviewer_id;
 
-    if (!map.has(reviewerId)) {
-      map.set(reviewerId, {
-        reviewerId,
-        reviewerFirstName: row.reviewer_first_name,
-        reviewerLastName: row.reviewer_last_name,
-        applicants: [],
-        total: 0,
-        accept: 0,
-        reject: 0,
-        waitlist: 0,
-        noDecision: 0,
-        acceptedNonUcsdPercentage: null,
-        acceptedWithNotNullUniversity: 0,
-        acceptedNonUcsd: 0,
-      });
-    }
+      if (!map.has(reviewerId)) {
+        map.set(reviewerId, {
+          reviewerId,
+          reviewerFirstName: row.reviewer_first_name,
+          reviewerLastName: row.reviewer_last_name,
+          applicants: [],
+          total: 0,
+          accept: 0,
+          reject: 0,
+          waitlist: 0,
+          noDecision: 0,
+          acceptedNonUcsdPercentage: null,
+          acceptedWithNotNullUniversity: 0,
+          acceptedNonUcsd: 0,
+        });
+      }
 
-    if (row.applicant_id) {
-      const reviewer = map.get(reviewerId)!;
+      if (row.applicant_id) {
+        const reviewer = map.get(reviewerId)!;
 
-      reviewer.applicants.push({
-        userId: row.applicant_id,
-        firstName: row.applicant_first_name,
-        lastName: row.applicant_last_name,
-        applicationDecision: row.applicationDecision,
-      });
+        reviewer.applicants.push({
+          userId: row.applicant_id,
+          firstName: row.applicant_first_name,
+          lastName: row.applicant_last_name,
+          applicationDecision: row.applicationDecision,
+        });
 
-      reviewer.total++;
+        reviewer.total++;
 
-      switch (row.applicationDecision) {
-        case 'ACCEPT':
-          reviewer.accept++;
-          if (row.university != null && String(row.university).trim() !== '') {
-            reviewer.acceptedWithNotNullUniversity++;
-            if (row.university !== UserService.UCSD_UNIVERSITY) {
-              reviewer.acceptedNonUcsd++;
+        switch (row.applicationDecision) {
+          case 'ACCEPT':
+            reviewer.accept++;
+            if (
+              row.university != null &&
+              String(row.university).trim() !== ''
+            ) {
+              reviewer.acceptedWithNotNullUniversity++;
+              if (row.university !== UserService.UCSD_UNIVERSITY) {
+                reviewer.acceptedNonUcsd++;
+              }
             }
-          }
-          break;
-        case 'REJECT':
-          reviewer.reject++;
-          break;
-        case 'WAITLIST':
-          reviewer.waitlist++;
-          break;
-        case 'NO_DECISION':
-        default:
-          reviewer.noDecision++;
-          break;
+            break;
+          case 'REJECT':
+            reviewer.reject++;
+            break;
+          case 'WAITLIST':
+            reviewer.waitlist++;
+            break;
+          case 'NO_DECISION':
+          default:
+            reviewer.noDecision++;
+            break;
+        }
       }
     }
-  }
 
-  const reviewers: ReviewerOverviewReviewer[] = Array.from(map.values()).map((r) => {
-    const acceptedNonUcsdPercentage =
-      r.acceptedWithNotNullUniversity > 0
-        ? Math.round((r.acceptedNonUcsd / r.acceptedWithNotNullUniversity) * 1000) / 10
-        : null;
+    const reviewers: ReviewerOverviewReviewer[] = Array.from(map.values()).map(
+      (r) => {
+        const acceptedNonUcsdPercentage =
+          r.acceptedWithNotNullUniversity > 0
+            ? Math.round(
+                (r.acceptedNonUcsd / r.acceptedWithNotNullUniversity) * 1000,
+              ) / 10
+            : null;
+        return {
+          reviewerId: r.reviewerId,
+          reviewerFirstName: r.reviewerFirstName,
+          reviewerLastName: r.reviewerLastName,
+          applicants: r.applicants,
+          total: r.total,
+          accept: r.accept,
+          reject: r.reject,
+          waitlist: r.waitlist,
+          noDecision: r.noDecision,
+          acceptedNonUcsd: r.acceptedNonUcsd,
+          acceptedNonUcsdPercentage,
+        };
+      },
+    );
+
     return {
-      reviewerId: r.reviewerId,
-      reviewerFirstName: r.reviewerFirstName,
-      reviewerLastName: r.reviewerLastName,
-      applicants: r.applicants,
-      total: r.total,
-      accept: r.accept,
-      reject: r.reject,
-      waitlist: r.waitlist,
-      noDecision: r.noDecision,
-      acceptedNonUcsd: r.acceptedNonUcsd,
-      acceptedNonUcsdPercentage,
+      reviewers,
     };
-  });
-
-  return {
-    reviewers,
-  };
   }
 
-    public async updateUserAccess(email: string, access: UserAccessType) {
+  public async updateUserAccess(email: string, access: UserAccessType) {
     return this.transactionsManager.readWrite(async (entityManager) => {
       const userRepository = Repositories.user(entityManager);
       const user = await userRepository.findByEmail(email);
@@ -539,7 +649,26 @@ export class UserService {
       return updatedUser;
     });
   }
+
+  public async addHousePointsToUser(
+    id: string,
+    points: number,
+  ): Promise<UserModel> {
+    return this.transactionsManager.readWrite(async (entityManager) => {
+      const userRepository = Repositories.user(entityManager);
+      const user = await Repositories.user(entityManager).findById(id);
+      if (!user) throw new NotFoundError('User not found');
+
+      user.points += points;
+
+      // assign house only if user still unassigned
+      if (user.house === House.UNASSIGNED) {
+        const leastHouse = await this.houseService.getLeastPopulated();
+        user.house = leastHouse;
+      }
+
+      const updatedUser = await userRepository.save(user);
+      return updatedUser;
+    });
+  }
 }
-
-
-

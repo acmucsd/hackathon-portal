@@ -36,7 +36,7 @@ const LiabilityForm = ({ accessToken }: LiabilityFormProps) => {
       showToast("Couldn't submit waiver", submittedWaiver.error);
       return;
     }
-    router.push('/profile');
+    router.push('/');
   };
   return (
     <Card gap={1.5} className={styles.container}>
@@ -46,8 +46,8 @@ const LiabilityForm = ({ accessToken }: LiabilityFormProps) => {
       </Typography>
       <Typography variant="body/medium">UNIVERSITY OF CALIFORNIA, San Diego</Typography>
       <Typography variant="body/medium">
-        <strong>Waiver:</strong> In return for being permitted to participate in DiamondHacks 2025
-        on April 5-6th, 2025 at UC San Diego (“The Activity”), including any associated use of the
+        <strong>Waiver:</strong> In return for being permitted to participate in DiamondHacks 2026
+        on April 4-5th, 2026 at UC San Diego (“The Activity”), including any associated use of the
         premises, facilities, staff, equipment, transportation, and services of the University, I,
         for myself, heirs, personal representatives, and assigns, do hereby release, waive,
         discharge, and promise not to sue The Regents of the University of California, the
@@ -63,7 +63,7 @@ const LiabilityForm = ({ accessToken }: LiabilityFormProps) => {
       </Typography>
       <Typography variant="body/medium">
         <strong>Description of the Activity (include date, time, location):</strong> Hackathon
-        Weekend, April 5-6 at UC San Diego 
+        Weekend, April 4-5 at UC San Diego 
       </Typography>
       <Typography variant="body/medium">
         <strong>Assumption of Risks:</strong> Participation in The Activity carries with it certain
@@ -71,7 +71,8 @@ const LiabilityForm = ({ accessToken }: LiabilityFormProps) => {
         specific risks vary from one activity to another, but the risks range from: 1) Minor
         injuries such as scratches, bruises, and sprains 2) Major injuries such as eye injury, joint
         or bone injuries, heart attacks, and concussions 3) Catastrophic injuries such as paralysis
-        and death.
+        and death. 4) Allergic reactions, ranging from mild symptoms to severe, life-threatening
+        anaphylaxis resulting from exposure to food or other allergens.
       </Typography>
       <Typography variant="body/medium">
         <strong>Indemnification and Hold Harmless:</strong> I also agree to indemnify and hold The

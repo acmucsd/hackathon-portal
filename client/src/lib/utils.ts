@@ -64,7 +64,7 @@ export function reportError(title: string, error: unknown) {
  */
 export function formatTitleCase(message: string) {
   return message
-    .replace('_', ' ')
+    .replace(/_/g, ' ')
     .toLowerCase()
     .replace(/\b\w/g, c => c.toUpperCase());
 }
@@ -87,6 +87,7 @@ export function formatTime(time: string) {
 export function canUserSubmitWaivers(applicationStatus: ApplicationStatus): boolean {
   return (
     applicationStatus === ApplicationStatus.ACCEPTED ||
+    applicationStatus === ApplicationStatus.ACCEPTED_FROM_WAITLIST ||
     applicationStatus === ApplicationStatus.CONFIRMED
   );
 }

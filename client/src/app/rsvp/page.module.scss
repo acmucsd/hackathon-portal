@@ -1,0 +1,7 @@
+.main {
+  flex: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10rem;
+  padding: var(--top-padding) var(--side-padding);
+}

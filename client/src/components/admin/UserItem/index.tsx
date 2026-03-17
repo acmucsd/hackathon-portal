@@ -31,7 +31,7 @@ const UserItem = ({ user, superAdmin, filterCriteria }: UserItemProps) => {
       <Typography variant="body/medium">
         Interest Form: <InterestFormTag status={user.didInterestForm ? 'YES' : 'NO'} />
       </Typography>
-      <Typography variant="body/medium">Submission Date: {formattedDate}</Typography>
+      <Typography variant="body/medium">Notes: {user.reviewerComments}</Typography>
       {superAdmin && (
         <Typography variant="body/medium">
           Assigned Reviewer:{' '}

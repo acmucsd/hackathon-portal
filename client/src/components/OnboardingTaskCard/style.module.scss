@@ -1,0 +1,64 @@
+@use '@/styles/vars.scss' as vars;
+
+.onboardingTaskCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  border-radius: 2rem;
+  justify-content: space-around;
+  border: 2px solid vars.$card-shelf-color;
+  padding: 1rem;
+  background-color: transparent;
+  text-align: center;
+  width: 100%;
+  max-width: 300px;
+
+  @media screen and (max-width: vars.$breakpoint-md) {
+    min-width: 250px;
+  }
+}
+
+.notDone {
+  background-color: vars.$card-shelf-color;
+}
+
+.onboardingImage {
+  max-width: 100%;
+  height: auto;
+}
+
+.badgeRequired,
+.badgeOptional {
+  display: inline-block;
+  border-radius: 1rem;
+  padding: 0.2rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  align-self: flex-start;
+}
+
+.badgeRequired {
+  background-color: vars.$error-dark-red;
+  color: vars.$error;
+}
+
+.badgeOptional {
+  background-color: vars.$card-stroke;
+  color: vars.$white;
+}
+
+.successButton {
+  background-color: vars.$success !important;
+  color: vars.$white !important;
+  cursor: default !important;
+
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: vars.$success !important;
+    color: vars.$white !important;
+  }
+}

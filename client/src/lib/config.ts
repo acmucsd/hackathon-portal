@@ -15,6 +15,7 @@ const config = {
         application: '/response/application',
         liabilityWaiver: '/response/liability-waiver',
         photoRelease: '/response/photo-release',
+        rsvp: '/response/rsvp',
       },
       admin: {
         applications: '/admin/applications',
@@ -29,6 +30,8 @@ const config = {
         assignments: '/admin/assignments',
         randomizeAssignments: '/admin/assignments/random',
         reviewerOverview: '/admin/reviewer-overview',
+        releaseDecisions: '/admin/release-decisions',
+        setAcceptanceDeadlinePassed: '/admin/applications/set-acceptance-deadline-passed',
       },
       event: {
         createEvent: '/event',
