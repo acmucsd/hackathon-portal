@@ -245,19 +245,10 @@ export class UserService {
     user: UserModel,
     fetchAiHandle: string | null,
   ): Promise<UserModel> {
-    if (fetchAiHandle !== null) {
-      await this.fetchAiHandleValidationService.validateOrThrow(
-        user.id,
-        fetchAiHandle,
-      );
-    }
-
-    return this.transactionsManager.readWrite(async (entityManager) => {
-      const userRepository = Repositories.user(entityManager);
-      user.fetchAiHandle = fetchAiHandle;
-      const updatedUser = userRepository.save(user);
-      return updatedUser;
-    });
+    return this.fetchAiHandleValidationService.updateFetchAiHandle(
+      user.id,
+      fetchAiHandle,
+    );
   }
 
   public async deleteUser(user: UserModel): Promise<void> {

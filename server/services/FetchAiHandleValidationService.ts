@@ -1,6 +1,7 @@
 import { Service } from 'typedi';
-import { BadRequestError } from 'routing-controllers';
+import { BadRequestError, NotFoundError } from 'routing-controllers';
 import { Repositories, TransactionsManager } from '../repositories';
+import { UserModel } from '../models/UserModel';
 
 const FETCH_AI_LINK_PATTERN =
   /^https?:\/\/asi1\.ai\/ai\/([a-zA-Z0-9_-]+)\/?(?:\?.*)?$/;
@@ -11,6 +12,7 @@ const BLOCKED_FETCH_AI_USERNAMES = new Set([
   'yourusername',
   'your-username',
 ]);
+const FETCH_AI_HANDLE_POINTS = 15;
 
 @Service()
 export class FetchAiHandleValidationService {
@@ -40,6 +42,33 @@ export class FetchAiHandleValidationService {
 
     await this.ensureAgentExists(username);
     await this.ensureUsernameNotTaken(currentUserId, username);
+  }
+
+  public async updateFetchAiHandle(
+    currentUserId: string,
+    fetchAiHandle: string | null,
+  ): Promise<UserModel> {
+    if (fetchAiHandle !== null) {
+      await this.validateOrThrow(currentUserId, fetchAiHandle);
+    }
+
+    return this.transactionsManager.readWrite(async (entityManager) => {
+      const userRepository = Repositories.user(entityManager);
+      const existingUser = await userRepository.findById(currentUserId);
+      if (!existingUser) throw new NotFoundError('User not found');
+
+      const hadHandle = existingUser.fetchAiHandle !== null;
+      const hasHandle = fetchAiHandle !== null;
+
+      if (!hadHandle && hasHandle) {
+        existingUser.points += FETCH_AI_HANDLE_POINTS;
+      } else if (hadHandle && !hasHandle) {
+        existingUser.points -= FETCH_AI_HANDLE_POINTS;
+      }
+
+      existingUser.fetchAiHandle = fetchAiHandle;
+      return userRepository.save(existingUser);
+    });
   }
 
   private async ensureAgentExists(username: string): Promise<void> {
