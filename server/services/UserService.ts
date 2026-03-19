@@ -34,6 +34,7 @@ import {
 import { ResponseModel } from '../models/ResponseModel';
 import { Application } from '../types/Application';
 import { HouseService } from './HouseService';
+import { FetchAiHandleValidationService } from './FetchAiHandleValidationService';
 
 import { In } from 'typeorm';
 
@@ -48,12 +49,16 @@ export class UserService {
 
   private transactionsManager: TransactionsManager;
 
+  private fetchAiHandleValidationService: FetchAiHandleValidationService;
+
   constructor(
     houseService: HouseService,
     transactionsManager: TransactionsManager,
+    fetchAiHandleValidationService: FetchAiHandleValidationService,
   ) {
     this.houseService = houseService;
     this.transactionsManager = transactionsManager;
+    this.fetchAiHandleValidationService = fetchAiHandleValidationService;
   }
 
   public async findById(id: string): Promise<UserModel> {
@@ -231,6 +236,25 @@ export class UserService {
     return this.transactionsManager.readWrite(async (entityManager) => {
       const userRepository = Repositories.user(entityManager);
       user = userRepository.merge(user, updateUser);
+      const updatedUser = userRepository.save(user);
+      return updatedUser;
+    });
+  }
+
+  public async updateFetchAiHandle(
+    user: UserModel,
+    fetchAiHandle: string | null,
+  ): Promise<UserModel> {
+    if (fetchAiHandle !== null) {
+      await this.fetchAiHandleValidationService.validateOrThrow(
+        user.id,
+        fetchAiHandle,
+      );
+    }
+
+    return this.transactionsManager.readWrite(async (entityManager) => {
+      const userRepository = Repositories.user(entityManager);
+      user.fetchAiHandle = fetchAiHandle;
       const updatedUser = userRepository.save(user);
       return updatedUser;
     });
