@@ -44,6 +44,11 @@ export class UserModel {
   @Column({ default: 0 })
   points: number;
 
+  @Column('text', {
+    nullable: true,
+  })
+  fetchAiHandle: string | null;
+
   @Column('enum', {
     enum: UserAccessType,
     default: UserAccessType.STANDARD,

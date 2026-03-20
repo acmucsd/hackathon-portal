@@ -34,6 +34,7 @@ import {
 import { ResponseModel } from '../models/ResponseModel';
 import { Application } from '../types/Application';
 import { HouseService } from './HouseService';
+import { FetchAiHandleValidationService } from './FetchAiHandleValidationService';
 
 import { In } from 'typeorm';
 
@@ -48,12 +49,16 @@ export class UserService {
 
   private transactionsManager: TransactionsManager;
 
+  private fetchAiHandleValidationService: FetchAiHandleValidationService;
+
   constructor(
     houseService: HouseService,
     transactionsManager: TransactionsManager,
+    fetchAiHandleValidationService: FetchAiHandleValidationService,
   ) {
     this.houseService = houseService;
     this.transactionsManager = transactionsManager;
+    this.fetchAiHandleValidationService = fetchAiHandleValidationService;
   }
 
   public async findById(id: string): Promise<UserModel> {
@@ -234,6 +239,16 @@ export class UserService {
       const updatedUser = userRepository.save(user);
       return updatedUser;
     });
+  }
+
+  public async updateFetchAiHandle(
+    user: UserModel,
+    fetchAiHandle: string | null,
+  ): Promise<UserModel> {
+    return this.fetchAiHandleValidationService.updateFetchAiHandle(
+      user.id,
+      fetchAiHandle,
+    );
   }
 
   public async deleteUser(user: UserModel): Promise<void> {
