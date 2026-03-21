@@ -11,7 +11,7 @@ import Button from '../Button';
 import showToast from '@/lib/showToast';
 import { SponsorTask } from '../Dashboard/sponsorTasks';
 import styles from './style.module.scss';
-import { updateFetchAiHandle } from '@/app/api/fetch-ai-handle/route';
+import { updateFetchAiHandle } from '@/lib/api/SponsorAPI';
 
 interface SponsorTaskCardProps {
   task: SponsorTask;
@@ -24,18 +24,15 @@ const SponsorTaskCard = ({ task }: SponsorTaskCardProps) => {
   const [error, setError] = useState<string | null>(null);
   const isFetchAiTask = task.id === 'fetch-ai';
 
-  const [isVerified, setIsVerified] = useState(
-    isFetchAiTask ? Boolean(task.completed) : false
-  );
+  const [isVerified, setIsVerified] = useState(isFetchAiTask ? Boolean(task.completed) : false);
 
+  useEffect(() => {
+    if (isFetchAiTask) {
+      setIsVerified(Boolean(task.completed));
+    }
+  }, [isFetchAiTask, task.completed]);
 
-useEffect(() => {
-  if (isFetchAiTask) {
-    setIsVerified(Boolean(task.completed));
-  }
-}, [isFetchAiTask, task.completed]);
-
-const handleFetchAiVerify = async () => {
+  const handleFetchAiVerify = async () => {
     const link = inputValue.trim();
     if (!link) {
       setError('Please enter a valid link');
@@ -58,7 +55,6 @@ const handleFetchAiVerify = async () => {
     }
   };
 
-
   const imageVariantClass = task.title.includes('Qualcomm')
     ? styles.imageQualcomm
     : task.title.includes('Fetch')
@@ -66,13 +62,15 @@ const handleFetchAiVerify = async () => {
       : styles.imageBrowser;
 
   return (
-    <Card gap={1} className={`${styles.sponsorTaskCard} ${isFetchAiTask && !isVerified ? styles.notDone : ''}`}>
+    <Card
+      gap={1}
+      className={`${styles.sponsorTaskCard} ${isFetchAiTask && !isVerified ? styles.notDone : ''}`}
+    >
       <div className={styles.header}>
         <div className={styles.logoWrap}>
           <Image
             src={task.image}
             alt={task.imageAlt}
-
             width={500}
             height={500}
             className={`${styles.image} ${imageVariantClass}`}

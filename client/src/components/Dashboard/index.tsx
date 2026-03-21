@@ -56,10 +56,8 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
     completedFormTypes.has(FormType.PHOTO_RELEASE);
 
   const sponsorTasks = SPONSOR_TASKS.map(task =>
-  task.id === 'fetch-ai'
-    ? { ...task, completed: Boolean(user?.fetchAiHandle) }
-    : task
-);
+    task.id === 'fetch-ai' ? { ...task, completed: Boolean(user?.fetchAiHandle) } : task
+  );
   const timelineItems: [Date, string][] = [
     [timeline.application, 'Application Deadline'],
     [timeline.decisions, 'Decisions Released'],
@@ -164,9 +162,9 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
                     done={task.formType ? completedFormTypes.has(task.formType) : false}
                   />
                 ))}
-                {sponsorTasks.map((task, i) => (
-                  <SponsorTaskCard key={`sponsor-${i}`} task={task} />
-                ))}
+              {sponsorTasks.map((task, i) => (
+                <SponsorTaskCard key={`sponsor-${i}`} task={task} />
+              ))}
             </div>
           </Card>
         </>

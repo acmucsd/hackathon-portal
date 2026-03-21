@@ -25,10 +25,10 @@ export const SPONSOR_TASKS: SponsorTask[] = [
     completed: false,
     variant: 'input',
     buttonLabel: 'Verify',
-    instructionsLink: 'https://docs.google.com/document/d/1zozdMkAVhDIxYlxsto2DcfS0ztuMg7Hy0Hr_qXUEEVg/edit?tab=t.0',
+    instructionsLink:
+      'https://docs.google.com/document/d/1zozdMkAVhDIxYlxsto2DcfS0ztuMg7Hy0Hr_qXUEEVg/edit?tab=t.0',
   },
   {
-
     id: 'browser-use',
     image: require('@/../public/assets/browseruse.png'),
     imageAlt: 'Atom Icon',
