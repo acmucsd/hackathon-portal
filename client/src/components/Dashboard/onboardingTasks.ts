@@ -1,9 +1,8 @@
 import { StaticImageData } from 'next/image';
-import Racoon from '@/../public/assets/racoon.png';
-import Sungod from '@/../public/assets/sungod-mini.png';
-import Geisel from '@/../public/assets/geisel-mini.png';
-import KingTriton from '@/../public/assets/king-triton-mini.png';
 import Crest from '@/../public/assets/crest.png';
+import BrowserUseLogo from '@/../public/assets/sponsors/browser-use.png';
+import QualcommLogo from '@/../public/assets/sponsors/qualcomm.png';
+import FetchAiLogo from '@/../public/assets/sponsors/fetch-ai.png';
 import { FormType } from '@/lib/types/enums';
 
 export interface OnboardingTask {
@@ -11,13 +10,16 @@ export interface OnboardingTask {
   imageAlt: string;
   title: string;
   subtitle?: string;
-  href: string;
+  subtitleLink?: string;
+  href?: string;
   buttonLabel: string;
-  /** When defined, the task is tracked as complete once a matching response exists. */
   formType?: FormType;
   variant?: 'primary' | 'secondary' | 'tertiary';
   openNewTab?: boolean;
   required?: boolean;
+  completed?: boolean;
+  isFetchAi?: boolean;
+  points?: number;
 }
 
 export const ONBOARDING_TASKS: OnboardingTask[] = [
@@ -52,5 +54,34 @@ export const ONBOARDING_TASKS: OnboardingTask[] = [
     buttonLabel: 'Complete',
     formType: FormType.LIABILITY_WAIVER,
     required: true,
+  },
+  {
+    image: BrowserUseLogo,
+    imageAlt: 'Browser Use Logo',
+    title: 'Opt in for Browser Use Credits',
+    subtitle: 'Get $75 free credits',
+    href: 'https://www.notion.so/acmucsd/Onboarding-Checklist-Sponsors-314143915b1280c78f32e929a28c7dd0',
+    buttonLabel: 'Opt In',
+    openNewTab: true,
+  },
+  {
+    image: QualcommLogo,
+    imageAlt: 'Qualcomm Logo',
+    title: 'Apply for Qualcomm Multiverse',
+    subtitle: 'Submit a project proposal to unlock this exclusive sponsor track.',
+    href: 'https://www.notion.so/acmucsd/Onboarding-Checklist-Sponsors-314143915b1280c78f32e929a28c7dd0',
+    buttonLabel: 'Apply Now',
+    openNewTab: true,
+  },
+  {
+    image: FetchAiLogo,
+    imageAlt: 'Fetch.AI Logo',
+    title: 'Sign up for Fetch.AI',
+    subtitle: 'View Instructions',
+    subtitleLink:
+      'https://docs.google.com/document/d/1zozdMkAVhDIxYlxsto2DcfS0ztuMg7Hy0Hr_qXUEEVg/edit?tab=t.0',
+    buttonLabel: 'Verify',
+    isFetchAi: true,
+    points: 15,
   },
 ];

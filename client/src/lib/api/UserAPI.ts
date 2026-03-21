@@ -61,6 +61,27 @@ export const getUser = async (userId: string): Promise<PublicProfile | string> =
 };
 
 /**
+ * Update current user's Fetch.ai handle
+ * @param link Fetch.ai profile link
+ */
+export const updateFetchAiHandle = async (link: string): Promise<void> => {
+  const authToken = await getCookie(CookieType.ACCESS_TOKEN);
+  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.user.fetchAiHandle}`;
+
+  try {
+    await axios.patch(
+      requestUrl,
+      { fetchAiHandle: link },
+      {
+        headers: { Authorization: `Bearer ${authToken}` },
+      }
+    );
+  } catch (error) {
+    throw new Error(getErrorMessage(error));
+  }
+};
+
+/**
  * Update current user's private profile
  * @param user Profile changes
  * @returns User's full profile

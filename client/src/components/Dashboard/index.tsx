@@ -9,9 +9,7 @@ import SunGod from '@/../public/assets/sungod-with-book.png';
 import LockIcon from '@/../public/assets/icons/lock.svg';
 import Typography from '../Typography';
 import OnboardingTaskCard from '../OnboardingTaskCard';
-import SponsorTaskCard from '../SponsorTaskCard';
 import { ONBOARDING_TASKS } from './onboardingTasks';
-import { SPONSOR_TASKS } from './sponsorTasks';
 import Link from 'next/link';
 import FAQ, { FAQQuestion } from '../FAQAccordion';
 import DashboardStatus from '../DashboardStatus';
@@ -55,9 +53,6 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
     completedFormTypes.has(FormType.LIABILITY_WAIVER) &&
     completedFormTypes.has(FormType.PHOTO_RELEASE);
 
-  const sponsorTasks = SPONSOR_TASKS.map(task =>
-    task.id === 'fetch-ai' ? { ...task, completed: Boolean(user?.fetchAiHandle) } : task
-  );
   const timelineItems: [Date, string][] = [
     [timeline.application, 'Application Deadline'],
     [timeline.decisions, 'Decisions Released'],
@@ -149,22 +144,18 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
               Onboarding Tasks
             </Typography>
             <div className={styles.onboardingTaskGrid}>
-              {[...ONBOARDING_TASKS]
-                .sort((a, b) => {
-                  const aDone = a.formType ? completedFormTypes.has(a.formType) : false;
-                  const bDone = b.formType ? completedFormTypes.has(b.formType) : false;
-                  return Number(aDone) - Number(bDone);
-                })
+              {ONBOARDING_TASKS.map(task => ({
+                ...task,
+                completed: task.isFetchAi
+                  ? Boolean(user.fetchAiHandle)
+                  : task.formType
+                    ? completedFormTypes.has(task.formType)
+                    : false,
+              }))
+                .sort((a, b) => Number(a.completed) - Number(b.completed))
                 .map(task => (
-                  <OnboardingTaskCard
-                    key={task.title}
-                    task={task}
-                    done={task.formType ? completedFormTypes.has(task.formType) : false}
-                  />
+                  <OnboardingTaskCard key={task.title} task={task} />
                 ))}
-              {sponsorTasks.map((task, i) => (
-                <SponsorTaskCard key={`sponsor-${i}`} task={task} />
-              ))}
             </div>
           </Card>
         </>
