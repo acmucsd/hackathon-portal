@@ -56,6 +56,17 @@ export const ONBOARDING_TASKS: OnboardingTask[] = [
     required: true,
   },
   {
+    image: FetchAiLogo,
+    imageAlt: 'Fetch.AI Logo',
+    title: 'Sign up for Fetch.AI',
+    subtitle: 'View Instructions',
+    subtitleLink:
+      'https://docs.google.com/document/d/1zozdMkAVhDIxYlxsto2DcfS0ztuMg7Hy0Hr_qXUEEVg/edit?tab=t.0',
+    buttonLabel: 'Verify',
+    isFetchAi: true,
+    points: 15,
+  },
+  {
     image: BrowserUseLogo,
     imageAlt: 'Browser Use Logo',
     title: 'Opt in for Browser Use Credits',
@@ -72,16 +83,5 @@ export const ONBOARDING_TASKS: OnboardingTask[] = [
     href: 'https://www.notion.so/acmucsd/Onboarding-Checklist-Sponsors-314143915b1280c78f32e929a28c7dd0',
     buttonLabel: 'Apply Now',
     openNewTab: true,
-  },
-  {
-    image: FetchAiLogo,
-    imageAlt: 'Fetch.AI Logo',
-    title: 'Sign up for Fetch.AI',
-    subtitle: 'View Instructions',
-    subtitleLink:
-      'https://docs.google.com/document/d/1zozdMkAVhDIxYlxsto2DcfS0ztuMg7Hy0Hr_qXUEEVg/edit?tab=t.0',
-    buttonLabel: 'Verify',
-    isFetchAi: true,
-    points: 15,
   },
 ];

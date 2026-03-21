@@ -194,7 +194,16 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
           <FAQ data={faq} />
         </div>
         <Typography variant="body/large" component="p">
-          Still have questions? Email{' '}
+          Still have questions? Go to{' '}
+          <Link
+            href="https://www.fetch.ai/diamondhacks2026"
+            className="link"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            fetch.ai
+          </Link>{' '}
+          for further assistance or email{' '}
           <Link href="mailto:hackathon@acmucsd.org" className="link">
             hackathon@acmucsd.org
           </Link>{' '}
