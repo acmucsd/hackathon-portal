@@ -25,6 +25,7 @@ export interface PrivateProfile extends PublicProfile {
   createdAt: Date;
   updatedAt: Date;
   responses?: ResponseModel;
+  fetchAiHandle?: string | null;
 }
 
 export interface HiddenProfile extends PrivateProfile {
