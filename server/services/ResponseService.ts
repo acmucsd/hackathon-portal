@@ -262,6 +262,7 @@ export class ResponseService {
   ): Promise<ResponseModel> {
     if (
       user.applicationStatus !== ApplicationStatus.ACCEPTED &&
+      user.applicationStatus !== ApplicationStatus.ACCEPTED_FROM_WAITLIST &&
       user.applicationStatus !== ApplicationStatus.CONFIRMED
     ) {
       throw new BadRequestError(
