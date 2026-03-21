@@ -52,17 +52,19 @@ const OnboardingTaskCard = ({ task }: OnboardingTaskCardProps) => {
     }
     setIsLoading(true);
     setError(null);
-    try {
-      await updateFetchAiHandle(link);
+
+    const result = await updateFetchAiHandle(link);
+
+    if (typeof result === 'string') {
+      setError(result);
+    } else {
       showToast('Success', 'Fetch.ai link verified.');
       setIsVerified(true);
       setInputValue('');
       router.refresh();
-    } catch {
-      setError('Failed to validate link');
-    } finally {
-      setIsLoading(false);
     }
+
+    setIsLoading(false);
   };
 
   const isComplete = isFetchAi ? isVerified : isDone;
