@@ -71,13 +71,13 @@ const SponsorTaskCard = ({ task }: SponsorTaskCardProps) => {
           <Image
             src={task.image}
             alt={task.imageAlt}
-            width={500}
-            height={500}
+            fill
+            sizes="(max-width: 768px) 160px, 220px"
             className={`${styles.image} ${imageVariantClass}`}
           />
         </div>
-
-        <div className={styles.points}>
+        {isFetchAiTask && (
+          <div className={styles.points}>
           {isFetchAiTask && isVerified ? (
             <>
               <span className={styles.checkmark}>✓</span>
@@ -90,6 +90,8 @@ const SponsorTaskCard = ({ task }: SponsorTaskCardProps) => {
             </>
           )}
         </div>
+        )}
+
       </div>
 
       <Typography variant="label/medium" component="h3" className={styles.title}>

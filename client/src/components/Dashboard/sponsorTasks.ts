@@ -1,12 +1,14 @@
 import { StaticImageData } from 'next/image';
-
+import  FetchLogo  from '@/../public/assets/fetch_logo_white.png';
+import BrowserUse from '@/../public/assets/browseruse.png';
+import QualcommLogo from '@/../public/assets/Qualcomm-Logo.png';
 export interface SponsorTask {
   id: 'browser-use' | 'fetch-ai' | 'qualcomm';
   image: StaticImageData;
   imageAlt: string;
   title: string;
   subtitle: string;
-  points: number;
+  points?: number;
   completed?: boolean;
   variant: 'input' | 'static';
   buttonLabel: string;
@@ -17,11 +19,11 @@ export interface SponsorTask {
 export const SPONSOR_TASKS: SponsorTask[] = [
   {
     id: 'fetch-ai',
-    image: require('@/../public/assets/fetch_logo_white 1.png'),
+    image: FetchLogo,
     imageAlt: 'Fetch.AI Logo',
     title: 'Sign up for Fetch.AI',
     subtitle: 'View Instructions',
-    points: 5,
+    points: 15,
     completed: false,
     variant: 'input',
     buttonLabel: 'Verify',
@@ -30,11 +32,10 @@ export const SPONSOR_TASKS: SponsorTask[] = [
   },
   {
     id: 'browser-use',
-    image: require('@/../public/assets/browseruse.png'),
+    image: BrowserUse,
     imageAlt: 'Atom Icon',
     title: 'Opt in for Browser Use Credits',
     subtitle: 'Get $75 free credits',
-    points: 5,
     variant: 'static',
     buttonLabel: 'Opt In',
     href: 'https://www.notion.so/acmucsd/Onboarding-Checklist-Sponsors-314143915b1280c78f32e929a28c7dd0',
@@ -42,11 +43,10 @@ export const SPONSOR_TASKS: SponsorTask[] = [
 
   {
     id: 'qualcomm',
-    image: require('@/../public/assets/Qualcomm-Logo.svg 1.png'),
+    image: QualcommLogo,
     imageAlt: 'Qualcomm Logo',
     title: 'Apply for Qualcomm Multiverse',
     subtitle: 'Submit a project proposal to unlock this exclusive sponsor track.',
-    points: 5,
     variant: 'static',
     buttonLabel: 'Apply Now',
     href: 'https://www.notion.so/acmucsd/Onboarding-Checklist-Sponsors-314143915b1280c78f32e929a28c7dd0',
