@@ -9,6 +9,7 @@ const config = {
       },
       user: {
         user: '/user',
+        fetchAiHandle: '/user/fetch-ai-handle',
       },
       response: {
         response: '/response',

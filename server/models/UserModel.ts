@@ -140,6 +140,7 @@ export class UserModel {
       applicationStatus: this.applicationStatus,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
+      fetchAiHandle: this.fetchAiHandle,
     };
     if (this.responses) privateProfile.responses = this.responses;
     return privateProfile;

@@ -144,18 +144,17 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
               Onboarding Tasks
             </Typography>
             <div className={styles.onboardingTaskGrid}>
-              {[...ONBOARDING_TASKS]
-                .sort((a, b) => {
-                  const aDone = a.formType ? completedFormTypes.has(a.formType) : false;
-                  const bDone = b.formType ? completedFormTypes.has(b.formType) : false;
-                  return Number(aDone) - Number(bDone);
-                })
+              {ONBOARDING_TASKS.map(task => ({
+                ...task,
+                completed: task.isFetchAi
+                  ? Boolean(user.fetchAiHandle)
+                  : task.formType
+                    ? completedFormTypes.has(task.formType)
+                    : false,
+              }))
+                .sort((a, b) => Number(a.completed) - Number(b.completed))
                 .map(task => (
-                  <OnboardingTaskCard
-                    key={task.title}
-                    task={task}
-                    done={task.formType ? completedFormTypes.has(task.formType) : false}
-                  />
+                  <OnboardingTaskCard key={task.title} task={task} />
                 ))}
             </div>
           </Card>
@@ -195,7 +194,16 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
           <FAQ data={faq} />
         </div>
         <Typography variant="body/large" component="p">
-          Still have questions? Email{' '}
+          Still have questions? Go to{' '}
+          <Link
+            href="https://www.fetch.ai/diamondhacks2026"
+            className="link"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            fetch.ai
+          </Link>{' '}
+          for further assistance or email{' '}
           <Link href="mailto:hackathon@acmucsd.org" className="link">
             hackathon@acmucsd.org
           </Link>{' '}

@@ -43,6 +43,7 @@ export interface PrivateProfile extends PublicProfile {
   createdAt: Date;
   updatedAt: Date;
   responses?: ResponseModel;
+  fetchAiHandle?: string | null;
 }
 
 export interface FullProfile extends PrivateProfile {
