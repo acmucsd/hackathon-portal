@@ -1,3 +1,5 @@
+import Image from 'next/image'
+import GreenConfetti from '@/../public/assets/green-confetti.png'
 import ProfileCard from '@/components/ProfileCard';
 import ApplicationCard from '@/components/ApplicationCard';
 import styles from './style.module.scss';
@@ -14,6 +16,12 @@ const Profile = ({ user, responses }: ProfileClientProps) => {
 
   return (
     <div className={styles.profileContainer}>
+      <Image
+        src={GreenConfetti}
+        alt="Confetti"
+        quality={100}
+        className={styles.confetti}
+      />
       <ProfileCard user={user} />
       {application && (
         <ApplicationCard application={application} applicationStatus={user.applicationStatus} />

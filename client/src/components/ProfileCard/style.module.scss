@@ -24,6 +24,51 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  width: 50%;
+
+  // .house {
+  //   position: absolute;
+  //   top: 10rem;
+  //   right: 45rem;
+
+  //   .books {
+  //     position: absolute;
+  //     top: 9.64rem;
+  //     width: auto;
+  //     height: 16rem;
+  //   }
+
+  //   .badge {
+  //     position: absolute;
+  //     left: 13rem;
+  //     width: auto;
+  //     height: 30rem;
+  //   }
+  // }
+
+  .house {
+    position: absolute;
+    top: 19rem;
+    right: 26.5rem;
+
+    &.editing {
+      top: 15rem;
+    }
+
+    .books {
+      position: absolute;
+      top: 6.63rem;
+      width: auto;
+      height: 10rem;
+    }
+
+    .badge {
+      position: absolute;
+      left: 4rem;
+      width: auto;
+      height: 20rem;
+    }
+  }
 }
 
 .buttonGroup {
