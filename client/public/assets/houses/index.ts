@@ -13,10 +13,10 @@ import SunGodBadge from './sun-god-badge.png';
 import GeiselBadge from './geisel-badge.png';
 import KingTritonBadge from './king-triton-badge.png';
 
-import GreenBooks from '@/../public/assets/houses/green-books.png';
-import RedBooks from '@/../public/assets/houses/red-books.png';
-import BlueBooks from '@/../public/assets/houses/blue-books.png';
-import YellowBooks from '@/../public/assets/houses/yellow-books.png';
+import GreenBooks from './green-books.png';
+import RedBooks from './red-books.png';
+import BlueBooks from './blue-books.png';
+import YellowBooks from './yellow-books.png';
 
 export const confetti = {
   green: GreenConfetti,
