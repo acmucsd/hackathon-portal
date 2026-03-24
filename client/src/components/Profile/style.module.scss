@@ -5,14 +5,47 @@
   flex-direction: column;
   gap: 2rem;
 
-  .confetti {
+  .house {
     display: flex;
-    position: absolute;
-    z-index: -1;
-    width: 100%;
-    height: auto;
-    margin: calc(var(--top-padding) * -1) calc(var(--side-padding) * -1) 0;
-    background-image: linear-gradient(#56B75A8C, #00000000);
+    justify-content: center;
+    margin-bottom: -2rem;
+
+    @media screen and (max-width: 870px){
+      align-items: center;
+    }
+
+    .confetti {
+      display: flex;
+      position: absolute;
+      z-index: -1;
+      width: 100%;
+      height: auto;
+      margin: calc(var(--top-padding) * -1) calc(var(--side-padding) * -1) 0;
+      background-image: linear-gradient(#56B75A8C, #00000000);
+
+      @media screen and (max-width: 870px){
+        margin: 0;
+      }
+    }
+
+    .badge {
+      display: none;
+
+      @media screen and (max-width: 870px){
+        display: flex;
+        width: 27rem;
+        height: auto;
+        margin-top: calc(var(--top-padding) * -1);
+      }
+
+      @media screen and (max-width: 650px){
+        width: 24rem;
+      }
+
+      @media screen and (max-width: 500px){
+        width: 20rem;
+      }
+    }
   }
 
   .formsContainer {

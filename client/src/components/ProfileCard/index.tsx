@@ -9,8 +9,7 @@ import Heading from '@/components/Heading';
 import TextField from '@/components/TextField';
 import CloseIcon from '../../../public/assets/icons/close.svg';
 import EditIcon from '../../../public/assets/icons/edit.svg';
-import GreenBooks from '@/../public/assets/green-books.png';
-import RacoonBadge from '@/../public/assets/racoon-badge.png'
+import { books, badges } from '@/../public/assets/houses';
 import { UserAPI } from '@/lib/api';
 import { useWindowSize } from '@/lib/hooks/useWindowSize';
 import isEmail from 'validator/lib/isEmail';
@@ -120,20 +119,22 @@ const ProfileCard = ({ user }: ProfileCardProps) => {
           autoComplete="given-name"
           disabled
         />
-        <div className={`${styles.house} ${editProfile && styles.editing}`}>
-          <Image
-            src={GreenBooks}
-            alt="Books"
-            quality={100}
-            className={styles.books}
-          />
-          <Image
-            src={RacoonBadge}
-            alt="Badge"
-            quality={100}
-            className={styles.badge}
-          />
-        </div>
+        {!isMobile &&
+          <div className={`${styles.house} ${editProfile && styles.editing}`}>
+            <Image
+              src={books.green}
+              alt="Books"
+              quality={100}
+              className={styles.books}
+            />
+            <Image
+              src={badges.racoon}
+              alt="Badge"
+              quality={100}
+              className={styles.badge}
+            />
+          </div>
+        }
       </div>
       {editProfile && (
         <div className={styles.buttonGroup}>
