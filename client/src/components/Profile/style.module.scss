@@ -10,7 +10,7 @@
     justify-content: center;
     margin-bottom: -2rem;
 
-    @media screen and (max-width: 870px){
+    @media screen and (max-width: 870px) {
       align-items: center;
     }
 
@@ -21,9 +21,24 @@
       width: 100%;
       height: auto;
       margin: calc(var(--top-padding) * -1) calc(var(--side-padding) * -1) 0;
-      background-image: linear-gradient(#56B75A8C, #00000000);
 
-      @media screen and (max-width: 870px){
+      &.raccoon {
+        background-image: linear-gradient(#56b75a8c, #00000000);
+      }
+
+      &.sunGod {
+        background-image: linear-gradient(#c5263a8c, #00000000);
+      }
+
+      &.geisel {
+        background-image: linear-gradient(#1551bf51, #00000000);
+      }
+
+      &.kingTriton {
+        background-image: linear-gradient(#ffd13b6a, #00000000);
+      }
+
+      @media screen and (max-width: 870px) {
         margin: 0;
       }
     }
@@ -31,18 +46,18 @@
     .badge {
       display: none;
 
-      @media screen and (max-width: 870px){
+      @media screen and (max-width: 870px) {
         display: flex;
         width: 27rem;
         height: auto;
         margin-top: calc(var(--top-padding) * -1);
       }
 
-      @media screen and (max-width: 650px){
+      @media screen and (max-width: 650px) {
         width: 24rem;
       }
 
-      @media screen and (max-width: 500px){
+      @media screen and (max-width: 500px) {
         width: 20rem;
       }
     }

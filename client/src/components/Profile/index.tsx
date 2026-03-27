@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { confetti, confettiMobile, badges } from '@/../public/assets/houses';
+import { houseAssets } from '@/lib/constants/houseAssets';
 import { useWindowSize } from '@/lib/hooks/useWindowSize';
 import ProfileCard from '@/components/ProfileCard';
 import ApplicationCard from '@/components/ApplicationCard';
@@ -18,23 +18,28 @@ const Profile = ({ user, responses }: ProfileClientProps) => {
   const size = useWindowSize();
   const isMobile = (size.width ?? 0) <= 870;
   const application = responses.find(response => response.formType === FormType.APPLICATION);
+  const house = houseAssets[user.house];
+
+  const houseStyles = {
+    RACCOON: styles.raccoon,
+    SUN_GOD: styles.sunGod,
+    GEISEL: styles.geisel,
+    TRITON: styles.kingTriton,
+  } as const;
 
   return (
     <div className={styles.profileContainer}>
-      <div className={styles.house}>
-        <Image
-          src={!isMobile ? confetti.green : confettiMobile.green}
-          alt="Confetti"
-          quality={100}
-          className={styles.confetti}
-        />
-        <Image
-          src={badges.racoon}
-          alt="Badge"
-          quality={100}
-          className={styles.badge}
-        />
-      </div>
+      {user.house !== 'UNASSIGNED' && size.width !== undefined && (
+        <div className={styles.house}>
+          <Image
+            src={!isMobile ? house.confetti : house.confettiMobile}
+            alt="Confetti"
+            quality={100}
+            className={`${styles.confetti} ${houseStyles[user.house]}`}
+          />
+          <Image src={house.badge} alt="Badge" quality={100} className={styles.badge} />
+        </div>
+      )}
       <ProfileCard user={user} />
       {application && (
         <ApplicationCard application={application} applicationStatus={user.applicationStatus} />

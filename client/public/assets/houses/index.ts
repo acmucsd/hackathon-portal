@@ -8,7 +8,7 @@ import RedConfettiMobile from './red-confetti-mobile.png';
 import BlueConfettiMobile from './blue-confetti-mobile.png';
 import YellowConfettiMobile from './yellow-confetti-mobile.png';
 
-import RacoonBadge from './racoon-badge.png';
+import RaccoonBadge from './racoon-badge.png';
 import SunGodBadge from './sun-god-badge.png';
 import GeiselBadge from './geisel-badge.png';
 import KingTritonBadge from './king-triton-badge.png';
@@ -33,7 +33,7 @@ export const confettiMobile = {
 };
 
 export const badges = {
-  racoon: RacoonBadge,
+  raccoon: RaccoonBadge,
   sunGod: SunGodBadge,
   geisel: GeiselBadge,
   kingTriton: KingTritonBadge,
