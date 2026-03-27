@@ -24,8 +24,12 @@
       margin-top: calc(var(--top-padding) * -1);
 
       .confetti {
-        width: 100%;
+        width: 130rem;
         height: auto;
+
+        @media screen and (max-width: 2090px) {
+          width: 100%;
+        }
 
         &.raccoon {
           @media screen and (max-width: 870px) {
