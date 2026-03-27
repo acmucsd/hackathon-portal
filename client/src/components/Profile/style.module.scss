@@ -14,14 +14,33 @@
       align-items: center;
     }
 
-    .confetti {
+    .confettiContainer {
       display: flex;
+      justify-content: center;
       position: absolute;
       z-index: -1;
       width: 100%;
-      height: auto;
-      margin: calc(var(--top-padding) * -1) calc(var(--side-padding) * -1) 0;
+      overflow: hidden;
+      margin-top: calc(var(--top-padding) * -1);
 
+      .confetti {
+        width: 100%;
+        height: auto;
+
+        @media screen and (max-width: 870px) {
+          width: 40rem;
+        }
+
+        @media screen and (max-width: 650px) {
+          width: 36rem;
+        }
+
+        @media screen and (max-width: 500px) {
+          width: 30rem;
+        }
+      }
+
+      // Gradients
       &.raccoon {
         background-image: linear-gradient(#56b75a8c, #00000000);
       }
@@ -36,10 +55,6 @@
 
       &.kingTriton {
         background-image: linear-gradient(#ffd13b6a, #00000000);
-      }
-
-      @media screen and (max-width: 870px) {
-        margin: 0;
       }
     }
 
