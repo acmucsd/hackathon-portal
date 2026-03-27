@@ -55,7 +55,8 @@
           }
         }
 
-        &.geisel, &.kingTriton {
+        &.geisel,
+        &.kingTriton {
           @media screen and (max-width: 870px) {
             width: 40rem;
           }
