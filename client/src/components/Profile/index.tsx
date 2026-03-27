@@ -36,7 +36,7 @@ const Profile = ({ user, responses }: ProfileClientProps) => {
               src={!isMobile ? house.confetti : house.confettiMobile}
               alt="Confetti"
               quality={100}
-              className={styles.confetti}
+              className={`${styles.confetti} ${houseStyles[user.house]}`}
             />
           </div>
           <Image src={house.badge} alt="Badge" quality={100} className={styles.badge} />

@@ -27,16 +27,42 @@
         width: 100%;
         height: auto;
 
-        @media screen and (max-width: 870px) {
-          width: 40rem;
+        &.raccoon {
+          @media screen and (max-width: 870px) {
+            width: 44rem;
+          }
+
+          @media screen and (max-width: 500px) {
+            width: 37rem;
+          }
         }
 
-        @media screen and (max-width: 650px) {
-          width: 36rem;
+        &.sunGod {
+          @media screen and (max-width: 870px) {
+            width: 43rem;
+          }
+
+          @media screen and (max-width: 650px) {
+            width: 39rem;
+          }
+
+          @media screen and (max-width: 500px) {
+            width: 33rem;
+          }
         }
 
-        @media screen and (max-width: 500px) {
-          width: 30rem;
+        &.geisel, &.kingTriton {
+          @media screen and (max-width: 870px) {
+            width: 40rem;
+          }
+
+          @media screen and (max-width: 650px) {
+            width: 36rem;
+          }
+
+          @media screen and (max-width: 500px) {
+            width: 30rem;
+          }
         }
       }
 
