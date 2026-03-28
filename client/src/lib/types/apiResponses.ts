@@ -43,6 +43,7 @@ export interface PrivateProfile extends PublicProfile {
   createdAt: Date;
   updatedAt: Date;
   responses?: ResponseModel;
+  fetchAiHandle?: string | null;
 }
 
 export interface FullProfile extends PrivateProfile {
@@ -231,6 +232,10 @@ export interface GetEmailVerificationLinkResponse extends ApiResponse {
 
 export interface GetPasswordResetLinkResponse extends ApiResponse {
   passwordResetLink: string;
+}
+
+export interface SetAcceptanceDeadlinePassedResponse extends ApiResponse {
+  updatedCount: number;
 }
 
 export interface ReviewerOverviewApplicant {

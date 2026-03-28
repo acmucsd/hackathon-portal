@@ -25,6 +25,7 @@ export interface PrivateProfile extends PublicProfile {
   createdAt: Date;
   updatedAt: Date;
   responses?: ResponseModel;
+  fetchAiHandle?: string | null;
 }
 
 export interface HiddenProfile extends PrivateProfile {
@@ -137,6 +138,10 @@ export interface GetApplicationDecisionResponse extends ApiResponse {
 
 export interface UpdateApplicationDecisionResponse extends ApiResponse {
   user: HiddenProfile;
+}
+
+export interface SetAcceptanceDeadlinePassedResponse extends ApiResponse {
+  updatedCount: number;
 }
 
 export interface ForgotPasswordResponse extends ApiResponse {}

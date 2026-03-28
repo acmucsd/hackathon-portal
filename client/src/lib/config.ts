@@ -9,6 +9,7 @@ const config = {
       },
       user: {
         user: '/user',
+        fetchAiHandle: '/user/fetch-ai-handle',
       },
       response: {
         response: '/response',
@@ -31,6 +32,7 @@ const config = {
         randomizeAssignments: '/admin/assignments/random',
         reviewerOverview: '/admin/reviewer-overview',
         releaseDecisions: '/admin/release-decisions',
+        setAcceptanceDeadlinePassed: '/admin/applications/set-acceptance-deadline-passed',
       },
       event: {
         createEvent: '/event',

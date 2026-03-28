@@ -86,6 +86,8 @@ const ApplicationView = ({ application, waivers, stats }: ApplicationViewProps) 
             <dd className={styles.response}>
               {user.firstName} {user.lastName}
             </dd>
+            <dt className={styles.question}>Email</dt>
+            <dd className={styles.response}>{user.email}</dd>
             <dt className={styles.question}>University</dt>
             <dd className={styles.response}>{application.data.university ?? NO_RESPONSE}</dd>
             <dt className={styles.question}>Age</dt>

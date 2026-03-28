@@ -262,6 +262,7 @@ export class ResponseService {
   ): Promise<ResponseModel> {
     if (
       user.applicationStatus !== ApplicationStatus.ACCEPTED &&
+      user.applicationStatus !== ApplicationStatus.ACCEPTED_FROM_WAITLIST &&
       user.applicationStatus !== ApplicationStatus.CONFIRMED
     ) {
       throw new BadRequestError(
@@ -310,7 +311,15 @@ export class ResponseService {
     user: UserModel,
     formData: RSVP,
   ): Promise<ResponseModel> {
-    if (user.applicationStatus !== ApplicationStatus.ACCEPTED) {
+
+    if (user.applicationStatus == ApplicationStatus.DEADLINE_PASSED) {
+      throw new BadRequestError('RSVP deadline has passed for accepted users.');
+    }
+
+    if (
+      user.applicationStatus !== ApplicationStatus.ACCEPTED &&
+      user.applicationStatus !== ApplicationStatus.ACCEPTED_FROM_WAITLIST
+    ) {
       throw new BadRequestError(
         'User must have an accepted application to submit this form.',
       );

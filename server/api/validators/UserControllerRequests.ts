@@ -12,6 +12,7 @@ import {
   CreateUserRequest as ICreateUserRequest,
   UpdateUser as IUpdateUser,
   UpdateUserRequest as IUpdateUserRequest,
+  UpdateFetchAiHandleRequest as IUpdateFetchAiHandleRequest,
   LoginRequest as ILoginRequest,
   ForgotPasswordRequest as IForgotPasswordRequest,
 } from '../../types/ApiRequests';
@@ -59,6 +60,10 @@ export class UpdateUserRequest implements IUpdateUserRequest {
   user: UpdateUser;
 }
 
+export class UpdateFetchAiHandleRequest implements IUpdateFetchAiHandleRequest {
+  fetchAiHandle: string | null;
+}
+
 export class LoginRequest implements ILoginRequest {
   @IsDefined()
   email: string;
@@ -72,4 +77,3 @@ export class ForgotPasswordRequest implements IForgotPasswordRequest {
   @IsEmail()
   email: string;
 }
-

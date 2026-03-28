@@ -15,6 +15,7 @@ import {
   CreateUserRequest,
   ForgotPasswordRequest,
   LoginRequest,
+  UpdateFetchAiHandleRequest,
   UpdateUserRequest,
 } from '../validators/UserControllerRequests';
 import { AuthenticatedUser } from '../decorators/AuthenticatedUser';
@@ -86,6 +87,20 @@ export class UserController {
     const updatedUser = await this.userService.updateUser(
       user,
       updateUserRequest.user,
+    );
+    return { error: null, user: updatedUser.getPrivateProfile() };
+  }
+
+  @UseBefore(UserAuthentication)
+  @Patch('/fetch-ai-handle')
+  async updateFetchAiHandle(
+    @Body({ required: true, validate: false })
+    updateFetchAiHandleRequest: UpdateFetchAiHandleRequest,
+    @AuthenticatedUser() user: UserModel,
+  ): Promise<UpdateCurrentUserReponse> {
+    const updatedUser = await this.userService.updateFetchAiHandle(
+      user,
+      updateFetchAiHandleRequest.fetchAiHandle,
     );
     return { error: null, user: updatedUser.getPrivateProfile() };
   }

@@ -83,6 +83,10 @@ export interface ForgotPasswordRequest {
   email: string;
 }
 
+export interface UpdateFetchAiHandleRequest {
+  fetchAiHandle: string | null;
+}
+
 export interface ReviewAssignmentJob {
   applicantId: string;
   reviewerId: string | undefined;

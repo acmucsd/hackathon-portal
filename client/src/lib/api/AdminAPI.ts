@@ -20,6 +20,7 @@ import type {
   GetReviewerOverviewResponse,
   ReviewerOverviewResponse,
   RevieweeProfile,
+  SetAcceptanceDeadlinePassedResponse,
 } from '@/lib/types/apiResponses';
 import { ApplicationDecision } from '@/lib/types/enums';
 import axios from 'axios';
@@ -283,6 +284,25 @@ export const releaseDecisions = async (token: string): Promise<void> => {
       },
     }
   );
+};
+
+/**
+ * Set all accepted users to ACCEPTANCE_DEADLINE_PASSED
+ * @param token
+ * @returns Number of users updated
+ */
+export const setAcceptanceDeadlinePassed = async (token: string): Promise<number> => {
+  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.admin.setAcceptanceDeadlinePassed}`;
+  const response = await axios.post<SetAcceptanceDeadlinePassedResponse>(
+    requestUrl,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data.updatedCount;
 };
 
 /**

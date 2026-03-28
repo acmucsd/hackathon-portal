@@ -22,6 +22,7 @@ import Modal from '../Modal';
 import { useState } from 'react';
 import { addToGoogleWallet } from './wallet';
 import showToast from '@/lib/showToast';
+import { RECOMMENDED_ITEMS } from './recommendedItems';
 
 /** Dates are in local time (America/Los_Angeles) */
 export interface Deadlines {
@@ -43,7 +44,8 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
   const [showBigQr, setShowBigQr] = useState(false);
   const isConfirmed =
     user.applicationStatus === ApplicationStatus.CONFIRMED ||
-    user.applicationStatus === ApplicationStatus.ACCEPTED;
+    user.applicationStatus === ApplicationStatus.ACCEPTED ||
+    user.applicationStatus === ApplicationStatus.ACCEPTED_FROM_WAITLIST;
 
   const completedFormTypes = new Set(responses.map(r => r.formType));
   const qrUnlocked =
@@ -51,14 +53,19 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
     completedFormTypes.has(FormType.LIABILITY_WAIVER) &&
     completedFormTypes.has(FormType.PHOTO_RELEASE);
 
-  const timelineItems: [Date, string][] = [
+  const waitlistOngoing = new Date() >= timeline.waitlist && new Date() < timeline.hackathon;
+
+  const timelineItems: [Date, string, boolean?][] = [
     [timeline.application, 'Application Deadline'],
     [timeline.decisions, 'Decisions Released'],
     [timeline.acceptance, 'RSVP Deadline'],
-    [timeline.waitlist, 'Rolling Waitlist RSVP'],
+    [timeline.waitlist, 'Rolling Waitlist RSVP', waitlistOngoing],
     [timeline.hackathon, 'Hackathon Day!'],
   ];
-  const nextUpcomingIndex = timelineItems.findIndex(([date]) => new Date() < date);
+  const nextUpcomingIndex = timelineItems.findIndex(([date, _label, ongoing]) => {
+    if (ongoing) return true;
+    return new Date() < date;
+  });
 
   return (
     <div
@@ -115,23 +122,44 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
               </>
             )}
           </Card>
+          <Card gap={1.5} className={`${styles.card} ${styles.recommended}`}>
+            <Typography variant="headline/heavy/small" component="h2">
+              Recommended Items
+            </Typography>
+            <ul className={styles.recommendedList}>
+              {RECOMMENDED_ITEMS.map(({ label, href, prefix, suffix }, i) => (
+                <li key={i}>
+                  <Typography
+                    variant="label/medium"
+                    component="span"
+                    className={styles.recommendedItem}
+                  >
+                    {prefix}
+                    <Link href={href} className="link" target="_blank" rel="noopener noreferrer">
+                      {label}
+                    </Link>
+                    {suffix}
+                  </Typography>
+                </li>
+              ))}
+            </ul>
+          </Card>
           <Card gap={1.5} className={`${styles.card} ${styles.onboarding}`}>
             <Typography variant="headline/heavy/small" component="h2">
               Onboarding Tasks
             </Typography>
             <div className={styles.onboardingTaskGrid}>
-              {[...ONBOARDING_TASKS]
-                .sort((a, b) => {
-                  const aDone = a.formType ? completedFormTypes.has(a.formType) : false;
-                  const bDone = b.formType ? completedFormTypes.has(b.formType) : false;
-                  return Number(aDone) - Number(bDone);
-                })
+              {ONBOARDING_TASKS.map(task => ({
+                ...task,
+                completed: task.isFetchAi
+                  ? Boolean(user.fetchAiHandle)
+                  : task.formType
+                    ? completedFormTypes.has(task.formType)
+                    : false,
+              }))
+                .sort((a, b) => Number(a.completed) - Number(b.completed))
                 .map(task => (
-                  <OnboardingTaskCard
-                    key={task.title}
-                    task={task}
-                    done={task.formType ? completedFormTypes.has(task.formType) : false}
-                  />
+                  <OnboardingTaskCard key={task.title} task={task} />
                 ))}
             </div>
           </Card>
@@ -150,10 +178,11 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
           Timeline
         </Typography>
         <div className={styles.timelineItemWrapper}>
-          {timelineItems.map(([date, label], i) => (
+          {timelineItems.map(([date, label, ongoing], i) => (
             <TimelineItem
               key={i}
               date={date}
+              ongoing={ongoing}
               first={i === 0}
               nextUpcoming={i === nextUpcomingIndex}
             >
@@ -171,7 +200,16 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
           <FAQ data={faq} />
         </div>
         <Typography variant="body/large" component="p">
-          Still have questions? Email{' '}
+          Still have questions? Go to{' '}
+          <Link
+            href="https://www.fetch.ai/diamondhacks2026"
+            className="link"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            fetch.ai
+          </Link>{' '}
+          for further assistance or email{' '}
           <Link href="mailto:hackathon@acmucsd.org" className="link">
             hackathon@acmucsd.org
           </Link>{' '}

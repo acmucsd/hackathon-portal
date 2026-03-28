@@ -14,9 +14,15 @@ interface UsersTableProps {
   filteredUsers: RevieweeProfile[];
   itemsPerPage?: number;
   superAdmin?: boolean;
+  filterCriteria?: { status: string; q: string };
 }
 
-const UsersTable = ({ filteredUsers, itemsPerPage = 10, superAdmin }: UsersTableProps) => {
+const UsersTable = ({
+  filteredUsers,
+  itemsPerPage = 10,
+  superAdmin,
+  filterCriteria,
+}: UsersTableProps) => {
   const [currentPage, setCurrentPage] = useState(0);
 
   useEffect(() => {
@@ -28,7 +34,7 @@ const UsersTable = ({ filteredUsers, itemsPerPage = 10, superAdmin }: UsersTable
     'Status',
     'School',
     'Interest Form?',
-    'Submission',
+    'Notes',
     ...(superAdmin ? ['Assigned Reviewer'] : []),
     'Action',
   ];
@@ -47,7 +53,12 @@ const UsersTable = ({ filteredUsers, itemsPerPage = 10, superAdmin }: UsersTable
       {isSmall ? (
         <TableList>
           {currentUsers.map(user => (
-            <UserItem key={user.id} user={user} superAdmin={superAdmin} />
+            <UserItem
+              key={user.id}
+              user={user}
+              superAdmin={superAdmin}
+              filterCriteria={filterCriteria}
+            />
           ))}
         </TableList>
       ) : (
@@ -63,7 +74,12 @@ const UsersTable = ({ filteredUsers, itemsPerPage = 10, superAdmin }: UsersTable
           </thead>
           <tbody>
             {currentUsers.map(user => (
-              <UserRow key={user.id} user={user} superAdmin={superAdmin} />
+              <UserRow
+                key={user.id}
+                user={user}
+                superAdmin={superAdmin}
+                filterCriteria={filterCriteria}
+              />
             ))}
           </tbody>
         </Table>

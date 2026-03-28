@@ -10,9 +10,10 @@ import styles from './style.module.scss';
 interface UserItemProps {
   user: RevieweeProfile;
   superAdmin?: boolean;
+  filterCriteria?: { status: string; q: string };
 }
 
-const UserItem = ({ user, superAdmin }: UserItemProps) => {
+const UserItem = ({ user, superAdmin, filterCriteria }: UserItemProps) => {
   const date = new Date(user.createdAt);
   const formattedDate = `${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()}`;
   const displayStatus =
@@ -30,7 +31,7 @@ const UserItem = ({ user, superAdmin }: UserItemProps) => {
       <Typography variant="body/medium">
         Interest Form: <InterestFormTag status={user.didInterestForm ? 'YES' : 'NO'} />
       </Typography>
-      <Typography variant="body/medium">Submission Date: {formattedDate}</Typography>
+      <Typography variant="body/medium">Notes: {user.reviewerComments}</Typography>
       {superAdmin && (
         <Typography variant="body/medium">
           Assigned Reviewer:{' '}
@@ -40,7 +41,7 @@ const UserItem = ({ user, superAdmin }: UserItemProps) => {
       {user.applicationStatus !== ApplicationStatus.NOT_SUBMITTED && (
         <Button
           className={styles.viewButton}
-          href={`/applicationView/${user.id}`}
+          href={`/applicationView/${user.id}${filterCriteria ? `?status=${encodeURIComponent(filterCriteria.status)}&q=${encodeURIComponent(filterCriteria.q)}` : ''}`}
           variant="tertiary"
           openNewTab
         >

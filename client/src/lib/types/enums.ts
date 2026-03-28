@@ -14,6 +14,8 @@ export enum ApplicationStatus {
   NOT_SUBMITTED = 'NOT_SUBMITTED',
   SUBMITTED = 'SUBMITTED',
   WITHDRAWN = 'WITHDRAWN',
+  DEADLINE_PASSED = 'DEADLINE_PASSED',
+  ACCEPTED_FROM_WAITLIST = 'ACCEPTED_FROM_WAITLIST',
 }
 
 export enum ApplicationDecision {
