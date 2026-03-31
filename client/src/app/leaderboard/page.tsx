@@ -5,7 +5,8 @@ import { CookieType } from '@/lib/types/enums';
 import { getCookie } from '@/lib/services/CookieService';
 
 import Card from '@/components/Card';
-import Podium from '@/components/Podium'; // adjust path as needed
+import Podium from '@/components/Podium';
+import LastUpdated from '@/components/LastUpdated';
 import Image from 'next/image';
 
 export default async function LeaderboardPage() {
@@ -31,30 +32,61 @@ export default async function LeaderboardPage() {
     'TRITON': 'King Triton',
   };
 
+  const timeAgo = (date: Date): string => {
+    const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
+    if (seconds < 60) return `${seconds}s ago`;
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return `${minutes}m ago`;
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours}h ago`;
+    return `${Math.floor(hours / 24)}d ago`;
+  }
+
+  const updatedAt = new Date();
+
   return (
-    <main className={styles.main}>
+    <main>
+      {/* Podium */}
       <div className={styles.podiumContainer}>
         <Image src="/assets/leaderboard/confetti.png" width={1500} height={480} alt="Confetti"
-         className={styles.confettiImage}/>
+          className={styles.confettiImage} />
         <Podium leaderboard={leaderboard} />
       </div>
 
       <Card className={styles.container} gap={1.5}>
+        {/* Banner */}
         <div className={styles.bannerContainer}>
           <Image src="/assets/leaderboard/banner.png" width={1131} height={220} alt="Banner"
-          className={styles.bannerImage}
-          />
+            className={styles.bannerImage} />
           <h1 className={styles.leaderboardTitle}>Leaderboard</h1>
-          <p className={styles.lastUpdated}>Last Updated: {new Date().toLocaleTimeString()}</p>
+          <LastUpdated />
         </div>
 
+        {/* Leaderboard items */}
+        {leaderboard.map((house, index) => {
+          const suffix = index === 0 ? 'st' : index === 1 ? 'nd' : index === 2 ? 'rd' : 'th';
+          const isFirst = index === 0;
 
-        {leaderboard.map((house, index) => (
-          <div key={index} className={styles.houseRow}>
-            <span className={styles.rank}>{index + 1}{index == 0 ? 'st' : index == 1 ? 'nd' : index == 2 ? 'rd' : 'th'}</span>
-            <span className={styles.houseName}>{houseNames[house]}</span>
-          </div>
-        ))}
+          return (
+            <>
+              <div key={index} className={`${styles.houseRow} ${isFirst ? styles.firstPlace : ''}`}>
+                <span className={styles.rank}>
+                  {index + 1}<span className={styles.suffix}>{suffix}</span>
+                </span>
+                <Image
+                  src={`/assets/leaderboard/${house}_button.png`}
+                  width={500}
+                  height={500}
+                  alt={houseNames[house]}
+                  className={styles.mascotImage}
+                />
+                <span className={styles.houseName}>{houseNames[house]}</span>
+              </div>
+              {isFirst && <div className={styles.divider} />}
+            </>
+          );
+        })}
+
       </Card>
     </main>
   );
