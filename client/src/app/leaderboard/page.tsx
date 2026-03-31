@@ -17,13 +17,7 @@ export default async function LeaderboardPage() {
   }
 
   // note: index 0 = 1st place, index 1 = 2nd place, etc.
-  // const leaderboard = await getHouseLeaderboard(accessToken);
-
-  // const leaderboard = ['SUN_GOD', 'RACCOON', 'TRITON', 'GEISEL']; // temporary hardcoded leaderboard until API is ready
-  const leaderboard = ['RACCOON', 'TRITON', 'GEISEL', 'SUN_GOD']; // temporary hardcoded leaderboard until API is ready
-  // const leaderboard = ['TRITON', 'GEISEL', 'SUN_GOD', 'RACCOON']; // temporary hardcoded leaderboard until API is ready
-  // const leaderboard = ['GEISEL', 'SUN_GOD', 'RACCOON', 'TRITON']; // temporary hardcoded leaderboard until API is ready
-
+  const leaderboard = await getHouseLeaderboard(accessToken);
 
   const houseNames: { [key: string]: string } = {
     'GEISEL': 'Geisel',
@@ -38,16 +32,6 @@ export default async function LeaderboardPage() {
     3: 'bronze',
     4: 'white',
   };
-
-  const timeAgo = (date: Date): string => {
-    const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
-    if (seconds < 60) return `${seconds}s ago`;
-    const minutes = Math.floor(seconds / 60);
-    if (minutes < 60) return `${minutes}m ago`;
-    const hours = Math.floor(minutes / 60);
-    if (hours < 24) return `${hours}h ago`;
-    return `${Math.floor(hours / 24)}d ago`;
-  }
 
   return (
     <main className={styles.main}>
