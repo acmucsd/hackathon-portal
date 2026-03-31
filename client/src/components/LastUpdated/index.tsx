@@ -5,7 +5,6 @@ import styles from './style.module.scss';
 
 function timeAgo(date: Date): string {
   const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
-  if (seconds < 60) return `${seconds}s ago`;
   const minutes = Math.floor(seconds / 60);
   if (minutes < 60) return `${minutes}m ago`;
   const hours = Math.floor(minutes / 60);
@@ -15,7 +14,7 @@ function timeAgo(date: Date): string {
 
 export default function LastUpdated() {
   const [date] = useState(() => new Date());
-  const [label, setLabel] = useState('0s ago');
+  const [label, setLabel] = useState('0m ago');
 
   useEffect(() => {
     const id = setInterval(() => setLabel(timeAgo(date)), 1000);
