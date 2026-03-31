@@ -10,7 +10,7 @@
     justify-content: center;
     margin-bottom: -2rem;
 
-    @media screen and (max-width: 870px) {
+    @media screen and (max-width: vars.$breakpoint-md) {
       align-items: center;
     }
 
@@ -32,7 +32,7 @@
         }
 
         &.raccoon {
-          @media screen and (max-width: 870px) {
+          @media screen and (max-width: vars.$breakpoint-md) {
             width: 44rem;
           }
 
@@ -42,7 +42,7 @@
         }
 
         &.sunGod {
-          @media screen and (max-width: 870px) {
+          @media screen and (max-width: vars.$breakpoint-md) {
             width: 43rem;
           }
 
@@ -57,7 +57,7 @@
 
         &.geisel,
         &.kingTriton {
-          @media screen and (max-width: 870px) {
+          @media screen and (max-width: vars.$breakpoint-md) {
             width: 40rem;
           }
 
@@ -92,7 +92,7 @@
     .badge {
       display: none;
 
-      @media screen and (max-width: 870px) {
+      @media screen and (max-width: vars.$breakpoint-md) {
         display: flex;
         width: 27rem;
         height: auto;

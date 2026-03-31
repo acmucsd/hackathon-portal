@@ -6,7 +6,7 @@ import { useWindowSize } from '@/lib/hooks/useWindowSize';
 import ProfileCard from '@/components/ProfileCard';
 import ApplicationCard from '@/components/ApplicationCard';
 import styles from './style.module.scss';
-import { FormType } from '@/lib/types/enums';
+import { FormType, House } from '@/lib/types/enums';
 import { PrivateProfile, ResponseModel } from '@/lib/types/apiResponses';
 
 interface ProfileClientProps {
@@ -20,12 +20,13 @@ const Profile = ({ user, responses }: ProfileClientProps) => {
   const application = responses.find(response => response.formType === FormType.APPLICATION);
   const house = houseAssets[user.house];
 
-  const houseStyles = {
-    RACCOON: styles.raccoon,
-    SUN_GOD: styles.sunGod,
-    GEISEL: styles.geisel,
-    TRITON: styles.kingTriton,
-  } as const;
+  const houseStyles: Record<House, string> = {
+    [House.RACCOON]: styles.raccoon,
+    [House.SUN_GOD]: styles.sunGod,
+    [House.GEISEL]: styles.geisel,
+    [House.TRITON]: styles.kingTriton,
+    [House.UNASSIGNED]: '',
+  };
 
   return (
     <div className={styles.profileContainer}>

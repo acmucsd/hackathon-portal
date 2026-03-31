@@ -71,12 +71,16 @@ const ProfileCard = ({ user }: ProfileCardProps) => {
           <EditIcon className={styles.editBtn} onClick={() => clearFields()} />
         )}
         {!editProfile ? (
-          <Button variant="tertiary" onClick={() => logout()} className={styles.logoutBtn}>
+          <Button
+            variant="tertiary"
+            onClick={() => logout()}
+            className={`${styles.logoutBtn} ${user.house === 'UNASSIGNED' && styles.noHouse}`}
+          >
             Log out
           </Button>
         ) : null}
       </div>
-      <div className={styles.profileContent}>
+      <div className={`${styles.profileContent} ${user.house === 'UNASSIGNED' && styles.noHouse}`}>
         <TextField
           variant="horizontal"
           id="firstName"

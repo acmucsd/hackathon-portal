@@ -2,6 +2,7 @@
 
 .profileHeader {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 1rem;
 
@@ -11,12 +12,14 @@
     cursor: pointer;
   }
 
-  .closeBtn {
-    margin-left: auto;
-  }
-
   .logoutBtn {
-    margin-left: auto;
+    &.noHouse {
+      margin-left: auto;
+    }
+
+    @media screen and (max-width: vars.$breakpoint-md) {
+      flex-basis: 100%;
+    }
   }
 }
 
@@ -24,34 +27,61 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  width: calc(100% - 21rem);
+  width: calc(100% - 40rem);
 
-  @media screen and (max-width: 870px) {
+  &.noHouse {
     width: 100%;
   }
 
   .house {
     position: absolute;
-    top: 19rem;
-    right: 26.5rem;
+    top: 10rem;
+    right: 45rem;
 
     &.editing {
-      top: 15rem;
+      top: 7rem;
     }
 
     .books {
       position: absolute;
-      top: 6.63rem;
+      top: 9.64rem;
       width: auto;
-      height: 10rem;
+      height: 16rem;
     }
 
     .badge {
       position: absolute;
-      left: 4rem;
+      left: 13rem;
       width: auto;
-      height: 20rem;
+      height: 30rem;
     }
+  }
+
+  @media screen and (max-width: 1176px) {
+    width: calc(100% - 21rem);
+
+    .house {
+      top: 19rem;
+      right: 26.5rem;
+
+      &.editing {
+        top: 15rem;
+      }
+
+      .books {
+        top: 6.63rem;
+        height: 10rem;
+      }
+
+      .badge {
+        left: 4rem;
+        height: 20rem;
+      }
+    }
+  }
+
+  @media screen and (max-width: vars.$breakpoint-md) {
+    width: 100%;
   }
 }
 
@@ -59,6 +89,7 @@
   display: flex;
   justify-content: flex-end;
   gap: 0.5rem;
+  position: relative;
 
   @media screen and (max-width: vars.$breakpoint-md) {
     .discardButton {
