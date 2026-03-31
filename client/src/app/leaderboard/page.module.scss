@@ -41,7 +41,7 @@
 }
 
 .leaderboardTitle {
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   font-weight: 800;
   font-size: 66px;
   line-height: 86px;
@@ -57,10 +57,10 @@
 }
 
 .houseRow {
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: 6rem 105px 1fr;
   align-items: center;
-  gap: 32px;
+  gap: 64px;
   width: 100%;
   padding: 20px 30px;
   border-radius: 12px;
