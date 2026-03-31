@@ -11,8 +11,7 @@ export function middleware(request: NextRequest) {
   }
 
   // Restrict the user from going to /schedule or /resources (for now)
-  // TODO: add leaderboard to this to be removed later
-  const restrictedPaths = ['/schedule', '/resources'];
+  const restrictedPaths = ['/schedule', '/resources', '/leaderboard'];
   if (restrictedPaths.includes(pathname)) {
     return NextResponse.rewrite(new URL('/404', request.url));
   }
