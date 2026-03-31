@@ -90,7 +90,6 @@
     max-width: 115px;
     height: calc(var(--column-height) / 2) !important;
     border-radius: 25px 25px 0 0;
-
   }
 }
 
@@ -102,22 +101,30 @@
 
 .sun_god .column {
   background: linear-gradient(180deg, #7a2a2a 0%, #521c1c 100%);
-  box-shadow: inset 0 2px 0 rgba(200, 100, 100, 0.25), 0 -2px 8px rgba(122, 42, 42, 0.3);
+  box-shadow:
+    inset 0 2px 0 rgba(200, 100, 100, 0.25),
+    0 -2px 8px rgba(122, 42, 42, 0.3);
 }
 
 .raccoon .column {
   background: linear-gradient(180deg, #3a7a4a 0%, #285636 100%);
-  box-shadow: inset 0 2px 0 rgba(100, 200, 120, 0.3), 0 -2px 8px rgba(58, 122, 74, 0.3);
+  box-shadow:
+    inset 0 2px 0 rgba(100, 200, 120, 0.3),
+    0 -2px 8px rgba(58, 122, 74, 0.3);
 }
 
 .triton .column {
   background: linear-gradient(180deg, #d4a017 0%, #a87c10 100%);
-  box-shadow: inset 0 2px 0 rgba(255, 220, 100, 0.5), 0 -2px 8px rgba(212, 160, 23, 0.3);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 220, 100, 0.5),
+    0 -2px 8px rgba(212, 160, 23, 0.3);
 }
 
 .geisel .column {
   background: linear-gradient(180deg, #2a5fa0 0%, #1a3d6e 100%);
-  box-shadow: inset 0 2px 0 rgba(100, 160, 240, 0.3), 0 -2px 8px rgba(42, 95, 160, 0.3);
+  box-shadow:
+    inset 0 2px 0 rgba(100, 160, 240, 0.3),
+    0 -2px 8px rgba(42, 95, 160, 0.3);
 }
 
 .gobletImage {

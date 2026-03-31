@@ -29,20 +29,32 @@ export default function Podium({ leaderboard }: PodiumProps) {
 
   return (
     <div className={styles.podiumWrapper}>
-      {FIXED_ORDER.map((house) => {
+      {FIXED_ORDER.map(house => {
         const rank = rankOf[house] ?? FIXED_ORDER.length;
         const imageSrc = `/assets/leaderboard/${house}.png`;
         const height = heightByRank[rank] ?? 200;
         const tier = RANK_TO_TIER[rank];
 
         return (
-          <div key={house} className={`${styles.podiumSlot} ${styles[house.toLowerCase()]} ${rank === 4 ? styles.mobile_hidden : ''}`}>
+          <div
+            key={house}
+            className={`${styles.podiumSlot} ${styles[house.toLowerCase()]} ${rank === 4 ? styles.mobile_hidden : ''}`}
+          >
             <div className={styles.mascotContainer}>
               {/* Desktop mascot */}
               <Image
                 src={imageSrc}
                 width={180 * (house === 'GEISEL' ? 1.4 : 1)}
-                height={200 * (house === 'RACCOON' ? 1.2 : house === 'TRITON' ? 1.4 : house === 'SUN_GOD' ? 1.1 : 1)}
+                height={
+                  200 *
+                  (house === 'RACCOON'
+                    ? 1.2
+                    : house === 'TRITON'
+                      ? 1.4
+                      : house === 'SUN_GOD'
+                        ? 1.1
+                        : 1)
+                }
                 alt={house}
                 className={`${styles.mascotImage} ${styles.desktopOnly}`}
               />
@@ -50,12 +62,7 @@ export default function Podium({ leaderboard }: PodiumProps) {
               {/* Mobile framed mascot */}
               <div className={styles.mobileOnly}>
                 <div className={styles.frameContainer}>
-                  <Image
-                    src={imageSrc}
-                    fill
-                    alt={house}
-                    className={styles.framedMascot}
-                  />
+                  <Image src={imageSrc} fill alt={house} className={styles.framedMascot} />
                   <Image
                     src={`/assets/leaderboard/${tier}_frame.png`}
                     fill

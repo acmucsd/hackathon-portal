@@ -49,7 +49,7 @@
   align-items: center;
   width: 80%;
   transform: translateY(-100%);
-  color: #FFD9D9;
+  color: #ffd9d9;
 }
 
 .bannerImage {
@@ -98,7 +98,7 @@
 
 .houseRow {
   display: grid;
-  grid-template-columns: 6rem 105px 1fr;
+  grid-template-columns: 6rem 105px 1fr auto;
   align-items: center;
   gap: 64px;
   width: 100%;
@@ -106,14 +106,21 @@
   border-radius: 12px;
 
   @media (max-width: vars.$breakpoint-md) {
-    grid-template-columns: 2.5rem 52px 1fr;
+    grid-template-columns: 2.5rem 52px 1fr auto;
     gap: 16px;
     padding: 10px 16px;
   }
 }
 
 .firstPlace {
-  background: linear-gradient(90deg, #ffdc5e7f 0%, #ffea9c80 25%, #ffd33385 50%, #ffe89575 75%, #ffce1e7b 100%);
+  background: linear-gradient(
+    90deg,
+    #ffdc5e7f 0%,
+    #ffea9c80 25%,
+    #ffd33385 50%,
+    #ffe89575 75%,
+    #ffce1e7b 100%
+  );
   border-radius: 16px;
   position: relative;
 
@@ -124,7 +131,14 @@
     inset: 0;
     border-radius: 16px;
     padding: 4px; // controls border thickness
-    background: linear-gradient(to bottom right, #ffd58d 0%, #ffe0ab 25%, #e8b257 50%, #c07a03 75%, #ffd58d 100%);
+    background: linear-gradient(
+      to bottom right,
+      #ffd58d 0%,
+      #ffe0ab 25%,
+      #e8b257 50%,
+      #c07a03 75%,
+      #ffd58d 100%
+    );
     -webkit-mask:
       linear-gradient(#fff 0 0) content-box,
       linear-gradient(#fff 0 0);

@@ -8,13 +8,23 @@ import config from '../config';
  * @returns List of houses sorted in decreasing order of points
  */
 export const getHouseLeaderboard = async (token: string): Promise<House[]> => {
-  const response = await axios.get<HouseLeaderboardResponse>(
-    `${config.api.baseUrl}${config.api.endpoints.leaderboard.leaderboard}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+  try {
+    const response = await axios.get<HouseLeaderboardResponse>(
+      `${config.api.baseUrl}${config.api.endpoints.leaderboard.leaderboard}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data.leaderboard;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 401) {
+        throw new Error('UNAUTHORIZED');
+      }
+      throw new Error(`Leaderboard fetch failed: ${error.response?.status}`);
     }
-  );
-  return response.data.leaderboard;
+    throw error;
+  }
 };
