@@ -1,5 +1,11 @@
+@use '@/styles/vars.scss' as vars;
+
 .lastUpdated {
   font-weight: 500;
   font-size: 20px;
   z-index: 1;
+
+  @media (max-width: vars.$breakpoint-md) {
+    font-size: 10px;
+  }
 }

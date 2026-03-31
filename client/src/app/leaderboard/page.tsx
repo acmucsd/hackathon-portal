@@ -20,8 +20,8 @@ export default async function LeaderboardPage() {
   // const leaderboard = await getHouseLeaderboard(accessToken);
 
   // const leaderboard = ['SUN_GOD', 'RACCOON', 'TRITON', 'GEISEL']; // temporary hardcoded leaderboard until API is ready
-  // const leaderboard = ['RACCOON', 'TRITON', 'GEISEL', 'SUN_GOD']; // temporary hardcoded leaderboard until API is ready
-  const leaderboard = ['TRITON', 'GEISEL', 'SUN_GOD', 'RACCOON']; // temporary hardcoded leaderboard until API is ready
+  const leaderboard = ['RACCOON', 'TRITON', 'GEISEL', 'SUN_GOD']; // temporary hardcoded leaderboard until API is ready
+  // const leaderboard = ['TRITON', 'GEISEL', 'SUN_GOD', 'RACCOON']; // temporary hardcoded leaderboard until API is ready
   // const leaderboard = ['GEISEL', 'SUN_GOD', 'RACCOON', 'TRITON']; // temporary hardcoded leaderboard until API is ready
 
 
@@ -30,6 +30,13 @@ export default async function LeaderboardPage() {
     'SUN_GOD': 'Sun God',
     'RACCOON': 'Raccoon',
     'TRITON': 'King Triton',
+  };
+
+  const RANK_TO_TIER: { [rank: number]: string } = {
+    1: 'gold',
+    2: 'silver',
+    3: 'bronze',
+    4: 'white',
   };
 
   const timeAgo = (date: Date): string => {
@@ -58,8 +65,12 @@ export default async function LeaderboardPage() {
       <Card className={styles.container} gap={1.5}>
         {/* Banner */}
         <div className={styles.bannerContainer}>
+          {/* Desktop banner */}
           <Image src="/assets/leaderboard/banner.png" width={1131} height={220} alt="Banner"
-            className={styles.bannerImage} />
+            className={`${styles.bannerImage} ${styles.bannerDesktop}`} />
+          {/* Mobile banner */}
+          <Image src="/assets/leaderboard/banner_mobile.png" width={600} height={220} alt="Banner"
+            className={`${styles.bannerImage} ${styles.bannerMobile}`} />
           <h1 className={styles.leaderboardTitle}>Leaderboard</h1>
           <LastUpdated />
         </div>
@@ -75,13 +86,21 @@ export default async function LeaderboardPage() {
                 <span className={styles.rank}>
                   {index + 1}<span className={styles.suffix}>{suffix}</span>
                 </span>
-                <Image
-                  src={`/assets/leaderboard/${house}_button.png`}
-                  width={500}
-                  height={500}
-                  alt={houseNames[house]}
-                  className={styles.mascotImage}
-                />
+                <div className={styles.mascotWrapper}>
+                  <Image
+                    src={`/assets/leaderboard/${house}.png`}
+                    width={500}
+                    height={500}
+                    alt={houseNames[house]}
+                    className={styles.mascotImage}
+                  />
+                  <Image
+                    src={`/assets/leaderboard/${RANK_TO_TIER[index + 1]}_frame.png`}
+                    fill
+                    alt="frame"
+                    className={styles.frameOverlay}
+                  />
+                </div>
                 <span className={styles.houseName}>{houseNames[house]}</span>
               </div>
               {isFirst && <div className={styles.divider} />}
