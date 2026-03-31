@@ -9,6 +9,10 @@
   width: 100%;
   mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
   -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+
+  @media (max-width: vars.$breakpoint-md) {
+    gap: 20px;
+  }
 }
 
 .podiumSlot {
@@ -30,11 +34,69 @@
   object-fit: contain;
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
   transition: transform 0.2s ease;
+
+  @media (max-width: vars.$breakpoint-md) {
+    width: 120px;
+    height: auto;
+  }
+}
+
+// Desktop/mobile visibility toggles
+.desktopOnly {
+  @media (max-width: vars.$breakpoint-md) {
+    display: none;
+  }
+}
+
+.mobileOnly {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+
+  @media (max-width: vars.$breakpoint-md) {
+    display: flex;
+  }
+}
+
+.frameContainer {
+  position: relative;
+  width: 105px;
+  height: 105px;
+}
+
+.framedMascot {
+  border-radius: 50%;
+  padding: 10%;
+}
+
+.frameOverlay {
+  object-fit: contain;
+  z-index: 1;
+}
+
+.medalImage {
+  margin-top: -24px;
+  z-index: 2;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
 }
 
 .column {
   width: 100%;
+  max-width: 225px;
   border-radius: 50px 50px 0 0;
+
+  @media (max-width: vars.$breakpoint-md) {
+    max-width: 115px;
+    height: calc(var(--column-height) / 2) !important;
+    border-radius: 25px 25px 0 0;
+
+  }
+}
+
+.firstPlace {
+  @media (max-width: vars.$breakpoint-md) {
+    height: calc(var(--column-height) / 2 + 60px) !important;
+  }
 }
 
 .sun_god .column {
@@ -61,6 +123,10 @@
   position: absolute;
   bottom: 10%;
   right: -30%;
+
+  @media (max-width: vars.$breakpoint-md) {
+    display: none;
+  }
 }
 
 .gobletGeisel {

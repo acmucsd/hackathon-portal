@@ -19,9 +19,9 @@ export default async function LeaderboardPage() {
   // note: index 0 = 1st place, index 1 = 2nd place, etc.
   // const leaderboard = await getHouseLeaderboard(accessToken);
 
-  const leaderboard = ['SUN_GOD', 'RACCOON', 'TRITON', 'GEISEL']; // temporary hardcoded leaderboard until API is ready
+  // const leaderboard = ['SUN_GOD', 'RACCOON', 'TRITON', 'GEISEL']; // temporary hardcoded leaderboard until API is ready
   // const leaderboard = ['RACCOON', 'TRITON', 'GEISEL', 'SUN_GOD']; // temporary hardcoded leaderboard until API is ready
-  // const leaderboard = ['TRITON', 'GEISEL', 'SUN_GOD', 'RACCOON']; // temporary hardcoded leaderboard until API is ready
+  const leaderboard = ['TRITON', 'GEISEL', 'SUN_GOD', 'RACCOON']; // temporary hardcoded leaderboard until API is ready
   // const leaderboard = ['GEISEL', 'SUN_GOD', 'RACCOON', 'TRITON']; // temporary hardcoded leaderboard until API is ready
 
 
@@ -42,14 +42,16 @@ export default async function LeaderboardPage() {
     return `${Math.floor(hours / 24)}d ago`;
   }
 
-  const updatedAt = new Date();
-
   return (
-    <main>
+    <main className={styles.main}>
       {/* Podium */}
       <div className={styles.podiumContainer}>
+        {/* desktop */}
         <Image src="/assets/leaderboard/confetti.png" width={1500} height={480} alt="Confetti"
           className={styles.confettiImage} />
+        {/* mobile */}
+        <Image src="/assets/leaderboard/confetti_mobile.png" width={200} height={150} alt="Confetti"
+          className={styles.confettiImageMobile} />
         <Podium leaderboard={leaderboard} />
       </div>
 

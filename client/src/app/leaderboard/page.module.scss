@@ -1,8 +1,10 @@
 @use '@/styles/vars.scss' as vars;
-
 .podiumContainer {
   padding-top: 200px;
   background: linear-gradient(180deg, #ffd13b55 0%, transparent 50%);
+  @media (max-width: vars.$breakpoint-md) {
+    padding-top: 80px;
+  }
 }
 
 .confettiImage {
@@ -10,6 +12,22 @@
   top: 120px;
   left: 0;
   width: 100%;
+
+  @media (max-width: vars.$breakpoint-md) {
+    display: none;
+  }
+}
+
+.confettiImageMobile {
+  position: absolute;
+  display: none;
+  top: 120px;
+  right: 0px;
+  transform: translateX(5%);
+
+  @media (max-width: vars.$breakpoint-md) {
+    display: block;
+  }
 }
 
 .container {
