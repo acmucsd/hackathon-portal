@@ -5,6 +5,110 @@
   flex-direction: column;
   gap: 2rem;
 
+  .house {
+    display: flex;
+    justify-content: center;
+    margin-bottom: -2rem;
+
+    @media screen and (max-width: vars.$breakpoint-md) {
+      align-items: center;
+    }
+
+    .confettiContainer {
+      display: flex;
+      justify-content: center;
+      position: absolute;
+      z-index: -1;
+      width: 100%;
+      overflow: hidden;
+      margin-top: calc(var(--top-padding) * -1);
+
+      .confetti {
+        width: 130rem;
+        height: auto;
+
+        @media screen and (max-width: 2090px) {
+          width: 100%;
+        }
+
+        &.raccoon {
+          @media screen and (max-width: vars.$breakpoint-md) {
+            width: 44rem;
+          }
+
+          @media screen and (max-width: 500px) {
+            width: 37rem;
+          }
+        }
+
+        &.sunGod {
+          @media screen and (max-width: vars.$breakpoint-md) {
+            width: 43rem;
+          }
+
+          @media screen and (max-width: 650px) {
+            width: 39rem;
+          }
+
+          @media screen and (max-width: 500px) {
+            width: 33rem;
+          }
+        }
+
+        &.geisel,
+        &.kingTriton {
+          @media screen and (max-width: vars.$breakpoint-md) {
+            width: 40rem;
+          }
+
+          @media screen and (max-width: 650px) {
+            width: 36rem;
+          }
+
+          @media screen and (max-width: 500px) {
+            width: 30rem;
+          }
+        }
+      }
+
+      // Gradients
+      &.raccoon {
+        background-image: linear-gradient(#56b75a8c, #00000000);
+      }
+
+      &.sunGod {
+        background-image: linear-gradient(#c5263a8c, #00000000);
+      }
+
+      &.geisel {
+        background-image: linear-gradient(#1551bf51, #00000000);
+      }
+
+      &.kingTriton {
+        background-image: linear-gradient(#ffd13b6a, #00000000);
+      }
+    }
+
+    .badge {
+      display: none;
+
+      @media screen and (max-width: vars.$breakpoint-md) {
+        display: flex;
+        width: 27rem;
+        height: auto;
+        margin-top: calc(var(--top-padding) * -1);
+      }
+
+      @media screen and (max-width: 650px) {
+        width: 24rem;
+      }
+
+      @media screen and (max-width: 500px) {
+        width: 20rem;
+      }
+    }
+  }
+
   .formsContainer {
     display: flex;
     width: 100%;
