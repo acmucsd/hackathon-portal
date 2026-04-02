@@ -9,6 +9,9 @@
   }
   .timelineCardWrapper {
     width: 500px;
+    @media screen and (max-width: vars.$breakpoint-md) {
+      width: 300px;
+    }
   }
   .timeBox {
     flex: none;
