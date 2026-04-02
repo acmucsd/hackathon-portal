@@ -11,6 +11,9 @@ export default async function LeaderboardPage() {
   }
   try {
     const leaderboard = await getHouseLeaderboard(accessToken);
+    if (typeof leaderboard === 'string') {
+      redirect('/api/logout');
+    }
     return <LeaderboardClient leaderboard={leaderboard} />;
   } catch (error) {
     redirect('/api/logout');

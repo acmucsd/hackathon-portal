@@ -8,12 +8,14 @@ import Image from 'next/image';
 import RankChangeBadge from '@/components/LeaderboardChangeBadge';
 import { useLeaderboardDiff } from '@/lib/hooks/useLeaderboardDiff';
 import React from 'react';
+import { House } from '@/lib/types/enums';
 
-const houseNames: { [key: string]: string } = {
+const houseNames: { [key in House]: string } = {
   GEISEL: 'Geisel',
   SUN_GOD: 'Sun God',
   RACCOON: 'Raccoon',
   TRITON: 'King Triton',
+  UNASSIGNED: 'Unassigned',
 };
 
 const RANK_TO_TIER: { [rank: number]: string } = {
@@ -24,7 +26,7 @@ const RANK_TO_TIER: { [rank: number]: string } = {
 };
 
 interface Props {
-  leaderboard: string[];
+  leaderboard: House[];
 }
 
 export default function LeaderboardClient({ leaderboard }: Props) {

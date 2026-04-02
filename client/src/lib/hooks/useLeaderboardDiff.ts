@@ -15,25 +15,15 @@ export const useLeaderboardDiff = (currentLeaderboard: string[]): HouseRankChang
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
     const previous: string[] = stored ? JSON.parse(stored) : [];
-
-    // console.log('previous:', previous);
-    // console.log('current:', currentLeaderboard);
-
     const hasChanged = currentLeaderboard.some((house, i) => house !== previous[i]);
-    // console.log('hasChanged:', hasChanged);
-
     const changes: HouseRankChange[] = currentLeaderboard.map((house, currentIndex) => {
       const previousIndex = previous.indexOf(house);
       const delta = previousIndex - currentIndex;
       const change: RankChange =
         previousIndex === -1 ? 'new' : delta > 0 ? 'up' : delta < 0 ? 'down' : 'same';
-
-      // console.log(`${house}: previousIndex=${previousIndex}, currentIndex=${currentIndex}, delta=${delta}, change=${change}`);
-
       return { house, change, delta };
     });
 
-    // console.log('diffs:', changes);
     setDiffs(changes);
 
     if (hasChanged && previous.length > 0) {
