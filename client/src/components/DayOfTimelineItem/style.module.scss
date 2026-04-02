@@ -7,16 +7,15 @@
   &.nextUpcoming {
     color: #ff434f;
   }
-  .timelineCardWrapper{
+  .timelineCardWrapper {
     width: 500px;
   }
   .timeBox {
     flex: none;
-    align-self:stretch;
-
+    align-self: stretch;
 
     div {
-      top:0px;
+      top: 0px;
       padding: 5px;
       width: 10rem;
       height: 50px;
@@ -24,7 +23,7 @@
       justify-content: center;
       display: flex;
       border-radius: 8px;
-      background-color: #A5E0FB;
+      background-color: #a5e0fb;
       color: black;
     }
 
@@ -38,7 +37,7 @@
       &::before {
         content: '';
         position: absolute;
-        background-color: #A5E0FB;
+        background-color: #a5e0fb;
         width: 4px;
         left: 50%;
         top: 0px;
