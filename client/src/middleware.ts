@@ -10,12 +10,6 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/api/logout', request.url));
   }
 
-  // Restrict the user from going to /schedule or /resources (for now)
-  const restrictedPaths = ['/schedule', '/resources'];
-  if (restrictedPaths.includes(pathname)) {
-    return NextResponse.rewrite(new URL('/404', request.url));
-  }
-
   // Continue to the requested page
   return NextResponse.next();
 

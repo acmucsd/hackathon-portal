@@ -1,0 +1,49 @@
+.status {
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  white-space: nowrap;
+
+  &.NOT_SUBMITTED {
+    color: #8d0d25;
+    background-color: #fad5dc;
+  }
+
+  &.SUBMITTED,
+  &.NO_DECISION,
+  &.MAIN_EVENT {
+    color: #142e52;
+    background-color: #d6e5f8;
+  }
+
+  &.ACCEPTED,
+  &.ACCEPTED_FROM_WAITLIST,
+  &.ACCEPT,
+  &.INFO,
+  &.SOCIAL {
+    color: #00573f;
+    background-color: #d7ede7;
+  }
+
+  &.WITHDRAWN,
+  &.WAITLIST,
+  &.WAITLISTED {
+    color: #8d490d;
+    background-color: #ecdf98;
+  }
+
+  &.REJECTED,
+  &.DEADLINE_PASSED,
+  &.REJECT {
+    color: #8d0d25;
+    background-color: #fad5dc;
+  }
+
+  &.CONFIRMED,
+  &.WORKSHOP {
+    color: #35118d;
+    background-color: #ece6f9;
+  }
+}
