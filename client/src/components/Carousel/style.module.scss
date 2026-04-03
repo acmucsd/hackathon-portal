@@ -8,6 +8,10 @@
   padding: 1.875rem 0;
   scrollbar-color: vars.$blue vars.$blue-4;
 
+  @media screen and (max-width: vars.$breakpoint-sm) {
+    gap: 1rem;
+  }
+
   // Prefer the custom scrollbar on Chrome 121+
   // https://stackoverflow.com/a/77931548
   @supports selector(::-webkit-scrollbar) {
