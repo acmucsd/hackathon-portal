@@ -21,7 +21,7 @@ const baseLinks: LinkMetadata[] = [
   { name: 'Dashboard', href: '/' },
   { name: 'Have questions?', href: 'https://www.fetch.ai/diamondhacks2026', external: true },
   // { name: 'Schedule', href: '/schedule' },
-  // { name: 'Resources', href: '/resources' },
+  { name: 'Resources', href: '/resources' },
   // { name: 'Leaderboard', href: '/leaderboard' },
   // { name: 'Hacker Guide', href: 'http://acmurl.com/diamondhacks25-guide', external: true },
 ];

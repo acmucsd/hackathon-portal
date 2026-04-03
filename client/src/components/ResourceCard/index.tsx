@@ -52,7 +52,7 @@ const ResourceCard = ({
           <Image
             src={`${imageSrc}`}
             alt={`${resource.title} cover image`}
-            style={{ objectFit: 'cover' }}
+            style={{ objectFit: 'contain' }}
             sizes="20rem"
             fill
           />
