@@ -1,0 +1,55 @@
+@use '@/styles/vars.scss' as vars;
+
+.item {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  &.nextUpcoming {
+    color: #ff434f;
+  }
+  .timelineCardWrapper {
+    width: 500px;
+    @media screen and (max-width: vars.$breakpoint-md) {
+      width: 300px;
+    }
+  }
+  .timeBox {
+    flex: none;
+    align-self: stretch;
+    @media screen and (max-width: vars.$breakpoint-md) {
+      display: none;
+    }
+    div {
+      top: 0px;
+      padding: 5px;
+      width: 10rem;
+      height: 50px;
+      align-items: center;
+      justify-content: center;
+      display: flex;
+      border-radius: 8px;
+      background-color: #a5e0fb;
+      color: black;
+    }
+
+    &.complete {
+      color: vars.$btn-primary;
+    }
+
+    &.hasLine {
+      position: relative;
+
+      &::before {
+        content: '';
+        position: absolute;
+        background-color: #a5e0fb;
+        width: 4px;
+        left: 50%;
+        top: 0px;
+        height: calc(100% + 1.5rem);
+        margin-left: -2px;
+        z-index: -1;
+      }
+    }
+  }
+}
