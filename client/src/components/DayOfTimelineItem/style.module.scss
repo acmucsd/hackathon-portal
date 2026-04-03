@@ -16,7 +16,9 @@
   .timeBox {
     flex: none;
     align-self: stretch;
-
+    @media screen and (max-width: vars.$breakpoint-md) {
+      display: none;
+    }
     div {
       top: 0px;
       padding: 5px;

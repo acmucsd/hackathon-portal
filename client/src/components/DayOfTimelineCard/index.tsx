@@ -1,12 +1,9 @@
 'use client';
-import Card from '@/components/Card';
 import Button from '@/components/Button';
-import Heading from '@/components/Heading';
 import StatusTag from '@/components/StatusTag';
-import { appQuestions } from '@/config';
-import { Fragment, useState } from 'react';
-import { PublicEvent, ResponseModel } from '@/lib/types/apiResponses';
-import { ApplicationStatus, EventType } from '@/lib/types/enums';
+import { useState } from 'react';
+import { PublicEvent, } from '@/lib/types/apiResponses';
+import { formatTime } from '@/lib/utils';
 import styles from './style.module.scss';
 
 interface DayOfTimelineCardProps {
@@ -22,6 +19,7 @@ const DayOfTimelineCard = ({ event }: DayOfTimelineCardProps) => {
         <div>
           <h2>{event.name}</h2>
           <h3 className={styles.location}>{event.location}</h3>
+          <h3 className={styles.time}>{`${formatTime(event.startTime)} - ${formatTime(event.endTime)}`}</h3>
         </div>
         <div className={styles.tagContainer}>
           <StatusTag status={event.type} />
@@ -31,7 +29,7 @@ const DayOfTimelineCard = ({ event }: DayOfTimelineCardProps) => {
         {expanded ? event.description : ''}
       </dl>
       <Button variant="tertiary" onClick={() => setExpanded(!expanded)}>
-        {expanded ? 'See Less' : 'See More'}
+        {expanded ? '-' : '+'}
       </Button>
     </div>
   );
