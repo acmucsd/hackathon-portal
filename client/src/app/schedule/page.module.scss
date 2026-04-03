@@ -2,6 +2,33 @@
   flex: auto;
   display: flex;
   flex-direction: column;
-  gap: 10rem;
+  gap: 5rem;
   padding: var(--top-padding) var(--side-padding);
+  align-items: center;
+}
+.timelineItemWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  position: relative;
+  z-index: 0;
+}
+.buttonContainer {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  .button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 2.5rem;
+    width: 40%;
+    margin-right: 10px;
+    border-radius: 5px;
+    border: 1px solid #525252;
+    cursor: pointer;
+    &.active {
+      background-color: #525252;
+    }
+  }
 }

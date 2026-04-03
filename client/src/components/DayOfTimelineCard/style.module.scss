@@ -1,0 +1,87 @@
+@use '@/styles/vars.scss' as vars;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: vars.$card-padding;
+  background-color: #37393e;
+  border: 5px solid #525252;
+  border-radius: 1.5rem;
+  cursor: pointer;
+
+  @media screen and (max-width: vars.$breakpoint-md) {
+    padding: vars.$card-padding-mobile;
+  }
+}
+
+.expanded {
+  display: inline;
+}
+
+.collapsed {
+  display: none;
+}
+
+.locationContainer {
+  display: flex;
+  margin-left: -3px;
+}
+
+.plusminus {
+  width: 100%;
+  display: flex;
+  justify-content: end;
+  font-size: 20px;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.tagContainer {
+  margin-top: 0.75rem;
+  margin-left: auto;
+  align-self: flex-start;
+}
+
+.location {
+  font-weight: 400;
+  font-size: medium;
+}
+
+.time {
+  white-space: nowrap;
+  font-weight: 400;
+  font-size: medium;
+}
+
+.question {
+  font-weight: 700;
+  a {
+    color: vars.$blue;
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.response {
+  padding: 0.75rem;
+
+  &:not(:last-child) {
+    margin-bottom: 1.5rem;
+  }
+}
+
+.submissionHeader {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 2rem;
+}
+
+.headerText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
