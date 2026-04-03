@@ -166,10 +166,10 @@ export class UserService {
 
     const userWithEmail = await this.transactionsManager.readWrite(
       async (entityManager) =>{
-        await entityManager.query(`SELECT pg_advisory_xact_lock(hashtext($1))`, [email]);
+        await entityManager.query('SELECT pg_advisory_xact_lock(hashtext($1))', [email]);
 
-        return await Repositories.user(entityManager).findByEmail(email);
-      }
+        return Repositories.user(entityManager).findByEmail(email);
+      },
     );
     const emailAlreadyUsed = userWithEmail !== null;
     if (emailAlreadyUsed) {
