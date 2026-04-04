@@ -71,16 +71,12 @@ const ProfileCard = ({ user }: ProfileCardProps) => {
           <EditIcon className={styles.editBtn} onClick={() => clearFields()} />
         )}
         {!editProfile ? (
-          <Button
-            variant="tertiary"
-            onClick={() => logout()}
-            className={`${styles.logoutBtn} ${user.house === 'UNASSIGNED' && styles.noHouse}`}
-          >
+          <Button variant="tertiary" onClick={() => logout()} className={`${styles.logoutBtn}`}>
             Log out
           </Button>
         ) : null}
       </div>
-      <div className={`${styles.profileContent} ${user.house === 'UNASSIGNED' && styles.noHouse}`}>
+      <div className={`${styles.profileContent}`}>
         <TextField
           variant="horizontal"
           id="firstName"
@@ -125,7 +121,7 @@ const ProfileCard = ({ user }: ProfileCardProps) => {
           autoComplete="given-name"
           disabled
         />
-        {user.house !== 'UNASSIGNED' && !isMobile && (
+        {!isMobile && (
           <div className={`${styles.house} ${editProfile && styles.editing}`}>
             <Image src={house.books} alt="Books" quality={100} className={styles.books} />
             <Image src={house.badge} alt="Badge" quality={100} className={styles.badge} />

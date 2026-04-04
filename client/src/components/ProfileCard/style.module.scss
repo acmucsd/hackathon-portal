@@ -13,10 +13,6 @@
   }
 
   .logoutBtn {
-    &.noHouse {
-      margin-left: auto;
-    }
-
     @media screen and (max-width: vars.$breakpoint-md) {
       flex-basis: 100%;
     }

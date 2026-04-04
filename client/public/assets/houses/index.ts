@@ -12,11 +12,13 @@ import RaccoonBadge from './racoon-badge.png';
 import SunGodBadge from './sun-god-badge.png';
 import GeiselBadge from './geisel-badge.png';
 import KingTritonBadge from './king-triton-badge.png';
+import UnassignedBadge from './unassigned-badge.png';
 
 import GreenBooks from './green-books.png';
 import RedBooks from './red-books.png';
 import BlueBooks from './blue-books.png';
 import YellowBooks from './yellow-books.png';
+import GrayBooks from './gray-books.png';
 
 import RaccoonDashboard from './raccoon-dashboard.png';
 import SunGodDashboard from './sun-god-dashboard.png';
@@ -47,6 +49,7 @@ export const badges = {
   sunGod: SunGodBadge,
   geisel: GeiselBadge,
   kingTriton: KingTritonBadge,
+  unassigned: UnassignedBadge,
 };
 
 export const books = {
@@ -54,6 +57,7 @@ export const books = {
   red: RedBooks,
   blue: BlueBooks,
   yellow: YellowBooks,
+  gray: GrayBooks,
 };
 
 export const mascotDashboards = {
