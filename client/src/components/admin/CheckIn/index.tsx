@@ -13,7 +13,7 @@ import Typography from '@/components/Typography';
 import Image from 'next/image';
 import Dropdown from '@/components/Dropdown';
 import { attendEvent } from '@/lib/api/AdminAPI';
-import { reportError } from '@/lib/utils';
+import { reportError, timeToDate } from '@/lib/utils';
 import { Autocomplete, TextField } from '@mui/material';
 import { ApplicationStatus } from '@/lib/types/enums';
 
@@ -33,7 +33,7 @@ const CheckIn = ({ token, events, users }: CheckInProps) => {
   const [success, setSuccess] = useState<boolean | null>(null);
   const [event, setEvent] = useState<PublicEvent | undefined>(() =>
     events.find(
-      event => new Date(event.startTime) <= new Date() && new Date() < new Date(event.endTime)
+      event => timeToDate(event.startTime) <= new Date() && new Date() < timeToDate(event.endTime)
     )
   );
   const [scanTime, setScanTime] = useState<Date | null>(null);

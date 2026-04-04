@@ -30,16 +30,18 @@ const Profile = ({ user, responses }: ProfileClientProps) => {
 
   return (
     <div className={styles.profileContainer}>
-      {user.house !== 'UNASSIGNED' && size.width !== undefined && (
+      {size.width !== undefined && (
         <div className={styles.house}>
-          <div className={`${styles.confettiContainer} ${houseStyles[user.house]}`}>
-            <Image
-              src={!isMobile ? house.confetti : house.confettiMobile}
-              alt="Confetti"
-              quality={100}
-              className={`${styles.confetti} ${houseStyles[user.house]}`}
-            />
-          </div>
+          {user.house !== 'UNASSIGNED' && (
+            <div className={`${styles.confettiContainer} ${houseStyles[user.house]}`}>
+              <Image
+                src={!isMobile ? house.confetti : house.confettiMobile}
+                alt="Confetti"
+                quality={100}
+                className={`${styles.confetti} ${houseStyles[user.house]}`}
+              />
+            </div>
+          )}
           <Image src={house.badge} alt="Badge" quality={100} className={styles.badge} />
         </div>
       )}

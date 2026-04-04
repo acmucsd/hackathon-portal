@@ -84,6 +84,19 @@ export function formatTime(time: string) {
   return formattedTime;
 }
 
+/**
+ * Converts a time string (HH:MM:SS) to a Date object for today
+ *
+ * @param time - Time string in HH:MM:SS format
+ * @returns Date object with today's date and the specified time
+ */
+export function timeToDate(time: string): Date {
+  const [hours, minutes, seconds = 0] = time.split(':').map(Number);
+  const date = new Date();
+  date.setHours(hours, minutes, seconds, 0);
+  return date;
+}
+
 export function canUserSubmitWaivers(applicationStatus: ApplicationStatus): boolean {
   return (
     applicationStatus === ApplicationStatus.ACCEPTED ||

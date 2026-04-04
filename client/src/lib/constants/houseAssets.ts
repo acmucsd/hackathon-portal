@@ -54,8 +54,8 @@ export const houseAssets: Record<House, HouseAssets> = {
   [House.UNASSIGNED]: {
     confetti: '',
     confettiMobile: '',
-    badge: '',
-    books: '',
+    badge: badges.unassigned,
+    books: books.gray,
     mascotDashboard: '',
     mascotDashboardMobile: '',
   },
