@@ -8,7 +8,7 @@
   padding: 2rem var(--side-padding);
   background-color: vars.$black;
 
-  @media screen and (max-width: vars.$breakpoint-md) {
+  @media screen and (max-width: vars.$breakpoint-lg) {
     position: relative;
     z-index: 2000;
   }
@@ -20,7 +20,7 @@
   align-items: center;
   gap: 0.5rem;
 
-  @media screen and (max-width: vars.$breakpoint-md) {
+  @media screen and (max-width: vars.$breakpoint-lg) {
     color: vars.$white;
     align-self: flex-start;
   }
@@ -36,7 +36,7 @@
   flex-direction: row;
   gap: 2rem;
 
-  @media screen and (max-width: vars.$breakpoint-md) {
+  @media screen and (max-width: vars.$breakpoint-lg) {
     display: none;
   }
 }
@@ -48,7 +48,7 @@
   text-decoration: none;
   color: vars.$white;
 
-  @media screen and (max-width: vars.$breakpoint-md) {
+  @media screen and (max-width: vars.$breakpoint-lg) {
     background-color: vars.$black;
     text-align: center;
   }
@@ -79,7 +79,7 @@
     }
   }
 
-  @media screen and (max-width: vars.$breakpoint-md) {
+  @media screen and (max-width: vars.$breakpoint-lg) {
     display: block;
   }
 }

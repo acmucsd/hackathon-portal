@@ -25,7 +25,6 @@
   display: none;
   top: 120px;
   right: 0px;
-  transform: translateX(5%);
 
   @media (max-width: vars.$breakpoint-md) {
     display: block;
@@ -55,7 +54,8 @@
 .bannerImage {
   position: absolute;
   top: 0;
-  width: 1000px;
+  width: 100vw;
+  max-width: 1000px;
   height: auto;
   margin-bottom: 1rem;
 }
@@ -68,7 +68,7 @@
 
 .bannerMobile {
   display: none;
-  width: 400px;
+  max-width: 400px;
   @media (max-width: vars.$breakpoint-md) {
     display: block;
   }
