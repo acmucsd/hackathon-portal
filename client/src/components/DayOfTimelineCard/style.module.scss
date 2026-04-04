@@ -76,12 +76,24 @@
   flex-direction: row;
   align-items: flex-start;
   gap: 2rem;
+
+  @media screen and (max-width: vars.$breakpoint-md) {
+    gap: 1rem;
+  }
 }
 
 .headerText {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+
+  h2 {
+    font-weight: 700 !important;
+
+    @media screen and (max-width: vars.$breakpoint-md) {
+      font-size: 1.25rem !important;
+    }
+  }
 }
 
 .rightSection {

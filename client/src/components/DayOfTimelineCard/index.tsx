@@ -1,5 +1,6 @@
 'use client';
 import Button from '@/components/Button';
+import Typography from '../Typography';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import StatusTag from '@/components/StatusTag';
 import { useState } from 'react';
@@ -23,14 +24,18 @@ const DayOfTimelineCard = ({ event }: DayOfTimelineCardProps) => {
     >
       <div className={styles.submissionHeader}>
         <div className={styles.headerText}>
-          <h2>{event.name}</h2>
+          <Typography variant="title/medium" component="h2">
+            {event.name}
+          </Typography>
           <div className={styles.locationContainer}>
             <LocationOnOutlinedIcon />
-            <h3 className={styles.location}>{event.location}</h3>
+            <Typography variant="body/medium" className={styles.location}>
+              {event.location}
+            </Typography>
           </div>
-          <h3
-            className={styles.time}
-          >{`${formatTime(event.startTime)} - ${formatTime(event.endTime)}`}</h3>
+          <Typography variant="body/medium" className={styles.time}>
+            {`${formatTime(event.startTime)} - ${formatTime(event.endTime)}`}
+          </Typography>
         </div>
         <div className={styles.rightSection}>
           <div className={styles.tagContainer}>

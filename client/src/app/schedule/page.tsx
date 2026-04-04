@@ -36,17 +36,15 @@ export default async function SchedulePage({
             Sunday
           </Link>
         </div>
-        <div>
-          <div className={styles.timelineItemWrapper}>
-            {fetchedFilteredEvents.map((event, i) => (
-              <DayOfTimelineItem
-                event={event}
-                key={i}
-                ongoing={false}
-                last={i === fetchedFilteredEvents.length - 1}
-              />
-            ))}
-          </div>
+        <div className={styles.timelineItemWrapper}>
+          {fetchedFilteredEvents.map((event, i) => (
+            <DayOfTimelineItem
+              event={event}
+              key={i}
+              ongoing={false}
+              last={i === fetchedFilteredEvents.length - 1}
+            />
+          ))}
         </div>
       </main>
     );

@@ -17,13 +17,14 @@
   display: flex;
   width: 100%;
   justify-content: center;
+  gap: 0.5rem;
+
   .button {
     display: flex;
     align-items: center;
     justify-content: center;
     height: 2.5rem;
     width: 40%;
-    margin-right: 10px;
     border-radius: 5px;
     border: 1px solid #525252;
     cursor: pointer;
