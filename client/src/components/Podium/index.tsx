@@ -81,7 +81,7 @@ export default function Podium({ leaderboard }: PodiumProps) {
 
               {rank === 1 && (
                 <Image
-                  src="/assets/leaderboard/goblet.png"
+                  src="/assets/leaderboard/GOBLET.png"
                   width={120}
                   height={180}
                   alt="Goblet"
