@@ -18,7 +18,7 @@ import TimelineItem from '../TimelineItem';
 import { PrivateProfile, PublicEvent, ResponseModel } from '@/lib/types/apiResponses';
 import QrCode from '../QrCode';
 import Button from '../Button';
-import { ApplicationStatus, Day, FormType, House} from '@/lib/types/enums';
+import { ApplicationStatus, Day, FormType, House } from '@/lib/types/enums';
 import Modal from '../Modal';
 import { useState } from 'react';
 import { useWindowSize } from '@/lib/hooks/useWindowSize';
@@ -87,14 +87,14 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
     >
       {user.house !== 'UNASSIGNED' && size.width !== undefined && (
         <div className={`${styles.confettiContainer} ${houseStyles[user.house]}`}>
-          {!isMobile &&
-          <Image
-            src={house.confetti}
-            alt="Confetti"
-            quality={100}
-            className={`${styles.confetti} ${houseStyles[user.house]}`}
-          />
-          }
+          {!isMobile && (
+            <Image
+              src={house.confetti}
+              alt="Confetti"
+              quality={100}
+              className={`${styles.confetti} ${houseStyles[user.house]}`}
+            />
+          )}
         </div>
       )}
       <Card gap={1.5} className={`${styles.card} ${styles.banner} ${houseStyles[user.house]}`}>
@@ -106,23 +106,23 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
             Access the application and view DiamondHacks updates below.
           </Typography>
         </div>
-        {user.house !== 'UNASSIGNED' ?
-        (size.width !== undefined &&
-        <Image
-          src={!isMobile ? house.mascotDashboard : house.mascotDashboardMobile}
-          alt={!isMobile ? "House mascot and books" : "House mascot"}
-          quality={100}
-          className={`${styles.bannerImage} ${houseStyles[user.house]}`}
-        />
-        )
-        :
-        <Image
-          src={TopBanner}
-          alt={"Books and potions in the shelf"}
-          quality={100}
-          className={`${styles.bannerImage} ${houseStyles[user.house]}`}
-        />
-        }
+        {user.house !== 'UNASSIGNED' ? (
+          size.width !== undefined && (
+            <Image
+              src={!isMobile ? house.mascotDashboard : house.mascotDashboardMobile}
+              alt={!isMobile ? 'House mascot and books' : 'House mascot'}
+              quality={100}
+              className={`${styles.bannerImage} ${houseStyles[user.house]}`}
+            />
+          )
+        ) : (
+          <Image
+            src={TopBanner}
+            alt={'Books and potions in the shelf'}
+            quality={100}
+            className={`${styles.bannerImage} ${houseStyles[user.house]}`}
+          />
+        )}
       </Card>
 
       {isConfirmed && (

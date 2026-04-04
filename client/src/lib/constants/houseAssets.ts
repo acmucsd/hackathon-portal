@@ -1,4 +1,11 @@
-import { confetti, confettiMobile, badges, books, mascotDashboards, mascotDashboardsMobile } from '@/../public/assets/houses';
+import {
+  confetti,
+  confettiMobile,
+  badges,
+  books,
+  mascotDashboards,
+  mascotDashboardsMobile,
+} from '@/../public/assets/houses';
 import { House } from '../types/enums';
 import { StaticImageData } from 'next/image';
 
