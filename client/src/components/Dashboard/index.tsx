@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Card from '../Card';
 import styles from './style.module.scss';
 import TopBanner from '@/../public/assets/banner2.png';
+import { houseAssets } from '@/lib/constants/houseAssets';
 import BottomBanner from '@/../public/assets/bottombanner.png';
 import SunGod from '@/../public/assets/sungod-with-book.png';
 import LockIcon from '@/../public/assets/icons/lock.svg';
@@ -17,9 +18,10 @@ import TimelineItem from '../TimelineItem';
 import { PrivateProfile, PublicEvent, ResponseModel } from '@/lib/types/apiResponses';
 import QrCode from '../QrCode';
 import Button from '../Button';
-import { ApplicationStatus, Day, FormType } from '@/lib/types/enums';
+import { ApplicationStatus, Day, FormType, House } from '@/lib/types/enums';
 import Modal from '../Modal';
 import { useState } from 'react';
+import { useWindowSize } from '@/lib/hooks/useWindowSize';
 import { addToGoogleWallet } from './wallet';
 import showToast from '@/lib/showToast';
 import { RECOMMENDED_ITEMS } from './recommendedItems';
@@ -67,23 +69,60 @@ const Dashboard = ({ faq, timeline, user, responses }: DashboardProps) => {
     return new Date() < date;
   });
 
+  const size = useWindowSize();
+  const isMobile = (size.width ?? 0) <= 870;
+  const house = houseAssets[user.house];
+
+  const houseStyles: Record<House, string> = {
+    [House.RACCOON]: styles.raccoon,
+    [House.SUN_GOD]: styles.sunGod,
+    [House.GEISEL]: styles.geisel,
+    [House.TRITON]: styles.kingTriton,
+    [House.UNASSIGNED]: styles.unassigned,
+  };
+
   return (
     <div
       className={`${styles.container} ${isConfirmed ? styles.confirmedContainer : styles.notConfirmed}`}
     >
-      <Card gap={1.5} className={`${styles.card} ${styles.banner}`}>
-        <Typography variant="headline/heavy/large" component="h1" className={styles.title}>
-          Welcome, {user.firstName + ' ' + user.lastName}!
-        </Typography>
-        <Typography variant="body/medium" component="p" className={styles.subtitle}>
-          Access the application and view DiamondHacks updates below.
-        </Typography>
-        <Image
-          src={TopBanner}
-          alt="Books and potions in the shelf"
-          quality={100}
-          className={styles.bannerImage}
-        />
+      {user.house !== 'UNASSIGNED' && size.width !== undefined && (
+        <div className={`${styles.confettiContainer} ${houseStyles[user.house]}`}>
+          {!isMobile && (
+            <Image
+              src={house.confetti}
+              alt="Confetti"
+              quality={100}
+              className={`${styles.confetti} ${houseStyles[user.house]}`}
+            />
+          )}
+        </div>
+      )}
+      <Card gap={1.5} className={`${styles.card} ${styles.banner} ${houseStyles[user.house]}`}>
+        <div className={styles.bannerText}>
+          <Typography variant="headline/heavy/large" component="h1" className={styles.title}>
+            Welcome, {user.firstName + ' ' + user.lastName}!
+          </Typography>
+          <Typography variant="body/medium" component="p" className={styles.subtitle}>
+            Access the application and view DiamondHacks updates below.
+          </Typography>
+        </div>
+        {user.house !== 'UNASSIGNED' ? (
+          size.width !== undefined && (
+            <Image
+              src={!isMobile ? house.mascotDashboard : house.mascotDashboardMobile}
+              alt={!isMobile ? 'House mascot and books' : 'House mascot'}
+              quality={100}
+              className={`${styles.bannerImage} ${houseStyles[user.house]}`}
+            />
+          )
+        ) : (
+          <Image
+            src={TopBanner}
+            alt={'Books and potions in the shelf'}
+            quality={100}
+            className={`${styles.bannerImage} ${houseStyles[user.house]}`}
+          />
+        )}
       </Card>
 
       {isConfirmed && (

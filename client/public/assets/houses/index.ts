@@ -18,6 +18,16 @@ import RedBooks from './red-books.png';
 import BlueBooks from './blue-books.png';
 import YellowBooks from './yellow-books.png';
 
+import RaccoonDashboard from './raccoon-dashboard.png';
+import SunGodDashboard from './sun-god-dashboard.png';
+import GeiselDashboard from './geisel-dashboard.png';
+import KingTritonDashboard from './king-triton-dashboard.png';
+
+import RaccoonDashboardMobile from './raccoon-dashboard-mobile.png';
+import SunGodDashboardMobile from './sun-god-dashboard-mobile.png';
+import GeiselDashboardMobile from './geisel-dashboard-mobile.png';
+import KingTritonDashboardMobile from './king-triton-dashboard-mobile.png';
+
 export const confetti = {
   green: GreenConfetti,
   red: RedConfetti,
@@ -44,4 +54,18 @@ export const books = {
   red: RedBooks,
   blue: BlueBooks,
   yellow: YellowBooks,
+};
+
+export const mascotDashboards = {
+  raccoon: RaccoonDashboard,
+  sunGod: SunGodDashboard,
+  geisel: GeiselDashboard,
+  kingTriton: KingTritonDashboard,
+};
+
+export const mascotDashboardsMobile = {
+  raccoon: RaccoonDashboardMobile,
+  sunGod: SunGodDashboardMobile,
+  geisel: GeiselDashboardMobile,
+  kingTriton: KingTritonDashboardMobile,
 };
