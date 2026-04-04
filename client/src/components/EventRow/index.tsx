@@ -59,11 +59,12 @@ const EventRow = ({ event, editable = false }: EventRowProps) => {
             event.location
           )}
         </TableCell>
+        <TableCell>{event.pointValue}</TableCell>
       </TableRow>
 
       {showDetails && (
         <TableRow className={styles.popupRow}>
-          <TableCell className={styles.popupCell} colSpan={5}>
+          <TableCell className={styles.popupCell} colSpan={6}>
             <div className={styles.popupContent}>
               <div className={styles.popupHeader}>
                 <div className={styles.popupTitle}>

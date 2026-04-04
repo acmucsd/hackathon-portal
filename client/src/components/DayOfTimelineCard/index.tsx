@@ -32,8 +32,14 @@ const DayOfTimelineCard = ({ event }: DayOfTimelineCardProps) => {
             className={styles.time}
           >{`${formatTime(event.startTime)} - ${formatTime(event.endTime)}`}</h3>
         </div>
-        <div className={styles.tagContainer}>
-          <StatusTag status={event.type} />
+        <div className={styles.rightSection}>
+          <div className={styles.tagContainer}>
+            <StatusTag status={event.type} />
+          </div>
+          <div className={styles.points}>
+            <span className={styles.plus}>+</span>
+            <span>{event.pointValue} pts</span>
+          </div>
         </div>
       </div>
       <dl className={`${expanded ? styles.expanded : styles.collapsed}`}>
