@@ -38,9 +38,7 @@
 }
 
 .tagContainer {
-  margin-top: 0.75rem;
-  margin-left: auto;
-  align-self: flex-start;
+  margin-top: 0;
 }
 
 .location {
@@ -84,4 +82,28 @@
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+}
+
+.rightSection {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.75rem;
+  margin-left: auto;
+}
+
+.points {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.35rem 0.7rem;
+  border-radius: 0.6rem;
+  background: #525252;
+}
+
+.plus {
+  color: vars.$white;
+  font-weight: 700;
 }
