@@ -22,6 +22,10 @@ export default function ResourcePage() {
         title="Tutorials"
         resources={RESOURCES.filter(r => r.resource_type === 'tutorial')}
       />
+      <ResourceCarousel
+        title="Documentation"
+        resources={RESOURCES.filter(r => r.resource_type === 'documentation')}
+      />
     </main>
   );
 }

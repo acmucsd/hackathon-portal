@@ -36,6 +36,7 @@ const EventForm = ({ accessToken, event }: EventFormProps) => {
       type: EventType.INFO,
       day: Day.SATURDAY,
       published: false,
+      pointValue: 5,
     },
   });
 
@@ -78,6 +79,7 @@ const EventForm = ({ accessToken, event }: EventFormProps) => {
         type: EventType.INFO,
         day: Day.SATURDAY,
         published: false,
+        pointValue: 5,
       }
     );
   };
@@ -198,6 +200,21 @@ const EventForm = ({ accessToken, event }: EventFormProps) => {
           })}
           type="textarea"
           autoComplete="off"
+        />
+        <TextField
+          id="pointValue"
+          label="Points"
+          error={errors.pointValue}
+          defaultText={String(currentEvent?.pointValue ?? 5)}
+          formRegister={register('pointValue', {
+            valueAsNumber: true,
+            required: 'Missing input/field.',
+            min: { value: 0, message: 'Points must be 0 or greater.' },
+            validate: v => !Number.isNaN(v) || 'Enter a valid number.',
+          })}
+          type="number"
+          autoComplete="off"
+          variant="horizontal"
         />
         <div className={styles.timeContainer}>
           <Controller

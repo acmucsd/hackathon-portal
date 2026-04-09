@@ -19,13 +19,14 @@ interface LinkMetadata {
 
 const baseLinks: LinkMetadata[] = [
   { name: 'Dashboard', href: '/' },
-  { name: 'Have questions?', href: 'https://www.fetch.ai/diamondhacks2026', external: true },
-  // { name: 'Schedule', href: '/schedule' },
-  // { name: 'Resources', href: '/resources' },
+  { name: 'Schedule', href: '/schedule' },
+  { name: 'Resources', href: '/resources' },
+  { name: 'Leaderboard', href: '/leaderboard' },
+  { name: 'FAQ', href: 'https://www.fetch.ai/diamondhacks2026', external: true },
   // { name: 'Hacker Guide', href: 'http://acmurl.com/diamondhacks25-guide', external: true },
 ];
 
-const MOBILE_BREAKPOINT = 870; // Matches $breakpoint-md from vars.scss
+const MOBILE_BREAKPOINT = 1024; // Matches $breakpoint-lg from vars.scss
 
 interface NavbarProps {
   user?: PrivateProfile;

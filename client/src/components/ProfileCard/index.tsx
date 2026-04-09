@@ -3,11 +3,13 @@
 import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import Button from '@/components/Button';
+import Image from 'next/image';
 import Card from '@/components/Card';
 import Heading from '@/components/Heading';
 import TextField from '@/components/TextField';
 import CloseIcon from '../../../public/assets/icons/close.svg';
 import EditIcon from '../../../public/assets/icons/edit.svg';
+import { houseAssets } from '@/lib/constants/houseAssets';
 import { UserAPI } from '@/lib/api';
 import { useWindowSize } from '@/lib/hooks/useWindowSize';
 import isEmail from 'validator/lib/isEmail';
@@ -31,6 +33,8 @@ const ProfileCard = ({ user }: ProfileCardProps) => {
   const isMobile = (size.width ?? 0) <= 870;
   const [editProfile, setEditProfile] = useState(false);
   const [currentUser, setCurrentUser] = useState(user);
+
+  const house = houseAssets[user.house];
 
   const {
     register,
@@ -67,12 +71,12 @@ const ProfileCard = ({ user }: ProfileCardProps) => {
           <EditIcon className={styles.editBtn} onClick={() => clearFields()} />
         )}
         {!editProfile ? (
-          <Button variant="tertiary" onClick={() => logout()} className={styles.logoutBtn}>
+          <Button variant="tertiary" onClick={() => logout()} className={`${styles.logoutBtn}`}>
             Log out
           </Button>
         ) : null}
       </div>
-      <div className={styles.profileContent}>
+      <div className={`${styles.profileContent}`}>
         <TextField
           variant="horizontal"
           id="firstName"
@@ -117,6 +121,12 @@ const ProfileCard = ({ user }: ProfileCardProps) => {
           autoComplete="given-name"
           disabled
         />
+        {!isMobile && (
+          <div className={`${styles.house} ${editProfile && styles.editing}`}>
+            <Image src={house.books} alt="Books" quality={100} className={styles.books} />
+            <Image src={house.badge} alt="Badge" quality={100} className={styles.badge} />
+          </div>
+        )}
       </div>
       {editProfile && (
         <div className={styles.buttonGroup}>

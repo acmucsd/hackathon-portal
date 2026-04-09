@@ -63,4 +63,32 @@ export const RESOURCES: Resource[] = [
     cover_image: '/assets/resources/auth0.png',
     tags: ['Authentication'],
   },
+  {
+    title: 'Fetch.ai Innovation Lab Docs',
+    link: 'https://innovationlab.fetch.ai/resources/docs/intro',
+    resource_type: 'documentation',
+    cover_image: '/assets/sponsors/fetch-ai.png',
+    tags: ['AI'],
+  },
+  {
+    title: 'Fetch.ai Innovation Lab Examples',
+    link: 'https://github.com/fetchai/innovation-lab-examples',
+    resource_type: 'documentation',
+    cover_image: '/assets/sponsors/fetch-ai.png',
+    tags: ['AI'],
+  },
+  {
+    title: 'Browser Use Cloud Quickstart',
+    link: 'https://docs.browser-use.com/cloud/quickstart',
+    resource_type: 'documentation',
+    cover_image: '/assets/sponsors/browser-use.png',
+    tags: ['AI'],
+  },
+  {
+    title: 'TwelveLabs Docs (Get Started)',
+    link: 'https://docs.twelvelabs.io/docs/get-started/introduction',
+    resource_type: 'documentation',
+    cover_image: '/assets/sponsors/twelvelabs.png',
+    tags: ['AI'],
+  },
 ];

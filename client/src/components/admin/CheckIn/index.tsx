@@ -13,9 +13,9 @@ import Typography from '@/components/Typography';
 import Image from 'next/image';
 import Dropdown from '@/components/Dropdown';
 import { attendEvent } from '@/lib/api/AdminAPI';
-import { reportError } from '@/lib/utils';
+import { reportError, timeToDate } from '@/lib/utils';
 import { Autocomplete, TextField } from '@mui/material';
-import { ApplicationStatus } from '@/lib/types/enums';
+import { ApplicationStatus, Day } from '@/lib/types/enums';
 
 interface CheckInProps {
   token: string;
@@ -31,11 +31,18 @@ interface UserOption {
 const CheckIn = ({ token, events, users }: CheckInProps) => {
   const [scannedUser, setScannedUser] = useState<PublicProfile | null>(null);
   const [success, setSuccess] = useState<boolean | null>(null);
-  const [event, setEvent] = useState<PublicEvent | undefined>(() =>
-    events.find(
-      event => new Date(event.startTime) <= new Date() && new Date() < new Date(event.endTime)
-    )
-  );
+  const [event, setEvent] = useState<PublicEvent | undefined>(() => {
+    const now = new Date();
+    const dayOfWeek = now.getDay();
+    const currentDay = dayOfWeek === 6 ? Day.SATURDAY : Day.SUNDAY;
+
+    return events.find(
+      event =>
+        event.day === currentDay &&
+        timeToDate(event.startTime) <= now &&
+        now < timeToDate(event.endTime)
+    );
+  });
   const [scanTime, setScanTime] = useState<Date | null>(null);
   const [searchedUser, setSearchedUser] = useState<UserOption | null>(null);
 
