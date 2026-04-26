@@ -21,9 +21,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   try {
     const userCookie = await getCookie(CookieType.USER);
     user = userCookie ? JSON.parse(userCookie) : null;
-    console.log(user)
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
 
   return (

@@ -1,8 +1,5 @@
 import config from '@/lib/config';
-import type {
-  ForgotPasswordRequest,
-  UserRegistration,
-} from '@/lib/types/apiRequests';
+import type { ForgotPasswordRequest, UserRegistration } from '@/lib/types/apiRequests';
 import type {
   PrivateProfile,
   CreateUserResponse,
@@ -21,9 +18,7 @@ import {
 } from 'firebase/auth';
 import { setSession } from '@/lib/actions/session';
 
-export const register = async (
-  user: UserRegistration
-): Promise<PrivateProfile> => {
+export const register = async (user: UserRegistration): Promise<PrivateProfile> => {
   const requestUrl = `${config.api.baseUrl}${config.api.endpoints.auth.register}`;
 
   const response = await axios.post<CreateUserResponse>(requestUrl, { user: user });
@@ -35,18 +30,13 @@ export const register = async (
   return response.data.user;
 };
 
-export const verifyToken = async (
-  token: string
-): Promise<PrivateProfile> => {
+export const verifyToken = async (token: string): Promise<PrivateProfile> => {
   const requestUrl = `${config.api.baseUrl}${config.api.endpoints.auth.verifyToken}`;
   const response = await axios.post<VerifyTokenResponse>(requestUrl, { token });
   return response.data.user;
 };
 
-export const login = async (
-  email: string,
-  password: string
-): Promise<PrivateProfile> => {
+export const login = async (email: string, password: string): Promise<PrivateProfile> => {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const token = await userCredential.user.getIdToken();

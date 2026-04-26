@@ -37,10 +37,10 @@ export default function RegisterPage() {
   const onSubmit: SubmitHandler<UserRegistration> = userRegistration => {
     AuthAPI.register(userRegistration)
       .then((user: PrivateProfile) => {
-        router.push(`/check-email?email=${encodeURIComponent(user.email)}`)
+        router.push(`/check-email?email=${encodeURIComponent(user.email)}`);
       })
       .catch(error => {
-        reportError('Error with registration!', error)
+        reportError('Error with registration!', error);
       });
   };
 

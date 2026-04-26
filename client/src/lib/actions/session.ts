@@ -4,34 +4,27 @@ import config from '@/lib/config';
 import { deleteUserCookies, getCookie, setCookie } from '@/lib/services/CookieService';
 import { CookieType } from '@/lib/types/enums';
 import type { PrivateProfile, VerifyTokenResponse } from '@/lib/types/apiResponses';
+import { redirect } from 'next/navigation';
+import { verifyToken } from '../api/AuthAPI';
 
 export async function getSession(): Promise<{
   authenticated: boolean;
   user?: PrivateProfile;
 }> {
-  const token = getCookie(CookieType.ACCESS_TOKEN);
+  const token = await getCookie(CookieType.ACCESS_TOKEN);
 
   if (!token) {
     return { authenticated: false };
   }
 
-  const verifyTokenUrl = `${config.api.baseUrl}${config.api.endpoints.auth.verifyToken}`;
-  const verifyResponse = await fetch(verifyTokenUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ token }),
-    cache: 'no-store',
-  });
+  const verifyResponse = await verifyToken(token);
 
-  if (!verifyResponse.ok) {
+  if (!verifyResponse) {
     await deleteUserCookies();
     return { authenticated: false };
   }
 
-  const verifyBody = (await verifyResponse.json()) as VerifyTokenResponse;
-  return { authenticated: true, user: verifyBody.user };
+  return { authenticated: true, user: verifyResponse };
 }
 
 export async function setSession(token: string): Promise<{
@@ -42,26 +35,17 @@ export async function setSession(token: string): Promise<{
     return { error: 'Missing token.' };
   }
 
-  const verifyTokenUrl = `${config.api.baseUrl}${config.api.endpoints.auth.verifyToken}`;
-  const verifyResponse = await fetch(verifyTokenUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ token }),
-    cache: 'no-store',
-  });
+  const verifyResponse = await verifyToken(token);
 
-  if (!verifyResponse.ok) {
+  if (!verifyResponse) {
     await deleteUserCookies();
     return { error: 'Invalid authentication token.' };
   }
 
-  const verifyBody = (await verifyResponse.json()) as VerifyTokenResponse;
-  const user = verifyBody.user as PrivateProfile;
+  const user = verifyResponse as PrivateProfile;
 
-  setCookie(CookieType.ACCESS_TOKEN, token);
-  setCookie(CookieType.USER, JSON.stringify(user));
+  await setCookie(CookieType.ACCESS_TOKEN, token);
+  await setCookie(CookieType.USER, JSON.stringify(user));
 
   return { error: null, user };
 }

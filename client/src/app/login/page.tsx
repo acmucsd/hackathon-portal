@@ -31,7 +31,7 @@ export default function LoginPage() {
     formState: { errors },
   } = useForm<LoginValues>();
 
-  const onSubmit: SubmitHandler<LoginValues> = async (credentials) => {
+  const onSubmit: SubmitHandler<LoginValues> = async credentials => {
     try {
       await AuthAPI.login(credentials.email, credentials.password);
       router.replace('/');
@@ -47,7 +47,10 @@ export default function LoginPage() {
     } catch (authError) {
       // Don't show error if user cancelled the popup
       const errorMessage = getErrorMessage(authError);
-      if (errorMessage.includes('user-cancelled') || errorMessage.includes('popup-closed-by-user')) {
+      if (
+        errorMessage.includes('user-cancelled') ||
+        errorMessage.includes('popup-closed-by-user')
+      ) {
         return;
       }
       setError(errorMessage);
@@ -109,12 +112,7 @@ export default function LoginPage() {
           </div>
 
           <Button variant="secondary" onClick={handleGoogleLogin} className={styles.googleButton}>
-            <Image
-              src="assets/icons/google-logo.svg"
-              alt="Google logo"
-              width={20}
-              height={20}
-            />
+            <Image src="assets/icons/google-logo.svg" alt="Google logo" width={20} height={20} />
             Continue with Google
           </Button>
 

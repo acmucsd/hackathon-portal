@@ -1,10 +1,12 @@
+'use server';
+
 import { cookies } from 'next/headers';
 import { CookieType } from '../types/enums';
 
 const isProduction = process.env.NODE_ENV === 'production';
 const SESSION_MAX_AGE_SECONDS = 60 * 60;
 
-export const authCookieOptions = {
+const authCookieOptions = {
   httpOnly: true,
   secure: isProduction,
   sameSite: 'lax' as const,

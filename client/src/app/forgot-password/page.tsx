@@ -33,10 +33,10 @@ export default function ForgotPasswordPage() {
   const onSubmit: SubmitHandler<ForgotPasswordRequest> = req => {
     AuthAPI.forgotPassword(req)
       .then(() => {
-        router.push(`/check-email?email=${encodeURIComponent(req.email)}`)
+        router.push(`/check-email?email=${encodeURIComponent(req.email)}`);
       })
       .catch(error => {
-        reportError('Error resetting password!', error)
+        reportError('Error resetting password!', error);
       });
   };
 

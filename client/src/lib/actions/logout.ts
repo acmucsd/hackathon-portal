@@ -1,4 +1,4 @@
-'use server'
+'use server';
 
 import { deleteUserCookies } from '@/lib/services/CookieService';
 import { redirect } from 'next/navigation';
