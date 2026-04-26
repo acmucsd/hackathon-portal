@@ -21,6 +21,7 @@
     "@types/validator": "^13.12.2",
     "axios": "^1.7.9",
     "cookies-next": "^5.0.2",
+    "firebase": "^12.12.1",
     "google-wallet": "^1.0.21",
     "jsonwebtoken": "^9.0.2",
     "localforage": "^1.10.0",

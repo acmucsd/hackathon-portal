@@ -4,8 +4,7 @@ const config = {
     endpoints: {
       auth: {
         register: '/user',
-        login: '/user/login',
-        forgotPassword: '/user/forgot-password',
+        verifyToken: '/user/verify-token',
       },
       user: {
         user: '/user',

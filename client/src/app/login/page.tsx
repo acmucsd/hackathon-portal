@@ -10,10 +10,9 @@ import Link from 'next/link';
 import Alert from '@/components/Alert';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useEffect, useState } from 'react';
-import { login } from './login';
-import { CookieType } from '@/lib/types/enums';
-import { redirect } from 'next/navigation';
-import { getCookie } from 'cookies-next';
+import { AuthAPI } from '@/lib/api';
+import { getErrorMessage } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
 
 interface LoginValues {
   email: string;
@@ -22,6 +21,7 @@ interface LoginValues {
 
 export default function LoginPage() {
   const [error, setError] = useState<string | undefined>(undefined);
+  const router = useRouter();
 
   const {
     register,
@@ -30,22 +30,26 @@ export default function LoginPage() {
   } = useForm<LoginValues>();
 
   const onSubmit: SubmitHandler<LoginValues> = async credentials => {
-    // If successful, the page will redirect and the rest of this function will
-    // not run
-    const error = await login(credentials.email, credentials.password);
-
-    setError(error);
-    redirect('/api/logout');
+    try {
+      await AuthAPI.login(credentials.email, credentials.password);
+      router.replace('/');
+    } catch (authError) {
+      setError(getErrorMessage(authError));
+      // could maybe use reportError() here for consistency?
+    }
   };
 
   useEffect(() => {
-    const userCookie = getCookie(CookieType.USER);
+    const checkSession = async () => {
+      const response = await fetch('/api/session', { cache: 'no-store' });
+      const body = (await response.json()) as { authenticated?: boolean };
+      if (body.authenticated) {
+        router.replace('/');
+      }
+    };
 
-    // Send the user to the dashboard page if they already have a valid cookie
-    if (userCookie) {
-      redirect('/');
-    }
-  }, []);
+    checkSession();
+  }, [router]);
 
   return (
     <main className={styles.main}>
