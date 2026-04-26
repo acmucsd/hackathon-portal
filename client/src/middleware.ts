@@ -5,9 +5,9 @@ export function middleware(request: NextRequest) {
   const accessToken = request.cookies.get(CookieType.ACCESS_TOKEN);
   const userCookie = request.cookies.get(CookieType.USER);
 
-  // Send the user to logout/login if required auth cookies are missing.
+  // Send the user to login if required auth cookies are missing
   if (!accessToken || !userCookie) {
-    return NextResponse.redirect(new URL('/api/logout', request.url));
+    return NextResponse.redirect(new URL('/login', request.url));
   }
 
   // Continue to the requested page

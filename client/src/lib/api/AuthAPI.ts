@@ -7,7 +7,6 @@ import type {
   PrivateProfile,
   CreateUserResponse,
   ForgotPasswordResponse,
-  ApiResponse,
   VerifyTokenResponse,
 } from '@/lib/types/apiResponses';
 import { auth } from '@/lib/firebase';
@@ -20,12 +19,8 @@ import {
   GoogleAuthProvider,
   signOut,
 } from 'firebase/auth';
+import { setSession } from '@/lib/actions/session';
 
-/**
- * Make a register request to create a new user
- * @param data UserRegistration info (email, name, major, etc.)
- * @returns PrivateProfile containing user information on successful creation
- */
 export const register = async (
   user: UserRegistration
 ): Promise<PrivateProfile> => {
@@ -56,24 +51,17 @@ export const login = async (
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const token = await userCredential.user.getIdToken();
 
-    const sessionResponse = await fetch('/api/session', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ token }),
-      credentials: 'include',
-    });
+    const result = await setSession(token);
 
-    if (!sessionResponse.ok) {
-      const body = (await sessionResponse.json().catch(() => null)) as
-        | (ApiResponse & { error?: { message?: string } })
-        | null;
-      throw new Error(body?.error?.message ?? 'Failed to create authenticated session.');
+    if (result.error) {
+      throw new Error(result.error);
     }
 
-    const body = (await sessionResponse.json()) as VerifyTokenResponse;
-    return body.user;
+    if (!result.user) {
+      throw new Error('Failed to create authenticated session.');
+    }
+
+    return result.user;
   } finally {
     await signOut(auth).catch(() => undefined);
   }
@@ -85,24 +73,17 @@ export const loginWithGoogle = async (): Promise<PrivateProfile> => {
     const userCredential = await signInWithPopup(auth, provider);
     const token = await userCredential.user.getIdToken();
 
-    const sessionResponse = await fetch('/api/session', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ token }),
-      credentials: 'include',
-    });
+    const result = await setSession(token);
 
-    if (!sessionResponse.ok) {
-      const body = (await sessionResponse.json().catch(() => null)) as
-        | (ApiResponse & { error?: { message?: string } })
-        | null;
-      throw new Error(body?.error?.message ?? 'Failed to create authenticated session.');
+    if (result.error) {
+      throw new Error(result.error);
     }
 
-    const body = (await sessionResponse.json()) as VerifyTokenResponse;
-    return body.user;
+    if (!result.user) {
+      throw new Error('Failed to create authenticated session.');
+    }
+
+    return result.user;
   } finally {
     await signOut(auth).catch(() => undefined);
   }

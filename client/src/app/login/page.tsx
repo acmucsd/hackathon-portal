@@ -14,6 +14,7 @@ import { AuthAPI } from '@/lib/api';
 import { getErrorMessage } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { getSession } from '@/lib/actions/session';
 
 interface LoginValues {
   email: string;
@@ -30,7 +31,7 @@ export default function LoginPage() {
     formState: { errors },
   } = useForm<LoginValues>();
 
-  const onSubmit: SubmitHandler<LoginValues> = async credentials => {
+  const onSubmit: SubmitHandler<LoginValues> = async (credentials) => {
     try {
       await AuthAPI.login(credentials.email, credentials.password);
       router.replace('/');
@@ -44,15 +45,19 @@ export default function LoginPage() {
       await AuthAPI.loginWithGoogle();
       router.replace('/');
     } catch (authError) {
-      setError(getErrorMessage(authError));
+      // Don't show error if user cancelled the popup
+      const errorMessage = getErrorMessage(authError);
+      if (errorMessage.includes('user-cancelled') || errorMessage.includes('popup-closed-by-user')) {
+        return;
+      }
+      setError(errorMessage);
     }
   };
 
   useEffect(() => {
     const checkSession = async () => {
-      const response = await fetch('/api/session', { cache: 'no-store' });
-      const body = (await response.json()) as { authenticated?: boolean };
-      if (body.authenticated) {
+      const session = await getSession();
+      if (session.authenticated) {
         router.replace('/');
       }
     };

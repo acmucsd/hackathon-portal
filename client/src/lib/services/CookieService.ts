@@ -13,13 +13,13 @@ export const authCookieOptions = {
 };
 
 export const getCookie = async (key: string): Promise<string> => {
-  const cookie = await cookies();
-  return cookie.get(key)?.value as string;
+  const cookieStore = await cookies();
+  return cookieStore.get(key)?.value as string;
 };
 
 export const setCookie = async (key: string, value: string): Promise<void> => {
-  const cookie = await cookies();
-  cookie.set(key, value, authCookieOptions);
+  const cookieStore = await cookies();
+  cookieStore.set(key, value, authCookieOptions);
 };
 
 export const deleteUserCookies = async (): Promise<void> => {
