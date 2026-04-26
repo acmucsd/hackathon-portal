@@ -16,6 +16,8 @@ import {
   sendEmailVerification,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
   signOut,
 } from 'firebase/auth';
 
@@ -29,7 +31,6 @@ export const register = async (
 ): Promise<PrivateProfile> => {
   const requestUrl = `${config.api.baseUrl}${config.api.endpoints.auth.register}`;
 
-  // is ther a way to do this in a transaction so both must succeed
   const response = await axios.post<CreateUserResponse>(requestUrl, { user: user });
   const userCredential = await signInWithEmailAndPassword(auth, user.email, user.password);
 
@@ -74,7 +75,35 @@ export const login = async (
     const body = (await sessionResponse.json()) as VerifyTokenResponse;
     return body.user;
   } finally {
-    // Keep auth material out of browser storage; session cookies are server-managed.
+    await signOut(auth).catch(() => undefined);
+  }
+};
+
+export const loginWithGoogle = async (): Promise<PrivateProfile> => {
+  try {
+    const provider = new GoogleAuthProvider();
+    const userCredential = await signInWithPopup(auth, provider);
+    const token = await userCredential.user.getIdToken();
+
+    const sessionResponse = await fetch('/api/session', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ token }),
+      credentials: 'include',
+    });
+
+    if (!sessionResponse.ok) {
+      const body = (await sessionResponse.json().catch(() => null)) as
+        | (ApiResponse & { error?: { message?: string } })
+        | null;
+      throw new Error(body?.error?.message ?? 'Failed to create authenticated session.');
+    }
+
+    const body = (await sessionResponse.json()) as VerifyTokenResponse;
+    return body.user;
+  } finally {
     await signOut(auth).catch(() => undefined);
   }
 };

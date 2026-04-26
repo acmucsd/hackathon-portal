@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react';
 import { AuthAPI } from '@/lib/api';
 import { getErrorMessage } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 interface LoginValues {
   email: string;
@@ -35,7 +36,15 @@ export default function LoginPage() {
       router.replace('/');
     } catch (authError) {
       setError(getErrorMessage(authError));
-      // could maybe use reportError() here for consistency?
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      await AuthAPI.loginWithGoogle();
+      router.replace('/');
+    } catch (authError) {
+      setError(getErrorMessage(authError));
     }
   };
 
@@ -61,6 +70,7 @@ export default function LoginPage() {
               <p>{error}</p>
             </Alert>
           ) : null}
+
           <TextField
             variant="vertical"
             id="email"
@@ -85,21 +95,33 @@ export default function LoginPage() {
             autoComplete="current-password"
             defaultText="Enter Password"
           />
-          {/* <Link href="/forgot-password">Forgot your password?</Link> */}
           <Button variant="primary" onClick={handleSubmit(onSubmit)}>
             Login
           </Button>
+
+          <div className={styles.divider}>
+            <span>or</span>
+          </div>
+
+          <Button variant="secondary" onClick={handleGoogleLogin} className={styles.googleButton}>
+            <Image
+              src="assets/icons/google-logo.svg"
+              alt="Google logo"
+              width={20}
+              height={20}
+            />
+            Continue with Google
+          </Button>
+
           <Typography variant="label/small" component="p">
             Don&rsquo;t have an account?{' '}
             <Link href="/register" className="link">
-              {' '}
               Sign up!
-            </Link>{' '}
+            </Link>
           </Typography>
           <Link href="/forgot-password" className="link">
-            {' '}
             Forgot Password?
-          </Link>{' '}
+          </Link>
         </Card>
       </div>
     </main>
