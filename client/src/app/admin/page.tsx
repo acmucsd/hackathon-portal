@@ -1,6 +1,6 @@
 import { TIMELINE } from '@/config';
 import AdminDashboard from '@/components/admin/AdminDashboard';
-import SuperAdminDashboard from '@/components/admin/SuperAdminDashboard';
+import { logout } from '@/lib/actions/logout';
 import { UserAPI, AdminAPI } from '@/lib/api';
 import { redirect } from 'next/navigation';
 import { getCookie } from '@/lib/services/CookieService';
@@ -11,7 +11,7 @@ export default async function Admin() {
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
 
   if (!accessToken) {
-    redirect('/api/logout');
+    logout();
   }
   const fetchedUser = await UserAPI.getCurrentUser(accessToken);
   if (fetchedUser.accessType !== 'ADMIN' && fetchedUser.accessType !== 'SUPER_ADMIN') {
@@ -27,6 +27,6 @@ export default async function Admin() {
       </main>
     );
   } catch (error) {
-    redirect('/api/logout');
+    logout();
   }
 }

@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { getCookie } from '@/lib/services/CookieService';
 import { CookieType } from '@/lib/types/enums';
 import styles from './page.module.scss';
+import { logout } from '@/lib/actions/logout';
 
 interface ModifyEventProps {
   params: Promise<{ uuid: string }>;
@@ -14,7 +15,7 @@ export default async function ModifyEvent({ params }: ModifyEventProps) {
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
 
   if (!accessToken) {
-    redirect('/api/logout');
+    logout();
   }
 
   try {
@@ -26,6 +27,6 @@ export default async function ModifyEvent({ params }: ModifyEventProps) {
       </main>
     );
   } catch (error) {
-    redirect('/api/logout');
+    logout();
   }
 }

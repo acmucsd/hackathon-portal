@@ -10,10 +10,11 @@ import Link from 'next/link';
 import Alert from '@/components/Alert';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useEffect, useState } from 'react';
-import { login } from './login';
-import { CookieType } from '@/lib/types/enums';
-import { redirect } from 'next/navigation';
-import { getCookie } from 'cookies-next';
+import { AuthAPI } from '@/lib/api';
+import { getErrorMessage } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import { getSession } from '@/lib/actions/session';
 
 interface LoginValues {
   email: string;
@@ -22,6 +23,7 @@ interface LoginValues {
 
 export default function LoginPage() {
   const [error, setError] = useState<string | undefined>(undefined);
+  const router = useRouter();
 
   const {
     register,
@@ -30,22 +32,41 @@ export default function LoginPage() {
   } = useForm<LoginValues>();
 
   const onSubmit: SubmitHandler<LoginValues> = async credentials => {
-    // If successful, the page will redirect and the rest of this function will
-    // not run
-    const error = await login(credentials.email, credentials.password);
+    try {
+      await AuthAPI.login(credentials.email, credentials.password);
+      router.replace('/');
+    } catch (authError) {
+      setError(getErrorMessage(authError));
+    }
+  };
 
-    setError(error);
-    redirect('/api/logout');
+  const handleGoogleLogin = async () => {
+    try {
+      await AuthAPI.loginWithGoogle();
+      router.replace('/');
+    } catch (authError) {
+      // Don't show error if user cancelled the popup
+      const errorMessage = getErrorMessage(authError);
+      if (
+        errorMessage.includes('user-cancelled') ||
+        errorMessage.includes('popup-closed-by-user')
+      ) {
+        return;
+      }
+      setError(errorMessage);
+    }
   };
 
   useEffect(() => {
-    const userCookie = getCookie(CookieType.USER);
+    const checkSession = async () => {
+      const session = await getSession();
+      if (session.authenticated) {
+        router.replace('/');
+      }
+    };
 
-    // Send the user to the dashboard page if they already have a valid cookie
-    if (userCookie) {
-      redirect('/');
-    }
-  }, []);
+    checkSession();
+  }, [router]);
 
   return (
     <main className={styles.main}>
@@ -57,6 +78,7 @@ export default function LoginPage() {
               <p>{error}</p>
             </Alert>
           ) : null}
+
           <TextField
             variant="vertical"
             id="email"
@@ -81,21 +103,28 @@ export default function LoginPage() {
             autoComplete="current-password"
             defaultText="Enter Password"
           />
-          {/* <Link href="/forgot-password">Forgot your password?</Link> */}
           <Button variant="primary" onClick={handleSubmit(onSubmit)}>
             Login
           </Button>
+
+          <div className={styles.divider}>
+            <span>or</span>
+          </div>
+
+          <Button variant="secondary" onClick={handleGoogleLogin} className={styles.googleButton}>
+            <Image src="assets/icons/google-logo.svg" alt="Google logo" width={20} height={20} />
+            Login with Google
+          </Button>
+
           <Typography variant="label/small" component="p">
             Don&rsquo;t have an account?{' '}
             <Link href="/register" className="link">
-              {' '}
               Sign up!
-            </Link>{' '}
+            </Link>
           </Typography>
           <Link href="/forgot-password" className="link">
-            {' '}
             Forgot Password?
-          </Link>{' '}
+          </Link>
         </Card>
       </div>
     </main>

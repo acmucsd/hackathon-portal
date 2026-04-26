@@ -2,12 +2,6 @@ import { Service } from 'typedi';
 import { Repositories, TransactionsManager } from '../repositories';
 import { UserModel } from '../models/UserModel';
 import { ReviewAssignmentJob, CreateUser } from '../types/ApiRequests';
-import {
-  sendEmailVerification,
-  signInWithCustomToken,
-  signInWithEmailAndPassword,
-  sendPasswordResetEmail,
-} from 'firebase/auth';
 import { FirebaseAuthError } from 'firebase-admin/auth';
 import {
   BadRequestError,
@@ -16,7 +10,7 @@ import {
   UnauthorizedError,
 } from 'routing-controllers';
 import { UpdateUser } from '../api/validators/UserControllerRequests';
-import { auth, adminAuth } from '../FirebaseAuth';
+import { adminAuth } from '../FirebaseAuth';
 
 import {
   ApplicationDecision,
@@ -29,7 +23,6 @@ import {
   ReviewAssignment,
   ReviewerOverviewResponse,
   ReviewerOverviewReviewer,
-  UserAndToken,
 } from '../types/ApiResponses';
 import { ResponseModel } from '../models/ResponseModel';
 import { Application } from '../types/Application';
@@ -216,10 +209,7 @@ export class UserService {
       const createdUser = userRepository.save(newUser);
       return createdUser;
 
-
     });
-
-    this.sendEmailVerification(returnedUser.id);
 
     return returnedUser;
   }
@@ -295,29 +285,6 @@ export class UserService {
     });
   }
 
-  public async login(email: string, password: string): Promise<UserAndToken> {
-    try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password,
-      );
-      const token = await userCredential.user.getIdToken();
-      // If checkAuthToken() runs without throwing an error, the user exists.
-      const user = await this.checkAuthToken(token);
-      return { token, user };
-    } catch (error) {
-      if (
-        error instanceof UnauthorizedError ||
-        error instanceof ForbiddenError
-      ) {
-        // Throw special error messages as-is.
-        throw error;
-      }
-      throw new UnauthorizedError('Invalid email or password.');
-    }
-  }
-
   public async checkAuthToken(token: string): Promise<UserModel> {
     let decodedToken;
     try {
@@ -361,31 +328,9 @@ export class UserService {
     }
   }
 
-  private async sendEmailVerification(id: string): Promise<void> {
-    const customToken = await adminAuth.createCustomToken(id);
-    const userCredential = await signInWithCustomToken(auth, customToken);
-    await sendEmailVerification(userCredential.user);
-  }
-
   public async getPasswordResetLink(email: string): Promise<string> {
     try {
       return await adminAuth.generatePasswordResetLink(email);
-    } catch (error) {
-      if (error instanceof FirebaseAuthError) {
-        if (error.code === 'auth/user-not-found') {
-          throw new NotFoundError(
-            'No user found with the provided email address.',
-          );
-        }
-      }
-      throw error;
-    }
-  }
-
-  public async sendPasswordResetEmail(email: string): Promise<void> {
-    try {
-      const firebaseRecord = await adminAuth.getUserByEmail(email);
-      if (firebaseRecord) await sendPasswordResetEmail(auth, email);
     } catch (error) {
       if (error instanceof FirebaseAuthError) {
         if (error.code === 'auth/user-not-found') {

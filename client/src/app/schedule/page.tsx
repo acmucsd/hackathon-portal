@@ -5,6 +5,7 @@ import DayOfTimelineItem from '@/components/DayOfTimelineItem';
 import { redirect } from 'next/navigation';
 import styles from './page.module.scss';
 import Link from 'next/link';
+import { logout } from '@/lib/actions/logout';
 
 export default async function SchedulePage({
   searchParams,
@@ -49,6 +50,6 @@ export default async function SchedulePage({
       </main>
     );
   } catch (error) {
-    redirect('/api/logout');
+    logout();
   }
 }

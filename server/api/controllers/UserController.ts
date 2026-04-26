@@ -13,10 +13,9 @@ import { Service } from 'typedi';
 import { IdParam } from '../validators/GenericRequests';
 import {
   CreateUserRequest,
-  ForgotPasswordRequest,
-  LoginRequest,
   UpdateFetchAiHandleRequest,
   UpdateUserRequest,
+  VerifyTokenRequest,
 } from '../validators/UserControllerRequests';
 import { AuthenticatedUser } from '../decorators/AuthenticatedUser';
 import { UserModel } from '../../models/UserModel';
@@ -25,9 +24,8 @@ import {
   DeleteCurrentUserResponse,
   GetCurrentUserResponse,
   GetUserResponse,
-  LoginResponse,
   UpdateCurrentUserReponse,
-  ForgotPasswordResponse,
+  VerifyTokenResponse,
 } from '../../types/ApiResponses';
 import { UserAuthentication } from '../middleware/UserAuthentication';
 
@@ -48,13 +46,14 @@ export class UserController {
     return { error: null, user: user.getPrivateProfile() };
   }
 
-  @Post('/login')
-  async login(@Body() loginRequest: LoginRequest): Promise<LoginResponse> {
-    const userAndToken = await this.userService.login(
-      loginRequest.email,
-      loginRequest.password,
+  @Post('/verify-token')
+  async verifyToken(
+    @Body() verifyTokenRequest: VerifyTokenRequest,
+  ): Promise<VerifyTokenResponse> {
+    const user = await this.userService.checkAuthToken(
+      verifyTokenRequest.token,
     );
-    return { error: null, ...userAndToken };
+    return { error: null, user: user.getPrivateProfile() };
   }
 
   @UseBefore(UserAuthentication)
@@ -111,14 +110,6 @@ export class UserController {
     @AuthenticatedUser() user: UserModel,
   ): Promise<DeleteCurrentUserResponse> {
     this.userService.deleteUser(user);
-    return { error: null };
-  }
-
-  @Post('/forgot-password')
-  async forgotPassword(
-    @Body() forgotPasswordRequest: ForgotPasswordRequest,
-  ): Promise<ForgotPasswordResponse> {
-    await this.userService.sendPasswordResetEmail(forgotPasswordRequest.email);
     return { error: null };
   }
 

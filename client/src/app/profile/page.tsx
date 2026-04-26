@@ -4,6 +4,7 @@ import { CookieType } from '@/lib/types/enums';
 import Profile from '@/components/Profile';
 import { redirect } from 'next/navigation';
 import styles from './page.module.scss';
+import { logout } from '@/lib/actions/logout';
 
 export default async function ProfilePage() {
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
@@ -17,6 +18,6 @@ export default async function ProfilePage() {
       </main>
     );
   } catch (error) {
-    redirect('/api/logout');
+    logout();
   }
 }

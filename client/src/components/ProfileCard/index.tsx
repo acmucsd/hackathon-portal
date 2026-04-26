@@ -14,7 +14,7 @@ import { UserAPI } from '@/lib/api';
 import { useWindowSize } from '@/lib/hooks/useWindowSize';
 import isEmail from 'validator/lib/isEmail';
 import styles from './style.module.scss';
-import logout from './logout';
+import { logout } from '@/lib/actions/logout';
 import showToast from '@/lib/showToast';
 import { PrivateProfile } from '@/lib/types/apiResponses';
 

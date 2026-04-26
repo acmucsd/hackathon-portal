@@ -5,7 +5,7 @@ import Heading from '@/components/Heading';
 import TextField from '@/components/TextField';
 import Button from '@/components/Button';
 import Typography from '@/components/Typography';
-import { AuthManager } from '@/lib/managers';
+import { AuthAPI } from '@/lib/api';
 import type { ForgotPasswordRequest } from '@/lib/types/apiRequests';
 import { reportError } from '@/lib/utils';
 import Link from 'next/link';
@@ -31,15 +31,13 @@ export default function ForgotPasswordPage() {
   const router = useRouter();
 
   const onSubmit: SubmitHandler<ForgotPasswordRequest> = req => {
-    AuthManager.resetPassword({
-      ...req,
-      onSuccessCallback: () => {
+    AuthAPI.forgotPassword(req)
+      .then(() => {
         router.push(`/check-email?email=${encodeURIComponent(req.email)}`);
-      },
-      onFailCallback: error => {
+      })
+      .catch(error => {
         reportError('Error resetting password!', error);
-      },
-    });
+      });
   };
 
   return (
