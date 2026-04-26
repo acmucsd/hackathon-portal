@@ -113,7 +113,7 @@ export default function LoginPage() {
 
           <Button variant="secondary" onClick={handleGoogleLogin} className={styles.googleButton}>
             <Image src="assets/icons/google-logo.svg" alt="Google logo" width={20} height={20} />
-            Continue with Google
+            Login with Google
           </Button>
 
           <Typography variant="label/small" component="p">
