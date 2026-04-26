@@ -36,6 +36,7 @@ export default function LoginPage() {
       await AuthAPI.login(credentials.email, credentials.password);
       router.replace('/');
     } catch (authError) {
+      console.error(authError);
       setError(getErrorMessage(authError));
     }
   };
@@ -53,6 +54,7 @@ export default function LoginPage() {
       ) {
         return;
       }
+      console.error(authError);
       setError(errorMessage);
     }
   };
