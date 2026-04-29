@@ -9,11 +9,11 @@
   position: relative;
   min-height: 100vh;
   isolation: isolate;
-  margin-bottom: 40vh;
+  margin-bottom: 2vh;
 
   .imageWrapper {
     position: absolute;
-    bottom: -115vh;
+    bottom: -75vh;
     left: 50%;
     width: 100%;
     overflow: hidden;
@@ -35,6 +35,7 @@
 
   @media screen and (max-width: vars.$breakpoint-md) {
     min-height: 80vh;
+    margin-bottom: 15vh;
   }
 }
 
