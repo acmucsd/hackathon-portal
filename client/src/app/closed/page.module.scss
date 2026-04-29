@@ -15,25 +15,34 @@
     position: absolute;
     bottom: -115vh;
     left: 50%;
-    width: 100vw;
+    width: 100%;
+    overflow: hidden;
     transform: translateX(-50%);
     z-index: 0;
     pointer-events: none;
 
     svg {
       display: block;
-      width: 100%;
+      position: relative;
+      left: 50%;
+      width: max(100%, 1440px);
+      max-width: none;
       height: auto;
       overflow: visible;
+      transform: translateX(-50%);
     }
+  }
+
+  @media screen and (max-width: vars.$breakpoint-md) {
+    min-height: 80vh;
   }
 }
 
 .message {
   border: #525252 2px solid;
   border-radius: 8px;
-  box-shadow: 0 0 18px 3px rgba(0, 0, 0, .3);
-  background: #37393E80;
+  box-shadow: 0 0 18px 3px rgba(0, 0, 0, 0.3);
+  background: #37393e80;
   position: relative;
   z-index: 2;
 }
