@@ -1,4 +1,4 @@
-name: Backend - Build & Deploy
+name: Backend (Preview) - Build & Deploy
 on:
   push:
     branches: [ "preview" ]
