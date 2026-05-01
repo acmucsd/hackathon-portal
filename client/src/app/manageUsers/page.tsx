@@ -7,6 +7,7 @@ import { getCookie } from '@/lib/services/CookieService';
 import { CookieType } from '@/lib/types/enums';
 import styles from './page.module.scss';
 import { RevieweeProfile } from '@/lib/types/apiResponses';
+import { logout } from '@/lib/actions/logout';
 
 export default async function ManageUsers() {
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
@@ -43,6 +44,6 @@ export default async function ManageUsers() {
       </main>
     );
   } catch (error) {
-    redirect('/api/logout');
+    logout();
   }
 }

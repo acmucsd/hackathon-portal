@@ -5,12 +5,13 @@ import { redirect } from 'next/navigation';
 import { getCookie } from '@/lib/services/CookieService';
 import { CookieType } from '@/lib/types/enums';
 import styles from './style.module.scss';
+import { logout } from '@/lib/actions/logout';
 
 export default async function superAdmin() {
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
 
   if (!accessToken) {
-    redirect('/api/logout');
+    logout();
   }
 
   const fetchedUser = await UserAPI.getCurrentUser(accessToken);
@@ -37,6 +38,6 @@ export default async function superAdmin() {
       </main>
     );
   } catch (error) {
-    redirect('/api/logout');
+    logout();
   }
 }

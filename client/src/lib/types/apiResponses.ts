@@ -105,6 +105,10 @@ export interface LoginResponse extends ApiResponse {
   user: PrivateProfile;
 }
 
+export interface VerifyTokenResponse extends ApiResponse {
+  user: PrivateProfile;
+}
+
 // Firebase Responses
 export interface GetIdTokenResponse {
   idToken: string;

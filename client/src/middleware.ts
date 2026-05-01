@@ -2,12 +2,12 @@ import { NextResponse, NextRequest } from 'next/server';
 import { CookieType } from './lib/types/enums';
 
 export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const accessToken = request.cookies.get(CookieType.ACCESS_TOKEN);
   const userCookie = request.cookies.get(CookieType.USER);
 
-  // Send the user to the login page if they don't have a valid cookie
-  if (!userCookie) {
-    return NextResponse.redirect(new URL('/api/logout', request.url));
+  // Send the user to login if required auth cookies are missing
+  if (!accessToken || !userCookie) {
+    return NextResponse.redirect(new URL('/login', request.url));
   }
 
   // Continue to the requested page

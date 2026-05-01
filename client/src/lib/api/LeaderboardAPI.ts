@@ -8,7 +8,7 @@ import { getErrorMessage } from '@/lib/utils';
  * Get House leaderboard
  * @returns List of houses sorted in decreasing order of points
  */
-export const getHouseLeaderboard = async (token: string): Promise<House[] | string> => {
+export const getHouseLeaderboard = async (token: string): Promise<House[]> => {
   try {
     const response = await axios.get<HouseLeaderboardResponse>(
       `${config.api.baseUrl}${config.api.endpoints.leaderboard.leaderboard}`,
@@ -20,6 +20,8 @@ export const getHouseLeaderboard = async (token: string): Promise<House[] | stri
     );
     return response.data.leaderboard;
   } catch (error) {
-    return getErrorMessage(error);
+    reportError(error);
+    return [];
+    //return getErrorMessage(error);
   }
 };

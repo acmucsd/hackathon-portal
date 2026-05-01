@@ -5,23 +5,24 @@ import { CookieType, ApplicationStatus } from '@/lib/types/enums';
 import { redirect } from 'next/navigation';
 import styles from './page.module.scss';
 import { canUserSubmitWaivers } from '@/lib/utils';
+import { logout } from '@/lib/actions/logout';
 
 export default async function PhotoReleasePage() {
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
 
   if (!accessToken) {
-    redirect('/api/logout');
+    logout();
   }
 
   let fetchedUser;
   try {
     fetchedUser = await UserAPI.getCurrentUser(accessToken);
   } catch (error) {
-    redirect('/api/logout');
+    logout();
   }
 
   // Only allow accepted participants to fill out photo release form
-  if (!canUserSubmitWaivers(fetchedUser.applicationStatus)) {
+  if (!canUserSubmitWaivers(fetchedUser!.applicationStatus)) {
     redirect('/');
   }
 

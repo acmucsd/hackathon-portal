@@ -1,10 +1,9 @@
 'use server';
 
-import type { UserPatches, PatchUserRequest, LoginRequest } from '@/lib/types/apiRequests';
+import type { UserPatches, PatchUserRequest } from '@/lib/types/apiRequests';
 import type {
   PrivateProfile,
   GetCurrentUserResponse,
-  LoginResponse,
   UpdateCurrentUserReponse,
   PublicProfile,
   GetUserResponse,
@@ -14,13 +13,6 @@ import config from '@/lib/config';
 import { getCookie, setCookie } from '../services/CookieService';
 import { CookieType } from '../types/enums';
 import { getErrorMessage } from '../utils';
-
-export const login = async (email: string, password: string): Promise<LoginResponse> => {
-  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.auth.login}`;
-  const requestBody: LoginRequest = { email, password };
-  const response = await axios.post<LoginResponse>(requestUrl, requestBody);
-  return response.data;
-};
 
 /**
  * Get current user's private profile

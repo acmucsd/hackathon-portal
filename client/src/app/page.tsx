@@ -6,12 +6,13 @@ import { ResponseAPI } from '@/lib/api';
 import { redirect } from 'next/navigation';
 import { getCookie } from '@/lib/services/CookieService';
 import { CookieType } from '@/lib/types/enums';
+import { logout } from '@/lib/actions/logout';
 
 export default async function Home() {
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
 
   if (!accessToken) {
-    redirect('/api/logout');
+    logout();
   }
 
   try {
@@ -29,6 +30,6 @@ export default async function Home() {
       </main>
     );
   } catch (error) {
-    redirect('/api/logout');
+    logout();
   }
 }
