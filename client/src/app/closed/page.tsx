@@ -1,6 +1,8 @@
 import Card from '@/components/Card';
 import Heading from '@/components/Heading';
-import Peakers from '../../../public/assets/heistscene.svg';
+// import Peakers from '../../../public/assets/heistscene.svg';
+import Closed from '../../../public/assets/Closed2026.svg';
+
 import styles from './page.module.scss';
 
 export default async function ClosedPage() {
@@ -12,7 +14,7 @@ export default async function ClosedPage() {
         </Heading>
       </Card>
       <div className={styles.imageWrapper}>
-        <Peakers />
+        <Closed />
       </div>
     </main>
   );
