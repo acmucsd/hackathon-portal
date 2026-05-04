@@ -4,12 +4,13 @@ import { CookieType } from '@/lib/types/enums';
 import { redirect } from 'next/navigation';
 import { UserAPI } from '@/lib/api';
 import styles from './page.module.scss';
+import { logout } from '@/lib/actions/logout';
 
 export default async function ResetPassword() {
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
 
   if (!accessToken) {
-    redirect('/api/logout');
+    logout();
   }
 
   try {
@@ -25,6 +26,6 @@ export default async function ResetPassword() {
       </div>
     );
   } catch (error) {
-    redirect('/api/logout');
+    logout();
   }
 }

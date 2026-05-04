@@ -13,8 +13,7 @@ import {
   UpdateUser as IUpdateUser,
   UpdateUserRequest as IUpdateUserRequest,
   UpdateFetchAiHandleRequest as IUpdateFetchAiHandleRequest,
-  LoginRequest as ILoginRequest,
-  ForgotPasswordRequest as IForgotPasswordRequest,
+  VerifyTokenRequest as IVerifyTokenRequest,
 } from '../../types/ApiRequests';
 
 const PASSWORD_MIN_LENGTH = 8;
@@ -64,16 +63,8 @@ export class UpdateFetchAiHandleRequest implements IUpdateFetchAiHandleRequest {
   fetchAiHandle: string | null;
 }
 
-export class LoginRequest implements ILoginRequest {
+export class VerifyTokenRequest implements IVerifyTokenRequest {
   @IsDefined()
-  email: string;
-
-  @IsDefined()
-  password: string;
-}
-
-export class ForgotPasswordRequest implements IForgotPasswordRequest {
-  @IsDefined()
-  @IsEmail()
-  email: string;
+  @IsNotEmpty()
+  token: string;
 }

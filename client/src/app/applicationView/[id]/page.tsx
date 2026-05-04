@@ -9,6 +9,7 @@ import { getCookie } from '@/lib/services/CookieService';
 import { CookieType, ApplicationDecision } from '@/lib/types/enums';
 import { filterApplicantsByCriteria } from '@/lib/utils';
 import { redirect } from 'next/navigation';
+import { logout } from '@/lib/actions/logout';
 
 function buildStats(
   reviewerOverview: ReviewerOverviewResponse,
@@ -66,7 +67,7 @@ export default async function ApplicationReviewPage({
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
 
   if (!accessToken) {
-    redirect('/api/logout');
+    logout();
   }
 
   try {
@@ -134,7 +135,7 @@ export default async function ApplicationReviewPage({
     const status = err?.response?.status;
 
     if (status === 401) {
-      redirect('/api/logout');
+      logout();
     }
     if (status === 403) {
       redirect('/manageUsers');
