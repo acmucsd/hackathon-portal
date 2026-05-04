@@ -57,8 +57,8 @@ export class ResponseService {
 
         const repository = Repositories.response(entityManager);
         return repository
-        .createQueryBuilder("Response")
-        .orderBy("Response.createdAt", "DESC")
+        .createQueryBuilder('Response')
+        .orderBy('Response.createdAt', 'DESC')
         .getMany();
       });
     return sortedResponses;
