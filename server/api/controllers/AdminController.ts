@@ -26,6 +26,7 @@ import {
   UpdateUserAccessResponse,
 } from '../../types/ApiResponses';
 import {
+  PaginationQueryParams,
   UpdateApplicationDecisionRequest,
   UpdateUserAccessRequest,
 } from '../validators/AdminControllerRequests';
@@ -91,11 +92,12 @@ export class AdminController {
   @Get('/applications')
   async getApplications(
     @AuthenticatedUser() user: UserModel,
+    @QueryParams() filters: PaginationQueryParams,
   ): Promise<GetFormsResponse> {
     if (!PermissionsService.canViewAllApplications(user))
       throw new ForbiddenError();
-
-    const responses = await this.responseService.getAllApplications();
+    const { offset, limit } = filters;
+    const responses = await this.responseService.getAllApplications(offset, limit);
     return { error: null, responses: responses };
   }
 

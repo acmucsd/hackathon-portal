@@ -1,6 +1,7 @@
-import { IsBoolean, IsDefined, IsEmail, IsIn, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsDefined, IsEmail, IsIn, IsNotEmpty, IsOptional, IsString, Min } from 'class-validator';
 import { UpdateApplicationDecisionRequest as IUpdateApplicationDecisionRequest } from '../../types/ApiRequests';
 import { UpdateUserAccessRequest as  IUpdateUserAccessRequest } from '../../types/ApiRequests';
+import { PaginationQueryParams as IPaginationQueryParams } from '../../types/ApiRequests';
 import { ApplicationDecision, UserAccessType } from '../../types/Enums';
 import { IsEduEmail, IsValidApplicationDecision } from '../decorators/Validators';
 
@@ -10,6 +11,16 @@ const AllowedRolesForUpdate = [
   UserAccessType.MANAGER,
   UserAccessType.ADMIN,
 ];
+
+export class PaginationQueryParams implements IPaginationQueryParams {
+  @IsOptional()
+  @Min(0)
+  offset?: number;
+
+  @IsOptional()
+  @Min(0)
+  limit?: number;
+}
 
 export class UpdateApplicationDecisionRequest implements IUpdateApplicationDecisionRequest {
   @IsDefined()
