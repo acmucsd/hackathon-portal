@@ -97,7 +97,7 @@ export class AdminController {
     if (!PermissionsService.canViewAllApplications(user))
       throw new ForbiddenError();
     const { offset, limit } = filters;
-    const responses = await this.responseService.getAllApplications(offset, limit);
+    const responses = await this.responseService.getAllApplicationsSorted(offset, limit);
     return { error: null, responses: responses };
   }
 

@@ -43,7 +43,7 @@ export class ResponseService {
     return response;
   }
 
-  private async getAllResponses(): Promise<ResponseModel[]> {
+  public async getAllResponses(): Promise<ResponseModel[]> {
     const responses = await this.transactionsManager.readOnly(
       async (entityManager) =>
         Repositories.response(entityManager).findAll(),
@@ -51,7 +51,7 @@ export class ResponseService {
     return responses;
   }
 
-  private async getAllApplicationsSorted(offset?: number, limit?: number): Promise<ResponseModel[]> {
+  public async getAllApplicationsSorted(offset?: number, limit?: number): Promise<ResponseModel[]> {
     const sortedResponses = await this.transactionsManager.readOnly(
       async (entityManager) => {
 
@@ -61,7 +61,7 @@ export class ResponseService {
             formType: FormType.APPLICATION,
           },
           order: {
-            createdAt: 'DESC',
+            createdAt: 'ASC',
           },
           skip: offset,
           take: limit,
@@ -116,15 +116,6 @@ export class ResponseService {
     }
   }
 
-  public async getAllApplications(offset?: number, limit?: number): Promise<ResponseModel[]> {
-
-    const applications = await this.getAllApplicationsSorted(offset, limit);
-    // const applications = responses.filter(
-    //   (response) => response.formType === FormType.APPLICATION,
-    // );
-
-    return applications;
-  }
 
   public async getAllApplicationsWithReviewerRelation(): Promise<ResponseModel[]> {
     const responses = await this.getAllResponsesWithReviewerRelation();
