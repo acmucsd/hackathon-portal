@@ -1,7 +1,7 @@
 import Card from '@/components/Card';
 import Heading from '@/components/Heading';
-// import Peakers from '../../../public/assets/heistscene.svg';
 import Closed from '../../../public/assets/Closed2026.svg';
+import ClosedMobile from '../../../public/assets/Closed2026Mobile.svg';
 
 import styles from './page.module.scss';
 
@@ -13,8 +13,11 @@ export default async function ClosedPage() {
           DiamondHacks portal is closed. <br></br>See you next year!
         </Heading>
       </Card>
-      <div className={styles.imageWrapper}>
+      <div className={`${styles.imageWrapper} ${styles.desktopImage}`}>
         <Closed />
+      </div>
+      <div className={`${styles.imageWrapper} ${styles.mobileImage}`}>
+        <ClosedMobile />
       </div>
     </main>
   );

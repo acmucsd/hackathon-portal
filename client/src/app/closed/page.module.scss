@@ -12,38 +12,35 @@
   margin-bottom: 2vh;
 
   .imageWrapper {
-    position: absolute;
-    bottom: -75vh;
-    left: 50%;
-    width: 100%;
-    overflow: hidden;
-    transform: translateX(-50%);
-    z-index: 0;
-    pointer-events: none;
+    transform: translateY(20%);
+  }
 
-    svg {
-      display: block;
-      position: relative;
-      left: 50%;
-      width: max(100%, 1440px);
-      max-width: none;
-      height: auto;
-      overflow: visible;
-      transform: translateX(-50%);
-    }
+  .mobileImage {
+    display: none;
+  }
+
+  .message {
+    border: #525252 2px solid;
+    border-radius: 8px;
+    box-shadow: 0 0 18px 3px rgba(0, 0, 0, 0.3);
+    background: #37393e80;
+    position: relative;
+    z-index: 2;
   }
 
   @media screen and (max-width: vars.$breakpoint-md) {
     min-height: 80vh;
-    margin-bottom: 15vh;
-  }
-}
 
-.message {
-  border: #525252 2px solid;
-  border-radius: 8px;
-  box-shadow: 0 0 18px 3px rgba(0, 0, 0, 0.3);
-  background: #37393e80;
-  position: relative;
-  z-index: 2;
+    .message {
+      margin-top: 20vh;
+    }
+
+    .desktopImage {
+      display: none;
+    }
+
+    .mobileImage {
+      display: block;
+    }
+  }
 }
