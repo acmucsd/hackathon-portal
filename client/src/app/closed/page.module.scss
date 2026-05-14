@@ -8,11 +8,11 @@
   padding: var(--top-padding) 0px;
   position: relative;
   min-height: 100vh;
-  isolation: isolate;
-  margin-bottom: 2vh;
 
   .imageWrapper {
-    transform: translateY(20%);
+    transform: translateY(15%);
+    // gets rid of "line" (from background) at bottom of screen
+    background: linear-gradient(transparent, #7db65c);
   }
 
   .mobileImage {
@@ -28,11 +28,15 @@
     z-index: 2;
   }
 
-  @media screen and (max-width: vars.$breakpoint-md) {
+  @media screen and (max-width: 650px) {
     min-height: 80vh;
 
     .message {
       margin-top: 20vh;
+    }
+
+    .imageWrapper {
+      transform: translateY(20%);
     }
 
     .desktopImage {
