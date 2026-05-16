@@ -53,6 +53,10 @@ export default function LoginPage() {
       ) {
         return;
       }
+      if (errorMessage.includes('admin-restricted-operation')) {
+        setError("This email is not associated with an existing account. Please sign up first.");
+        return;
+      }
       setError(errorMessage);
     }
   };
