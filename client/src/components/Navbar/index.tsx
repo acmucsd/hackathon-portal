@@ -1,6 +1,7 @@
-'use client';
+ 'use client';
 
 import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import styles from './style.module.scss';
 import Typography from '../Typography';
 import Image from 'next/image';
@@ -28,10 +29,8 @@ const baseLinks: LinkMetadata[] = [
 
 const MOBILE_BREAKPOINT = 1024; // Matches $breakpoint-lg from vars.scss
 
-interface NavbarProps {
-  user?: PrivateProfile;
-}
-export default function Navbar({ user }: NavbarProps) {
+export default function Navbar() {
+  const [user, setUser] = useState<PrivateProfile | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const onLinkClick = () => {
@@ -48,6 +47,29 @@ export default function Navbar({ user }: NavbarProps) {
     }
     return result;
   })();
+
+  const pathname = usePathname();
+
+  useEffect(() => {
+    // Fetch session from server API that reads httpOnly cookies.
+    // Include pathname in deps so we revalidate on navigation (e.g., after logout).
+    const fetchSession = async () => {
+      try {
+        const res = await fetch('/api/session', { cache: 'no-store', credentials: 'same-origin' });
+        if (!res.ok) {
+          setUser(null);
+          return;
+        }
+        const data = await res.json();
+        setUser(data.user || null);
+      } catch (err) {
+        console.error(err);
+        setUser(null);
+      }
+    };
+
+    fetchSession();
+  }, [pathname]);
 
   useEffect(() => {
     // Close mobile menu when screen gets larger than mobile breakpoint
