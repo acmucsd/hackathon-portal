@@ -14,9 +14,6 @@ export const metadata: Metadata = {
   description: "ACM at UCSD's annual hackathon",
 };
 
-// This app reads request-specific data (cookies) in the root layout.
-// Tell Next.js to render these routes dynamically instead of statically.
-export const dynamic = 'force-dynamic';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
