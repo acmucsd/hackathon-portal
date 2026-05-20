@@ -116,3 +116,7 @@ export interface AddListOfInterestedPhoneRequest {
   phones: string[];
 }
 
+export interface PaginationQueryParams {
+  offset?: number;
+  limit?: number;
+}
