@@ -14,7 +14,6 @@ export const metadata: Metadata = {
   description: "ACM at UCSD's annual hackathon",
 };
 
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
