@@ -30,10 +30,15 @@ export const register = async (user: UserRegistration): Promise<PrivateProfile> 
   return response.data.user;
 };
 
-export const verifyToken = async (token: string): Promise<PrivateProfile> => {
+export const verifyToken = async (token: string): Promise<PrivateProfile | null> => {
   const requestUrl = `${config.api.baseUrl}${config.api.endpoints.auth.verifyToken}`;
-  const response = await axios.post<VerifyTokenResponse>(requestUrl, { token });
-  return response.data.user;
+
+  try {
+    const response = await axios.post<VerifyTokenResponse>(requestUrl, { token });
+    return response.data.user;
+  } catch {
+    return null;
+  }
 };
 
 export const login = async (email: string, password: string): Promise<PrivateProfile> => {
