@@ -68,6 +68,7 @@ export const login = async (email: string, password: string): Promise<PrivatePro
         throw new Error('Incorrect email or password.');
       }
     }
+    throw e;
   } finally {
     await signOut(auth).catch(() => undefined);
   }
@@ -98,6 +99,7 @@ export const loginWithGoogle = async (): Promise<PrivateProfile> => {
         throw new Error('Try a different login method.');
       }
     }
+    throw e;
   } finally {
     await signOut(auth).catch(() => undefined);
   }
