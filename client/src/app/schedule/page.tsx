@@ -3,16 +3,15 @@ import DayOfTimelineItem from '@/components/DayOfTimelineItem';
 import { redirect } from 'next/navigation';
 import styles from './page.module.scss';
 import Link from 'next/link';
-import { headers } from 'next/headers';
-import config from '@/lib/config';
+import { getCookie } from '@/lib/services/CookieService';
+import { CookieType } from '@/lib/types/enums';
 
 export default async function SchedulePage({
   searchParams,
 }: {
   searchParams: Promise<{ day?: string }>;
 }) {
-  const headersList = await headers();
-  const accessToken = headersList.get(config.header.accessToken)!;
+  const accessToken = (await getCookie(CookieType.ACCESS_TOKEN))!;
 
   const { day } = await searchParams;
   const selectedDate = day ?? 'SATURDAY';

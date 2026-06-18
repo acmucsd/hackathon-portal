@@ -16,7 +16,7 @@ import {
   GoogleAuthProvider,
   signOut,
 } from 'firebase/auth';
-import { setSession } from '@/lib/actions/session';
+import { setSession } from '@/lib/services/SessionService';
 import { FirebaseError } from 'firebase/app';
 
 export const register = async (user: UserRegistration): Promise<PrivateProfile> => {

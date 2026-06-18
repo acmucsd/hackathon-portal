@@ -2,13 +2,12 @@ import ResetPasswordDashboard from '@/components/admin/ResetPasswordDashboard';
 import { redirect } from 'next/navigation';
 import { UserAPI } from '@/lib/api';
 import styles from './page.module.scss';
-import { headers } from 'next/headers';
-import config from '@/lib/config';
 import { onlyAllowAdmins } from '@/lib/services/PermissionsService';
+import { getCookie } from '@/lib/services/CookieService';
+import { CookieType } from '@/lib/types/enums';
 
 export default async function ResetPassword() {
-  const headersList = await headers();
-  const accessToken = headersList.get(config.header.accessToken)!;
+  const accessToken = (await getCookie(CookieType.ACCESS_TOKEN))!;
 
   let fetchedUser;
   try {

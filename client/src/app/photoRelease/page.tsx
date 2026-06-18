@@ -3,12 +3,11 @@ import { UserAPI } from '@/lib/api';
 import { redirect } from 'next/navigation';
 import styles from './page.module.scss';
 import { canUserSubmitWaivers } from '@/lib/utils';
-import config from '@/lib/config';
-import { headers } from 'next/headers';
+import { CookieType } from '@/lib/types/enums';
+import { getCookie } from '@/lib/services/CookieService';
 
 export default async function PhotoReleasePage() {
-  const headersList = await headers();
-  const accessToken = headersList.get(config.header.accessToken)!;
+  const accessToken = (await getCookie(CookieType.ACCESS_TOKEN))!;
 
   let fetchedUser;
   try {

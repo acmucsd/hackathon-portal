@@ -28,15 +28,6 @@ export function middleware(request: NextRequest) {
     response.cookies.delete(CookieType.USER);
     return response;
   }
-
-  // Continue to the requested page
-  const response = NextResponse.next({
-    request: {
-      headers: new Headers(request.headers),
-    },
-  });
-  response.headers.set('x-access-token', accessToken.value);
-  return response;
 }
 
 export const config = {

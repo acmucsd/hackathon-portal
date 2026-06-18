@@ -16,7 +16,7 @@ const authCookieOptions = {
 
 export const getCookie = async (key: string): Promise<string | null> => {
   const cookieStore = await cookies();
-  const cookie = cookieStore.get(key)?.value as string;
+  const cookie = cookieStore.get(key)?.value;
   if (cookie == '' || !cookie) return null;
   return cookie;
 };

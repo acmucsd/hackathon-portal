@@ -14,7 +14,7 @@ import { AuthAPI } from '@/lib/api';
 import { getErrorMessage } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { getSession } from '@/lib/actions/session';
+import { getSession } from '@/lib/services/SessionService';
 
 interface LoginValues {
   email: string;

@@ -4,6 +4,8 @@ import { signOut } from 'firebase/auth';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
+// server invoked logout
+
 export async function GET() {
   //await signOut(auth).catch(() => undefined);
   await deleteUserCookies();

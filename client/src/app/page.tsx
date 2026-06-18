@@ -3,12 +3,12 @@ import styles from './page.module.scss';
 import Dashboard from '@/components/Dashboard';
 import { UserAPI } from '@/lib/api';
 import { ResponseAPI } from '@/lib/api';
-import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { getCookie } from '@/lib/services/CookieService';
+import { CookieType } from '@/lib/types/enums';
 
 export default async function Home() {
-  const headersList = await headers();
-  const accessToken = headersList.get('x-access-token')!;
+  const accessToken = (await getCookie(CookieType.ACCESS_TOKEN))!;
 
   let fetchedUser;
   try {

@@ -8,9 +8,8 @@ import type {
 import { CookieType, ApplicationDecision } from '@/lib/types/enums';
 import { filterApplicantsByCriteria } from '@/lib/utils';
 import { redirect } from 'next/navigation';
-import { headers } from 'next/headers';
-import config from '@/lib/config';
 import { onlyAllowAdmins } from '@/lib/services/PermissionsService';
+import { getCookie } from '@/lib/services/CookieService';
 
 function buildStats(
   reviewerOverview: ReviewerOverviewResponse,
@@ -65,8 +64,7 @@ export default async function ApplicationReviewPage({
   const { id: userId } = await params;
   const { status: filterStatus, q: searchQuery } = await searchParams;
 
-  const headersList = await headers();
-  const accessToken = headersList.get(config.header.accessToken)!;
+  const accessToken = (await getCookie(CookieType.ACCESS_TOKEN))!;
 
   try {
     const currentUser = await UserAPI.getCurrentUser(accessToken);

@@ -11,8 +11,8 @@ import { redirect } from 'next/navigation';
 import { ResponseAPI } from '@/lib/api';
 import { ResponseModel } from '@/lib/types/apiResponses';
 import { applicationToResponses } from '@/lib/responses';
-import { headers } from 'next/headers';
-import config from '@/lib/config';
+import { getCookie } from '@/lib/services/CookieService';
+import { CookieType } from '@/lib/types/enums';
 
 const STEP_REVIEW = appQuestions.length + 1;
 const STEP_SUBMITTED = appQuestions.length + 2;
@@ -25,8 +25,7 @@ export default async function ApplicationPage({ params }: ApplicationPageProps) 
   const step = Number((await params).step);
   const deadlinePassed = new Date() >= TIMELINE.application;
 
-  const headersList = await headers();
-  const accessToken = headersList.get(config.header.accessToken)!;
+  const accessToken = (await getCookie(CookieType.ACCESS_TOKEN))!;
 
   let response: ResponseModel | null = null;
   if (step < STEP_SUBMITTED) {

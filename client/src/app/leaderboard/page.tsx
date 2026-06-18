@@ -1,12 +1,11 @@
 import { getHouseLeaderboard } from '@/lib/api/LeaderboardAPI';
 import LeaderboardClient from '@/components/LeaderboardClient';
-import { headers } from 'next/headers';
-import config from '@/lib/config';
 import { redirect } from 'next/navigation';
+import { getCookie } from '@/lib/services/CookieService';
+import { CookieType } from '@/lib/types/enums';
 
 export default async function LeaderboardPage() {
-  const headersList = await headers();
-  const accessToken = headersList.get(config.header.accessToken)!;
+  const accessToken = (await getCookie(CookieType.ACCESS_TOKEN))!;
 
   try {
     const leaderboard = await getHouseLeaderboard(accessToken);

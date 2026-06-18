@@ -1,8 +1,10 @@
+'use server';
+
 import { redirect } from 'next/navigation';
 import { PrivateProfile } from '../types/apiResponses';
 import { UserAccessType } from '../types/enums';
 
-export function onlyAllowSuperAdmins(user: PrivateProfile) {
+export async function onlyAllowSuperAdmins(user: PrivateProfile) {
   if (user.accessType !== UserAccessType.SUPER_ADMIN) {
     if (user.accessType === UserAccessType.ADMIN) {
       redirect('/admin');
@@ -12,7 +14,7 @@ export function onlyAllowSuperAdmins(user: PrivateProfile) {
   }
 }
 
-export function onlyAllowAdmins(user: PrivateProfile) {
+export async function onlyAllowAdmins(user: PrivateProfile) {
   if (user.accessType !== UserAccessType.ADMIN && user.accessType !== UserAccessType.SUPER_ADMIN) {
     redirect('/');
   }

@@ -3,14 +3,13 @@ import UsersDashboard from '@/components/admin/UsersDashboard';
 import { AdminAPI, UserAPI } from '@/lib/api';
 import styles from './page.module.scss';
 import { RevieweeProfile } from '@/lib/types/apiResponses';
-import { headers } from 'next/headers';
-import config from '@/lib/config';
 import { onlyAllowAdmins } from '@/lib/services/PermissionsService';
 import { redirect } from 'next/navigation';
+import { CookieType } from '@/lib/types/enums';
+import { getCookie } from '@/lib/services/CookieService';
 
 export default async function ManageUsers() {
-  const headersList = await headers();
-  const accessToken = headersList.get(config.header.accessToken)!;
+  const accessToken = (await getCookie(CookieType.ACCESS_TOKEN))!;
 
   let user;
   try {

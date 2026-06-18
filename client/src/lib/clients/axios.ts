@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { logout } from '../actions/logout';
+import { logout } from '../services/SessionService';
 
 const client = axios.create({});
 

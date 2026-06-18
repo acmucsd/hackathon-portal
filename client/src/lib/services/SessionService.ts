@@ -4,6 +4,12 @@ import { deleteUserCookies, getCookie, setCookie } from '@/lib/services/CookieSe
 import { CookieType } from '@/lib/types/enums';
 import type { PrivateProfile } from '@/lib/types/apiResponses';
 import { verifyToken } from '../api/AuthAPI';
+import { signOut } from 'firebase/auth';
+import { auth } from '../clients/firebase';
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
+
+// for logins and client-invoked logouts (redirect to /api/logout if from the server)
 
 export async function getSession(): Promise<{
   authenticated: boolean;
@@ -43,4 +49,11 @@ export async function setSession(token: string): Promise<{
   await setCookie(CookieType.USER, JSON.stringify(user));
 
   return { error: null, user };
+}
+
+export async function logout() {
+  await signOut(auth).catch(() => undefined);
+  await deleteUserCookies();
+  revalidatePath('/', 'layout');
+  redirect('/login');
 }
