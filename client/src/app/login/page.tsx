@@ -31,6 +31,10 @@ export default function LoginPage() {
     formState: { errors },
   } = useForm<LoginValues>();
 
+  useEffect(() => {
+    router.refresh();
+  }, [router]);
+
   const onSubmit: SubmitHandler<LoginValues> = async credentials => {
     try {
       await AuthAPI.login(credentials.email, credentials.password);

@@ -23,7 +23,7 @@ import type {
   SetAcceptanceDeadlinePassedResponse,
 } from '@/lib/types/apiResponses';
 import { ApplicationDecision } from '@/lib/types/enums';
-import axios from 'axios';
+import axios from '@/lib/clients/axios';
 import { PostAssignmentsRequest } from '../types/apiRequests';
 
 /**

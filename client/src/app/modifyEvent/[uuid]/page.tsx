@@ -1,10 +1,10 @@
-import { EventAPI } from '@/lib/api';
+import { EventAPI, UserAPI } from '@/lib/api';
 import EventForm from '@/components/admin/EventForm';
 import { redirect } from 'next/navigation';
-import { getCookie } from '@/lib/services/CookieService';
-import { CookieType } from '@/lib/types/enums';
 import styles from './page.module.scss';
-import { logout } from '@/lib/actions/logout';
+import { headers } from 'next/headers';
+import config from '@/lib/config';
+import { onlyAllowAdmins } from '@/lib/services/PermissionsService';
 
 interface ModifyEventProps {
   params: Promise<{ uuid: string }>;
@@ -12,9 +12,18 @@ interface ModifyEventProps {
 
 export default async function ModifyEvent({ params }: ModifyEventProps) {
   const event = (await params).uuid;
-  const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
 
-  if (!accessToken) { return logout(); }
+  const headersList = await headers();
+  const accessToken = headersList.get(config.header.accessToken)!;
+
+  let user;
+  try {
+    user = await UserAPI.getCurrentUser(accessToken);
+  } catch (error) {
+    console.error(error);
+    redirect('/api/logout');
+  }
+  onlyAllowAdmins(user);
 
   try {
     const fetchedEvent = await EventAPI.getEvent(accessToken, event);
@@ -25,6 +34,7 @@ export default async function ModifyEvent({ params }: ModifyEventProps) {
       </main>
     );
   } catch (error) {
-    return logout();
+    console.error(error);
+    redirect('/');
   }
 }

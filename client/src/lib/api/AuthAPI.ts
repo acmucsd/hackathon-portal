@@ -6,8 +6,8 @@ import type {
   ForgotPasswordResponse,
   VerifyTokenResponse,
 } from '@/lib/types/apiResponses';
-import { auth } from '@/lib/firebase';
-import axios from 'axios';
+import { auth } from '@/lib/clients/firebase';
+import axios from '@/lib/clients/axios';
 import {
   sendEmailVerification,
   sendPasswordResetEmail,
@@ -92,7 +92,7 @@ export const loginWithGoogle = async (): Promise<PrivateProfile> => {
     return result.user;
   } catch (e) {
     if (e instanceof FirebaseError) {
-      if (e.message.includes("auth/admin-restricted-operation")) {
+      if (e.message.includes('auth/admin-restricted-operation')) {
         throw new Error('No account associated with that email.');
       } else {
         throw new Error('Try a different login method.');

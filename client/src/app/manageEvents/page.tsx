@@ -1,15 +1,23 @@
-import { EventAPI } from '@/lib/api';
-import { redirect } from 'next/navigation';
-import { getCookie } from '@/lib/services/CookieService';
-import { CookieType } from '@/lib/types/enums';
+import { EventAPI, UserAPI } from '@/lib/api';
 import styles from './page.module.scss';
 import EventDashboard from '@/components/admin/EventDashboard';
-import { logout } from '@/lib/actions/logout';
+import { headers } from 'next/headers';
+import config from '@/lib/config';
+import { onlyAllowAdmins } from '@/lib/services/PermissionsService';
+import { redirect } from 'next/navigation';
 
 export default async function ManageEvents() {
-  const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
+  const headersList = await headers();
+  const accessToken = headersList.get(config.header.accessToken)!;
 
-  if (!accessToken) { return logout(); }
+  let user;
+  try {
+    user = await UserAPI.getCurrentUser(accessToken);
+  } catch (error) {
+    console.error(error);
+    redirect('/api/logout');
+  }
+  onlyAllowAdmins(user);
 
   try {
     const events = await EventAPI.getEvents(accessToken);
@@ -20,6 +28,7 @@ export default async function ManageEvents() {
       </main>
     );
   } catch (error) {
-    return logout();
+    console.error(error);
+    redirect('/');
   }
 }

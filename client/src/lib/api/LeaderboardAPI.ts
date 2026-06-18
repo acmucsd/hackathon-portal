@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from '@/lib/clients/axios';
 import { HouseLeaderboardResponse } from '../types/apiResponses';
 import { House } from '../types/enums';
 import config from '../config';

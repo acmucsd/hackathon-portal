@@ -16,6 +16,8 @@ export const metadata: Metadata = {
   description: "ACM at UCSD's annual hackathon",
 };
 
+export const dynamic = 'force-dynamic';
+
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   let user: PrivateProfile | undefined;
   try {

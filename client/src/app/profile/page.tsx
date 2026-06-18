@@ -1,18 +1,23 @@
 import { UserAPI, ResponseAPI } from '@/lib/api';
-import { getCookie } from '@/lib/services/CookieService';
-import { CookieType } from '@/lib/types/enums';
 import Profile from '@/components/Profile';
-import { redirect } from 'next/navigation';
 import styles from './page.module.scss';
-import { logout } from '@/lib/actions/logout';
+import { headers } from 'next/headers';
+import config from '@/lib/config';
+import { redirect } from 'next/navigation';
 
 export default async function ProfilePage() {
-  const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
+  const headersList = await headers();
+  const accessToken = headersList.get(config.header.accessToken)!;
 
-  if (!accessToken) { return logout(); }
+  let fetchedUser;
+  try {
+    fetchedUser = await UserAPI.getCurrentUser(accessToken);
+  } catch (error) {
+    console.error(error);
+    redirect('/api/logout');
+  }
 
   try {
-    const fetchedUser = await UserAPI.getCurrentUser(accessToken);
     const fetchedResponses = await ResponseAPI.getResponsesForCurrentUser(accessToken);
     return (
       <main className={styles.main}>
@@ -20,6 +25,7 @@ export default async function ProfilePage() {
       </main>
     );
   } catch (error) {
-    return logout();
+    console.error(error);
+    redirect('/');
   }
 }

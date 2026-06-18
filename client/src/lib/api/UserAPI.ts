@@ -8,7 +8,7 @@ import type {
   PublicProfile,
   GetUserResponse,
 } from '@/lib/types/apiResponses';
-import axios from 'axios';
+import axios from '@/lib/clients/axios';
 import config from '@/lib/config';
 import { getCookie, setCookie } from '../services/CookieService';
 import { CookieType } from '../types/enums';

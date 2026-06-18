@@ -2,24 +2,24 @@ import { TIMELINE } from '@/config';
 import SuperAdminDashboard from '@/components/admin/SuperAdminDashboard';
 import { UserAPI, AdminAPI } from '@/lib/api';
 import { redirect } from 'next/navigation';
-import { getCookie } from '@/lib/services/CookieService';
-import { CookieType } from '@/lib/types/enums';
 import styles from './style.module.scss';
-import { logout } from '@/lib/actions/logout';
+import config from '@/lib/config';
+import { headers } from 'next/headers';
+import { onlyAllowSuperAdmins } from '@/lib/services/PermissionsService';
 
 export default async function superAdmin() {
-  const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
+  const headersList = await headers();
+  const accessToken = headersList.get(config.header.accessToken)!;
 
-  if (!accessToken) { return logout(); }
-
-  const fetchedUser = await UserAPI.getCurrentUser(accessToken);
-  if (fetchedUser.accessType !== 'SUPER_ADMIN') {
-    if (fetchedUser.accessType === 'ADMIN') {
-      redirect('/admin');
-    } else {
-      redirect('/');
-    }
+  let fetchedUser;
+  try {
+    fetchedUser = await UserAPI.getCurrentUser(accessToken);
+  } catch (error) {
+    console.error(error);
+    return redirect('/api/logout');
   }
+  onlyAllowSuperAdmins(fetchedUser);
+
   try {
     const assignments = await AdminAPI.getAllAssignments(accessToken);
     const applications = assignments.map(a => ({ ...a.applicant, reviewer: a.reviewer }));
@@ -36,6 +36,7 @@ export default async function superAdmin() {
       </main>
     );
   } catch (error) {
-    return logout();
+    console.error(error);
+    redirect('/');
   }
 }

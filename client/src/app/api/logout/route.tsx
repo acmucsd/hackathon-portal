@@ -1,13 +1,11 @@
-'use server';
-
+import { auth } from '@/lib/clients/firebase';
 import { deleteUserCookies } from '@/lib/services/CookieService';
+import { signOut } from 'firebase/auth';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { auth } from '../clients/firebase';
-import { signOut } from 'firebase/auth';
 
-export async function logout() {
-  await signOut(auth).catch(() => undefined);
+export async function GET() {
+  //await signOut(auth).catch(() => undefined);
   await deleteUserCookies();
   revalidatePath('/', 'layout');
   redirect('/login');

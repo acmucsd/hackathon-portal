@@ -46,6 +46,9 @@ const config = {
       },
     },
   },
+  header: {
+    accessToken: 'x-access-token',
+  },
 };
 
 export default config;

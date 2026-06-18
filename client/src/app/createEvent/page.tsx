@@ -1,27 +1,23 @@
 import { UserAPI } from '@/lib/api';
 import { redirect } from 'next/navigation';
-import { getCookie } from '@/lib/services/CookieService';
-import { CookieType } from '@/lib/types/enums';
 import EventForm from '@/components/admin/EventForm';
 import styles from './page.module.scss';
-import { logout } from '@/lib/actions/logout';
+import { headers } from 'next/headers';
+import config from '@/lib/config';
+import { onlyAllowAdmins } from '@/lib/services/PermissionsService';
 
 export default async function CreateEvent() {
-  const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
-
-  if (!accessToken) { return logout(); }
+  const headersList = await headers();
+  const accessToken = headersList.get(config.header.accessToken)!;
 
   let fetchedUser;
   try {
     fetchedUser = await UserAPI.getCurrentUser(accessToken);
   } catch (error) {
-    return logout();
+    console.error(error);
+    redirect('/api/logout');
   }
-
-  // Only allow admins to access page
-  if (fetchedUser!.accessType !== 'ADMIN' && fetchedUser!.accessType !== 'SUPER_ADMIN') {
-    redirect('/');
-  }
+  onlyAllowAdmins(fetchedUser);
 
   return (
     <main className={styles.main}>

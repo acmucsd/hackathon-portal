@@ -299,7 +299,6 @@ export class UserService {
     try {
       decodedToken = await adminAuth.verifyIdToken(token);
     } catch (error) {
-      console.log(decodedToken);
       if (error instanceof FirebaseAuthError) {
         if (error.code === 'auth/invalid-id-token')
           throw new UnauthorizedError('Invalid auth token');

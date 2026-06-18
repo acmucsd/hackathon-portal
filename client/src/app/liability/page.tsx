@@ -1,22 +1,21 @@
 import LiabilityForm from '@/components/LiabilityForm';
 import { UserAPI } from '@/lib/api';
-import { getCookie } from '@/lib/services/CookieService';
-import { CookieType, ApplicationStatus } from '@/lib/types/enums';
 import { redirect } from 'next/navigation';
 import styles from './page.module.scss';
 import { canUserSubmitWaivers } from '@/lib/utils';
-import { logout } from '@/lib/actions/logout';
+import config from '@/lib/config';
+import { headers } from 'next/headers';
 
 export default async function LiabilityPage() {
-  const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
-
-  if (!accessToken) { return logout(); }
+  const headersList = await headers();
+  const accessToken = headersList.get(config.header.accessToken)!;
 
   let fetchedUser;
   try {
     fetchedUser = await UserAPI.getCurrentUser(accessToken);
   } catch (error) {
-    return logout();
+    console.error(error);
+    redirect('/api/logout');
   }
 
   // Only allow accepted participants to fill out liability form

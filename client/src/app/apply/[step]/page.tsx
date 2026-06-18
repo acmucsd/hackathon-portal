@@ -9,12 +9,10 @@ import Typography from '@/components/Typography';
 import PartyPopper from '@/../public/assets/party-popper.svg';
 import { redirect } from 'next/navigation';
 import { ResponseAPI } from '@/lib/api';
-import { getCookie } from '@/lib/services/CookieService';
-import { CookieType, Yes, YesOrNo } from '@/lib/types/enums';
-import { AxiosError } from 'axios';
 import { ResponseModel } from '@/lib/types/apiResponses';
 import { applicationToResponses } from '@/lib/responses';
-import { logout } from '@/lib/actions/logout';
+import { headers } from 'next/headers';
+import config from '@/lib/config';
 
 const STEP_REVIEW = appQuestions.length + 1;
 const STEP_SUBMITTED = appQuestions.length + 2;
@@ -24,20 +22,19 @@ type ApplicationPageProps = {
 };
 
 export default async function ApplicationPage({ params }: ApplicationPageProps) {
-  const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
   const step = Number((await params).step);
   const deadlinePassed = new Date() >= TIMELINE.application;
 
-  if (!accessToken) { return logout(); }
+  const headersList = await headers();
+  const accessToken = headersList.get(config.header.accessToken)!;
 
   let response: ResponseModel | null = null;
   if (step < STEP_SUBMITTED) {
     try {
       response = await ResponseAPI.getApplication(accessToken);
     } catch (error) {
-      if (!(error instanceof AxiosError && error.status === 404)) {
-        return logout();
-      }
+      console.error(error);
+      redirect('/');
     }
   }
   if (deadlinePassed) {

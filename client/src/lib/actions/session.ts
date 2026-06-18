@@ -10,13 +10,11 @@ export async function getSession(): Promise<{
   user?: PrivateProfile;
 }> {
   const token = await getCookie(CookieType.ACCESS_TOKEN);
-
   if (!token) {
     return { authenticated: false };
   }
 
   const verifyResponse = await verifyToken(token);
-
   if (!verifyResponse) {
     await deleteUserCookies();
     return { authenticated: false };
@@ -34,7 +32,6 @@ export async function setSession(token: string): Promise<{
   }
 
   const verifyResponse = await verifyToken(token);
-
   if (!verifyResponse) {
     await deleteUserCookies();
     return { error: 'Invalid authentication token.' };
