@@ -28,13 +28,15 @@ export default async function ApplicationPage({ params }: ApplicationPageProps) 
   const step = Number((await params).step);
   const deadlinePassed = new Date() >= TIMELINE.application;
 
+  if (!accessToken) { return logout(); }
+
   let response: ResponseModel | null = null;
   if (step < STEP_SUBMITTED) {
     try {
       response = await ResponseAPI.getApplication(accessToken);
     } catch (error) {
       if (!(error instanceof AxiosError && error.status === 404)) {
-        logout();
+        return logout();
       }
     }
   }

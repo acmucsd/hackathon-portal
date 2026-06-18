@@ -157,9 +157,7 @@ export class UserService {
   public async createUser(createUser: CreateUser): Promise<UserModel> {
 
     const email = createUser.email.toLowerCase();
-    const returnedUser = await this.transactionsManager.readWrite(
-
-    async (entityManager) =>{
+    const returnedUser = await this.transactionsManager.readWrite(async (entityManager) => {
       await entityManager.query('SELECT pg_advisory_xact_lock(hashtext($1))', [email]);
       const userWithEmail = await Repositories.user(entityManager).findByEmail(email);
       const emailAlreadyUsed = userWithEmail !== null;
@@ -168,9 +166,11 @@ export class UserService {
         const firebaseRecord = await adminAuth.getUserByEmail(email);
 
         if (!firebaseRecord.emailVerified) {
+
           await adminAuth.updateUser(firebaseRecord.uid, {
             password: createUser.password,
           });
+
           const user = await this.updateUser(userWithEmail, {
             firstName: createUser.firstName,
             lastName: createUser.lastName,
@@ -182,6 +182,7 @@ export class UserService {
         }
       }
 
+      // try to create Firebase user
       let firebaseUser;
       try {
         firebaseUser = await adminAuth.createUser({
@@ -190,25 +191,33 @@ export class UserService {
           displayName: `${createUser.firstName} ${createUser.lastName}`,
         });
       } catch (error) {
-
         if (error instanceof FirebaseAuthError) {
-
           if (error.code === 'auth/email-already-exists')
             throw new ForbiddenError('Email already in use');
         }
         throw error;
       }
 
-      const userRepository = Repositories.user(entityManager);
-      const newUser = userRepository.create({
-        id: firebaseUser.uid,
-        email,
-        firstName: createUser.firstName,
-        lastName: createUser.lastName,
-      });
-      const createdUser = userRepository.save(newUser);
-      return createdUser;
-
+      // try to make DB user
+      try {
+        const userRepository = Repositories.user(entityManager);
+        const newUser = userRepository.create({
+          id: firebaseUser.uid,
+          email,
+          firstName: createUser.firstName,
+          lastName: createUser.lastName,
+        });
+        const createdUser = await userRepository.save(newUser);
+        return createdUser;
+      } catch (error) {
+        // Rollback: delete Firebase user if DB creation fails
+        try {
+          await adminAuth.deleteUser(firebaseUser.uid);
+        } catch (deleteError) {
+          console.error('Failed to delete orphaned Firebase user:', firebaseUser.uid, deleteError);
+        }
+        throw error;
+      }
     });
 
     return returnedUser;
@@ -290,6 +299,7 @@ export class UserService {
     try {
       decodedToken = await adminAuth.verifyIdToken(token);
     } catch (error) {
+      console.log(decodedToken);
       if (error instanceof FirebaseAuthError) {
         if (error.code === 'auth/invalid-id-token')
           throw new UnauthorizedError('Invalid auth token');

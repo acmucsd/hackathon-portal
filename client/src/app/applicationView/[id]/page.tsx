@@ -66,9 +66,7 @@ export default async function ApplicationReviewPage({
 
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
 
-  if (!accessToken) {
-    logout();
-  }
+  if (!accessToken) { return logout(); }
 
   try {
     const currentUser = await UserAPI.getCurrentUser(accessToken);
@@ -135,7 +133,7 @@ export default async function ApplicationReviewPage({
     const status = err?.response?.status;
 
     if (status === 401) {
-      logout();
+      return logout();
     }
     if (status === 403) {
       redirect('/manageUsers');

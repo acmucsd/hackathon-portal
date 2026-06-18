@@ -9,9 +9,7 @@ import { logout } from '@/lib/actions/logout';
 export default async function ManageEvents() {
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
 
-  if (!accessToken) {
-    logout();
-  }
+  if (!accessToken) { return logout(); }
 
   try {
     const events = await EventAPI.getEvents(accessToken);
@@ -22,6 +20,6 @@ export default async function ManageEvents() {
       </main>
     );
   } catch (error) {
-    logout();
+    return logout();
   }
 }

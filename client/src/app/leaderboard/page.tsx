@@ -7,16 +7,15 @@ import { logout } from '@/lib/actions/logout';
 
 export default async function LeaderboardPage() {
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
-  if (!accessToken) {
-    logout();
-  }
+  console.log(accessToken)
+  if (!accessToken) { return logout(); }
   try {
     const leaderboard = await getHouseLeaderboard(accessToken);
     if (typeof leaderboard === 'string') {
-      logout();
+      return logout();
     }
     return <LeaderboardClient leaderboard={leaderboard} />;
   } catch (error) {
-    logout();
+    return logout();
   }
 }

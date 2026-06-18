@@ -17,6 +17,7 @@ import {
   signOut,
 } from 'firebase/auth';
 import { setSession } from '@/lib/actions/session';
+import { FirebaseError } from 'firebase/app';
 
 export const register = async (user: UserRegistration): Promise<PrivateProfile> => {
   const requestUrl = `${config.api.baseUrl}${config.api.endpoints.auth.register}`;
@@ -57,6 +58,16 @@ export const login = async (email: string, password: string): Promise<PrivatePro
     }
 
     return result.user;
+  } catch (e) {
+    if (e instanceof FirebaseError) {
+      if (
+        e.code === 'auth/invalid-credential' ||
+        e.code === 'auth/wrong-password' ||
+        e.code === 'auth/user-not-found'
+      ) {
+        throw new Error('Incorrect email or password.');
+      }
+    }
   } finally {
     await signOut(auth).catch(() => undefined);
   }
@@ -79,6 +90,14 @@ export const loginWithGoogle = async (): Promise<PrivateProfile> => {
     }
 
     return result.user;
+  } catch (e) {
+    if (e instanceof FirebaseError) {
+      if (e.message.includes("auth/admin-restricted-operation")) {
+        throw new Error('No account associated with that email.');
+      } else {
+        throw new Error('Try a different login method.');
+      }
+    }
   } finally {
     await signOut(auth).catch(() => undefined);
   }

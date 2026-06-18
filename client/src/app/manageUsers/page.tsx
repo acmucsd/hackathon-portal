@@ -14,7 +14,7 @@ export default async function ManageUsers() {
   const userCookie = await getCookie(CookieType.USER);
 
   if (!accessToken || !userCookie) {
-    redirect('/login');
+    return logout();
   }
 
   try {
@@ -44,6 +44,6 @@ export default async function ManageUsers() {
       </main>
     );
   } catch (error) {
-    logout();
+    return logout();
   }
 }

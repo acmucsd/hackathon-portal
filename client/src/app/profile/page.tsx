@@ -9,6 +9,8 @@ import { logout } from '@/lib/actions/logout';
 export default async function ProfilePage() {
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
 
+  if (!accessToken) { return logout(); }
+
   try {
     const fetchedUser = await UserAPI.getCurrentUser(accessToken);
     const fetchedResponses = await ResponseAPI.getResponsesForCurrentUser(accessToken);
@@ -18,6 +20,6 @@ export default async function ProfilePage() {
       </main>
     );
   } catch (error) {
-    logout();
+    return logout();
   }
 }

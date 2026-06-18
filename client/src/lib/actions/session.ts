@@ -1,10 +1,8 @@
 'use server';
 
-import config from '@/lib/config';
 import { deleteUserCookies, getCookie, setCookie } from '@/lib/services/CookieService';
 import { CookieType } from '@/lib/types/enums';
-import type { PrivateProfile, VerifyTokenResponse } from '@/lib/types/apiResponses';
-import { redirect } from 'next/navigation';
+import type { PrivateProfile } from '@/lib/types/apiResponses';
 import { verifyToken } from '../api/AuthAPI';
 
 export async function getSession(): Promise<{

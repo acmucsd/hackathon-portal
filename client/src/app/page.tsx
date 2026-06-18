@@ -12,7 +12,7 @@ export default async function Home() {
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
 
   if (!accessToken) {
-    logout();
+    return logout();
   }
 
   try {
@@ -30,6 +30,6 @@ export default async function Home() {
       </main>
     );
   } catch (error) {
-    logout();
+    return logout();
   }
 }

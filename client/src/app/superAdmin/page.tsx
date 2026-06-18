@@ -10,9 +10,7 @@ import { logout } from '@/lib/actions/logout';
 export default async function superAdmin() {
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
 
-  if (!accessToken) {
-    logout();
-  }
+  if (!accessToken) { return logout(); }
 
   const fetchedUser = await UserAPI.getCurrentUser(accessToken);
   if (fetchedUser.accessType !== 'SUPER_ADMIN') {
@@ -38,6 +36,6 @@ export default async function superAdmin() {
       </main>
     );
   } catch (error) {
-    logout();
+    return logout();
   }
 }

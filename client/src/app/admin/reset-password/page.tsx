@@ -9,9 +9,7 @@ import { logout } from '@/lib/actions/logout';
 export default async function ResetPassword() {
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
 
-  if (!accessToken) {
-    logout();
-  }
+  if (!accessToken) { return logout(); }
 
   try {
     const fetchedUser = await UserAPI.getCurrentUser(accessToken);
@@ -26,6 +24,6 @@ export default async function ResetPassword() {
       </div>
     );
   } catch (error) {
-    logout();
+    return logout();
   }
 }

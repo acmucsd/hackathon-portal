@@ -9,15 +9,13 @@ import { logout } from '@/lib/actions/logout';
 export default async function CreateEvent() {
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
 
-  if (!accessToken) {
-    logout();
-  }
+  if (!accessToken) { return logout(); }
 
   let fetchedUser;
   try {
     fetchedUser = await UserAPI.getCurrentUser(accessToken);
   } catch (error) {
-    logout();
+    return logout();
   }
 
   // Only allow admins to access page

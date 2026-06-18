@@ -4,7 +4,7 @@ import { cookies } from 'next/headers';
 import { CookieType } from '../types/enums';
 
 const isProduction = process.env.NODE_ENV === 'production';
-const SESSION_MAX_AGE_SECONDS = 60 * 60;
+const SESSION_MAX_AGE_SECONDS = 30;
 
 const authCookieOptions = {
   httpOnly: true,
@@ -14,9 +14,11 @@ const authCookieOptions = {
   maxAge: SESSION_MAX_AGE_SECONDS,
 };
 
-export const getCookie = async (key: string): Promise<string> => {
+export const getCookie = async (key: string): Promise<string | null> => {
   const cookieStore = await cookies();
-  return cookieStore.get(key)?.value as string;
+  const cookie = cookieStore.get(key)?.value as string;
+  if (cookie == '' || !cookie) return null;
+  return cookie;
 };
 
 export const setCookie = async (key: string, value: string): Promise<void> => {

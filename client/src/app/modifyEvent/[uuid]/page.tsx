@@ -14,9 +14,7 @@ export default async function ModifyEvent({ params }: ModifyEventProps) {
   const event = (await params).uuid;
   const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
 
-  if (!accessToken) {
-    logout();
-  }
+  if (!accessToken) { return logout(); }
 
   try {
     const fetchedEvent = await EventAPI.getEvent(accessToken, event);
@@ -27,6 +25,6 @@ export default async function ModifyEvent({ params }: ModifyEventProps) {
       </main>
     );
   } catch (error) {
-    logout();
+    return logout();
   }
 }

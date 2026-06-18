@@ -16,6 +16,8 @@ export default async function SchedulePage({
   const { day } = await searchParams;
   const selectedDate = day ?? 'SATURDAY';
 
+  if (!accessToken) { return logout(); }
+
   try {
     const fetchedEvents = await EventAPI.getPublishedEvents(accessToken);
     const fetchedFilteredEvents = fetchedEvents
@@ -50,6 +52,6 @@ export default async function SchedulePage({
       </main>
     );
   } catch (error) {
-    logout();
+    return logout();
   }
 }
