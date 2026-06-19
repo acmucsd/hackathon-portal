@@ -16,8 +16,31 @@ import {
   GoogleAuthProvider,
   signOut,
 } from 'firebase/auth';
-import { setSession } from '@/lib/services/SessionService';
 import { FirebaseError } from 'firebase/app';
+import { deleteUserCookies, setCookie } from '../services/CookieService';
+import { CookieType } from '../types/enums';
+import { logoutAction } from '../actions/logout';
+
+
+export const verifyToken = async (token: string): Promise<PrivateProfile | null> => {
+  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.auth.verifyToken}`;
+
+  try {
+    const response = await axios.post<VerifyTokenResponse>(requestUrl, { token });
+    return response.data.user;
+  } catch {
+    return null;
+  }
+};
+
+/***
+ *
+ * The following methods can only be called from client rendered components (anything with 'use client').
+ * Firebase methods cannot be called from a server (any page.tsx)
+ *
+ * For server invoked logouts, redirect to /api/logout
+ *
+ */
 
 export const register = async (user: UserRegistration): Promise<PrivateProfile> => {
   const requestUrl = `${config.api.baseUrl}${config.api.endpoints.auth.register}`;
@@ -31,33 +54,27 @@ export const register = async (user: UserRegistration): Promise<PrivateProfile> 
   return response.data.user;
 };
 
-export const verifyToken = async (token: string): Promise<PrivateProfile | null> => {
-  const requestUrl = `${config.api.baseUrl}${config.api.endpoints.auth.verifyToken}`;
-
-  try {
-    const response = await axios.post<VerifyTokenResponse>(requestUrl, { token });
-    return response.data.user;
-  } catch {
-    return null;
-  }
-};
-
 export const login = async (email: string, password: string): Promise<PrivateProfile> => {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const token = await userCredential.user.getIdToken();
 
-    const result = await setSession(token);
-
-    if (result.error) {
-      throw new Error(result.error);
+    if (!token || typeof token !== 'string') {
+      throw new Error('Missing token.');
     }
 
-    if (!result.user) {
-      throw new Error('Failed to create authenticated session.');
+    const verifyResponse = await verifyToken(token);
+    if (!verifyResponse) {
+      await deleteUserCookies();
+      throw new Error('Invalid authentication token.');
     }
 
-    return result.user;
+    const user = verifyResponse as PrivateProfile;
+
+    await setCookie(CookieType.ACCESS_TOKEN, token);
+    await setCookie(CookieType.USER, JSON.stringify(user));
+
+    return user;
   } catch (e) {
     if (e instanceof FirebaseError) {
       if (
@@ -80,17 +97,22 @@ export const loginWithGoogle = async (): Promise<PrivateProfile> => {
     const userCredential = await signInWithPopup(auth, provider);
     const token = await userCredential.user.getIdToken();
 
-    const result = await setSession(token);
-
-    if (result.error) {
-      throw new Error(result.error);
+    if (!token || typeof token !== 'string') {
+      throw new Error('Missing token.');
     }
 
-    if (!result.user) {
-      throw new Error('Failed to create authenticated session.');
+    const verifyResponse = await verifyToken(token);
+    if (!verifyResponse) {
+      await deleteUserCookies();
+      throw new Error('Invalid authentication token.');
     }
 
-    return result.user;
+    const user = verifyResponse as PrivateProfile;
+
+    await setCookie(CookieType.ACCESS_TOKEN, token);
+    await setCookie(CookieType.USER, JSON.stringify(user));
+
+    return user;
   } catch (e) {
     if (e instanceof FirebaseError) {
       if (e.message.includes('auth/admin-restricted-operation')) {
@@ -104,6 +126,12 @@ export const loginWithGoogle = async (): Promise<PrivateProfile> => {
     await signOut(auth).catch(() => undefined);
   }
 };
+
+export async function logout() {
+  await signOut(auth).catch(() => undefined); // client call, manual log out
+  logoutAction();
+}
+
 
 export const forgotPassword = async (
   forgotReq: ForgotPasswordRequest

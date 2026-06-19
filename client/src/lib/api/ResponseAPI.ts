@@ -1,5 +1,3 @@
-'use server';
-
 import config from '@/lib/config';
 import type {} from '@/lib/types/apiRequests';
 import type {

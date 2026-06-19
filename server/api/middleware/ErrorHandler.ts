@@ -18,7 +18,6 @@ export class ErrorHandler implements ExpressErrorMiddlewareInterface {
     next: NextFunction,
   ): void {
     if (!response.headersSent) {
-      console.error(error);
       const { name, message, stack } = error;
       const httpCode = error instanceof HttpError ? error.httpCode : 500;
       const errorBody: CustomErrorBody = {
@@ -31,6 +30,7 @@ export class ErrorHandler implements ExpressErrorMiddlewareInterface {
         errorBody.stack = stack;
       }
       const errorResponse: ApiResponse = { error: errorBody };
+      console.error("[ERROR] ", errorResponse);
       response.status(httpCode).json(errorResponse);
     } else {
       next();

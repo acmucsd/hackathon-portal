@@ -1,4 +1,4 @@
-'use server';
+'use server'
 
 import type { UserPatches, PatchUserRequest } from '@/lib/types/apiRequests';
 import type {
@@ -10,7 +10,7 @@ import type {
 } from '@/lib/types/apiResponses';
 import axios from '@/lib/clients/axios';
 import config from '@/lib/config';
-import { getCookie, setCookie } from '../services/CookieService';
+import { getCookie } from '../services/CookieService';
 import { CookieType } from '../types/enums';
 import { getErrorMessage } from '../utils';
 
@@ -70,8 +70,6 @@ export const updateFetchAiHandle = async (link: string): Promise<PrivateProfile 
       }
     );
 
-    await setCookie(CookieType.USER, JSON.stringify(response.data.user));
-
     return response.data.user;
   } catch (error) {
     return getErrorMessage(error);
@@ -98,8 +96,6 @@ export const updateCurrentUserProfile = async (
         Authorization: `Bearer ${authToken}`,
       },
     });
-
-    await setCookie(CookieType.USER, JSON.stringify(response.data.user));
 
     return response.data.user;
   } catch (error) {

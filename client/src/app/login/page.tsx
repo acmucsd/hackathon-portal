@@ -14,7 +14,6 @@ import { AuthAPI } from '@/lib/api';
 import { getErrorMessage } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { getSession } from '@/lib/services/SessionService';
 
 interface LoginValues {
   email: string;
@@ -60,17 +59,6 @@ export default function LoginPage() {
       setError(errorMessage);
     }
   };
-
-  useEffect(() => {
-    const checkSession = async () => {
-      const session = await getSession();
-      if (session.authenticated) {
-        router.replace('/');
-      }
-    };
-
-    checkSession();
-  }, [router]);
 
   return (
     <main className={styles.main}>
