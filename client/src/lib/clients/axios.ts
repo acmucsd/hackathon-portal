@@ -11,13 +11,15 @@ client.interceptors.response.use(
 
   async error => {
     if (getErrorMessage(error) === 'Missing auth token') {
-      if (typeof window === 'undefined') { // server call
+      if (typeof window === 'undefined') {
+        // server call
         logoutAction();
-      } else { // client call
+      } else {
+        // client call
         showToast('Error', 'Expired session.');
         logout();
       }
-      return Promise.reject('Expired session.');;
+      return Promise.reject('Expired session.');
     } else {
       return Promise.reject(error);
     }

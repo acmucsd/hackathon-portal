@@ -30,7 +30,7 @@ export class ErrorHandler implements ExpressErrorMiddlewareInterface {
         errorBody.stack = stack;
       }
       const errorResponse: ApiResponse = { error: errorBody };
-      console.error("[ERROR] ", errorResponse);
+      console.error('[ERROR] ', errorResponse);
       response.status(httpCode).json(errorResponse);
     } else {
       next();

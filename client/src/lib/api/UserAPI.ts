@@ -1,4 +1,4 @@
-'use server'
+'use server';
 
 import type { UserPatches, PatchUserRequest } from '@/lib/types/apiRequests';
 import type {

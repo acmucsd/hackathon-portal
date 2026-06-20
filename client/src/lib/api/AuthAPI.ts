@@ -21,7 +21,6 @@ import { deleteUserCookies, setCookie } from '../services/CookieService';
 import { CookieType } from '../types/enums';
 import { logoutAction } from '../actions/logout';
 
-
 export const verifyToken = async (token: string): Promise<PrivateProfile | null> => {
   const requestUrl = `${config.api.baseUrl}${config.api.endpoints.auth.verifyToken}`;
 
@@ -131,7 +130,6 @@ export async function logout() {
   await signOut(auth).catch(() => undefined); // client call, manual log out
   logoutAction();
 }
-
 
 export const forgotPassword = async (
   forgotReq: ForgotPasswordRequest
