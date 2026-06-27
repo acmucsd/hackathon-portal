@@ -8,6 +8,7 @@
     "start": "node --env-file=.env build/index.js",
     "dev": "node -r ts-node/register --env-file=.env --watch index.ts",
     "test": "jest --config jest.config.json --runInBand",
+    "test:e2e": "playwright test",
     "release": "typeorm-ts-node-commonjs migration:run -d ./MigrationDataSource.ts && node build/index.js",
     "lint": "eslint ./ --ext .ts",
     "lint:fix": "eslint ./ --ext .ts --fix",
@@ -37,9 +38,10 @@
     "typeorm": "^0.3.20"
   },
   "devDependencies": {
+    "@playwright/test": "^1.61.1",
     "@types/body-parser": "^1.19.5",
     "@types/express": "^5.0.0",
-    "@types/jest": "^29.5.13",
+    "@types/jest": "^30.0.0",
     "@types/multer": "^1.4.12",
     "@types/node": "^22.7.9",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
