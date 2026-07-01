@@ -42,6 +42,9 @@ const application = {
   additionalComments: 'No special requests. Excited to join!',
 };
 
+test.describe.configure({ mode: 'default' });
+
+
 // Tests when applications are closed:
 
 test('user is not able to get application without submititng application', async ({ request }) => {
