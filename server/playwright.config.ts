@@ -1,5 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
-
+import 'dotenv/config'
+import { Config } from './config';
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
@@ -24,9 +25,11 @@ export default defineConfig({
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
+  globalSetup: require.resolve('./e2e/auth.setup'),
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
-    // baseURL: 'http://localhost:3000',
+    baseURL: Config.testing.baseUrl,
+
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
@@ -34,6 +37,7 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
+    { name: 'setup', testMatch: /auth\.setup\.ts/ },
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
@@ -71,9 +75,9 @@ export default defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-   webServer: {
-     command: 'npm run start',
-     url: 'http://localhost:3000',
-     reuseExistingServer: !process.env.CI,
-   },
+  //  webServer: {
+  //    command: 'npm run start',
+  //    url: 'http://localhost:3000',
+  //    reuseExistingServer: !process.env.CI,
+  //  },
 });

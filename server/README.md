@@ -16,7 +16,8 @@ psql -h localhost -p 5432 -U acmucsd_dev -d hackathon_portal
 ## Running tests for end-to-end Playwright tests
 
 ```bash
-  yarn playwright test
+  cd server
+  yarn run test:e2e
     # Runs the end-to-end tests.
 
   yarn playwright test --ui

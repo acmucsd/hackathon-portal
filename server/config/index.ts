@@ -48,4 +48,11 @@ export const Config = {
     RESUME_UPLOAD_PATH:
       process.env.BASE_UPLOAD_PATH! + process.env.RESUME_UPLOAD_PATH!,
   },
+  testing: {
+    uiBaseUrl: String(process.env.UI_BASE_URL),
+    apiBaseUrl: String(process.env.API_BASE_URL),
+    authPath: String(process.env.AUTH_PATH),
+    testUserEmail: String(process.env.TEST_USER_EMAIL),
+    testUserPassword: String(process.env.TEST_USER_PASSWORD),
+  }
 };
