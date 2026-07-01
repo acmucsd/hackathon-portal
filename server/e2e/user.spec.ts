@@ -1,16 +1,15 @@
-import {test, expect} from "@playwright/test"
-import fs from "fs"
+import { test, expect } from '@playwright/test';
+import fs from 'fs';
 import 'dotenv/config';
-import { Config } from "../config";
+import { Config } from '../config';
 
 const baseUrl = Config.testing.apiBaseUrl;
 const authPath = Config.testing.authPath;
-const testEmail = Config.testing.testUserEmail;
 
 const { token } = JSON.parse(fs.readFileSync(authPath, 'utf8'));
 
 // Tests user login
-test('user is able to log in', async ({request})=>{
+test('user is able to log in', async ({ request })=>{
   const response = await request.get(`${baseUrl}/user/`, {
     headers: {
       Authorization: `Bearer ${token}`,

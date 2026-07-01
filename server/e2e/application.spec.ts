@@ -1,13 +1,13 @@
-import { test, expect } from "@playwright/test";
-import fs from "fs";
-import path from "path";
-import "dotenv/config";
-import { Config } from "../config";
+import { test, expect } from '@playwright/test';
+import fs from 'fs';
+import path from 'path';
+import 'dotenv/config';
+import { Config } from '../config';
 
 const baseUrl = Config.testing.apiBaseUrl;
 const authPath = Config.testing.authPath;
 
-const { token } = JSON.parse(fs.readFileSync(authPath, "utf8"));
+const { token } = JSON.parse(fs.readFileSync(authPath, 'utf8'));
 
 const application = {
   age: '19',
@@ -44,7 +44,7 @@ const application = {
 
 // Tests when applications are closed:
 
-test("user is not able to get application without submititng application", async ({ request }) => {
+test('user is not able to get application without submititng application', async ({ request }) => {
   const response = await request.get(`${baseUrl}/response/application`, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -64,7 +64,7 @@ test("user is not able to get application without submititng application", async
   expect(data.error.message).toBe('No application found for user');
 });
 
-test("user is not able to submit an application when applications are closed", async ({ request }) => {
+test('user is not able to submit an application when applications are closed', async ({ request }) => {
   const response = await request.post(`${baseUrl}/response/application`, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -72,10 +72,10 @@ test("user is not able to submit an application when applications are closed", a
     multipart: {
       application: JSON.stringify(application),
       file: {
-        name: "resume.pdf",
-        mimeType: "application/pdf",
+        name: 'resume.pdf',
+        mimeType: 'application/pdf',
         buffer: fs.readFileSync(
-          path.join(__dirname, "fixtures", "resume.pdf")
+          path.join(__dirname, 'fixtures', 'resume.pdf'),
         ),
       },
     },
@@ -91,10 +91,10 @@ test("user is not able to submit an application when applications are closed", a
   expect(data.error.message).toBe('Applications are currently closed.');
 });
 
-test("user is not able to update their application when applications are closed", async ({ request }) => {
+test('user is not able to update their application when applications are closed', async ({ request }) => {
   const updatedApplication = {
     ...application,
-    firstName: "Jane",
+    firstName: 'Jane',
   };
 
   const response = await request.patch(`${baseUrl}/response/application`, {
@@ -116,7 +116,8 @@ test("user is not able to update their application when applications are closed"
   expect(data.error.message).toBe('Applications are currently closed.');
 });
 
-test("user is not able to update their application with a new resume when applications are closed", async ({ request }) => {
+test('user is unable to update their application with a new resume when applications are closed',
+  async ({ request }) => {
   const response = await request.patch(`${baseUrl}/response/application`, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -124,10 +125,10 @@ test("user is not able to update their application with a new resume when applic
     multipart: {
       application: JSON.stringify(application),
       file: {
-        name: "resume.pdf",
-        mimeType: "application/pdf",
+        name: 'resume.pdf',
+        mimeType: 'application/pdf',
         buffer: fs.readFileSync(
-          path.join(__dirname, "fixtures", "resume.pdf")
+          path.join(__dirname, 'fixtures', 'resume.pdf'),
         ),
       },
     },
@@ -142,7 +143,7 @@ test("user is not able to update their application with a new resume when applic
   expect(data.error.message).toBe('Applications are currently closed.');
 });
 
-test("user is able to delete their application if no such application exists", async ({ request }) => {
+test('user is able to delete their application if no such application exists', async ({ request }) => {
   const response = await request.delete(`${baseUrl}/response/application`, {
     headers: {
       Authorization: `Bearer ${token}`,

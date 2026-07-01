@@ -1,5 +1,5 @@
 import { request } from '@playwright/test';
-import fs from "fs";
+import fs from 'fs';
 import 'dotenv/config';
 import { Config } from '../config';
 
@@ -20,7 +20,7 @@ export default async () => {
   });
 
   const { token } = await response.json();
-  fs.writeFileSync(authPath, JSON.stringify({token: token}));
+  fs.writeFileSync(authPath, JSON.stringify({ token: token }));
 
 };
 
