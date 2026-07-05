@@ -1,9 +1,8 @@
 import { request } from '@playwright/test';
 import fs from 'fs';
+import path from 'path';
 import 'dotenv/config';
 import { Config } from '../config';
-import { seedTestUser } from '../seed';
-import { UserAccessType } from '../types/Enums';
 
 const baseUrl = Config.testing.apiBaseUrl;
 const authPath = Config.testing.authPath;
@@ -25,6 +24,8 @@ export default async () => {
   });
 
   const { token } = await response.json();
+
+  fs.mkdirSync(path.dirname(authPath), { recursive: true });
   fs.writeFileSync(authPath, JSON.stringify({ token: token }));
 
 };

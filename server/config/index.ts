@@ -54,6 +54,6 @@ export const Config = {
     authPath: String(process.env.AUTH_PATH),
     testUserEmail: String(process.env.TEST_USER_EMAIL),
     testUserPassword: String(process.env.TEST_USER_PASSWORD),
-    testUserId: String(process.env.TEST_USER_ID)
+    testUserId: String(process.env.TEST_USER_ID),
   },
 };

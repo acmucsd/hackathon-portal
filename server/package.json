@@ -7,6 +7,7 @@
     "build": "tsc",
     "start": "node --env-file=.env build/index.js",
     "dev": "node -r ts-node/register --env-file=.env --watch index.ts",
+    "dev:test": "node -r ts-node/register --watch index.ts",
     "test": "jest --config jest.config.json --runInBand",
     "test:e2e": "playwright test",
     "seed": "npx ts-node seed.ts",

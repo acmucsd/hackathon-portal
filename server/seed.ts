@@ -9,7 +9,8 @@ import { Config } from './config';
 const testEmail = Config.testing.testUserEmail;
 const testId = Config.testing.testUserId;
 
-export const seedTestUser = async (id:string, email: string, accessType: UserAccessType, firstName: string="First", lastName: string="Last") => {
+export const seedTestUser = async (id:string, email: string, accessType: UserAccessType,
+  firstName: string = 'First', lastName: string = 'Last') => {
   if (!dataSource.isInitialized) {
     await dataSource.initialize();
   }
