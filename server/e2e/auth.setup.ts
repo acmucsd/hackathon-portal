@@ -2,14 +2,19 @@ import { request } from '@playwright/test';
 import fs from 'fs';
 import 'dotenv/config';
 import { Config } from '../config';
+import { seedTestUser } from '../seed';
+import { UserAccessType } from '../types/Enums';
 
 const baseUrl = Config.testing.apiBaseUrl;
 const authPath = Config.testing.authPath;
 const testEmail = Config.testing.testUserEmail;
 const testPassword = Config.testing.testUserPassword;
 
-// Logs in normal user
+
+
 export default async () => {
+
+// Logs in normal user
   const api = await request.newContext();
 
   const response = await api.post(`${baseUrl}/user/login`, {

@@ -9,6 +9,7 @@
     "dev": "node -r ts-node/register --env-file=.env --watch index.ts",
     "test": "jest --config jest.config.json --runInBand",
     "test:e2e": "playwright test",
+    "seed": "npx ts-node seed.ts",
     "release": "typeorm-ts-node-commonjs migration:run -d ./MigrationDataSource.ts && node build/index.js",
     "lint": "eslint ./ --ext .ts",
     "lint:fix": "eslint ./ --ext .ts --fix",

@@ -3,51 +3,20 @@ import fs from 'fs';
 import path from 'path';
 import 'dotenv/config';
 import { Config } from '../config';
+import { application } from './fixtures/constants';
 
 const baseUrl = Config.testing.apiBaseUrl;
 const authPath = Config.testing.authPath;
 
 const { token } = JSON.parse(fs.readFileSync(authPath, 'utf8'));
 
-const application = {
-  age: '19',
-  phoneNumber: '+18563188585',
-  university: 'University of California, San Diego',
-  levelOfStudy: 'Undergraduate University (3+ year)',
-  country: 'United States',
-  linkedin: 'https://www.linkedin.com/in/example-andrew-zhang/',
-  mlhCodeOfConduct: 'YES',
-  mlhAuthorization: 'YES',
-  mlhEmailAuthorization: 'NO',
-  dietary: ['None'],
-  underrepresented: 'No',
-  gender: 'Man',
-  pronouns: 'He/Him',
-  ethnicity: ['Asian'],
-  orientation: ['Heterosexual or straight'],
-  educationLevel: 'Undergraduate University (3+ year)',
-  tshirtSize: 'M',
-  address1Shipping: '1234 Sample St',
-  address2Shipping: 'Apt 567',
-  cityShipping: 'San Diego',
-  stateShipping: 'CA',
-  countryShipping: 'United States',
-  zipcodeShipping: '92092',
-  major: 'Computer science, computer engineering, or software engineering',
-  interests: ['AI', 'Web Development', 'Hackathons'],
-  referrer: ['Friend', 'ACM UCSD'],
-  motivation: '__INTEGRATION_TEST__',
-  resumeLink: 'https://example.com/resume.pdf',
-  willAttend: 'YES',
-  additionalComments: 'No special requests. Excited to join!',
-};
 
 test.describe.configure({ mode: 'default' });
 
 
 // Tests when applications are closed:
 
-test('user is not able to get application without submititng application', async ({ request }) => {
+test('user is not able to get application without submitting application', async ({ request }) => {
   const response = await request.get(`${baseUrl}/response/application`, {
     headers: {
       Authorization: `Bearer ${token}`,
