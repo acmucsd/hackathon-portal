@@ -14,9 +14,11 @@ import { UserAPI } from '@/lib/api';
 import { useWindowSize } from '@/lib/hooks/useWindowSize';
 import isEmail from 'validator/lib/isEmail';
 import styles from './style.module.scss';
-import logout from './logout';
 import showToast from '@/lib/showToast';
 import { PrivateProfile } from '@/lib/types/apiResponses';
+import { logout } from '@/lib/api/AuthAPI';
+import { setCookie } from '@/lib/services/CookieService';
+import { CookieType } from '@/lib/types/enums';
 
 interface UpdateProfileValues {
   firstName: string;
@@ -50,6 +52,7 @@ const ProfileCard = ({ user }: ProfileCardProps) => {
     if (typeof updatedUser === 'string') {
       showToast('Changes failed to save', updatedUser);
     } else {
+      setCookie(CookieType.USER, JSON.stringify(updatedUser));
       setCurrentUser(updatedUser);
       setEditProfile(prevState => !prevState);
       reset(updatedUser);

@@ -2,12 +2,6 @@ import { Service } from 'typedi';
 import { Repositories, TransactionsManager } from '../repositories';
 import { UserModel } from '../models/UserModel';
 import { ReviewAssignmentJob, CreateUser } from '../types/ApiRequests';
-import {
-  sendEmailVerification,
-  signInWithCustomToken,
-  signInWithEmailAndPassword,
-  sendPasswordResetEmail,
-} from 'firebase/auth';
 import { FirebaseAuthError } from 'firebase-admin/auth';
 import {
   BadRequestError,
@@ -16,7 +10,7 @@ import {
   UnauthorizedError,
 } from 'routing-controllers';
 import { UpdateUser } from '../api/validators/UserControllerRequests';
-import { auth, adminAuth } from '../FirebaseAuth';
+import { adminAuth } from '../FirebaseAuth';
 
 import {
   ApplicationDecision,
@@ -29,7 +23,6 @@ import {
   ReviewAssignment,
   ReviewerOverviewResponse,
   ReviewerOverviewReviewer,
-  UserAndToken,
 } from '../types/ApiResponses';
 import { ResponseModel } from '../models/ResponseModel';
 import { Application } from '../types/Application';
@@ -164,9 +157,7 @@ export class UserService {
   public async createUser(createUser: CreateUser): Promise<UserModel> {
 
     const email = createUser.email.toLowerCase();
-    const returnedUser = await this.transactionsManager.readWrite(
-
-    async (entityManager) =>{
+    const returnedUser = await this.transactionsManager.readWrite(async (entityManager) => {
       await entityManager.query('SELECT pg_advisory_xact_lock(hashtext($1))', [email]);
       const userWithEmail = await Repositories.user(entityManager).findByEmail(email);
       const emailAlreadyUsed = userWithEmail !== null;
@@ -175,9 +166,11 @@ export class UserService {
         const firebaseRecord = await adminAuth.getUserByEmail(email);
 
         if (!firebaseRecord.emailVerified) {
+
           await adminAuth.updateUser(firebaseRecord.uid, {
             password: createUser.password,
           });
+
           const user = await this.updateUser(userWithEmail, {
             firstName: createUser.firstName,
             lastName: createUser.lastName,
@@ -189,6 +182,7 @@ export class UserService {
         }
       }
 
+      // try to create Firebase user
       let firebaseUser;
       try {
         firebaseUser = await adminAuth.createUser({
@@ -197,29 +191,34 @@ export class UserService {
           displayName: `${createUser.firstName} ${createUser.lastName}`,
         });
       } catch (error) {
-
         if (error instanceof FirebaseAuthError) {
-
           if (error.code === 'auth/email-already-exists')
             throw new ForbiddenError('Email already in use');
         }
         throw error;
       }
 
-      const userRepository = Repositories.user(entityManager);
-      const newUser = userRepository.create({
-        id: firebaseUser.uid,
-        email,
-        firstName: createUser.firstName,
-        lastName: createUser.lastName,
-      });
-      const createdUser = userRepository.save(newUser);
-      return createdUser;
-
-
+      // try to make DB user
+      try {
+        const userRepository = Repositories.user(entityManager);
+        const newUser = userRepository.create({
+          id: firebaseUser.uid,
+          email,
+          firstName: createUser.firstName,
+          lastName: createUser.lastName,
+        });
+        const createdUser = await userRepository.save(newUser);
+        return createdUser;
+      } catch (error) {
+        // Rollback: delete Firebase user if DB creation fails
+        try {
+          await adminAuth.deleteUser(firebaseUser.uid);
+        } catch (deleteError) {
+          console.error('Failed to delete orphaned Firebase user:', firebaseUser.uid, deleteError);
+        }
+        throw error;
+      }
     });
-
-    this.sendEmailVerification(returnedUser.id);
 
     return returnedUser;
   }
@@ -295,29 +294,6 @@ export class UserService {
     });
   }
 
-  public async login(email: string, password: string): Promise<UserAndToken> {
-    try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password,
-      );
-      const token = await userCredential.user.getIdToken();
-      // If checkAuthToken() runs without throwing an error, the user exists.
-      const user = await this.checkAuthToken(token);
-      return { token, user };
-    } catch (error) {
-      if (
-        error instanceof UnauthorizedError ||
-        error instanceof ForbiddenError
-      ) {
-        // Throw special error messages as-is.
-        throw error;
-      }
-      throw new UnauthorizedError('Invalid email or password.');
-    }
-  }
-
   public async checkAuthToken(token: string): Promise<UserModel> {
     let decodedToken;
     try {
@@ -361,31 +337,9 @@ export class UserService {
     }
   }
 
-  private async sendEmailVerification(id: string): Promise<void> {
-    const customToken = await adminAuth.createCustomToken(id);
-    const userCredential = await signInWithCustomToken(auth, customToken);
-    await sendEmailVerification(userCredential.user);
-  }
-
   public async getPasswordResetLink(email: string): Promise<string> {
     try {
       return await adminAuth.generatePasswordResetLink(email);
-    } catch (error) {
-      if (error instanceof FirebaseAuthError) {
-        if (error.code === 'auth/user-not-found') {
-          throw new NotFoundError(
-            'No user found with the provided email address.',
-          );
-        }
-      }
-      throw error;
-    }
-  }
-
-  public async sendPasswordResetEmail(email: string): Promise<void> {
-    try {
-      const firebaseRecord = await adminAuth.getUserByEmail(email);
-      if (firebaseRecord) await sendPasswordResetEmail(auth, email);
     } catch (error) {
       if (error instanceof FirebaseAuthError) {
         if (error.code === 'auth/user-not-found') {

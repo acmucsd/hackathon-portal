@@ -31,9 +31,8 @@ export interface UpdateUserRequest {
   user: UpdateUser;
 }
 
-export interface LoginRequest {
-  email: string;
-  password: string;
+export interface VerifyTokenRequest {
+  token: string;
 }
 
 // Event requests
@@ -77,10 +76,6 @@ export interface UpdateEventRequest {
 export interface UpdateApplicationDecisionRequest {
   applicationDecision: ApplicationDecision;
   reviewerComments?: string | null;
-}
-
-export interface ForgotPasswordRequest {
-  email: string;
 }
 
 export interface UpdateFetchAiHandleRequest {

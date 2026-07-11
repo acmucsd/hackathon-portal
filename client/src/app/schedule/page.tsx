@@ -1,17 +1,18 @@
 import { EventAPI } from '@/lib/api';
-import { getCookie } from '@/lib/services/CookieService';
-import { CookieType } from '@/lib/types/enums';
 import DayOfTimelineItem from '@/components/DayOfTimelineItem';
 import { redirect } from 'next/navigation';
 import styles from './page.module.scss';
 import Link from 'next/link';
+import { getCookie } from '@/lib/services/CookieService';
+import { CookieType } from '@/lib/types/enums';
 
 export default async function SchedulePage({
   searchParams,
 }: {
   searchParams: Promise<{ day?: string }>;
 }) {
-  const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
+  const accessToken = (await getCookie(CookieType.ACCESS_TOKEN))!;
+
   const { day } = await searchParams;
   const selectedDate = day ?? 'SATURDAY';
 
@@ -49,6 +50,7 @@ export default async function SchedulePage({
       </main>
     );
   } catch (error) {
-    redirect('/api/logout');
+    console.error(error);
+    redirect('/');
   }
 }

@@ -1,26 +1,27 @@
 import Typography from '@/components/Typography';
 import UsersDashboard from '@/components/admin/UsersDashboard';
 import { AdminAPI, UserAPI } from '@/lib/api';
-
-import { redirect } from 'next/navigation';
-import { getCookie } from '@/lib/services/CookieService';
-import { CookieType } from '@/lib/types/enums';
 import styles from './page.module.scss';
 import { RevieweeProfile } from '@/lib/types/apiResponses';
+import { onlyAllowAdmins } from '@/lib/services/PermissionsService';
+import { redirect } from 'next/navigation';
+import { CookieType } from '@/lib/types/enums';
+import { getCookie } from '@/lib/services/CookieService';
 
 export default async function ManageUsers() {
-  const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
-  const userCookie = await getCookie(CookieType.USER);
+  const accessToken = (await getCookie(CookieType.ACCESS_TOKEN))!;
 
-  if (!accessToken || !userCookie) {
-    redirect('/login');
+  let user;
+  try {
+    user = await UserAPI.getCurrentUser(accessToken);
+  } catch (error) {
+    console.error(error);
+    redirect('/api/logout');
   }
+  onlyAllowAdmins(user);
 
   try {
-    const fetchedUser = await UserAPI.getCurrentUser(accessToken);
-    const accessType = fetchedUser.accessType;
-    const user = JSON.parse(userCookie);
-
+    const accessType = user.accessType;
     const isSuperAdmin = accessType === 'SUPER_ADMIN';
 
     const users: RevieweeProfile[] = isSuperAdmin
@@ -43,6 +44,7 @@ export default async function ManageUsers() {
       </main>
     );
   } catch (error) {
-    redirect('/api/logout');
+    console.error(error);
+    redirect('/');
   }
 }

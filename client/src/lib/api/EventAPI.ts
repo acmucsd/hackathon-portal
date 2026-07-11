@@ -8,7 +8,7 @@ import {
   GetOneEventResponse,
 } from '../types/apiResponses';
 import { getErrorMessage } from '../utils';
-import axios from 'axios';
+import axios from '@/lib/clients/axios';
 
 /**
  * Make a request to create an event

@@ -1,16 +1,33 @@
-import { cookies, headers } from 'next/headers';
+'use server';
+
+import { cookies } from 'next/headers';
 import { CookieType } from '../types/enums';
 
-export const getCookie = async (key: string): Promise<string> => {
-  const cookie = await cookies();
-  return cookie.get(key)?.value as string;
+const isProduction = process.env.NODE_ENV === 'production';
+const SESSION_MAX_AGE_SECONDS = 60 * 60 * 4;
+
+const authCookieOptions = {
+  httpOnly: true,
+  secure: isProduction,
+  sameSite: 'lax' as const,
+  path: '/',
+  maxAge: SESSION_MAX_AGE_SECONDS,
 };
 
+export const getCookie = async (key: string): Promise<string | null> => {
+  const cookieStore = await cookies();
+  const cookie = cookieStore.get(key)?.value;
+  if (!cookie) return null;
+  return cookie;
+};
+
+// can only be called from components with 'use client'
 export const setCookie = async (key: string, value: string): Promise<void> => {
-  const cookie = await cookies();
-  cookie.set(key, value);
+  const cookieStore = await cookies();
+  cookieStore.set(key, value, authCookieOptions);
 };
 
+// can only be called from components with 'use client'
 export const deleteUserCookies = async (): Promise<void> => {
   const cookieStore = await cookies();
   cookieStore.delete(CookieType.ACCESS_TOKEN);

@@ -68,13 +68,7 @@ export interface UpdateCurrentUserReponse extends ApiResponse {
 
 export interface DeleteCurrentUserResponse extends ApiResponse {}
 
-export interface UserAndToken {
-  token: string;
-  user: PrivateProfile;
-}
-
-export interface LoginResponse extends ApiResponse {
-  token: string;
+export interface VerifyTokenResponse extends ApiResponse {
   user: PrivateProfile;
 }
 
@@ -143,8 +137,6 @@ export interface UpdateApplicationDecisionResponse extends ApiResponse {
 export interface SetAcceptanceDeadlinePassedResponse extends ApiResponse {
   updatedCount: number;
 }
-
-export interface ForgotPasswordResponse extends ApiResponse {}
 
 export interface PublicAttendance {
   user: PublicProfile;

@@ -1,22 +1,23 @@
 import { TIMELINE } from '@/config';
 import AdminDashboard from '@/components/admin/AdminDashboard';
-import SuperAdminDashboard from '@/components/admin/SuperAdminDashboard';
 import { UserAPI, AdminAPI } from '@/lib/api';
+import styles from './page.module.scss';
+import { onlyAllowAdmins } from '@/lib/services/PermissionsService';
 import { redirect } from 'next/navigation';
 import { getCookie } from '@/lib/services/CookieService';
 import { CookieType } from '@/lib/types/enums';
-import styles from './page.module.scss';
 
 export default async function Admin() {
-  const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
+  const accessToken = (await getCookie(CookieType.ACCESS_TOKEN))!;
 
-  if (!accessToken) {
+  let fetchedUser;
+  try {
+    fetchedUser = await UserAPI.getCurrentUser(accessToken);
+  } catch (error) {
+    console.error(error);
     redirect('/api/logout');
   }
-  const fetchedUser = await UserAPI.getCurrentUser(accessToken);
-  if (fetchedUser.accessType !== 'ADMIN' && fetchedUser.accessType !== 'SUPER_ADMIN') {
-    redirect('/');
-  }
+  onlyAllowAdmins(fetchedUser);
 
   try {
     const applications = await AdminAPI.getUsers(accessToken);
@@ -27,6 +28,7 @@ export default async function Admin() {
       </main>
     );
   } catch (error) {
-    redirect('/api/logout');
+    console.error(error);
+    redirect('/');
   }
 }

@@ -1,5 +1,3 @@
-'use server';
-
 import config from '@/lib/config';
 import type {} from '@/lib/types/apiRequests';
 import type {
@@ -7,7 +5,7 @@ import type {
   ResponseModel,
   SubmitApplicationResponse,
 } from '@/lib/types/apiResponses';
-import axios from 'axios';
+import axios from '@/lib/clients/axios';
 import { Application, RSVP, Waiver } from '../types/application';
 import { getErrorMessage } from '../utils';
 

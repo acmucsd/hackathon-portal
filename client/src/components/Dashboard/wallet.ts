@@ -21,7 +21,7 @@ const ISSUER_ID = process.env.ISSUER_ID ?? '';
 export async function addToGoogleWallet(baseUrl: string): Promise<string> {
   let url;
   try {
-    const user: PrivateProfile = JSON.parse(await getCookie(CookieType.USER));
+    const user: PrivateProfile = JSON.parse((await getCookie(CookieType.USER))!);
 
     const client = new GenericClient(GOOGLE_APPLICATION_CREDENTIALS);
 
