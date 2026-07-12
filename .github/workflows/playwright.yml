@@ -1,0 +1,86 @@
+name: Playwright Tests
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  playwright:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: ${{ vars.RDS_DATABASE}}
+          POSTGRES_USER: ${{ secrets.RDS_USER}}
+          POSTGRES_PASSWORD: ${{ secrets.RDS_PASSWORD}}
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      RDS_HOST: ${{ vars.RDS_HOST}}
+      RDS_PORT: ${{ vars.RDS_PORT}}
+      RDS_DATABASE: ${{ vars.RDS_DATABASE}}
+      RDS_USER: ${{ secrets.RDS_USER}}
+      RDS_PASSWORD: ${{ secrets.RDS_PASSWORD}}
+      GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS}}
+      API_KEY: ${{ secrets.API_KEY}}
+      PROJECT_ID: ${{ secrets.PROJECT_ID}}
+      FIREBASE_ADMIN_CLIENT_EMAIL: ${{ secrets.FIREBASE_ADMIN_CLIENT_EMAIL}}
+      FIREBASE_ADMIN_PRIVATE_KEY: ${{ secrets.FIREBASE_ADMIN_PRIVATE_KEY}}
+      UI_BASE_URL: ${{ vars.UI_BASE_URL}}
+      API_BASE_URL: ${{ vars.API_BASE_URL}}
+      AUTH_PATH: ${{ secrets.AUTH_PATH}}
+      TEST_USER_EMAIL: ${{ secrets.TEST_USER_EMAIL}}
+      TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD}}
+      TEST_USER_ID: ${{ secrets.TEST_USER_ID}}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+          cache-dependency-path: |
+            client/yarn.lock
+            server/yarn.lock
+
+      - name: Install server dependencies
+        working-directory: server
+        run: yarn install --frozen-lockfile
+
+      - name: Install client dependencies
+        working-directory: client
+        run: yarn install --frozen-lockfile
+
+      - name: Install Playwright
+        working-directory: server
+        run: npx playwright install --with-deps
+
+      - name: Run database migrations
+        working-directory: server
+        run: yarn run db:migrate
+
+      - name: Run database seeds
+        working-directory: server
+        run: yarn run seed
+
+      - name: Start client
+        working-directory: client
+        run: yarn dev &
+
+      - name: Start server
+        working-directory: server
+        run: yarn dev:test &
+
+      - name: Run Playwright tests
+        working-directory: server
+        run: yarn run test:e2e

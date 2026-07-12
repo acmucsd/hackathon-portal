@@ -12,3 +12,32 @@ docker-compose --env-file .env up
 ## Directly querying Postgres on a local build using `psql`
 
 psql -h localhost -p 5432 -U acmucsd_dev -d hackathon_portal
+
+## Running tests for end-to-end Playwright tests
+
+Make sure you have the db running in the background.
+If not, follow the steps above.
+
+```bash
+cd server
+yarn run seed
+yarn run test:e2e
+```
+## Other additional optional commands for playwright testing.
+
+```bash
+  yarn playwright test --ui
+    # Starts the interactive UI mode.
+
+  yarn playwright test --project=chromium
+    # Runs the tests only on Desktop Chrome.
+
+  yarn playwright test example
+    # Runs the tests in a specific file.
+
+  yarn playwright test --debug
+    # Runs the tests in debug mode.
+
+  yarn playwright codegen
+    # Auto generate tests with Codegen.
+```
