@@ -3,10 +3,9 @@
 import Card from '@/components/Card';
 import Heading from '@/components/Heading';
 import TextField from '@/components/TextField';
-import Dropdown from '@/components/Dropdown';
 import Button from '@/components/Button';
 import Typography from '@/components/Typography';
-import { AuthManager } from '@/lib/managers';
+import { AuthAPI } from '@/lib/api';
 import type { UserRegistration } from '@/lib/types/apiRequests';
 import type { PrivateProfile } from '@/lib/types/apiResponses';
 import { reportError } from '@/lib/utils';
@@ -36,15 +35,13 @@ export default function RegisterPage() {
   const router = useRouter();
 
   const onSubmit: SubmitHandler<UserRegistration> = userRegistration => {
-    AuthManager.register({
-      ...userRegistration,
-      onSuccessCallback: (user: PrivateProfile) => {
+    AuthAPI.register(userRegistration)
+      .then((user: PrivateProfile) => {
         router.push(`/check-email?email=${encodeURIComponent(user.email)}`);
-      },
-      onFailCallback: error => {
+      })
+      .catch(error => {
         reportError('Error with registration!', error);
-      },
-    });
+      });
   };
 
   return (

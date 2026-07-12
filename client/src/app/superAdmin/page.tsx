@@ -2,25 +2,23 @@ import { TIMELINE } from '@/config';
 import SuperAdminDashboard from '@/components/admin/SuperAdminDashboard';
 import { UserAPI, AdminAPI } from '@/lib/api';
 import { redirect } from 'next/navigation';
+import styles from './style.module.scss';
+import { onlyAllowSuperAdmins } from '@/lib/services/PermissionsService';
 import { getCookie } from '@/lib/services/CookieService';
 import { CookieType } from '@/lib/types/enums';
-import styles from './style.module.scss';
 
 export default async function superAdmin() {
-  const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
+  const accessToken = (await getCookie(CookieType.ACCESS_TOKEN))!;
 
-  if (!accessToken) {
-    redirect('/api/logout');
+  let fetchedUser;
+  try {
+    fetchedUser = await UserAPI.getCurrentUser(accessToken);
+  } catch (error) {
+    console.error(error);
+    return redirect('/api/logout');
   }
+  onlyAllowSuperAdmins(fetchedUser);
 
-  const fetchedUser = await UserAPI.getCurrentUser(accessToken);
-  if (fetchedUser.accessType !== 'SUPER_ADMIN') {
-    if (fetchedUser.accessType === 'ADMIN') {
-      redirect('/admin');
-    } else {
-      redirect('/');
-    }
-  }
   try {
     const assignments = await AdminAPI.getAllAssignments(accessToken);
     const applications = assignments.map(a => ({ ...a.applicant, reviewer: a.reviewer }));
@@ -37,6 +35,7 @@ export default async function superAdmin() {
       </main>
     );
   } catch (error) {
-    redirect('/api/logout');
+    console.error(error);
+    redirect('/');
   }
 }

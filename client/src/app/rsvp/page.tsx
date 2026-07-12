@@ -1,27 +1,24 @@
 import RSVPForm from '@/components/RSVPForm';
 import { UserAPI } from '@/lib/api';
-import { getCookie } from '@/lib/services/CookieService';
-import { CookieType, ApplicationStatus } from '@/lib/types/enums';
 import { redirect } from 'next/navigation';
 import styles from './page.module.scss';
 import { canUserSubmitWaivers } from '@/lib/utils';
+import { CookieType } from '@/lib/types/enums';
+import { getCookie } from '@/lib/services/CookieService';
 
 export default async function RSVPPage() {
-  const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
-
-  if (!accessToken) {
-    redirect('/api/logout');
-  }
+  const accessToken = (await getCookie(CookieType.ACCESS_TOKEN))!;
 
   let fetchedUser;
   try {
     fetchedUser = await UserAPI.getCurrentUser(accessToken);
   } catch (error) {
+    console.error(error);
     redirect('/api/logout');
   }
 
   // Only allow accepted participants to fill out RSVP form
-  if (!canUserSubmitWaivers(fetchedUser.applicationStatus)) {
+  if (!canUserSubmitWaivers(fetchedUser!.applicationStatus)) {
     redirect('/');
   }
 

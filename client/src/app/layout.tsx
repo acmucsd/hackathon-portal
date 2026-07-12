@@ -16,11 +16,16 @@ export const metadata: Metadata = {
   description: "ACM at UCSD's annual hackathon",
 };
 
+export const dynamic = 'force-dynamic';
+
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   let user: PrivateProfile | undefined;
   try {
-    user = JSON.parse(await getCookie(CookieType.USER));
-  } catch {}
+    const userCookie = await getCookie(CookieType.USER);
+    user = userCookie ? JSON.parse(userCookie) : null;
+  } catch (error) {
+    console.error(error);
+  }
 
   return (
     <html lang="en">

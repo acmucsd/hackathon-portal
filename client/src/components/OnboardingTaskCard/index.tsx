@@ -10,6 +10,8 @@ import showToast from '@/lib/showToast';
 import { updateFetchAiHandle } from '@/lib/api/UserAPI';
 import { OnboardingTask } from '../Dashboard/onboardingTasks';
 import styles from './style.module.scss';
+import { CookieType } from '@/lib/types/enums';
+import { setCookie } from '@/lib/services/CookieService';
 
 interface OnboardingTaskCardProps {
   task: OnboardingTask;
@@ -58,6 +60,7 @@ const OnboardingTaskCard = ({ task }: OnboardingTaskCardProps) => {
     if (typeof result === 'string') {
       setError(result);
     } else {
+      setCookie(CookieType.USER, JSON.stringify(result));
       showToast('Success', 'Fetch.ai link verified.');
       setIsVerified(true);
       setInputValue('');

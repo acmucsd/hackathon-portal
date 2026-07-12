@@ -5,10 +5,11 @@ import type {
   ReviewAssignment,
   ReviewerOverviewResponse,
 } from '@/lib/types/apiResponses';
-import { getCookie } from '@/lib/services/CookieService';
 import { CookieType, ApplicationDecision } from '@/lib/types/enums';
 import { filterApplicantsByCriteria } from '@/lib/utils';
 import { redirect } from 'next/navigation';
+import { onlyAllowAdmins } from '@/lib/services/PermissionsService';
+import { getCookie } from '@/lib/services/CookieService';
 
 function buildStats(
   reviewerOverview: ReviewerOverviewResponse,
@@ -63,14 +64,12 @@ export default async function ApplicationReviewPage({
   const { id: userId } = await params;
   const { status: filterStatus, q: searchQuery } = await searchParams;
 
-  const accessToken = await getCookie(CookieType.ACCESS_TOKEN);
-
-  if (!accessToken) {
-    redirect('/api/logout');
-  }
+  const accessToken = (await getCookie(CookieType.ACCESS_TOKEN))!;
 
   try {
     const currentUser = await UserAPI.getCurrentUser(accessToken);
+    onlyAllowAdmins(currentUser);
+
     const isSuperAdmin = currentUser.accessType === 'SUPER_ADMIN';
 
     const fetchedApplication = await AdminAPI.getUserWithApplication(accessToken, userId);
@@ -134,7 +133,7 @@ export default async function ApplicationReviewPage({
     const status = err?.response?.status;
 
     if (status === 401) {
-      redirect('/api/logout');
+      redirect('/');
     }
     if (status === 403) {
       redirect('/manageUsers');

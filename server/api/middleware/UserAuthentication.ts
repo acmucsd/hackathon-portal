@@ -18,7 +18,7 @@ export class UserAuthentication implements ExpressMiddlewareInterface {
   async use(request: Request, response: Response, next: NextFunction) {
     try {
       const authHeader = request.get('Authorization');
-      if (!authHeader) throw new UnauthorizedError('Missing auth token');
+      if (!authHeader) throw new UnauthorizedError('Missing auth header');
       const splitHeader = authHeader.split(' ');
       const invalidAuthFormat =
         splitHeader.length !== 2 ||
@@ -26,10 +26,10 @@ export class UserAuthentication implements ExpressMiddlewareInterface {
         splitHeader[1].length === 0;
       if (invalidAuthFormat) throw new BadRequestError();
       const token = splitHeader[1];
+      if (!token || token == '' || token == 'null') throw new UnauthorizedError('Missing auth token');
       request.user = await this.userService.checkAuthToken(token);
       return next();
     } catch (error) {
-      console.error(error);
       next(error);
     }
   }
