@@ -10,8 +10,6 @@
     "strict": true,
     "strictPropertyInitialization": false,
     "skipLibCheck": true,
-    "types": ["jest"],
-    "ignoreDeprecations": "6.0", //To ignore warning for moduleResolution
   },
   "include": [
     "**/*.ts"

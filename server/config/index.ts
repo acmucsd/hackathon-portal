@@ -51,7 +51,8 @@ export const Config = {
   testing: {
     uiBaseUrl: String(process.env.UI_BASE_URL),
     apiBaseUrl: String(process.env.API_BASE_URL),
-    authPath: String(process.env.AUTH_PATH),
+    authPath: String(process.env.AUTH_FILE),
+    tokenPath: String(process.env.TOKEN_FILE),
     testUserEmail: String(process.env.TEST_USER_EMAIL),
     testUserPassword: String(process.env.TEST_USER_PASSWORD),
     testUserId: String(process.env.TEST_USER_ID),

@@ -1,5 +1,6 @@
 import { AdminController } from './AdminController';
 import { EventController } from './EventController';
+import { HealthController } from './HealthController';
 import { InterestFormResponseController } from './InterestFormResponseController';
 import { LeaderboardController } from './LeaderboardController';
 import { ResponseController } from './ResponseController';
@@ -12,4 +13,5 @@ export const controllers = [
   AdminController,
   InterestFormResponseController,
   LeaderboardController,
+  HealthController,
 ];

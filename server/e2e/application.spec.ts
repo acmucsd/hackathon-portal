@@ -6,9 +6,10 @@ import { Config } from '../config';
 import { application } from './fixtures/constants';
 
 const baseUrl = Config.testing.apiBaseUrl;
-const authPath = Config.testing.authPath;
+const tokenPath = Config.testing.tokenPath;
 
-const { token } = JSON.parse(fs.readFileSync(authPath, 'utf8'));
+
+const { token } = JSON.parse(fs.readFileSync(tokenPath, 'utf8'));
 
 
 test.describe.configure({ mode: 'default' });

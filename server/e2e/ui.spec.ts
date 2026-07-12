@@ -3,6 +3,7 @@ import { Config } from '../config';
 
 const baseUrl = Config.testing.uiBaseUrl;
 
+
 test('has title', async ({ page }) => {
   await page.goto(`${baseUrl}/`);
 
@@ -10,29 +11,17 @@ test('has title', async ({ page }) => {
   await expect(page).toHaveTitle(/DiamondHacks/);
 });
 
-test('get started link', async ({ page }) => {
+test('has correct dashboard headings', async ({ page }) => {
   await page.goto(`${baseUrl}/`);
 
-  const usernameField = page.getByLabel('Email Address');
-  const passwordField = page.getByLabel('Password');
-  const loginButton = page.getByRole('button', { name: 'Login' });
-  const emptyEmailInputError = page.getByText('Enter your email');
-  const emptyPasswordInputError = page.getByText('Enter your password');
 
+  const applicationStatusHeading = page.getByRole('heading', { name: 'Application Status' });
+  const faqHeading = page.getByRole('heading', { name: 'Frequently Asked Questions' });
 
-  // Expect the fields to exist.
-  await expect(usernameField).toBeVisible();
-  await expect(passwordField).toBeVisible();
+  // Expect the headings to be visible.
+  await expect(applicationStatusHeading).toBeVisible();
+  await expect(faqHeading).toBeVisible();
 
-  // Test No errors
-  await expect(emptyEmailInputError).not.toBeVisible();
-  await expect(emptyPasswordInputError).not.toBeVisible();
-
-  await loginButton.click();
-
-  // Expects error for submitting without filling in.
-  await expect(emptyEmailInputError).toBeVisible();
-  await expect(emptyPasswordInputError).toBeVisible();
 });
 
 
