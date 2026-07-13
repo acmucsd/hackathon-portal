@@ -23,6 +23,10 @@ export default async () => {
 
   await page.getByRole('button', { name: 'Login', exact: true }).click();
 
+  await page.waitForURL(baseUrl, {
+    timeout: 15000,
+  });
+
   await expect(page.getByRole('heading', { name: 'Application Status' })).toBeVisible();
 
 
