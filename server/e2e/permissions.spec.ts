@@ -4,8 +4,9 @@ import { Config } from '../config';
 
 const baseUrl = Config.testing.apiBaseUrl;
 const testEmail = Config.testing.testUserEmail;
-const authPath = Config.testing.authPath;
-const { token } = JSON.parse(fs.readFileSync(authPath, 'utf8'));
+const tokenPath = Config.testing.tokenPath;
+
+const { token } = JSON.parse(fs.readFileSync(tokenPath, 'utf8'));
 
 // Tests to ensure that normal user is not able to access admin and super admin stuff
 test('normal user is not able to access email verification', async ({ request })=>{

@@ -4,9 +4,9 @@ import 'dotenv/config';
 import { Config } from '../config';
 
 const baseUrl = Config.testing.apiBaseUrl;
-const authPath = Config.testing.authPath;
+const tokenPath = Config.testing.tokenPath;
 
-const { token } = JSON.parse(fs.readFileSync(authPath, 'utf8'));
+const { token } = JSON.parse(fs.readFileSync(tokenPath, 'utf8'));
 
 // Tests user login
 test('user is able to log in', async ({ request })=>{
