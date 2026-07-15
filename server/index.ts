@@ -10,33 +10,34 @@ import { Config } from './config';
 
 useContainer(Container);
 
-dataSource
-  .initialize()
-  .then(() => {
-    console.log('Initialized TypeORM DataSource');
-  })
-  .catch((error) => {
-    console.log(error);
+async function start() {
+  await dataSource.initialize();
+  console.log('Initialized TypeORM DataSource');
+
+  const app = createExpressServer({
+    cors: true,
+    routePrefix: '/api/v1',
+    controllers,
+    middlewares,
+    defaults: {
+      paramOptions: {
+        required: true,
+      },
+    },
+    validation: {
+      whitelist: true,
+      skipMissingProperties: true,
+      forbidUnknownValues: true,
+    },
+    defaultErrorHandler: false,
   });
 
-const app = createExpressServer({
-  cors: true,
-  routePrefix: '/api/v1',
-  controllers,
-  middlewares,
-  defaults: {
-    paramOptions: {
-      required: true,
-    },
-  },
-  validation: {
-    whitelist: true,
-    skipMissingProperties: true,
-    forbidUnknownValues: true,
-  },
-  defaultErrorHandler: false,
-});
+  app.listen(Config.port, () => {
+    console.log(`Listening on port ${Config.port}...`);
+  });
+}
 
-app.listen(Config.port, () => {
-  console.log(`Listening on port ${Config.port}...`);
+start().catch((error) => {
+  console.error('Failed to initialize TypeORM DataSource:', error);
+  process.exit(1);
 });
