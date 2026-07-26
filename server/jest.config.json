@@ -1,8 +1,12 @@
 {
+	"clearMocks": true,
+	"restoreMocks": true,
+	"testEnvironment": "node",
 	"transform": {
         	"^.+\\.ts$": "ts-jest"
 	},
 	"modulePaths": ["<rootDir>/src"],
+	"setupFilesAfterEnv": ["<rootDir>/tests/setup.ts"],
 	"testRegex": "tests/.*\\.tests?\\.ts$",
 	"moduleFileExtensions": [
 		"ts",
