@@ -15,5 +15,5 @@ export const controllers = [
   InterestFormResponseController,
   LeaderboardController,
   HealthController,
-  MetricsController
+  MetricsController,
 ];
