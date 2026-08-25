@@ -3,6 +3,7 @@ import { EventController } from './EventController';
 import { HealthController } from './HealthController';
 import { InterestFormResponseController } from './InterestFormResponseController';
 import { LeaderboardController } from './LeaderboardController';
+import { MetricsController } from './MetricsController';
 import { ResponseController } from './ResponseController';
 import { UserController } from './UserController';
 
@@ -14,4 +15,5 @@ export const controllers = [
   InterestFormResponseController,
   LeaderboardController,
   HealthController,
+  MetricsController,
 ];
