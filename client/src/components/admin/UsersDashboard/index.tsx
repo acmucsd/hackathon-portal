@@ -18,35 +18,79 @@ interface UsersDashboardProps {
 const UsersDashboard = ({ users, assignedUsers, superAdmin }: UsersDashboardProps) => {
   const [filterStatus, setFilterStatus] = useState(superAdmin ? 'All' : 'My Assignments');
   const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState('timeAssigned');
+  const [reverseSort, setReverseSort] = useState(false);
 
   const sourceUsers = superAdmin ? users : assignedUsers;
 
-  const filteredUsers = filterApplicantsByCriteria(sourceUsers, filterStatus, searchQuery).sort(
-    sortRevieweeProfiles
+  const sortUsers = (usersToSort: RevieweeProfile[]) =>
+    [...usersToSort].sort((a, b) => {
+      let comparison = 0;
+      if (sortBy === 'school') {
+        comparison = (a.university ?? '').localeCompare(b.university ?? '', undefined, {
+          sensitivity: 'base',
+        });
+      }
+      else if (sortBy === 'decisionMade') {
+        const aHasDecision = a.applicationDecision !== ApplicationDecision.NO_DECISION;
+        const bHasDecision = b.applicationDecision !== ApplicationDecision.NO_DECISION;
+        comparison = Number(bHasDecision) - Number(aHasDecision);
+      }
+
+      if (comparison === 0) comparison = sortRevieweeProfiles(a, b);
+      return reverseSort ? -comparison : comparison;
+    });
+
+  const filteredUsers = sortUsers(
+    filterApplicantsByCriteria(sourceUsers, filterStatus, searchQuery)
   );
 
-  const assignedFilteredUsers = {
-    'To Review': assignedUsers
-      .filter(user => user.applicationDecision === ApplicationDecision.NO_DECISION)
-      .filter(user =>
-        `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase())
-      ),
-    'My Acceptances': assignedUsers
-      .filter(user => user.applicationDecision === ApplicationDecision.ACCEPT)
-      .filter(user =>
-        `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase())
-      ),
-    'My Rejections': assignedUsers
-      .filter(user => user.applicationDecision === ApplicationDecision.REJECT)
-      .filter(user =>
-        `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase())
-      ),
-    'My Waitlists': assignedUsers
-      .filter(user => user.applicationDecision === ApplicationDecision.WAITLIST)
-      .filter(user =>
-        `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase())
-      ),
-  };
+  const assignedSections: [string, RevieweeProfile[]][] = [
+    [
+      'To Review',
+      assignedUsers
+        .filter(user => user.applicationDecision === ApplicationDecision.NO_DECISION)
+        .filter(user =>
+          `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase())
+        ),
+    ],
+    [
+      'My Acceptances',
+      assignedUsers
+        .filter(user => user.applicationDecision === ApplicationDecision.ACCEPT)
+        .filter(user =>
+          `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase())
+        ),
+    ],
+    [
+      'My Rejections',
+      assignedUsers
+        .filter(user => user.applicationDecision === ApplicationDecision.REJECT)
+        .filter(user =>
+          `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase())
+        ),
+    ],
+    [
+      'My Waitlists',
+      assignedUsers
+        .filter(user => user.applicationDecision === ApplicationDecision.WAITLIST)
+        .filter(user =>
+          `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase())
+        ),
+    ],
+  ];
+  const assignedFilteredUsers: [string, RevieweeProfile[]][] = assignedSections.map(
+    ([sectionTitle, sectionUsers]): [string, RevieweeProfile[]] => [
+      sectionTitle,
+      sortUsers(sectionUsers),
+    ]
+  );
+
+  if (sortBy === 'decisionMade') {
+    assignedFilteredUsers.sort(([aTitle], [bTitle]) =>
+      aTitle === 'To Review' ? 1 : bTitle === 'To Review' ? -1 : 0
+    );
+  }
 
   const itemsPerPage = 10;
 
@@ -71,9 +115,28 @@ const UsersDashboard = ({ users, assignedUsers, superAdmin }: UsersDashboardProp
         <Search query={searchQuery} setQuery={setSearchQuery} />
       </div>
       <hr className={styles.divider} />
+      <div className={styles.sortControls}>
+        <label htmlFor="user-sort">Sort by</label>
+        <select
+          id="user-sort"
+          value={sortBy}
+          onChange={event => setSortBy(event.currentTarget.value)}
+        >
+          <option value="timeAssigned">Time Assigned</option>
+          <option value="school">School</option>
+          <option value="decisionMade">Decision Made</option>
+        </select>
+        <button
+          type="button"
+          className={styles.sortDirection}
+          onClick={() => setReverseSort(!reverseSort)}
+        >
+          {reverseSort ? '↑' : '↓'}
+        </button>
+      </div>
       {filterStatus === 'My Assignments' ? (
         <>
-          {Object.entries(assignedFilteredUsers).map(([sectionTitle, usersInSection]) => (
+          {assignedFilteredUsers.map(([sectionTitle, usersInSection]) => (
             <div className={styles.sectionContainer} key={sectionTitle}>
               <Typography variant="label/large">
                 {sectionTitle} ({usersInSection.length})

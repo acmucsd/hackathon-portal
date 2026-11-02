@@ -42,4 +42,38 @@
     height: 2px;
     border: 0;
   }
+
+  .sortControls {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
+
+    label {
+      color: vars.$white;
+    }
+
+    select {
+      border: 1px solid vars.$white;
+      border-radius: 0.5rem;
+      background-color: transparent;
+      color: vars.$white;
+      padding: 0.5rem;
+      cursor: pointer;
+    }
+
+    option {
+      color: vars.$black;
+    }
+
+    .sortDirection {
+      border: 0;
+      background: transparent;
+      color: vars.$white;
+      cursor: pointer;
+      font-size: 1.5rem;
+      line-height: 1;
+      padding: 0.25rem;
+    }
+  }
 }
