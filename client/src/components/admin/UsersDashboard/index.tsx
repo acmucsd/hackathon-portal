@@ -18,7 +18,7 @@ interface UsersDashboardProps {
 const UsersDashboard = ({ users, assignedUsers, superAdmin }: UsersDashboardProps) => {
   const [filterStatus, setFilterStatus] = useState(superAdmin ? 'All' : 'My Assignments');
   const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState('timeAssigned');
+  const [sortBy, setSortBy] = useState('timeCreated');
   const [reverseSort, setReverseSort] = useState(false);
 
   const sourceUsers = superAdmin ? users : assignedUsers;
@@ -122,7 +122,7 @@ const UsersDashboard = ({ users, assignedUsers, superAdmin }: UsersDashboardProp
           value={sortBy}
           onChange={event => setSortBy(event.currentTarget.value)}
         >
-          <option value="timeAssigned">Time Assigned</option>
+          <option value="timeCreated">Time Created</option>
           <option value="school">School</option>
           <option value="decisionMade">Decision Made</option>
         </select>
