@@ -30,8 +30,7 @@ const UsersDashboard = ({ users, assignedUsers, superAdmin }: UsersDashboardProp
         comparison = (a.university ?? '').localeCompare(b.university ?? '', undefined, {
           sensitivity: 'base',
         });
-      }
-      else if (sortBy === 'decisionMade') {
+      } else if (sortBy === 'decisionMade') {
         const aHasDecision = a.applicationDecision !== ApplicationDecision.NO_DECISION;
         const bHasDecision = b.applicationDecision !== ApplicationDecision.NO_DECISION;
         comparison = Number(bHasDecision) - Number(aHasDecision);
