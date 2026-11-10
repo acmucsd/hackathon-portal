@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "start": "node --env-file=.env build/index.js",
+    "start": "node --require @opentelemetry/auto-instrumentations-node/register --env-file=.env build/index.js",
     "dev": "node -r ts-node/register --env-file=.env --watch index.ts",
     "dev:test": "node -r ts-node/register --watch index.ts",
     "test": "jest --config jest.config.json --runInBand",
@@ -24,6 +24,8 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.723.0",
     "@aws-sdk/lib-storage": "^3.723.0",
+    "@opentelemetry/api": "^1.10.0",
+    "@opentelemetry/auto-instrumentations-node": "^0.83.0",
     "body-parser": "^1.20.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
