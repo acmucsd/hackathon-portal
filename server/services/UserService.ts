@@ -2,7 +2,7 @@ import { Service } from 'typedi';
 import { Repositories, TransactionsManager } from '../repositories';
 import { UserModel } from '../models/UserModel';
 import { ReviewAssignmentJob, CreateUser } from '../types/ApiRequests';
-import { FirebaseAuthError } from 'firebase-admin/auth';
+import { FirebaseAuthError, UserRecord } from 'firebase-admin/auth';
 import {
   BadRequestError,
   ForbiddenError,
@@ -29,7 +29,7 @@ import { Application } from '../types/Application';
 import { HouseService } from './HouseService';
 import { FetchAiHandleValidationService } from './FetchAiHandleValidationService';
 
-import { In } from 'typeorm';
+import { In, QueryFailedError } from 'typeorm';
 
 /** Internal: includes acceptedWithNotNullUniversity for computation; omitted from final output. */
 interface ReviewerOverviewReviewerInternal extends ReviewerOverviewReviewer {
@@ -155,9 +155,13 @@ export class UserService {
   }
 
   public async createUser(createUser: CreateUser): Promise<UserModel> {
-
     const email = createUser.email.toLowerCase();
-    const returnedUser = await this.transactionsManager.readWrite(async (entityManager) => {
+    let firebaseUser: UserRecord | undefined;
+    let savedFailed = false;
+    try{
+      return await this.transactionsManager.readWrite(async (entityManager) => {
+        savedFailed = false;
+
       await entityManager.query('SELECT pg_advisory_xact_lock(hashtext($1))', [email]);
       const userWithEmail = await Repositories.user(entityManager).findByEmail(email);
       const emailAlreadyUsed = userWithEmail !== null;
@@ -183,44 +187,52 @@ export class UserService {
       }
 
       // try to create Firebase user
-      let firebaseUser;
-      try {
+      if (firebaseUser === undefined){
+        try {
         firebaseUser = await adminAuth.createUser({
           email,
           password: createUser.password,
           displayName: `${createUser.firstName} ${createUser.lastName}`,
         });
-      } catch (error) {
-        if (error instanceof FirebaseAuthError) {
-          if (error.code === 'auth/email-already-exists')
-            throw new ForbiddenError('Email already in use');
+        } catch (error) {
+          if (error instanceof FirebaseAuthError) {
+            if (error.code === 'auth/email-already-exists')
+              throw new ForbiddenError('Email already in use');
+          }
+          throw error;
         }
-        throw error;
       }
 
-      // try to make DB user
-      try {
-        const userRepository = Repositories.user(entityManager);
+      const userRepository = Repositories.user(entityManager);
         const newUser = userRepository.create({
           id: firebaseUser.uid,
           email,
           firstName: createUser.firstName,
           lastName: createUser.lastName,
         });
-        const createdUser = await userRepository.save(newUser);
-        return createdUser;
-      } catch (error) {
-        // Rollback: delete Firebase user if DB creation fails
+        try{
+          return await userRepository.save(newUser);
+        }
+        catch (error){
+          savedFailed = true;
+          throw error;
+        }
+      }, { maxAttempts: 3 });
+    }
+    catch (error) {
+      const serializationFailure =
+        error instanceof QueryFailedError && error.driverError.code === '40001';
+
+      // Clean up after the last attempt.
+      if (firebaseUser && (savedFailed || serializationFailure)) {
         try {
           await adminAuth.deleteUser(firebaseUser.uid);
         } catch (deleteError) {
           console.error('Failed to delete orphaned Firebase user:', firebaseUser.uid, deleteError);
         }
-        throw error;
       }
-    });
-
-    return returnedUser;
+      throw error;
+    }
   }
 
   public async updateUser(
