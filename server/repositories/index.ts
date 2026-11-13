@@ -47,8 +47,9 @@ export class TransactionsManager {
     return this.dataSource.transaction('REPEATABLE READ', fn);
   }
 
-  public async readWrite<T>(fn: (entityManager: EntityManager) => Promise<T>, { maxAttempts = 1 } : { maxAttempts?: number } = {}) {
-      for (let attempt = 1; ; attempt++) {
+  public async readWrite<T>(fn: (entityManager: EntityManager) => Promise<T>,
+  { maxAttempts = 1 } : { maxAttempts?: number } = {}) {
+    for (let attempt = 1; ; attempt++) {
 			try {
 				if (attempt > 1) {
 					console.warn(`[db] Starting transaction attempt ${attempt}/${maxAttempts} after SQLSTATE 40001`);
