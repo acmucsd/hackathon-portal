@@ -47,8 +47,7 @@ export class TransactionsManager {
     return this.dataSource.transaction('REPEATABLE READ', fn);
   }
 
-  public async readWrite<T>(fn: (entityManager: EntityManager) => Promise<T>,
-		{ maxAttempts = 1 }: {maxAttempts?: number } = {}) {
+  public async readWrite<T>(fn: (entityManager: EntityManager) => Promise<T>, { maxAttempts = 1 } : { maxAttempts?: number } = {}) {
       for (let attempt = 1; ; attempt++) {
 			try {
 				if (attempt > 1) {
@@ -62,7 +61,7 @@ export class TransactionsManager {
 				error instanceof QueryFailedError
 				&& error.driverError.code === '40001';
 
-				if (!isSerializationFailure || attempt >= maxAttempts){
+				if (!isSerializationFailure || attempt >= maxAttempts) {
 					throw error;
 				}
 

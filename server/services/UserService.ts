@@ -158,7 +158,7 @@ export class UserService {
     const email = createUser.email.toLowerCase();
     let firebaseUser: UserRecord | undefined;
     let savedFailed = false;
-    try{
+    try {
       return await this.transactionsManager.readWrite(async (entityManager) => {
         savedFailed = false;
 
@@ -187,7 +187,7 @@ export class UserService {
       }
 
       // try to create Firebase user
-      if (firebaseUser === undefined){
+      if (firebaseUser === undefined) {
         try {
         firebaseUser = await adminAuth.createUser({
           email,
@@ -210,10 +210,10 @@ export class UserService {
           firstName: createUser.firstName,
           lastName: createUser.lastName,
         });
-        try{
+        try {
           return await userRepository.save(newUser);
         }
-        catch (error){
+        catch (error) {
           savedFailed = true;
           throw error;
         }
