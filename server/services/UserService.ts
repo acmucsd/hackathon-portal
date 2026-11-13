@@ -212,14 +212,12 @@ export class UserService {
         });
         try {
           return await userRepository.save(newUser);
-        }
-        catch (error) {
+        } catch (error) {
           savedFailed = true;
           throw error;
         }
       }, { maxAttempts: 3 });
-    }
-    catch (error) {
+    } catch (error) {
       const serializationFailure =
         error instanceof QueryFailedError && error.driverError.code === '40001';
 

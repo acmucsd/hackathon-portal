@@ -56,8 +56,7 @@ export class TransactionsManager {
 				}
 
 				return await this.dataSource.transaction('SERIALIZABLE', fn);
-			}
-			catch (error) {
+			} catch (error) {
 				const isSerializationFailure =
 				error instanceof QueryFailedError
 				&& error.driverError.code === '40001';
